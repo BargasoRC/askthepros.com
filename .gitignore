@@ -1,0 +1,9 @@
+.DS_Store
+npm-debug.log
+test/unit/coverage
+test/e2e/reports
+selenium-debug.log
+src/components/increment
+node_modules/
+src/config.js
+dist/
