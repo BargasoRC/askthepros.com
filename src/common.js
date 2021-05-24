@@ -3,10 +3,10 @@ let APP_EMAIL = 'support@payhiram.ph'
 export default {
   sidebarMenu: [
     // {accountType: 'ALL', showOnAdmin: true, accountStatus: 'ALL', description: 'Dashboard', icon: 'fa fa-arrow-right', path: 'dashboard', flag: false, subMenu: null}
-      {id: 1, users: 'ALL', parent_id: 0, description: 'DASHBOARD', icon: '', path: 'dashboard', flag: false, subMenu: null},
+      {id: 1, users: 'ALL', parent_id: 0, description: 'DASHBOARD', icon: '', path: 'dashboard', flag: false, subMenu: null}
   ],
   menuOff: [
-      {id: 1, users: 'ALL', parent_id: 0, description: 'DASHBOARD', icon: 'fa fa-tachometer', path: 'dashboard', flag: false, subMenu: null},
+      {id: 1, users: 'ALL', parent_id: 0, description: 'DASHBOARD', icon: 'fa fa-tachometer', path: 'dashboard', flag: false, subMenu: null}
   ],
   APP_NAME: 'askthepros.com',
   APP_NAME_HTML: 'askthepros.com',
