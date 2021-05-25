@@ -57,18 +57,11 @@ export default{
       tokenRequired: false
     }
   }, {
-    path: '*',
-    name: 'notfound',
-    component: resolve => require(['modules/pagenotfound/PageNotFound.vue'], resolve),
+    path: '/',
+    name: 'home',
+    component: resolve => require(['src/modules/home/index.vue'], resolve),
     meta: {
       tokenRequired: false
-    }
-  }, {
-    path: '/analytics',
-    name: 'analytics',
-    component: resolve => require(['modules/analytics/index.vue'], resolve),
-    meta: {
-      tokenRequired: true
     }
   }
   ]
