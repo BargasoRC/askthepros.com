@@ -25,6 +25,9 @@
           <b class="font-weight-normal">Learn How</b>
         </li>
         <li class="pl-5 pr-5 nav_item">
+          <b class="font-weight-normal">Pricing</b>
+        </li>
+        <li class="pl-5 pr-5 nav_item">
           <b class="font-weight-normal">Contact Us</b>
         </li>
         <li class="pl-5 pr-5 nav_item" @click="navigate('login')">
@@ -67,7 +70,14 @@ export default {
   z-index: 100;
 }
 .navbar {
-  background-color: $white !important;
+  background: linear-gradient(180deg, #FFFFFF 6.77%, rgba(255, 255, 255, 0.782123) 19.79%,
+    rgba(255, 255, 255, 0.326451) 63.54%, rgba(255, 255, 255, 0.535072) 76.04%, rgba(255, 255, 255, 0.184593) 86.46%, rgba(255, 255, 255, 0) 100%), 
+    url("../../assets/img/banner.jpg");
+    background-attachment: fixed;
+    background-position: auto,center top;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
 }
 .navbar-brand .logo-brand {
   // width: 100px;
