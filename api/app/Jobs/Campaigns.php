@@ -56,6 +56,8 @@ class Campaigns implements ShouldQueue
         echo "\n\t[Campaigns Job] Get Authentication Credentials of merchant = ".$value['name'];
         $account = $value ? app($this->accountClass)->retrieveById($value['account_id']) : null;
         $credentials = app($this->shopifyCredentialsController)->getCredentialsByParams('merchant_id', $value['id']);
+        $customers = app($this->shopifyController)->getAllCustomers($credentials);
+        $this->manageCustomerFilter($credentials, $value);
         echo "\n\t[Campaigns Job] Credentials ".print_r($credentials);
         $results = app($this->campaignController)->retrieveCampaigns();
         if(sizeof($account) > 0){
@@ -83,15 +85,23 @@ class Campaigns implements ShouldQueue
               array('campaign_id', '=', $vValue[$i]['id']),
               array('deleted_at', '=', null),
             ));
-          $customerShopify = app($this->shopifyController)->getCustomers($credentials);
           foreach ($customers as $customer) {
             $cd = 0;
             foreach ($customer['customer'] as $each) {
               $conditions = json_decode($each['attributes']);
               $result = $this->manageCustomerFilter($conditions->condition, $conditions->attributes, $credentials);
-              if(sizeof($result) > 0){
+              if($result !== null){
                 $r = 0;
                 foreach ($result as $rValue) {
+                  $customerData = array(
+                    "default_address"  => isset($rValue['default_address']) ? $rValue['default_address'] : $rValue['addresses'],
+                    "campaign"      => array(
+                      "name"  => $vValue[$i]["name"],
+                      "schedule" => $vValue[$i]["schedule"]
+                    ),
+                    "payload" => "campaigns",
+                    "merchant"=> $merchant['name']
+                  );
                   $array = array(
                     'merchant_id' => $merchant['id'],
                     'payload'   => 'campaigns',
@@ -99,6 +109,7 @@ class Campaigns implements ShouldQueue
                     'full_name'  => $rValue['first_name'].' '.$rValue['last_name'],
                     'receiver'  => $rValue['phone'],
                     'status'    => 'on going',
+                    'customer_data' => json_encode($customerData),
                     'created_at'  => Carbon::now()
                   );
                   $smsGroup = app($this->smsGroupController)->createByParams($array);
@@ -130,48 +141,35 @@ class Campaigns implements ShouldQueue
     }
   }
 
-  public function manageCustomerFilter($condition, $filter, $credentials){
-    $query = 'query=';
-    $isOrder=false;
-    $temp = [];
-    $searhResult = [];
-    $i=0;
-    foreach ($filter as $value) {
-      if(sizeof($filter) > 0){
-        if($value->title == 'Lifetime money spent by customer'){
-          $query .= 'total_spent:'.$value->value.' ';
-        }else if($value->title == 'Number of orders placed by customer'){
-          $query .= 'order_count ';
-        }else if($value->title ==  'Customer ordered specific product(s)'){
-          $query .= 'order_count ';
-        }else if($value->title == "Customer tagged with 'x'"){
-          $query .= 'customer_tag:'.$value->value;
-        }else if($value->title == 'Customer not tagged with "x"'){
-          $query .= '&customer_tag!='.$value->value;
-        }else if($value->title == 'Customer located in "x" countries'){
-          $query .= 'country:'.$value->value;
-        }else if($value->title == 'Customer not located in "x" countries'){
-          $query .= 'country!='.$value->value;
-        }else if($value->title == 'Customer(s) with fulfilled orders'){
-          $queryParameter = 'fulfill_status:fulfilled';
-          $temp = app($this->shopifyController)->getOrdersByParams($credentials, $queryParameter);
-        }else if($value->title == 'Customer(s) with unfulfilled orders'){
-          $queryParameter = 'fulfill_status:null';
-          $temp = app($this->shopifyController)->getOrdersByParams($credentials, $queryParameter);
-        }else if($value->title == 'Customer(s) with paid orders'){
-          $queryParameter = 'financial_status:paid';
-          $temp = app($this->shopifyController)->getOrdersByParams($credentials, $queryParameter);
-        }else if($value->title == 'Customer(s) with pending orders'){
-          $queryParameter = 'financial_status:pending';
-          $temp = app($this->shopifyController)->getOrdersByParams($credentials, $queryParameter);
-        }else if($value->title == 'Customer(s) with refunded orders'){
-          $queryParameter = 'financial_status:refunded';
-          $temp = app($this->shopifyController)->getOrdersByParams($credentials, $queryParameter);
+  public function manageCustomerFilter($credentials, $merchantId){
+    $customers = app($this->shopifyController)->getAllCustomers($credentials);
+    $customerList = app('App\Http\Controllers\CustomerListController')->retrieveAllCustomers();
+    if(sizeof($customerList) > 0){
+      foreach ($customerList as $list) {
+        foreach ($customers as $cust) {
+          foreach ($list['attributes'] as $attr) {
+            if($attr['condition'] == 'AND'){
+
+            }
+          }
         }
-        $searhResult = app($this->shopifyController)->searchCustomers($credentials, $query);
       }
-      $i++;
     }
-    return $searhResult['data'];
+  }
+
+  public function manageConditions($value){
+    if($value->title == 'Lifetime money spent by customer'){
+    }else if($value->title == 'Number of orders placed by customer'){
+    }else if($value->title ==  'Customer ordered specific product(s)'){
+    }else if($value->title == "Customer tagged with 'x'"){
+    }else if($value->title == 'Customer not tagged with "x"'){
+    }else if($value->title == 'Customer located in "x" countries'){
+    }else if($value->title == 'Customer not located in "x" countries'){
+    }else if($value->title == 'Customer(s) with fulfilled orders'){
+    }else if($value->title == 'Customer(s) with unfulfilled orders'){
+    }else if($value->title == 'Customer(s) with paid orders'){
+    }else if($value->title == 'Customer(s) with pending orders'){
+    }else if($value->title == 'Customer(s) with refunded orders'){
+    }
   }
 }

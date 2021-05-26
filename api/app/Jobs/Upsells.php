@@ -72,7 +72,7 @@ class Upsells implements ShouldQueue
       foreach ($data as $key => $value) {
         $collections = app($this->shopifyController)->getRestProducts($credentials, null);
         $orders = app($this->shopifyController)->getOrders($credentials);
-        $customers = app($this->shopifyController)->getCustomers($credentials);
+        $customers = app($this->shopifyController)->getAllCustomers($credentials);
         $o = 0;
         $url = null;
         $tempOrder = [];
@@ -81,6 +81,9 @@ class Upsells implements ShouldQueue
           // $oValue['discount'] = $oValue['total_discounts'];
           $oValue['line_items'][0]['discount_codes'] = $oValue['discount_codes'];
           $oValue['line_items'][0]['discount'] = $oValue['total_discounts'];
+          $oValue['line_items'][0]['total_price'] = $oValue['total_price'];
+          $oValue['line_items'][0]['presentment_currency'] = $oValue['currency'];
+          $oValue['line_items'][0]['shipping_address'] = $oValue['shipping_address'];
           array_push($tempOrder, $oValue['line_items']);
           $o++;
         }
@@ -115,13 +118,25 @@ class Upsells implements ShouldQueue
                       $uValue['discount_codes'] = $uValue['admin_graphql_api_id'];
                       $uValue['upsells_id'] = $upsellsData !== null ? $upsellsData['upsell_id'] : null;
                       
+                      $customerData = array(
+                        "default_address"  => isset($cValue[$j]['default_address']) ? $cValue[$j]['default_address'] : $tValue[$c]['shipping_address'],
+                        "cart"      => array(
+                          "presentment_currency"  => $tValue[$c]["presentment_currency"],
+                          "total_price" => $tValue[$c]["total_price"]
+                        ),
+                        "products" =>  $uValue['order_product'],
+                        "payload" => "upsells",
+                        $credentials['name']
+                      );
 
                       $array = array(
                         'merchant_id' => $credentials['id'],
                         'payload'   => 'upsells',
                         'payload_value' => $upsellsData !== null ? $upsellsData['upsell_id'] : null,
                         'receiver'  => $cValue[$j]['phone'],
+                        'full_name'  => $cValue[$j]['first_name'].' '.$cValue[$j]['last_name'],
                         'status'    => 'on going',
+                        'customer_data' => json_encode($customerData),
                         'created_at'  => Carbon::now()
                       );
 

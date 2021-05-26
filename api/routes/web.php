@@ -108,6 +108,7 @@ $controller = 'ShopifyRequestController@';
 Route::post($route.'graphql', $controller."testing");
 Route::post($route.'customers', $controller."customers");
 Route::post($route.'products', $controller."products");
+Route::post($route.'products_rest', $controller."productsByRest");
 Route::post($route.'collections', $controller."collections");
 Route::get($route.'test', $controller."test");
 
@@ -142,6 +143,10 @@ Route::post($route.'response_handler', $controller."responseHandler");
 $route = env('PACKAGE_ROUTE', '').'/sms_groups/';
 $controller = 'SMSGroupController@';
 Route::post($route.'retrieve', $controller."retrieve");
+Route::post($route.'update', $controller."update");
+Route::post($route.'retrieve_admin', $controller."retrieveAdmin");
+Route::post($route.'retrieve_admin_search', $controller."retrieveAdminWithSearch");
+Route::post($route.'admin_dashboard', $controller."adminDashboard");
 
 // sms controller
 $route = env('PACKAGE_ROUTE', '').'/sms/';
@@ -216,6 +221,7 @@ $controller = 'DashboardController@';
 Route::post($route.'create', $controller."create");
 Route::post($route.'update', $controller."update");
 Route::post($route.'retrieve', $controller."retrieve");
+Route::post($route.'retrieve_graph', $controller."retrieveGraph");
 Route::post($route.'retrieve_global', $controller."retrieveGlobal");
 Route::post($route.'retrieve_cart_recovery', $controller.'getCartRecovery');
 Route::post($route.'retrieve_campaigns', $controller.'getCampaigns');
@@ -223,3 +229,7 @@ Route::post($route.'retrieve_upsells', $controller."retrieveUpsells");
 Route::post($route.'delete', $controller."delete");
 Route::get($route.'test', $controller."test");
 
+//CountryController
+$route = env('PACKAGE_ROUTE', '').'/countries/';
+$controller = 'CountryController@';
+Route::post($route.'retrieve', $controller."retrieveCountries");
