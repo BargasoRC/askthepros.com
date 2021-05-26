@@ -3,26 +3,26 @@
 <footer class="page-footer indigo">
 
   <!-- Footer Links -->
-  <div class="container-fluid text-center text-md-left" >
+  <div class="container-fluid d-flex justify-content-center" style="background: #F1B814;">
 
     <!-- Grid row -->
-    <div class="row" style="background: #F1B814;">
+    <div class="row w-75 " style="padding-bottom:1%;">
 
       <!-- Grid column -->
-      <div class="col-md-3 mx-auto">
+      <div class="col-md-4 ft-col-left ">
 
         <!-- Links -->
-        <h5 class="font-weight-bold mt-3 mb-4 footer-title">About</h5>
+        <h5 class="font-weight-bold mt-3 mb-4 ft-title">About</h5>
 
         <ul class="list-unstyled">
           <li>
-            <a href="#!">Our Mission</a>
+            <a class="ft-link" href="#!">Our Mission</a>
           </li>
           <li>
-            <a href="#!">Our Story</a>
+            <a class="ft-link" href="#!">Our Story</a>
           </li>
           <li>
-            <a href="#!">Team Members</a>
+            <a class="ft-link" href="#!">Team Members</a>
           </li>
         </ul>
 
@@ -32,17 +32,17 @@
       <hr class="clearfix w-100 d-md-none">
 
       <!-- Grid column -->
-      <div class="col-md-3 mx-auto">
+      <div class="col-md-4 mx-auto ">
 
         <!-- Links -->
-        <h5 class="font-weight-bold mt-3 mb-4 footer-title">Information</h5>
+        <h5 class="font-weight-bold mt-3 mb-4 ft-title">Information</h5>
 
         <ul class="list-unstyled">
           <li>
-            <a href="#!">Term and Conditions</a>
+            <a class="ft-link" href="#!">Terms and Conditions</a>
           </li>
           <li>
-            <a href="#!">Privacy Policy</a>
+            <a class="ft-link" href="#!">Privacy Policy</a>
           </li>
         </ul>
 
@@ -52,15 +52,20 @@
       <hr class="clearfix w-100 d-md-none">
 
       <!-- Grid column -->
-      <div class="col-md-3 mx-auto">
+      <div class="col-md-4 mx-auto ">
 
         <!-- Links -->
-        <h5 class="font-weight-bold mt-3 mb-4 footer-title">We Accept All Major Credit Cards For Fast and Easy Payment</h5>
-
-        <div class="container">
-          <div class="row"></div>
-
-        </div>
+        <h5 class="font-weight-bold mt-3 mb-4 ft-title" style="margin-bottom:0px;padding-top:0px">We Accept All Major Credit Cards For Fast and Easy Payment</h5>
+        <ul class="list-unstyled">
+            <li>
+              <img src="../../assets/img/pay_methods.jpg" alt="Payment Methods">
+            </li>
+        </ul>
+        <dir class="row d-flex justify-content-start" style="padding-left:5%">
+          <p>Copyright © 2021. All Rights Reserved.</p>
+          <img src="../../assets/img/logo_small_redo.png" alt="logo" height="21px" width="50px" style="padding-left:10px">
+        </dir>
+        
 
       </div>
       <!-- Grid column -->
@@ -72,9 +77,9 @@
   <!-- Footer Links -->
 
   <!-- Copyright -->
-  <div class="footer-copyright text-center py-3">© 2020 Copyright:
+  <!-- <div class="">© 2020 Copyright:
     <a href="https://mdbootstrap.com/"> MDBootstrap.com</a>
-  </div>
+  </div> -->
   <!-- Copyright -->
 
 </footer>
@@ -91,14 +96,25 @@
   font-size: 12px;
   z-index: 10000;
 }
-.footer-title{
+.ft-title {
   /* font-family:Roboto; */
   font-size:18px;
   font-weight:700;
-  padding-top:10%;
+  padding-top:5%;
   padding-bottom:5%;
 }
-
+.ft-col-left {
+  padding-left: 5%;
+}
+.ft-col-right {
+  padding-right: 5%;
+}
+.ft-link {
+  color: black;
+}
+.ft-link:hover {
+  color: black;
+}
 @media (max-width: 991px){
   .apps-footer{
     display: none;
@@ -107,7 +123,9 @@
 </style>
 <script>
 import COMMON from 'src/common.js'
+import Image from '../../components/increment/generic/modal/Image.vue'
 export default {
+  components: { Image },
   data(){
     return {
       common: COMMON
