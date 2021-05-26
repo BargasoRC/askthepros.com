@@ -1,7 +1,5 @@
 <template>
-    
-      <HomeBanner></HomeBanner>
-    
+    <HomeBanner></HomeBanner>
 </template>
 <script>
 import ROUTER from 'src/router'

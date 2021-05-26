@@ -1,5 +1,5 @@
 <template>
-    <div class="jumbotron jumbotron-fluid banner" style="height:786px;padding-top:0px;">
+    <div class="jumbotron jumbotron-fluid banner" style="height:786px;padding-top:0px;padding-bottom:0px;margin-bottom:0px">
       <div class="container-fluid" style="padding-left:50%;padding-top:15%;padding-right:65px;">
         <div class="row">
           <h1 class="display-4" style="font-family:Roboto;font-weight:700;font-size:50px;color:#01004E">Become A Local Expert<br>With Automated Social Media<br>Posting.</h1>
@@ -27,7 +27,7 @@
     background-size: cover;
     position: relative;
     background-attachment: fixed;
-  background-position: center top;
+    background-position: center top;
 }
 </style>
 
