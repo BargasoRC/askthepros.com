@@ -26,9 +26,10 @@ class Billing implements ShouldQueue
     public $accountClass = 'Increment\Account\Http\AccountController';
     public $shopifyAuthController = 'App\Http\Controllers\ShopifyAuthenticateController';
     public $merchantController = 'Increment\Imarket\Merchant\Http\MerchantController';
-    public $smsController = 'App\Http\Controllers\SMSHandlerController';
+    public $smsController = 'App\Http\Controllers\SMSController';
     public $billingController = 'App\Http\Controllers\BillingController';
     public $shopifyController = 'App\Http\Controllers\ShopifyDirectController';
+    public $planController = 'App\Http\Controllers\PlanController';
 
     public function __construct()
     {
@@ -42,96 +43,93 @@ class Billing implements ShouldQueue
      */
     public function handle()
     {
-        //
-        echo "\n\t[Billing Job] dispatched ...";
+      //
+      echo "\n\t[Billing Job] dispatched ...";
 
-        echo "\n\t[Billing Job] Retrieving merchants ... ";
-        $merchants = Merchant::get();
+      echo "\n\t[Billing Job] Retrieving merchants ... ";
+      $merchants = Merchant::get();
 
-
-        if(sizeof($merchants) > 0){
-            foreach ($merchants as $key => $value) {
-                echo "\n\t[Billing Job] Get Authentication Credentials of merchant = ".$value['name'];
-                $account = $value ? app($this->accountClass)->retrieveById($value['account_id']) : null;
-                $credentials = app($this->shopifyCredentialsController)->getCredentialsByParams('merchant_id', $value['id']);
-                echo "\n\t[Billing Job] Credentials".print_r($credentials);
-                $results = app($this->billingController)->getByParams('merchant_id', $value);
-                // $results = app($this->shopifyController)->getAbandonedCheckouts($credentials, null); // should be replace by sms data where status is = 2
-                if(sizeof($account) > 0){
-                $this->manageResult($results, $value, $account[0], $credentials);
-                }else{
-                echo "\n\t\t[Billing Job] No accounts found... ";   
-                }
-            }
-        }else{
-            echo "\n\t[Billing Job] No merchants found... ";
-        }
-        echo "\n\t[Billing Job] finished ...";
-    }
-
-    public function manageResult($data, $merchant, $account, $credentials){
-        if(sizeof($data) > 0){
-          $i=0;
-          foreach ($data as $key) {
-            $data[$i]['details'] = 'sample';
-            $data[$i]['status'] = 1;
-            $data[$i]['amount'] = ((float)$data[$i]['total_price']) * 4.67;
-            BillingModel::create($data[$i]);
-            $abandonedCheckouts = app($this->shopifyController)->getAbandonedCheckouts($credentials, null);
-            if($abandonedCheckouts['data']){
-              if(sizeof($abandonedCheckouts['data']) > 0){
-                $j = 0;
-                foreach ($abandonedCheckouts['data'] as $key) {
-                  $params = array(
-                    'recurring_application_charge' => array(
-                      'name' => $abandonedCheckouts['data'][$j]['line_items'][0]['title'],
-                      'price' => $abandonedCheckouts['data'][$j]['line_items'][0]['price'],
-                      'return_url' => $abandonedCheckouts['data'][$j]['abandoned_checkout_url'],
-                      'capped_amount' =>  100,
-                      'terms' => "$1 for 1000 emails",
-                      'activated_on' => null,
-                      'billing_on' => null,
-                      'test' => true,
-                      "status" => "active",
-                    ),
-
-                  );
-                  
-                  $racResult = app($this->shopifyController)->createRecurringApplicationCharge($credentials, json_encode($params));
-                  // dd($racResult);
-                  if($racResult['error'] == null){
-                    echo 'recurring application charge is successfully created'."\n";
-                    // $updateParams = array(
-                    //   'recurring_application_charge' => array(
-                    //     'status' => 'accepted'
-                    //   )
-                    //   );
-                    // $updateCharge = app($this->shopifyController)->updateRecurringApplicationCharge($credentials, json_encode($updateParams), $racResult['data']['id']);
-                    $usageChargeParams = array(
-                      'usage_charge' => array(
-                        'description' => $abandonedCheckouts['data'][$j]['line_items'][0]['title'],
-                        'price' => (int)$abandonedCheckouts['data'][$j]['line_items'][0]['price']
-                      )
-                    );
-                    $usageCharge = app($this->shopifyController)->createUsageCharge($credentials, json_encode($usageChargeParams), $racResult['data']['id']);
-                    // print(json_encode($usageCharge['error']['recurring_application_charge'][0]));
-                    // dd();
-                    if($usageCharge['error'] == null){
-                      echo 'usage charge charge is successfully created';
-                    }else{
-                      echo 'error occured in creating usage charge: '.$usageCharge['error']['recurring_application_charge'][0]."\n\t";
-                    }
-                  }else{
-                    echo 'error occured in creating recurring application charge: '.$racResult['error']."\n\t";
-                  }
-                  $j++;
-                }
-              }
-            }
-            // $i++;
+      if(sizeof($merchants) > 0){
+        foreach ($merchants as $key => $merchant) {
+          // check if merchant recently billed and paid
+          echo "\n\t[Billing Job] Start billing of merchant => " .$merchant['name'];
+          // get recent billing
+          $recentBilling = app($this->billingController)->getRecentBilling('merchant_id', $merchant['id']);
+          $totalSpent = 0;
+          if($recentBilling){
+            // get the current spent of the merchant
+            echo "\n\t\t[Billing Job] Calculate new total for billing starting ".$recentBilling['end_date'];
+            $totalSpent = app($this->smsController)->getTotalSpentByStartDate($merchant['id'], $recentBilling['end_date']);
+          }else{
+            // get the new billing
+            // get the current spent of the merchant
+            echo "\n\t\t[Billing Job] Calculate new total for billing";
+            $totalSpent = app($this->smsController)->getTotalSpentWithoutDate($merchant['id']);
           }
-        }else{
-          echo "\n\t\t[Billing Job] No billing found... ";
+
+          // get the plan of the merchant
+          echo "\n\t\t[Billing Job] Retrieving currrent plan";
+          $currentPlan = app($this->planController)->getByParams('merchant_id', $merchant['id']);
+
+          echo "\n\t\t[Billing Job] Retrieving account details";
+          $account = $merchant ? app($this->accountClass)->retrieveById($merchant['account_id']) : null;
+          
+          echo "\n\t\t[Billing Job] Retrieving shopify credentials";
+          $credentials = app($this->shopifyCredentialsController)->getCredentialsByParams('merchant_id', $merchant['id']);
+
+
+          // check if recently not greater than 15 days from the previous end, ignore, otherwise billed customer
+          if(sizeof($account) > 0 && $currentPlan){
+            $this->manageResult($currentPlan, $merchant, $account[0], $credentials, $totalSpent, Carbon::now(), Carbon::now());
+          }else{
+            echo "\n\t\t[Billing Job] No accounts found... ";   
+          }
         }
+      }else{
+          echo "\n\t[Billing Job] No merchants found... ";
       }
+      echo "\n\t[Billing Job] finished ...";
+  }
+
+  public function manageResult($currentPlan, $merchant, $account, $credentials, $totalSpent, $endDate, $billingDate){
+    $title = 'PIVOTSMS '.$currentPlan['plan'].' Plan Subscription: '.$currentPlan['currency'].' '.$currentPlan['amount'].' plus addition charges per sms sent';
+    $total = doubleval($currentPlan['amount'] + $totalSpent);
+    echo "\n\t\t\t[Billing Job] Billing description: ".$title; 
+    echo "\n\t\t\t[Billing Job] Billing total: ".$total; 
+    $params = array(
+      'recurring_application_charge' => array(
+        'name' => $title,
+        'price' => $total,
+        'return_url' => 'https://'.$credentials['shop'],
+        'capped_amount' =>  8000,
+        'terms' => $title,
+        'activated_on' => $endDate,
+        'billing_on' => $billingDate,
+        'test' => true,
+        "status" => "active",
+      )
+    );
+    echo "\n\t\t\t[Billing Job] Requesting to shopify recurring billing... "; 
+    $racResult = app($this->shopifyController)->createRecurringApplicationCharge($credentials, json_encode($params));
+    // dd($racResult);
+    if($racResult['error'] == null){
+      echo "\n\t\t\t[Billing Job] Recurring application charge is successfully created";
+      $usageChargeParams = array(
+        'usage_charge' => array(
+          'description' => $title,
+          'price' => $total
+        )
+      );
+      echo "\n\t\t\t[Billing Job] Create usage charge on shopify";
+      $usageCharge = app($this->shopifyController)->createUsageCharge($credentials, json_encode($usageChargeParams), $racResult['data']['id']);
+      if($usageCharge['error'] == null){
+        echo "\n\t\t\t[Billing Job] Usage charge is successfully created";
+      }else{
+        echo "\n\t\t\t[Billing Job] Usage charge error: ".$usageCharge['error']['recurring_application_charge'][0];
+      }
+
+    }else{
+      echo "\n\t\t\t[Billing Job] Recurring application charge error: ".$racResult['error'];
+    }
+  }
 }

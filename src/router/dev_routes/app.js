@@ -3,7 +3,7 @@ export default{
   routes: [{
     path: '/signup',
     name: 'signup',
-    component: resolve => require(['components/increment/basic/Signup.vue'], resolve),
+    component: resolve => require(['modules/account/register.vue'], resolve),
     meta: {
       tokenRequired: false
     }
@@ -38,7 +38,7 @@ export default{
   }, {
     path: '/login',
     name: 'loginAccount',
-    component: resolve => require(['components/increment/basic/LoginWithoutRegister.vue'], resolve),
+    component: resolve => require(['modules/account/login.vue'], resolve),
     meta: {
       tokenRequired: false
     }
