@@ -7,7 +7,7 @@
             <p style="color:#01009A">With Automated Social Media<br>Posting.</p>
             </h1>
         </div>
-        <div class="row" style="margin-top:2%"> 
+        <div class="row d-md-flex flex-column " style="margin-top:2%"> 
           <div class="col">
               <DialogueButton :icon="'fas fa-sign-in-alt'" :text="'Login'" :styles="'background: #01004E;'"></DialogueButton>
               <DialogueButton :icon="'fas fa-sign-in-alt'" :text="'Register'" :styles="'background: #F1B814;'" style="margin-left:20px"></DialogueButton>
