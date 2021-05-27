@@ -55,7 +55,7 @@
       <div class="col-md-4 mx-auto ">
 
         <!-- Links -->
-        <h5 class="font-weight-bold mt-3 mb-4 ft-title" style="margin-bottom:0px;padding-top:0px">We Accept All Major Credit Cards For Fast and Easy Payment</h5>
+        <h5 class="font-weight-bold mt-3 mb-4 ft-title" style="margin-bottom:0px;padding-top:6%">We Accept All Major Credit Cards<br> For Fast and Easy Payment</h5>
         <ul class="list-unstyled">
             <li>
               <img src="../../assets/img/pay_methods.jpg" alt="Payment Methods">
@@ -100,7 +100,7 @@
   /* font-family:Roboto; */
   font-size:18px;
   font-weight:700;
-  padding-top:5%;
+  padding-top:10%;
   padding-bottom:5%;
 }
 .ft-col-left {
