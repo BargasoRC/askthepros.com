@@ -7,11 +7,10 @@
             <p style="color:#01009A">With Automated Social Media<br>Posting.</p>
             </h1>
         </div>
-        <div class="row" style="padding-left:3%;margin-top:2%"> 
+        <div class="row" style="margin-top:2%"> 
           <div class="col">
-              <!-- Insert Custom button here -->
-            <a href="#" class="btn" style="width:20%;margin-right:3%;color:white;background: #01004E;border-radius: 22.5px 22.5px 0px 22.5px;font-family:Nunito" role="button">Login<i class="fas fa-sign-in-alt" style="padding-left:40px"></i></a>
-            <a href="#" class="btn" style="width:20%;color:white;background:#F1B814;border-radius: 22.5px 22.5px 0px 22.5px;font-family:Nunito" role="button">Register Now<i class="fas fa-sign-in-alt" style="padding-left:40px"></i></a>
+              <DialogueButton :icon="'fas fa-sign-in-alt'" :text="'Login'" :styles="'background: #01004E;'"></DialogueButton>
+              <DialogueButton :icon="'fas fa-sign-in-alt'" :text="'Register'" :styles="'background: #F1B814;'" style="margin-left:20px"></DialogueButton>
           </div>
         </div>
       </div>
@@ -35,8 +34,10 @@
 </style>
 
 <script>
+import DialogueButton from 'src/modules/generic/dialogueBtn.vue'
 export default {
   components: {
+    DialogueButton
   },
   data() {
     return {}

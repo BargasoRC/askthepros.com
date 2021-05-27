@@ -29,5 +29,6 @@ export default {
   padding-left: 20px;
   padding-right: 20px;
   min-width: 150px;
+  color: #FFFF;
 }
 </style>
