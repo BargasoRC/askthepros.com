@@ -7,10 +7,12 @@
             <p style="color:#01009A">With Automated Social Media<br>Posting.</p>
             </h1>
         </div>
-        <div class="row d-md-flex flex-column " style="margin-top:2%"> 
-          <div class="col">
-              <DialogueButton :icon="'fas fa-sign-in-alt'" :text="'Login'" :styles="'background: #01004E;'"></DialogueButton>
-              <DialogueButton :icon="'fas fa-sign-in-alt'" :text="'Register'" :styles="'background: #F1B814;'" style="margin-left:20px"></DialogueButton>
+        <div class="row d-flex-md-column justify-content-md-start " style="margin-top:2%;"> 
+          <div class="col-md-3 " >
+              <dialogueBtn :onClick="login" :icon="'fas fa-sign-in-alt'" :text="'Login'" :styles="{backgroundColor: '#01004E',color: 'white', marginTop: '20px'}"/> 
+          </div>
+          <div class="col-md-3 " >
+            <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register'" :styles="{backgroundColor: '#F1B814',color: 'white', marginTop: '20px'}"/> 
           </div>
         </div>
       </div>
@@ -34,10 +36,10 @@
 </style>
 
 <script>
-import DialogueButton from 'src/modules/generic/dialogueBtn.vue'
+import dialogueBtn from 'src/modules/generic/dialogueBtn.vue'
 export default {
   components: {
-    DialogueButton
+    dialogueBtn
   },
   data() {
     return {}
