@@ -1,7 +1,7 @@
 <template>
   <div class="LoginContainer col-sm-12">
     <div class="row RowContainer">
-      <div class="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xs-7 QouteCardContainer">
+      <div class="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xs-7 QouteCardContainer mb-5">
         <div class="QouteCard">
           <div class="SubQoute">
             <h1 class="QouteText" style="color: #01004E">Become A Local Expert</h1>
@@ -11,7 +11,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xs-5 d-flex justify-content-center LoginCardContainer">
+      <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xs-5 d-flex justify-content-center LoginCardContainer mb-5">
         <div class="card RegisterCard">
           <div class="card-body RegisterCardBody">
             <div class="d-flex justify-content-center pt-5 pb-5 mb-3">
@@ -22,22 +22,37 @@
                 :type="'text'"
                 :styles="{}"
                 :placeholder="'Username'"
-                :class="'registrationField'"
+                :classes="'registrationField'"
                 v-model="username"
               />
               <roundedInput 
                 :type="'text'"
                 :styles="{}"
                 :placeholder="'Password'"
-                :class="'registrationField'"
+                :classes="'registrationField'"
                 v-model="password"
               />
               <roundedInput 
                 :type="'text'"
                 :styles="{}"
                 :placeholder="'Confirm Password'"
-                :class="'registrationField'"
+                :classes="'registrationField'"
                 v-model="cpassword"
+              />
+              <roundedSelectBtn 
+                :placeholder="'Select Industry'"
+                :items="[
+                  'BPO',
+                  'COMMUNICATION INDUSTRY'
+                ]"
+                class="registrationField"
+                :styles="{
+                  background: 'none',
+                  color: '#84868B !important',
+                  width: '100% !important',
+                  minWidth: '100% !important'
+                }"
+                @onSelect="onSelect"
               />
             </div>
             <div class="d-flex justify-content-between">
@@ -46,7 +61,7 @@
                 :text="'Forgot your password?'"
                 :styles="{
                   background: 'none',
-                  color: '272727'
+                  color: '#272727'
                 }"
               />
               <dialogueBtn 
@@ -64,14 +79,14 @@
             </div>
             <div class="col-sm-12">
               <div class="row">
-                <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="col-sm-4 col-md-4 col-lg-4 mt-1 mb-1">
                   <roundedBtn
                     :onClick="gmailLogin"
                     :icon="'fab fa-google'"
                     :text="'Sign In'"
                     :styles="{
                       background: 'none',
-                      color: '272727',
+                      color: '#272727',
                       width: '100% !important',
                       minWidth: '100% !important',
                       border: '1px solid #84868B'
@@ -79,14 +94,14 @@
                     :icon_position="'left'"
                   />
                 </div>
-                <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="col-sm-4 col-md-4 col-lg-4 mt-1 mb-1">
                   <roundedBtn
                     :onClick="fbLogin"
                     :icon="'fab fa-facebook-f'"
                     :text="'Sign In'"
                     :styles="{
                       background: 'none',
-                      color: '272727',
+                      color: '#272727',
                       width: '100% !important',
                       minWidth: '100% !important',
                       border: '1px solid #84868B'
@@ -94,14 +109,14 @@
                     :icon_position="'left'"
                   />
                 </div>
-                <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="col-sm-4 col-md-4 col-lg-4 mt-1 mb-1">
                   <roundedBtn
                     :onClick="linkedInLogin"
                     :icon="'fab fa-linkedin-in'"
                     :text="'Sign In'"
                     :styles="{
                       background: 'none',
-                      color: '272727',
+                      color: '#272727',
                       width: '100% !important',
                       minWidth: '100% !important',
                       border: '1px solid #84868B'
@@ -136,6 +151,7 @@
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import roundedInput from 'src/modules/generic/roundedInput'
 import roundedBtn from 'src/modules/generic/roundedBtn'
+import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
 export default {
   data() {
     return {
@@ -147,7 +163,8 @@ export default {
   components: {
     dialogueBtn,
     roundedInput,
-    roundedBtn
+    roundedBtn,
+    roundedSelectBtn
   },
   methods: {
     login(event) {
@@ -167,6 +184,9 @@ export default {
     },
     linkedInLogin(event) {
       console.log('linkedin login:::')
+    },
+    onSelect(data) {
+      console.log('On Select:::')
     }
   }
 }
@@ -204,18 +224,19 @@ export default {
 .RegisterCardBody {}
 .LoginContainer {
   min-height: 85vh;
+  background-color: transparent !important;
 }
 .RowContainer {
-  background: none;
+  background-color: transparent !important;
 }
 .QouteCardContainer {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  background: none;
+  background-color: transparent !important;
 }
 .LoginCardContainer {
-  background: none;
+  background-color: transparent !important;
 }
 
 @media (max-width: 500px) {

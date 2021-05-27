@@ -70,14 +70,21 @@ export default {
   z-index: 100;
 }
 .navbar {
-  background: linear-gradient(180deg, #FFFFFF 6.77%, rgba(255, 255, 255, 0.782123) 19.79%,
-    rgba(255, 255, 255, 0.326451) 63.54%, rgba(255, 255, 255, 0.535072) 76.04%, rgba(255, 255, 255, 0.184593) 86.46%, rgba(255, 255, 255, 0) 100%), 
-    url("../../assets/img/banner.jpg");
-    background-attachment: fixed;
-    background-position: auto,center top;
-    background-repeat: no-repeat;
-    background-size: cover;
-    position: relative;
+  // background: linear-gradient(180deg, #FFFFFF 6.77%, rgba(255, 255, 255, 0.782123) 19.79%,
+  //   rgba(255, 255, 255, 0.326451) 63.54%, rgba(255, 255, 255, 0.535072) 76.04%, rgba(255, 255, 255, 0.184593) 86.46%, rgba(255, 255, 255, 0) 100%), 
+  //   url("../../assets/img/banner.jpg");
+    // background-attachment: fixed;
+    // background-position: auto,center top;
+    // background-repeat: no-repeat;
+    // background-size: cover;
+    // position: relative;
+  background: none !important;
+}
+.navbar-header {
+  background: none !important;
+}
+#navbarSupportedContent {
+  background: none !important;
 }
 .navbar-brand .logo-brand {
   // width: 100px;
@@ -173,6 +180,8 @@ export default {
       width: 10%;
     }
     .logo-brand{
+      width: 80px !important;
+      height: 50px !important;
       margin-left:-1% !important;
     }
   }

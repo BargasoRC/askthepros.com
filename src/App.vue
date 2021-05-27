@@ -13,9 +13,9 @@
         <lazy-loading></lazy-loading>
       </div>
       <div v-else-if="tokenData.token === null &&  parseInt(user.userID) <= 0 && tokenData.loading === false">
-        <login-header></login-header>
+        <!-- <login-header></login-header> -->
         <system-content></system-content>
-        <landing-footer></landing-footer>
+        <!-- <landing-footer></landing-footer> -->
       </div>
     </div>
     <!-- <system-footer></system-footer> -->
@@ -210,13 +210,13 @@ export default {
     }
   },
   components: {
-    'login-header': () => import('modules/frame/Header2.vue'),
+    // 'login-header': () => import('modules/frame/Header2.vue'),
     'system-header': () => import('modules/frame/Header.vue'),
     'system-sidebar': () => import('modules/frame/Sidebar.vue'),
     'system-content': () => import('modules/frame/Content.vue'),
     'system-footer': () => import('components/increment/generic/frame/Footer.vue'),
     'system-loading': () => import('components/loader/Loading.vue'),
-    'landing-footer': () => import('modules/frame/Footer.vue'),
+    // 'landing-footer': () => import('modules/frame/Footer.vue'),
     // 'guide': () => import('modules/guide/Guide.vue'),
     // 'privacy-policy': () => import('modules/docs/PrivacyPolicy.vue'),
     // 'terms-and-conditions': () => import('modules/docs/TermsAndConditions.vue'),
