@@ -78,8 +78,18 @@ class CartRecovery implements ShouldQueue
           $cartProducts .= ($i > 0 ? ',' : '').$lValue['title'];
           $i++;
         }
+
         echo "\n\t\t[CartRecovery Job] Sending sms to ".$value['customer']['phone'];
-        
+        $customerData = array(
+          "default_address"  => isset($value['customer']['default_address']) ? $value['customer']['default_address'] : $value['shipping_address'],
+          "cart"      => array(
+            "presentment_currency"  => $value["presentment_currency"],
+            "total_price" => $value["total_price"],
+            "order_id" => $value['id']
+          ),
+          "products" => $cartProducts,
+          "merchant"=> $merchant['name']
+        );
         $array = array(
           'merchant_id' => $merchant['id'],
           'payload'   => 'cart_recoveries',
@@ -87,11 +97,13 @@ class CartRecovery implements ShouldQueue
           'full_name'  => $value['customer']['first_name'].' '.$value['customer']['last_name'],
           'receiver'  => $value['customer']['phone'],
           'status'    => 'on going',
+          'customer_data' => json_encode($customerData),
           'created_at'  => Carbon::now()
         );
         $smsGroup = app($this->smsGroupController)->createByParams($array);
         if($smsGroup){
           $message = app($this->smsController)->timeSender($value, $merchant, $account, $cartProducts, 'cart_recoveries');
+          unset($array['customer_data']);
           $array['sms_group_id'] = $smsGroup['id'];
           $array['sender'] = env("TWILIO_NUMBER");
           $array['messages'] = $message;
