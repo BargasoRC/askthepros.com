@@ -114,6 +114,12 @@ p {
     width: 90%;
     margin: 5%;
   }
+  h1 {
+  font-size: 30px;
+  }
+  #topheader {
+  font-size: 20px;
+  }
 }
 
 #company {
