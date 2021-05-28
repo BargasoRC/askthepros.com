@@ -26,7 +26,7 @@
                 v-model="username"
               />
               <roundedInput 
-                :type="'text'"
+                :type="'password'"
                 :styles="{}"
                 :placeholder="'Password'"
                 :class="'LoginField'"
@@ -129,6 +129,7 @@
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import roundedInput from 'src/modules/generic/roundedInput'
 import roundedBtn from 'src/modules/generic/roundedBtn'
+import AUTH from 'src/services/auth'
 export default {
   data() {
     return {
@@ -144,6 +145,18 @@ export default {
   methods: {
     login(event) {
       console.log('login:::')
+      AUTH.authenticate(this.username, this.password, (response) => {
+        this.$router.push('dashboard')
+      }, (response, status) => {
+        $('#loading').css({'display': 'none'})
+        if(status === 401){
+          this.errorMessage = 'Username and Password did not match.'
+        }else if(status === 402){
+          this.errorMessage = response.error
+        }else{
+          this.errorMessage = 'Cannot log in? Contact us through email: ' + this.common.APP_EMAIL
+        }
+      })
     },
     register(event) {
       console.log('register:::')
