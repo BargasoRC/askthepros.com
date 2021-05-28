@@ -5,20 +5,29 @@
         <span class="col-md-7">
           <h1>We offer affordable prices per industry</h1>
           <p>Select the industry you belong to know pricing.</p>
-          <select v-model="selected">
+          <div class="selectBtn">
+            <dialogueSelectBtn 
+            :items="returnIndustry"
+            :placeholder="'Industry'"
+            :styles="{}"
+            :dropdownItemStyles="{}"
+            @onSelect="onIndustrySelect"
+          />
+          </div>
+          <!-- <select v-model="selected">
             <option disabled value="">Industry</option>
             <option v-for="(item, index) in industry" :key="index">{{item.category}}</option>
-          </select>
+          </select> -->
           <img :src="require('assets/img/section3-img.png')"/>
         </span>
         <span class="col-md-5" style="text-align: center;">
           <div class="pricing">
             <div class="layer1">
-              <h6>Finance</h6>
-              <p>199USD / Month</p>
+              <h6>{{industry[selected].category}}</h6>
+              <p>{{industry[selected].price}}USD / Month</p>
             </div>
             <div class="layer2">
-              <span v-for="(item, index) in benefit" :key="index">
+              <span v-for="(item, index) in industry[selected].benefit" :key="index">
                 <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;{{item}}</p>
                 <hr/>
               </span>
@@ -32,73 +41,39 @@
 </template>
 
 <script>
-import ROUTER from 'src/router'
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
+import dialogueSelectBtn from 'src/modules/generic/dialogueSelectBtn'
+import global from 'src/helpers/global'
 export default {
   components: {
-    dialogueBtn
+    dialogueBtn,
+    dialogueSelectBtn
   },
   data(){
     return{
-      selected: '',
-      benefit: ['Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin'],
-      industry: [
-        {
-          category: 'Manufacturing',
-          price: 190,
-          benefit: ['Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin']
-        },
-        {
-          category: 'Construction',
-          price: 290,
-          benefit: ['Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin']
-        },
-        {
-          category: 'Finance',
-          price: 199,
-          benefit: ['Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin']
-        },
-        {
-          category: 'Transport',
-          price: 192,
-          benefit: ['Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin']
-        },
-        {
-          category: 'Agriculture',
-          price: 100,
-          benefit: ['Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin']
-        },
-        {
-          category: 'Retail',
-          price: 190,
-          benefit: ['Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin']
-        },
-        {
-          category: 'Technology',
-          price: 195,
-          benefit: ['Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin']
-        },
-        {
-          category: 'Education',
-          price: 142,
-          benefit: ['Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin']
-        },
-        {
-          category: 'Publishing',
-          price: 132,
-          benefit: ['Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin']
-        },
-        {
-          category: 'Medicine',
-          price: 122,
-          benefit: ['Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin']
-        }
-      ]
+      selected: 2,
+      industry: global.industry
+    }
+  },
+  computed: {
+    returnIndustry() {
+      return this.industry.map(el => {
+        return el.category
+      })
     }
   },
   methods: {
+    onIndustrySelect(data) {
+      console.log('SELECTED INDUSTRY: ', data)
+      this.selected = data.index
+      this.global.selectedIndustryIndex = data.index
+    },
+    register() {
+      this.redirect('signup')
+      window.scrollTo(0, 0)
+    },
     redirect(parameter) {
-      ROUTER.push(parameter)
+      this.$router.push(parameter)
     }
   }
 }
@@ -138,10 +113,10 @@ img {
   text-align: center;
   min-height: 60vh;
   border: 0.5px solid $text;
-  margin-left: 50px;
+  margin-left: 20%;
   border-top-left-radius: 22.5px;
   border-top-right-radius: 22.5px;
-  max-width: 350px;
+  width: 80%;
   padding-bottom: 30px;
 }
 
@@ -185,6 +160,30 @@ img {
 
 hr {
   background-color: $text;
+}
+
+@media (max-width: 700px) {
+  .col-md-7 h1{
+    font-size: 30px;
+  }
+  .col-md-5 p{
+    font-size: 20px;
+  }
+  .col-md-7, .col-md-5 {
+    width: 100%;
+    text-align: center;
+  }
+  .pricing {
+    margin-top: 20% !important;
+    margin: 5%;
+    width: 90%;
+  }
+  .selectBtn {
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    display: flex;
+    justify-content: center;
+  }
 }
 </style>
 

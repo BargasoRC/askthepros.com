@@ -6,7 +6,7 @@
           <iframe src="https://www.youtube.com/embed/DkRIdQa9otU"></iframe>
         </span>
         <span class="col-md-6">   
-            <h1>Connect your Social Media<br>and Automate.</h1>
+            <h1>Connect your Social Media and Automate.</h1>
             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the. </p>
             <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register Now'" :styles="{backgroundColor: '#F1B814',color: 'white', marginTop: '20px'}"/>
         </span>
@@ -16,15 +16,18 @@
 </template>
 
 <script>
-import ROUTER from 'src/router'
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
 export default {
   components: {
     dialogueBtn
   },
   methods: {
+    register() {
+      this.redirect('signup')
+      window.scrollTo(0, 0)
+    },
     redirect(parameter) {
-      ROUTER.push(parameter)
+      this.$router.push(parameter)
     }
   }
 }
@@ -61,6 +64,23 @@ iframe{
   min-height: 30vh;
   border-radius: 22.5px;
   background-color: $white;
+}
+
+@media screen and (max-width: 700px) {
+  .col-md-6 {
+    text-align: center;
+  }
+  .col-md-6 h1 {
+    margin-top: 10vh;
+    font-size: 30px;
+  }
+  .col-md-6 p {
+    font-size: 20px;
+  }
+
+  .col-md-6 iframe {
+    width: 100%;
+  }
 }
 </style>
 
