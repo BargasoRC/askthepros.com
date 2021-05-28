@@ -28,12 +28,19 @@
               <roundedInput 
                 :type="'text'"
                 :styles="{}"
+                :placeholder="'Email Address'"
+                :classes="'registrationField'"
+                v-model="email"
+              />
+              <roundedInput 
+                :type="'password'"
+                :styles="{}"
                 :placeholder="'Password'"
                 :classes="'registrationField'"
                 v-model="password"
               />
               <roundedInput 
-                :type="'text'"
+                :type="'password'"
                 :styles="{}"
                 :placeholder="'Confirm Password'"
                 :classes="'registrationField'"
@@ -152,12 +159,19 @@ import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import roundedInput from 'src/modules/generic/roundedInput'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
+import AUTH from 'src/services/auth'
+import CONFIG from 'src/config'
+import COMMON from 'src/common'
 export default {
   data() {
     return {
       username: '',
       password: '',
-      cpassword: ''
+      cpassword: '',
+      email: '',
+      config: CONFIG,
+      common: COMMON,
+      type: 'USER'
     }
   },
   components: {
@@ -168,10 +182,38 @@ export default {
   },
   methods: {
     login(event) {
-      console.log('login:::')
+      // console.log('login:::')
+      this.$router.push('/login')
     },
     register(event) {
       console.log('register:::')
+      let parameter = {
+        username: this.username,
+        email: this.email,
+        password: this.password,
+        config: CONFIG,
+        account_type: this.type,
+        referral_code: null,
+        status: 'ADMIN'
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('accounts/create', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.error !== null){
+          if(response.error.status === 100){
+            let message = response.error.message
+            if(typeof message.username !== undefined && typeof message.username !== 'undefined'){
+              this.errorMessage = message.username[0]
+            }else if(typeof message.email !== undefined && typeof message.email !== 'undefined'){
+              this.errorMessage = message.email[0]
+            }
+          }else if(response.data !== null){
+            if(response.data > 0){
+              this.login()
+            }
+          }
+        }
+      })
     },
     forgotPassword(event) {
       console.log('forgot password:::')
