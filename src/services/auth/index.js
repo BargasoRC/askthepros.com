@@ -4,7 +4,6 @@ import ROUTER from 'src/router'
 import {Howl} from 'howler'
 import Vue from 'vue'
 import Echo from 'laravel-echo'
-import COMMON from 'src/common.js'
 import Pusher from 'pusher-js'
 import Config from 'src/config.js'
 export default {
@@ -26,13 +25,15 @@ export default {
     notifSetting: null,
     messages: {
       data: null,
-      totalUnreadMessages: 0
+      totalUnreadMessages: 0,
+      messages: [],
+      merchant: null,
+      payload: null
     },
     ledger: {
       amount: 0,
       currency: 'PHP'
-    },
-    storeId: null
+    }
   },
   messenger: {
     messages: [],
@@ -66,21 +67,7 @@ export default {
   echo: null,
   currentPath: false,
   attachmentValue: null,
-  notification: {
-    type: '',
-    order: [],
-    crockery: []
-  },
-  setNotificationType(type) {
-    this.notification.type = type
-  },
-  setNotificationOrders(payload) {
-    this.notification.order.push(payload)
-  },
-  setNotificationCrockery(payload) {
-    this.notification.crockery.push(payload)
-  },
-  setUser(userID, username, email, type, status, profile, notifSetting, subAccount, code, storeId){
+  setUser(userID, username, email, type, status, profile, notifSetting, subAccount, code){
     if(userID === null){
       username = null
       email = null
@@ -100,9 +87,7 @@ export default {
     this.user.notifSetting = notifSetting
     this.user.subAccount = subAccount
     this.user.code = code
-    this.user.storeId = storeId
     localStorage.setItem('account_id', this.user.userID)
-    localStorage.setItem('store_id', this.user.storeId)
     setTimeout(() => {
       this.tokenData.loading = false
     }, 1000)
@@ -123,92 +108,46 @@ export default {
   },
   authenticate(username, password, callback, errorCallback){
     let vue = new Vue()
-    // let credentials = {
-    //   username: username,
-    //   password: password,
-    //   status: 'VERIFIED'
-    // }
-    let parameter = 'storefront_login' + `?Email=${username}&Password=${password}`
-    vue.APIGetRequest(parameter, (response) => {
-      this.tokenData.loading = false
-      this.tokenData.verifyingToken = false
-      if(typeof response !== 'string'){
-        let token = response.authorization.access_token
-        this.tokenData.token = token
-        localStorage.setItem('usertoken', token)
-        localStorage.setItem('email', username)
-        localStorage.setItem('password', password)
-        this.retrieveStoreId(response.customer.id)
-        .then(res => {
-          if(res.customers.length > 0){
-            this.setUser(response.customer.id, null, response.customer.email, null, null, null, null, null, null, res.customers[0].registered_in_store_id)
-            ROUTER.push('/orders')
-            COMMON.setFag('/orders')
+    let credentials = {
+      username: username,
+      password: password,
+      status: 'VERIFIED'
+    }
+    vue.APIRequest('authenticate', credentials, (response) => {
+      this.tokenData.token = response.token
+      vue.APIRequest('authenticate/user', {}, (userInfo) => {
+        let parameter = {
+          'condition': [{
+            'value': userInfo.id,
+            'clause': '=',
+            'column': 'id'
+          }]
+        }
+        // if(userInfo.account_type === 'ADMIN'){
+        vue.APIRequest('accounts/retrieve', parameter).then(response => {
+          if(response.data.length > 0){
+            console.log('ACCOUNTS RESPONSE: ', response)
+            // this.otpDataHolder.userInfo = userInfo
+            // this.otpDataHolder.data = response.data
+            // this.checkOtp(response.data[0].notification_settings)
+            // userID, username, email, type, status, profile, notifSetting, subAccount, code
+            // this.setUser(response.customer.id,  response.customer.username, response.customer.email, null, null, null, null, null, null)
           }
         })
-        .catch(error => {
-          error
-          console.log('Retrieving customer information error')
-        })
-        $('#loading').css({'display': 'none'})
-      }else{
-        $('#loading').css({'display': 'none'})
-        this.tokenData.loading = false
-        this.tokenData.verifyingToken = false
-        this.removeAuthentication()
-        ROUTER.push('/login')
-      }
-      if(callback){
-        callback(response)
-      }
-    },
-    (response, status) => {
+        // this.retrieveNotifications(userInfo.id)
+        // this.retrieveMessages(userInfo.id, userInfo.account_type)
+        if(callback){
+          callback(userInfo)
+        }
+        // }else{
+        //   this.deaunthenticate()
+        // }
+      })
+    }, (response, status) => {
       if(errorCallback){
         errorCallback(response, status)
-        this.tokenData.loading = false
-        this.tokenData.verifyingToken = false
       }
-    }
-    )
-  },
-  customCheckAuthentication(callback, flag = false){
-    this.tokenData.verifyingToken = true
-    let token = localStorage.getItem('usertoken')
-    if(token){
-      if(flag === false){
-        this.tokenData.loading = true
-      }
-      this.setToken(token)
-      let vue = new Vue()
-      let username = localStorage.getItem('email')
-      let password = localStorage.getItem('password')
-      let storeId = localStorage.getItem('store_id')
-
-      let parameter = 'storefront_login' + `?Email=${username}&Password=${password}`
-      vue.APIGetRequest(parameter, response => {
-        this.setUser(response.customer.id, null, response.customer.email, null, null, null, null, null, null, storeId)
-        this.tokenData.verifyingToken = false
-        this.tokenData.loading = false
-        let location = window.location.href
-        if(this.currentPath){
-          // ROUTER.push(this.currentPath)
-        }else{
-          window.location.href = location
-        }
-      })
-      return true
-    }else{
-      this.tokenData.verifyingToken = false
-      this.setUser(null)
-      return false
-    }
-  },
-  removeAuthentication(){
-    localStorage.clear()
-    this.tokenData.token = null
-    this.setUser(null)
-    $('#loading').css({'display': 'none'})
-    ROUTER.push('/')
+    })
   },
   checkAuthentication(callback, flag = false){
     this.tokenData.verifyingToken = true
@@ -242,8 +181,8 @@ export default {
             window.location.href = location
           }
         })
-        this.retrieveNotifications(userInfo.id)
-        this.retrieveMessages(userInfo.id, userInfo.account_type)
+        // this.retrieveNotifications(userInfo.id)
+        // this.retrieveMessages(userInfo.id, userInfo.account_type)
         this.getGoogleCode()
       }, (response) => {
         this.setToken(null)
@@ -261,7 +200,7 @@ export default {
 
   },
   deaunthenticate(){
-    this.tokenData.loading = false
+    this.tokenData.loading = true
     localStorage.removeItem('usertoken')
     localStorage.removeItem('account_id')
     localStorage.removeItem('google_code')
@@ -271,7 +210,10 @@ export default {
     let vue = new Vue()
     vue.APIRequest('authenticate/invalidate')
     this.clearNotifTimer()
-    this.tokenData.token = null
+    setTimeout(() => {
+      this.tokenData.token = null
+      this.tokenData.loading = false
+    }, 100)
     ROUTER.go('/')
   },
   retrieveNotifications(accountId){
@@ -330,7 +272,7 @@ export default {
     if(this.notifTimer.timer === null){
       this.notifTimer.timer = window.setInterval(() => {
         if(accountId !== null){
-          this.retrieveNotifications(accountId)
+          // this.retrieveNotifications(accountId)
         }
       }, this.notifTimer.speed)
     }
@@ -373,20 +315,7 @@ export default {
     }
   },
   checkOtp(setting){
-    if(setting !== null){
-      if(parseInt(setting.email_otp) === 1 || parseInt(setting.sms_otp) === 1){
-        // ask otp code here
-        $('#authenticateOTP').modal({
-          backdrop: 'static',
-          keyboard: true,
-          show: true
-        })
-      }else{
-        this.proceedToLogin()
-      }
-    }else{
-      this.proceedToLogin()
-    }
+    this.proceedToLogin()
   },
   proceedToLogin(){
     this.setToken(this.tokenData.token)
@@ -396,7 +325,7 @@ export default {
     let notifSetting = data[0].notification_settings
     let subAccount = data[0].sub_account
     this.setUser(userInfo.id, userInfo.username, userInfo.email, userInfo.account_type, userInfo.status, profile, notifSetting, subAccount)
-    ROUTER.push('/requests')
+    ROUTER.push('/dashboard')
   },
   setGoogleCode(code, scope){
     localStorage.setItem('google_code', code)
@@ -433,15 +362,5 @@ export default {
       case 101: return 'Lending'
       case 102: return 'Installment'
     }
-  },
-  retrieveStoreId(userID) {
-    return new Promise((resolve, reject) => {
-      let vue = new Vue()
-      vue.APIGetRequest(`customers/${userID}`, response => {
-        resolve(response)
-      }, error => {
-        reject(error)
-      })
-    })
   }
 }
