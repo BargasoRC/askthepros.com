@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100% position: relative">
+  <div>
     <button
       class="btn dialogueBTN select-btn"
       type="button"
@@ -27,7 +27,7 @@
           borderTopRightRadius: '0px !important',
           borderBottomLeftRadius: '0px !important',
           overflow: 'hidden',
-          width: 'calc(100% - 35px)'
+          minWidth: '200px'
         },
         dropdownItemStyles
       }"
@@ -44,9 +44,9 @@
               dropdownItemStyles.color ?
                 dropdownItemStyles.color
               :
-                '#272727'
+                '#01009A'
             :
-              '#272727'
+              '#01009A'
           )
         }"
       >
@@ -86,8 +86,9 @@ export default {
   padding-right: 1.6em;
   display: flex;
   justify-content: space-between;
-  background: $white !important;
+  background: $primary !important;
   outline: none;
+  color: $white;
 }
 
 .select-btn::after {
@@ -115,10 +116,15 @@ export default {
   border-bottom-right-radius: 0px;
   padding-left: 20px;
   padding-right: 20px;
-  min-width: 150px;
+  min-width: 200px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border: 1px solid $gray !important;
+}
+
+b:hover {
+  background-color: #01009A;
+  color: $white !important;
 }
 </style>
