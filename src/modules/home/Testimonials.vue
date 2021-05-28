@@ -5,21 +5,20 @@
         <p id="topheader">TESTIMONIALS</p>
         <h1>What our clients says about us.</h1>
       </center>
-      <div class="row no-gutters holder">
-        <span class="column single-card" v-for="(item, index) in testimonials" :key="index">
+      <div class="row holder">
+        <div class="column single-card" v-for="(item, index) in testimonials" :key="index">
           <div class="card-image"><img id="company" :src="item.company"></div>
           <p><i class="fas fa-quote-left"></i></p>
           <h6>{{item.comment}}</h6>
           <hr/>
           <div class="row">
-          <div class="col-md-3">
-            <img id="photo" :src="item.photo">
+            <div class="column" style="width:30%"><img id="photo" :src="item.photo"></div>
+            <div class="column" style="width:70%">
+              <p id="name">{{item.name}}</p>
+              <p id="job">{{item.job}}</p>
+            </div>
           </div>
-          <div class="col-md-9">
-            <p id="name">{{item.name}}</p>
-            <p id="job">{{item.job}}</p>
-          </div></div>
-        </span>
+        </div>
       </div>
     </div>
   </div>
@@ -76,6 +75,10 @@ center {
   padding-top: 20vh;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 .holder {
   padding-top: 5vh;
   padding-bottom: 20vh;
@@ -98,11 +101,19 @@ p {
 
 .single-card {
   background-color: $white;
-  width: 32%;
   padding: 30px;
-  margin: 5px;
-  height: 500px;
+  margin: 0.5%;
+  min-height: 500px;
   border-radius: 5px;
+  float: left;
+  width: 32%;
+}
+
+@media screen and (max-width: 600px) {
+  .single-card {
+    width: 90%;
+    margin: 5%;
+  }
 }
 
 #company {
