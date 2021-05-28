@@ -16,19 +16,20 @@
         <img 
           :src="require('../../assets/img/asktheprooslogo-clear.png')" 
           class="logo-brand"
+          @click="navigate('')"
         />
       </a>
     </div>
     <div class="collapse navbar-collapse text-center" id="navbarSupportedContent">
       <ul class="nav navbar-nav navbar-right ml-auto">
         <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal">Learn How</b>
+          <b class="font-weight-normal" @click="headerScrollTo('#learn-how')">Learn How</b>
         </li>
         <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal">Pricing</b>
+          <b class="font-weight-normal" @click="headerScrollTo('#pricing')">Pricing</b>
         </li>
         <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal">Contact Us</b>
+          <b class="font-weight-normal" @click="headerScrollTo()">Contact Us</b>
         </li>
         <li class="pl-5 pr-5 nav_item" @click="navigate('login')">
           <b class="font-weight-normal"  :style="'color: ' + ($route.name == 'loginAccount' ? '#007bff' : 'black')">Login</b>
@@ -42,6 +43,7 @@
 </template>
 
 <script>
+import Jquery from 'jquery'
 export default {
   created() {
   },
@@ -53,6 +55,15 @@ export default {
   methods: {
     navigate(route) {
       this.$router.push(`/${route}`)
+    },
+    headerScrollTo(id) {
+      let height = Jquery(window).height()
+      Jquery('html, body').animate(
+        {
+          scrollTop: Jquery(id).offset().top - parseInt(height * 0.0)
+        },
+        500
+      )
     }
   }
 }
@@ -70,15 +81,15 @@ export default {
   z-index: 100;
 }
 .navbar {
-  // background: linear-gradient(180deg, #FFFFFF 6.77%, rgba(255, 255, 255, 0.782123) 19.79%,
-  //   rgba(255, 255, 255, 0.326451) 63.54%, rgba(255, 255, 255, 0.535072) 76.04%, rgba(255, 255, 255, 0.184593) 86.46%, rgba(255, 255, 255, 0) 100%), 
-  //   url("../../assets/img/banner.jpg");
+    // background: linear-gradient(180deg, #FFFFFF 6.77%, rgba(255, 255, 255, 0.782123) 19.79%,
+    // rgba(255, 255, 255, 0.326451) 63.54%, rgba(255, 255, 255, 0.535072) 76.04%, rgba(255, 255, 255, 0.184593) 86.46%, rgba(255, 255, 255, 0) 100%), 
+    // url("../../assets/img/banner.jpg");
     // background-attachment: fixed;
     // background-position: auto,center top;
     // background-repeat: no-repeat;
     // background-size: cover;
     // position: relative;
-  background: none !important;
+   background: none !important;
 }
 .navbar-header {
   background: none !important;
