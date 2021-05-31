@@ -166,7 +166,7 @@ hr {
   .col-md-7 h1{
     font-size: 30px;
   }
-  .col-md-5 p{
+  .col-md-5 p, .col-md-7 p{
     font-size: 20px;
   }
   .col-md-7, .col-md-5 {
