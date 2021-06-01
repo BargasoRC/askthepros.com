@@ -48,10 +48,7 @@
               />
               <roundedSelectBtn 
                 :placeholder="'Select Industry'"
-                :items="[
-                  'BPO',
-                  'COMMUNICATION INDUSTRY'
-                ]"
+                :items="returnIndustry"
                 class="registrationField"
                 :styles="{
                   background: 'none',
@@ -59,6 +56,7 @@
                   width: '100% !important',
                   minWidth: '100% !important'
                 }"
+                :selectedIndex="global.selectedIndustryIndex"
                 @onSelect="onSelect"
               />
             </div>
@@ -162,6 +160,7 @@ import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config'
 import COMMON from 'src/common'
+import global from 'src/helpers/global'
 export default {
   data() {
     return {
@@ -171,7 +170,10 @@ export default {
       email: '',
       config: CONFIG,
       common: COMMON,
-      type: 'USER'
+      type: 'USER',
+      industry: global.industry,
+      selectedIndustry: null,
+      global: global
     }
   },
   components: {
@@ -180,7 +182,18 @@ export default {
     roundedBtn,
     roundedSelectBtn
   },
+  computed: {
+    returnIndustry() {
+      return this.industry.map(el => {
+        return el.category
+      })
+    }
+  },
   methods: {
+    onSelect(data) {
+      console.log('On Select:::')
+      this.selectedIndustry = data.index
+    },
     login(event) {
       // console.log('login:::')
       this.$router.push('/login')
@@ -199,6 +212,7 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('accounts/create', parameter).then(response => {
         $('#loading').css({'display': 'none'})
+        console.log('REGISTRATION RESPONSE: ', response)
         if(response.error !== null){
           if(response.error.status === 100){
             let message = response.error.message
@@ -226,9 +240,6 @@ export default {
     },
     linkedInLogin(event) {
       console.log('linkedin login:::')
-    },
-    onSelect(data) {
-      console.log('On Select:::')
     }
   }
 }
