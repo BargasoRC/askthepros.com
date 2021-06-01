@@ -131,7 +131,9 @@ export default {
             // this.otpDataHolder.data = response.data
             // this.checkOtp(response.data[0].notification_settings)
             // userID, username, email, type, status, profile, notifSetting, subAccount, code
-            // this.setUser(response.customer.id,  response.customer.username, response.customer.email, null, null, null, null, null, null)
+            let data = response.data[0]
+            this.setUser(data.id, data.username, data.email, data.account_type, data.status, data.information, null, null, data.code)
+            this.setToken(data.code)
           }
         })
         // this.retrieveNotifications(userInfo.id)
@@ -171,6 +173,7 @@ export default {
           let notifSetting = response.data[0].notification_settings
           let subAccount = response.data[0].sub_account
           this.setUser(userInfo.id, userInfo.username, userInfo.email, userInfo.account_type, userInfo.status, profile, notifSetting, subAccount, userInfo.code)
+          this.setToken(response.data[0].code)
         }).done(response => {
           this.tokenData.verifyingToken = false
           this.tokenData.loading = false
