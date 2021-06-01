@@ -160,6 +160,7 @@ export default {
     },
     register(event) {
       console.log('register:::')
+      this.$router.push('/signup')
     },
     forgotPassword(event) {
       console.log('forgot password:::')
