@@ -9,16 +9,11 @@
             </h1>
         </div>
         <div class="row d-flex justify-content-center button-container" style=""> 
-          <div class="col-md-auto  position-absolute button-container-button" >
-              <dialogueBtn :onClick="login" :icon="'fas fa-sign-in-alt'" :text="'Login'" :styles="{backgroundColor: '#01004E',color: 'white', marginTop: '20px'}"/> 
-          </div>
-          <div class="col-md-auto position-absolute button-container-button" >
-            <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register'" :styles="{backgroundColor: '#F1B814',color: 'white', marginTop: '20px'}"/> 
+          <div class="col-md-auto d-flex-row position-absolute button-container-button" >
+              <dialogueBtn :onClick="login" :icon="'fas fa-sign-in-alt'" :text="'Login'" :styles="{backgroundColor: '#01004E',color: 'white', marginTop: '20px', marginRight:'30px'}"/> 
+              <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register'" :styles="{backgroundColor: '#F1B814',color: 'white', marginTop: '20px'}"/> 
           </div>
         </div>
-      </div>
-      <div class="row">
-        
       </div>
     </div>
 </template>
@@ -44,7 +39,7 @@
    padding-left:0%;
 }
 .banner-container-row {
-  padding-left: 28%;
+  padding-left: 30%;
 }
 .banner-container-text {
   font-family:Roboto;
@@ -57,14 +52,18 @@
 }
 .button-container {
   margin-top:2%;
-  padding-left:15%;
+  padding-left:20%;
 }
+
 // For Large Screens
 @media (max-width:1199px){
 .banner-container{
   padding-right: 0%;
   padding-left: 0%;
   padding-top: 20%;
+}
+.button-container {
+  padding-left: 10%;
 }
 }
 // For Medium Screens
@@ -77,6 +76,9 @@
   padding-left: 0px;
   text-align: center;
 }
+.banner-container-row {
+  padding-left: 0%;
+}
 .button-container {
   padding-left: 0%;
 }
@@ -86,20 +88,23 @@
   .banner-container{
     // padding-top: 30%;
   }
+  .banner-container-row {
+    padding-left: 0%;
+  }
 .banner-container-text {
   font-size:40px;
   padding-left: 0px;
   text-align: center;
 }
-.button-container {
+.button-container-button {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: center;
 }
-.button-container {
-  display: inline-flex;
-  flex-wrap: wrap;
+@media (max-width:500px){
+  .banner-container-text {
+    font-size: 30px;
+  }
 }
-
 }
 </style>
 

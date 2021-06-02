@@ -25,7 +25,7 @@
       </a>
     </div>
     <div class="collapse navbar-collapse text-center" id="navbarSupportedContent">
-      <ul class="nav navbar-nav navbar-right ml-auto">
+      <ul class="nav sidebar navbar-right ml-auto">
         <li class="pl-5 pr-5 nav_item">
           <b class="font-weight-normal" @click="headerScrollTo('#learn-how')">Learn How</b>
         </li>
@@ -75,6 +75,9 @@ export default {
 
 <style scoped lang="scss">
 @import "~assets/style/colors.scss";
+.sidebar{
+  
+}
 .nav_item {
   cursor: pointer;
 }
