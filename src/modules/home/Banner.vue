@@ -34,7 +34,7 @@
     // background-position: center top;
 }
 .banner-text {
-  font-family:Roboto;
+  font-family: 'Roboto';
   font-weight:700;
   font-size:50px;
 }
