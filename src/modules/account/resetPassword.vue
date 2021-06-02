@@ -15,53 +15,31 @@
         <div class="card LoginCard">
           <div class="card-body LoginCardBody">
             <div class="d-flex justify-content-center pt-5 pb-5 mb-3">
-              <b>Login with AskThePros</b>
+              <b>Request to Reset Password with AskThePros</b>
             </div>
             <div>
-              <p
-                class="mb-2 pb-0 errorMessage"
-                v-if="errorMessage != ''"
-              >{{errorMessage}}</p>
               <roundedInput 
                 :type="'text'"
-                :placeholder="'Username'"
-                :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
                 :styles="{
-                  border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                  border: !this.isEmailError ? '.2px solid red !important' : 'none'
                 }"
-                v-model="username"
+                :placeholder="'Email Address'"
+                :class="''"
+                v-model="email"
               />
               <p
                 class="mb-0 pb-0 invalidEmail"
-                v-if="!this.isValid && username == ''"
-              >Required Field</p>
-              <roundedInput 
-                :type="'password'"
-                :placeholder="'Password'"
-                :class="!this.isValid && password == ''? 'mb-0 ' : ' LoginField'"
-                :styles="{
-                  border: !this.isValid && password == '' ? '1px solid red !important' : 'none'
-                }"
-                v-model="password"
-              />
-              <p
-                class="mb-0 pb-0 invalidEmail"
-                v-if="!this.isValid && password == ''"
-              >Required Field</p>
+                v-if="!this.isEmailError"
+              >Invalid email</p>
             </div>
-            <div class="d-flex justify-content-between">
-              <roundedBtn
-                :onClick="forgotPassword"
-                :text="'Forgot your password?'"
-                :styles="{
-                  background: 'none',
-                  color: '272727'
-                }"
-              />
+            <div class="message mt-2 mb-2">
+              <i v-if="showResponse" class="resetPasswordMessage">We send recory email to yor email address at <u>{{email}}</u>. Please give us a moment, it may take few minutes. Please check your email address to continue.</i>
+            </div>
+            <div class="d-flex justify-content-center">
               <dialogueBtn 
-                :onClick="login"
+                :onClick="reset"
                 :icon="'fas fa-sign-in-alt'"
-                :text="'Login'"
+                :text="'Send Request'"
                 :styles="{
                   backgroundColor: '#01009A',
                   color: 'white'
@@ -125,9 +103,9 @@
             </div>
             <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-center">
               <dialogueBtn 
-                :onClick="register"
+                :onClick="login"
                 :icon="'fas fa-sign-in-alt'"
-                :text="'Register Now'"
+                :text="'Login'"
                 :styles="{
                   backgroundColor: '#F1B814',
                   color: 'white'
@@ -146,13 +124,13 @@ import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import roundedInput from 'src/modules/generic/roundedInput'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import AUTH from 'src/services/auth'
+import global from 'src/helpers/global'
 export default {
   data() {
     return {
-      username: '',
-      password: '',
-      errorMessage: '',
-      isValid: true
+      email: '',
+      showResponse: false,
+      isEmailError: true
     }
   },
   components: {
@@ -161,30 +139,29 @@ export default {
     roundedBtn
   },
   methods: {
-    login(event) {
-      if(this.username !== '' && this.password !== '') {
-        this.isValid = true
-        AUTH.authenticate(this.username, this.password, (response) => {
-          this.$router.push('dashboard')
-        }, (response, status) => {
-          $('#loading').css({'display': 'none'})
-          if(status === 401){
-            this.errorMessage = 'Username and Password did not match.'
-          }else if(status === 402){
-            this.errorMessage = response.error
+    reset(event) {
+      console.log('Reset password:::', global.validateEmail(this.email))
+      if(global.validateEmail(this.email)){
+        this.isEmailError = true
+        let parameter = {
+          email: this.email
+        }
+        this.APIRequest('accounts/request_reset', parameter).then(response => {
+          if(response.data.length > 0){
+            console.log('ACCOUNTS RESPONSE: ', response)
+            this.showResponse = true
           }
         })
       }else{
-        this.isValid = false
+        this.isEmailError = false
       }
     },
-    register(event) {
-      console.log('register:::')
-      this.$router.push('/signup')
+    login(event) {
+      console.log('login:::')
+      this.$router.push('/')
     },
     forgotPassword(event) {
       console.log('forgot password:::')
-      this.$router.push('/request_reset_password')
     },
     gmailLogin(event) {
       console.log('gmail login:::')
@@ -201,18 +178,16 @@ export default {
 
 <style lang="scss" scoped>
 @import "~assets/style/colors.scss";
-.errorMessage {
-  margin-top: -14px;
-  color: $danger;
-  font-size: 10px;
-  margin-bottom: 25px !important;
-  text-align: center;
-}
 .invalidEmail {
   color: $danger;
   font-size: 10px;
   margin-left: 20px;
-  margin-bottom: 25px !important;
+}
+.resetPasswordMessage {
+  font-size: 12px;
+}
+.message {
+  min-height: 80px;
 }
 .orSeparatorA {
   margin-top: 35px;

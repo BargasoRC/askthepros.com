@@ -18,47 +18,108 @@
               <b>Register with AskThePros</b>
             </div>
             <div>
+              <p
+                class="mb-2 pb-0 errorMessage"
+                v-if="errorMessage != ''"
+              >{{errorMessage}}</p>
               <roundedInput 
                 :type="'text'"
-                :styles="{}"
                 :placeholder="'Username'"
-                :classes="'registrationField'"
+                :class="!this.isValid && username == '' ? 'mb-0 ' : ' registrationField'"
+                :styles="{
+                  border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                }"
                 v-model="username"
               />
+              <p
+                class="mb-0 pb-0 requiredFieldError"
+                v-if="!this.isValid && username == ''"
+              >Required Field</p>
               <roundedInput 
                 :type="'text'"
-                :styles="{}"
                 :placeholder="'Email Address'"
-                :classes="'registrationField'"
+                :class="!this.isValid && (email == '' || !isEmailValid) ? 'mb-0 ' : ' registrationField'"
+                :styles="{
+                  border: !this.isValid && (email == '' || !isEmailValid) ? '1px solid red !important' : 'none',
+                }"
                 v-model="email"
               />
+              <p
+                class="mb-0 pb-0 requiredFieldError"
+                v-if="!this.isValid && (email == '' || !isEmailValid)"
+              >{{
+                !isEmailValid ?
+                  'Invalid Email'
+                :
+                  'Required Field'
+              }}</p>
               <roundedInput 
                 :type="'password'"
-                :styles="{}"
                 :placeholder="'Password'"
-                :classes="'registrationField'"
+                :class="!this.isValid && (password == '' || password != cpassword || passwordRequirements != '') ? 'mb-0 ' : ' registrationField'"
+                :styles="{
+                  border: !this.isValid && (password == '' || password != cpassword || passwordRequirements != '') ? '1px solid red !important' : 'none',
+                }"
                 v-model="password"
               />
+              <p
+                class="mb-0 pb-0 requiredFieldError"
+                v-if="!this.isValid && (password == '' || password != cpassword || passwordRequirements != '')"
+              >{{
+                password != cpassword ?
+                  passwordRequirements != '' ?
+                    passwordRequirements
+                  :
+                    'Password Did Not Match'
+                :
+                  passwordRequirements != '' ?
+                    passwordRequirements
+                  :
+                  'Required Field'
+              }}</p>
               <roundedInput 
                 :type="'password'"
-                :styles="{}"
                 :placeholder="'Confirm Password'"
-                :classes="'registrationField'"
+                :class="!this.isValid && (password == '' || password != cpassword || passwordRequirements != '') ? 'mb-0 ' : ' registrationField'"
+                :styles="{
+                  border: !this.isValid && (password == '' || password != cpassword || passwordRequirements != '') ? '1px solid red !important' : 'none',
+                }"
                 v-model="cpassword"
               />
+              <p
+                class="mb-0 pb-0 requiredFieldError"
+                v-if="!this.isValid && (password == '' || password != cpassword || passwordRequirements != '')"
+              >{{
+                password != cpassword ?
+                  passwordRequirements != '' ?
+                    passwordRequirements
+                  :
+                    'Password Did Not Match'
+                :
+                  passwordRequirements != '' ?
+                    passwordRequirements
+                  :
+                  'Required Field'
+              }}</p>
               <roundedSelectBtn 
                 :placeholder="'Select Industry'"
                 :items="returnIndustry"
-                class="registrationField"
+                :class="''"
                 :styles="{
                   background: 'none',
                   color: '#84868B !important',
                   width: '100% !important',
-                  minWidth: '100% !important'
+                  minWidth: '100% !important',
+                  border: !this.isValid && selectedIndustry == null ? '1px solid red !important' : 'none',
+                  marginBottom: !this.isValid && selectedIndustry == null ? '0px' : '35px'
                 }"
                 :selectedIndex="global.selectedIndustryIndex"
                 @onSelect="onSelect"
               />
+              <p
+                class="mb-0 pb-0 requiredFieldError"
+                v-if="!this.isValid && selectedIndustry == null"
+              >Required Field</p>
             </div>
             <div class="d-flex justify-content-between">
               <roundedBtn
@@ -173,7 +234,11 @@ export default {
       type: 'USER',
       industry: global.industry,
       selectedIndustry: null,
-      global: global
+      global: global,
+      errorMessage: '',
+      isValid: true,
+      isEmailValid: true,
+      passwordRequirements: ''
     }
   },
   components: {
@@ -200,34 +265,67 @@ export default {
     },
     register(event) {
       console.log('register:::')
-      let parameter = {
-        username: this.username,
-        email: this.email,
-        password: this.password,
-        config: CONFIG,
-        account_type: this.type,
-        referral_code: null,
-        status: 'ADMIN'
-      }
-      $('#loading').css({'display': 'block'})
-      this.APIRequest('accounts/create', parameter).then(response => {
-        $('#loading').css({'display': 'none'})
-        console.log('REGISTRATION RESPONSE: ', response)
-        if(response.error !== null){
-          if(response.error.status === 100){
-            let message = response.error.message
-            if(typeof message.username !== undefined && typeof message.username !== 'undefined'){
-              this.errorMessage = message.username[0]
-            }else if(typeof message.email !== undefined && typeof message.email !== 'undefined'){
-              this.errorMessage = message.email[0]
-            }
-          }else if(response.data !== null){
-            if(response.data > 0){
-              this.login()
+      if(this.validate()) {
+        this.isValid = true
+        let parameter = {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+          config: CONFIG,
+          account_type: this.type,
+          referral_code: null,
+          status: 'ADMIN'
+        }
+        $('#loading').css({'display': 'block'})
+        this.APIRequest('accounts/create', parameter).then(response => {
+          $('#loading').css({'display': 'none'})
+          console.log('REGISTRATION RESPONSE: ', response)
+          if(response.error !== null){
+            if(response.error.status === 100){
+              let message = response.error.message
+              if(typeof message.username !== undefined && typeof message.username !== 'undefined'){
+                this.errorMessage = message.username[0]
+              }else if(typeof message.email !== undefined && typeof message.email !== 'undefined'){
+                this.errorMessage = message.email[0]
+              }
+            }else if(response.data !== null){
+              if(response.data > 0){
+                this.login()
+              }
             }
           }
+        })
+      }
+    },
+    validate() {
+      let email = this.email
+      let username = this.username
+      let password = this.password
+      let cpassword = this.cpassword
+      let selectedIndustry = this.selectedIndustry
+      if(email === '' || username === '' || password === '' || cpassword === '' || selectedIndustry === null || selectedIndustry === undefined){
+        this.isValid = false
+        return false
+      }else if(!global.validateEmail(email)) {
+        this.isValid = false
+        this.isEmailValid = false
+        return false
+      }else if(password !== cpassword) {
+        if(global.validateEmail(email)) {
+          this.isEmailValid = true
         }
-      })
+        this.isValid = false
+        return false
+      }else if(!global.validatePassword(password)) {
+        if(global.validateEmail(email)) {
+          this.isEmailValid = true
+        }
+        this.isValid = false
+        this.passwordRequirements = 'Password should be minimum of 8 and maximum of 16 and should contain at least one digit, lower case, upper case and special character.'
+        return false
+      }
+      this.passwordRequirements = ''
+      return true
     },
     forgotPassword(event) {
       console.log('forgot password:::')
@@ -246,6 +344,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "~assets/style/colors.scss";
+.requiredFieldError {
+  color: $danger;
+  font-size: 10px;
+  margin-left: 20px;
+  margin-bottom: 25px !important;
+}
+.errorMessage {
+  margin-top: -14px;
+  color: $danger;
+  font-size: 10px;
+  margin-bottom: 25px !important;
+  text-align: center;
+}
 .orSeparatorA {
   margin-top: 35px;
   margin-bottom: 15px;
