@@ -42,8 +42,13 @@
    padding-top:15%;
    padding-right:65px;
 }
+<<<<<<< HEAD
 .banner-container-text {
   font-family:Roboto;
+=======
+.banner-text {
+  font-family: 'Roboto';
+>>>>>>> 4c48ac37dc8d0b86002554a6a4f00e49a2632c78
   font-weight:700;
   font-size:50px;
   padding-left:30%;
