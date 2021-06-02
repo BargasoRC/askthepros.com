@@ -109,7 +109,7 @@ p {
   width: 32%;
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 767px) {
   .single-card {
     width: 90%;
     margin: 5%;
