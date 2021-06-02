@@ -162,7 +162,7 @@ hr {
   background-color: $text;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 767px) {
   .col-md-7 h1{
     font-size: 30px;
   }
