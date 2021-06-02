@@ -40,15 +40,17 @@
 }
 .banner-container {
    padding-top:15%;
-   padding-right:65px;
+   padding-right:0%;
+   padding-left:0%;
 }
-<<<<<<< HEAD
+.banner-container-row {
+  padding-left: 28%;
+}
 .banner-container-text {
   font-family:Roboto;
-=======
+}
 .banner-text {
   font-family: 'Roboto';
->>>>>>> 4c48ac37dc8d0b86002554a6a4f00e49a2632c78
   font-weight:700;
   font-size:50px;
   padding-left:30%;
@@ -68,6 +70,7 @@
 // For Medium Screens
 @media (max-width: 991px) {
 .banner-container{
+  padding-top: 30%;
 }
 .banner-container-text {
   font-size:50px;
@@ -79,9 +82,9 @@
 }
 }
 // For Small Screens
-@media (max-width: 768px){
+@media (max-width: 767px){
   .banner-container{
-    padding-top: 30%;
+    // padding-top: 30%;
   }
 .banner-container-text {
   font-size:40px;
@@ -112,6 +115,17 @@ export default {
     return {}
   },
   methods: {
+    login(){
+      this.redirect('login')
+      window.scrollTo(0, 0)
+    },
+    register(){
+      this.redirect('signup')
+      window.scrollTo(0, 0)
+    },
+    redirect(parameter){
+      this.$router.push(parameter)
+    }
   }
 }
 </script>
