@@ -1,7 +1,7 @@
 <template>
 <footer class="page-footer indigo">
   <!-- Footer Links -->
-  <div class="container-fluid d-flex justify-content-center" style="background: #F1B814;">
+  <div class="container-fluid d-flex justify-content-center" style="background: #F1B814; padding-top: 50px;padding-bottom: 30px;">
     <!-- Grid row -->
     <div class="row w-75 " style="padding-bottom:1%;">
       <!-- Grid column -->
