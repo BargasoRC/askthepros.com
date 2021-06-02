@@ -9,7 +9,7 @@
     <div class="row w-75 " style="padding-bottom:1%;">
 
       <!-- Grid column -->
-      <div class="col-md-4 ft-col-left ">
+      <div class="col-md-4 d-sm-flex flex-sm-column align-items-sm-center align-content-sm-center align-items-md-start flex-lg-column">
 
         <!-- Links -->
         <h5 class="font-weight-bold mt-3 mb-4 ft-title">About</h5>
@@ -32,7 +32,7 @@
       <hr class="clearfix w-100 d-md-none">
 
       <!-- Grid column -->
-      <div class="col-md-4 mx-auto ">
+      <div class="col-md-4 d-sm-flex flex-lg-column flex-sm-column align-items-sm-center align-items-md-start">
 
         <!-- Links -->
         <h5 class="font-weight-bold mt-3 mb-4 ft-title">Information</h5>
@@ -52,15 +52,18 @@
       <hr class="clearfix w-100 d-md-none">
 
       <!-- Grid column -->
-      <div class="col-md-4 mx-auto ">
+      <div class="col-md-4 d-sm-flex flex-lg-column flex-sm-column align-items-sm-center align-items-md-start">
 
         <!-- Links -->
         <h5 class="font-weight-bold mt-3 ft-title" style="margin-bottom:15px;padding-top:6%">We Accept All Major Credit Cards<br> For Fast and Easy Payment</h5>
-        <ul class="list-unstyled">
+        <!-- <div class="ft-pay-img"> -->
+          <ul class="list-unstyled">
             <li>
-              <img src="../../assets/img/pay_methods.jpg" alt="Payment Methods">
+              <img class="ft-pay-img" src="../../assets/img/pay_methods.jpg" alt="Payment Methods">
             </li>
         </ul>
+        <!-- </div> -->
+        
         <dir class="row d-flex justify-content-start" style="padding-left:5%">
           <p>Copyright © 2021. All Rights Reserved.</p>
           <img src="../../assets/img/logo_small_redo.png" alt="logo" height="21px" width="50px" style="padding-left:10px">
@@ -115,9 +118,27 @@
 .ft-link:hover {
   color: black;
 }
+.ft-pay-img {
+  width: 100%;
+}
+@media (max-width:1199px){
+
+}
 @media (max-width: 991px){
   .apps-footer{
     display: none;
+  }
+}
+@media (max-width: 768px){
+  .ft-title {
+    font-size: 100%;
+    text-align: center;
+  }
+  li{
+    text-align: center;
+  }
+  .ft-pay-img {
+    width: 70%;
   }
 }
 </style>

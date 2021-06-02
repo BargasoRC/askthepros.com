@@ -2,7 +2,16 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="navbar-header">
       <a class="navbar-brand" href="#">
-          <button 
+        <img 
+          :src="require('../../assets/img/asktheprooslogo-clear.png')" 
+          class="logo-brand"
+          @click="navigate('')"
+        />
+      </a>
+    </div>
+    <div class="navbar-header">
+      <a href="#">
+        <button 
             class="navbar-toggler" 
             type="button" 
             data-toggle="collapse" 
@@ -13,11 +22,6 @@
           >
           <i class="navbar-toggler-icon"></i>
         </button> 
-        <img 
-          :src="require('../../assets/img/asktheprooslogo-clear.png')" 
-          class="logo-brand"
-          @click="navigate('')"
-        />
       </a>
     </div>
     <div class="collapse navbar-collapse text-center" id="navbarSupportedContent">
