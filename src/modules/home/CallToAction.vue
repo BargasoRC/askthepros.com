@@ -66,7 +66,7 @@ iframe{
   background-color: $white;
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 767px) {
   .col-md-6 {
     text-align: center;
   }
