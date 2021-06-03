@@ -59,7 +59,7 @@
 </template>
 <style type="text/css">
 .page-footer {
-  font-family: 'Roboto';
+  
 }
 .ft-title {
   font-size:18px;

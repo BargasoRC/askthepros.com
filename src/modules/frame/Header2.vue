@@ -14,18 +14,20 @@
         <button 
             class="navbar-toggler" 
             type="button" 
-            data-toggle="collapse" 
-            data-target="#navbarSupportedContent" 
-            aria-controls="navbarSupportedContent" 
-            aria-expanded="false" 
-            aria-label="Toggle navigation"
+            @click="showSidebar()"
           >
           <i class="navbar-toggler-icon"></i>
         </button> 
       </a>
     </div>
-    <div class="collapse navbar-collapse text-center" id="navbarSupportedContent">
-      <ul class="nav sidebar navbar-right ml-auto">
+    <div class="sidebar container" id="navbarSupportedContent" v-if="!isActive">
+        <div id="dismiss" class="flex-row">
+          <i class="fas fa-arrow-right" @click="showSidebar()"></i>
+        </div>
+        <div class="sidebar-header">
+            <h3>Bootstrap Sidebar</h3>
+        </div>
+        <ul class="nav navbar-nav navbar-right ml-auto">
         <li class="pl-5 pr-5 nav_item">
           <b class="font-weight-normal" @click="headerScrollTo('#learn-how')">Learn How</b>
         </li>
@@ -43,6 +45,25 @@
         </li>
       </ul>
     </div>
+    <!-- <div class="navbar-collapse text-center" id="navbarSupportedContent">
+      <ul class="nav navbar-nav navbar-right ml-auto">
+        <li class="pl-5 pr-5 nav_item">
+          <b class="font-weight-normal" @click="headerScrollTo('#learn-how')">Learn How</b>
+        </li>
+        <li class="pl-5 pr-5 nav_item">
+          <b class="font-weight-normal" @click="headerScrollTo('#pricing')">Pricing</b>
+        </li>
+        <li class="pl-5 pr-5 nav_item">
+          <b class="font-weight-normal" @click="headerScrollTo()">Contact Us</b>
+        </li>
+        <li class="pl-5 pr-5 nav_item" @click="navigate('login')">
+          <b class="font-weight-normal"  :style="'color: ' + ($route.name == 'loginAccount' ? '#007bff' : 'black')">Login</b>
+        </li>
+        <li class="pl-5 pr-5 nav_item" @click="navigate('signup')">
+          <b class="font-weight-normal" :style="'color: ' + ($route.name == 'signup' ? '#007bff' : 'black')">Register</b>
+        </li>
+      </ul>
+    </div> -->
   </nav>
 </template>
 
@@ -53,6 +74,7 @@ export default {
   },
   components: {},
   data: () => ({
+    isActive: false
   }),
   computed: {
   },
@@ -68,15 +90,33 @@ export default {
         },
         500
       )
+    },
+    showSidebar(){
+      this.isActive = !this.isActive
     }
   }
 }
 </script>
-
 <style scoped lang="scss">
 @import "~assets/style/colors.scss";
 .sidebar{
-  
+  min-width: 50%;
+  max-width: 50%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  right: 0;
+  /* top layer */
+  z-index: 9999;
+  background-color: white;
+}
+#dismiss {
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    /* top right corner of the sidebar */
+    top: 10px;
+    right: 10px;
 }
 .nav_item {
   cursor: pointer;
@@ -88,21 +128,13 @@ export default {
   z-index: 100;
 }
 .navbar {
-    // background: linear-gradient(180deg, #FFFFFF 6.77%, rgba(255, 255, 255, 0.782123) 19.79%,
-    // rgba(255, 255, 255, 0.326451) 63.54%, rgba(255, 255, 255, 0.535072) 76.04%, rgba(255, 255, 255, 0.184593) 86.46%, rgba(255, 255, 255, 0) 100%), 
-    // url("../../assets/img/banner.jpg");
-    // background-attachment: fixed;
-    // background-position: auto,center top;
-    // background-repeat: no-repeat;
-    // background-size: cover;
-    // position: relative;
    background: none !important;
 }
 .navbar-header {
   background: none !important;
 }
 #navbarSupportedContent {
-  background: none !important;
+  
 }
 .navbar-brand .logo-brand {
   // width: 100px;
