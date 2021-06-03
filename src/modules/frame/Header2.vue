@@ -20,32 +20,38 @@
         </button> 
       </a>
     </div>
-    <div class="sidebar container" id="navbarSupportedContent" v-if="!isActive">
-        <div id="dismiss" class="flex-row">
-          <i class="fas fa-arrow-right" @click="showSidebar()"></i>
+    <!-- Show when screen is <991px -->
+    <div class="sidebar contianer-fluid" id="navbarSupportedContent d-none d-sm-block d-md-block d-lg-none" v-if="!isActive">
+        <div class="row w-100  justify-content-end no-gutters"  style="padding-right:20%; padding-top:20%">
+          <i class="fas fa-times fa-2x" @click="showSidebar()"></i>
         </div>
-        <div class="sidebar-header">
-            <h3>Bootstrap Sidebar</h3>
+        <div class="row no-gutters justify-content-start flex-column">
+          <ul class="nav navbar-nav navbar-right row no-gutters">
+          <li class="pl-5 pr-5 nav_item">
+            <b class="font-weight-normal nav-text" @click="headerScrollTo('#learn-how')">Learn How</b>
+            <hr>
+          </li>
+          <li class="pl-5 pr-5 nav_item">
+            <b class="font-weight-normal nav-text" @click="headerScrollTo('#pricing')">Pricing</b>
+            <hr>
+          </li>
+          <li class="pl-5 pr-5 nav_item">
+            <b class="font-weight-normal nav-text" @click="headerScrollTo()">Contact Us</b>
+            <hr>
+          </li>
+          <li class="pl-5 pr-5 nav_item" @click="navigate('login')">
+            <b class="font-weight-normal nav-text"  :style="'color: ' + ($route.name == 'loginAccount' ? '#007bff' : 'black')">Login</b>
+            <hr>
+          </li>
+          <li class="pl-5 pr-5 nav_item" @click="navigate('signup')">
+            <b class="font-weight-normal nav-text" :style="'color: ' + ($route.name == 'signup' ? '#007bff' : 'black')">Register</b>
+            <hr>
+          </li>
+        </ul>
         </div>
-        <ul class="nav navbar-nav navbar-right ml-auto">
-        <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal" @click="headerScrollTo('#learn-how')">Learn How</b>
-        </li>
-        <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal" @click="headerScrollTo('#pricing')">Pricing</b>
-        </li>
-        <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal" @click="headerScrollTo()">Contact Us</b>
-        </li>
-        <li class="pl-5 pr-5 nav_item" @click="navigate('login')">
-          <b class="font-weight-normal"  :style="'color: ' + ($route.name == 'loginAccount' ? '#007bff' : 'black')">Login</b>
-        </li>
-        <li class="pl-5 pr-5 nav_item" @click="navigate('signup')">
-          <b class="font-weight-normal" :style="'color: ' + ($route.name == 'signup' ? '#007bff' : 'black')">Register</b>
-        </li>
-      </ul>
     </div>
-    <!-- <div class="navbar-collapse text-center" id="navbarSupportedContent">
+    <!-- Show  when screen is >991px -->
+    <div class="navbar-collapse text-center d-none d-lg-block" id="navbarSupportedContent">
       <ul class="nav navbar-nav navbar-right ml-auto">
         <li class="pl-5 pr-5 nav_item">
           <b class="font-weight-normal" @click="headerScrollTo('#learn-how')">Learn How</b>
@@ -63,7 +69,7 @@
           <b class="font-weight-normal" :style="'color: ' + ($route.name == 'signup' ? '#007bff' : 'black')">Register</b>
         </li>
       </ul>
-    </div> -->
+    </div>
   </nav>
 </template>
 
@@ -109,14 +115,12 @@ export default {
   /* top layer */
   z-index: 9999;
   background-color: white;
+  border-left: 0.5px solid #84868B;
+  transition: width 0.5s;
+  -webkit-transition: all 0.25s;
 }
-#dismiss {
-    width: 35px;
-    height: 35px;
-    position: absolute;
-    /* top right corner of the sidebar */
-    top: 10px;
-    right: 10px;
+.nav-text {
+  font-size: 125%;
 }
 .nav_item {
   cursor: pointer;
