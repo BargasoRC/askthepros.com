@@ -42,7 +42,7 @@
   padding-left: 30%;
 }
 .banner-container-text {
-  font-family:Roboto;
+  font-weight: 700;
 }
 .banner-text {
   font-family: 'Roboto';
