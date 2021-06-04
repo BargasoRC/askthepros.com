@@ -80,7 +80,7 @@ export default {
   },
   components: {},
   data: () => ({
-    isActive: false
+    isActive: true
   }),
   computed: {
   },
@@ -247,6 +247,9 @@ export default {
   }
 
 @media (max-width: 991px){
+  .sidebar {
+     display: block;
+   }
    .system-header{
       width: 30%;
     }
