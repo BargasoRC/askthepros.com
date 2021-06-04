@@ -131,11 +131,11 @@
                 }"
               />
               <dialogueBtn 
-                :onClick="login"
+                :onClick="register"
                 :icon="'fas fa-sign-in-alt'"
-                :text="'Login'"
+                :text="'Register now'"
                 :styles="{
-                  backgroundColor: '#01009A',
+                  backgroundColor: '#F1B814',
                   color: 'white'
                 }"
               />
@@ -197,11 +197,11 @@
             </div>
             <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-center">
               <dialogueBtn 
-                :onClick="register"
+                :onClick="login"
                 :icon="'fas fa-sign-in-alt'"
-                :text="'Register Now'"
+                :text="'Login'"
                 :styles="{
-                  backgroundColor: '#F1B814',
+                  backgroundColor: '#01009A',
                   color: 'white'
                 }"
               />
