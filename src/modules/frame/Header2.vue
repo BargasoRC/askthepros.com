@@ -21,7 +21,7 @@
       </a>
     </div>
     <!-- Show when screen is <991px -->
-    <div class="sidebar contianer-fluid" id="navbarSupportedContent d-none d-sm-block d-md-block d-lg-none" v-if="!isActive">
+    <div class="sidebar contianer-fluid" id="navbarSupportedContent d-none d-sm-block" v-if="!isActive">
         <div class="row w-100  justify-content-end no-gutters"  style="padding-right:20%; padding-top:20%">
           <i class="fas fa-times fa-2x" @click="showSidebar()"></i>
         </div>
@@ -180,6 +180,9 @@ export default {
 
 
  @media (min-width: 1200px){
+   .sidebar {
+     display: none;
+   }
     .system-header{
       width: 50% !important;
     }
@@ -211,6 +214,9 @@ export default {
   }
 
  @media (max-width: 1199px){
+   .sidebar {
+     display: none;
+   }
     .system-header{
       width: 70% !important;
     }
