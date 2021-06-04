@@ -1,7 +1,7 @@
 <template>
   <div class="LoginContainer col-sm-12">
     <div class="row RowContainer">
-      <div class="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xs-7 QouteCardContainer">
+      <div class="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xs-7 QouteCardContainer mb-5">
         <div class="QouteCard">
           <div class="SubQoute">
             <h1 class="QouteText" style="color: #01004E">Become A Local Expert</h1>
@@ -11,27 +11,43 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xs-5 d-flex justify-content-center LoginCardContainer">
+      <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xs-5 d-flex justify-content-center LoginCardContainer mb-5">
         <div class="card LoginCard">
           <div class="card-body LoginCardBody">
             <div class="d-flex justify-content-center pt-5 pb-5 mb-3">
               <b>Login with AskThePros</b>
             </div>
             <div>
+              <p
+                class="mb-2 pb-0 errorMessage"
+                v-if="errorMessage != ''"
+              >{{errorMessage}}</p>
               <roundedInput 
                 :type="'text'"
-                :styles="{}"
                 :placeholder="'Username'"
-                :class="'LoginField'"
+                :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                :styles="{
+                  border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                }"
                 v-model="username"
               />
+              <p
+                class="mb-0 pb-0 invalidEmail"
+                v-if="!this.isValid && username == ''"
+              >Required Field</p>
               <roundedInput 
                 :type="'password'"
-                :styles="{}"
                 :placeholder="'Password'"
-                :class="'LoginField'"
+                :class="!this.isValid && password == ''? 'mb-0 ' : ' LoginField'"
+                :styles="{
+                  border: !this.isValid && password == '' ? '1px solid red !important' : 'none'
+                }"
                 v-model="password"
               />
+              <p
+                class="mb-0 pb-0 invalidEmail"
+                v-if="!this.isValid && password == ''"
+              >Required Field</p>
             </div>
             <div class="d-flex justify-content-between">
               <roundedBtn
@@ -134,7 +150,9 @@ export default {
   data() {
     return {
       username: '',
-      password: ''
+      password: '',
+      errorMessage: '',
+      isValid: true
     }
   },
   components: {
@@ -144,19 +162,21 @@ export default {
   },
   methods: {
     login(event) {
-      console.log('login:::')
-      AUTH.authenticate(this.username, this.password, (response) => {
-        this.$router.push('dashboard')
-      }, (response, status) => {
-        $('#loading').css({'display': 'none'})
-        if(status === 401){
-          this.errorMessage = 'Username and Password did not match.'
-        }else if(status === 402){
-          this.errorMessage = response.error
-        }else{
-          this.errorMessage = 'Cannot log in? Contact us through email: ' + this.common.APP_EMAIL
-        }
-      })
+      if(this.username !== '' && this.password !== '') {
+        this.isValid = true
+        AUTH.authenticate(this.username, this.password, (response) => {
+          this.$router.push('dashboard')
+        }, (response, status) => {
+          $('#loading').css({'display': 'none'})
+          if(status === 401){
+            this.errorMessage = 'Username and Password did not match.'
+          }else if(status === 402){
+            this.errorMessage = response.error
+          }
+        })
+      }else{
+        this.isValid = false
+      }
     },
     register(event) {
       console.log('register:::')
@@ -164,6 +184,7 @@ export default {
     },
     forgotPassword(event) {
       console.log('forgot password:::')
+      this.$router.push('/request_reset_password')
     },
     gmailLogin(event) {
       console.log('gmail login:::')
@@ -179,6 +200,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "~assets/style/colors.scss";
+.errorMessage {
+  margin-top: -14px;
+  color: $danger;
+  font-size: 10px;
+  margin-bottom: 25px !important;
+  text-align: center;
+}
+.invalidEmail {
+  color: $danger;
+  font-size: 10px;
+  margin-left: 20px;
+  margin-bottom: 25px !important;
+}
 .orSeparatorA {
   margin-top: 35px;
   margin-bottom: 15px;

@@ -45,7 +45,7 @@ export default{
   }, {
     path: '/request_reset_password',
     name: 'requestResetPassword',
-    component: resolve => require(['components/increment/basic/RequestResetPassword.vue'], resolve),
+    component: resolve => require(['modules/account/resetPassword.vue'], resolve),
     meta: {
       tokenRequired: false
     }

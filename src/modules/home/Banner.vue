@@ -19,6 +19,7 @@
 </template>
 <style scoped lang="scss">
 @import "~assets/style/colors.scss";
+
 .banner {
     height:837px;
     padding-top:0px;
@@ -53,6 +54,7 @@
   margin-top:2%;
   padding-left:20%;
 }
+
 // For Large Screens
 @media (max-width:1199px){
 .banner-container{
