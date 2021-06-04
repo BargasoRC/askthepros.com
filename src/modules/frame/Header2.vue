@@ -87,6 +87,7 @@ export default {
   methods: {
     navigate(route) {
       this.$router.push(`/${route}`)
+      this.isActive = !this.isActive
     },
     headerScrollTo(id) {
       let height = Jquery(window).height()
