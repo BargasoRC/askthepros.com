@@ -14,10 +14,6 @@
             @onSelect="onIndustrySelect"
           />
           </div>
-          <!-- <select v-model="selected">
-            <option disabled value="">Industry</option>
-            <option v-for="(item, index) in industry" :key="index">{{item.category}}</option>
-          </select> -->
           <img :src="require('assets/img/section3-img.png')"/>
         </span>
         <span class="col-md-5" style="text-align: center;">
