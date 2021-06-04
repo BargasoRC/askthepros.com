@@ -25,8 +25,7 @@
     padding-top:0px;
     padding-bottom:0px;
     margin-bottom:0px;
-    background: linear-gradient(180deg, #FFFFFF 6.77%, rgba(255, 255, 255, 0.782123) 19.79%,
-    rgba(255, 255, 255, 0.326451) 63.54%, rgba(255, 255, 255, 0.535072) 76.04%, rgba(255, 255, 255, 0.184593) 86.46%, rgba(255, 255, 255, 0) 100%), 
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.326451) 28.65%, rgba(255, 255, 255, 0.535072) 44.27%, rgba(255, 255, 255, 0.184593) 86.46%, rgba(255, 255, 255, 0) 100%), 
     url("../../assets/img/banner.jpg");
     background-repeat: no-repeat;
     background-size: cover;
