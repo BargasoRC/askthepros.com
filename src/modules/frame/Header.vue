@@ -3,7 +3,7 @@
     <div class="system-header">
       <a class="navbar-brand" v-on:click="redirect('dashboard')">
         <img :src="require('../../assets/img/asktheprooslogo-clear.png')" class="logo-brand">
-        <label class="navbar-brand hide-on-mobile text-white" v-html="common.APP_NAME_HTML"></label>
+        <!-- <label class="navbar-brand hide-on-mobile text-white" v-html="common.APP_NAME_HTML"></label> -->
       </a>
     </div>
     <nav class="header-navbar">
@@ -473,8 +473,8 @@ body{
 
 
 .logo-brand{
-  width: 25px;
-  height: 25px;
+  width: auto;
+  height: 35px;
 }
 .left-menu-icons .account-type{
   padding: 10px 10px 10px 10px;
