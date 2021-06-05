@@ -44,20 +44,20 @@ class APIController extends Controller
   );
 
   protected $whiteListedDomain = array(
-    'https://pivotsms.com/',
-    'https://www.pivotsms.com/',
-    'http://www.pivotsms.com/',
-    'http://pivotsms.com/',
+    'https://askthepros.com/',
+    'https://www.askthepros.com/',
+    'http://www.askthepros.com/',
+    'http://askthepros.com/',
     'http://localhost:8001/',
-    'com.pivotsms'
+    'com.askthepros'
   );
 
   protected $whiteListedDomainOrigin = array(
-    'https://pivotsms.com',
-    'https://www.pivotsms.com',
-    'http://www.pivotsms.com',
-    'http://pivotsms.com',
-    'com.pivotsms',
+    'https://askthepros.com',
+    'https://www.askthepros.com',
+    'http://www.askthepros.com',
+    'http://askthepros.com',
+    'com.askthepros',
     'http://localhost:8001'
   );
   
