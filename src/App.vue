@@ -4,7 +4,6 @@
       <div v-if="tokenData.token !== null && parseInt(user.userID) > 0 && tokenData.loading === false">
        <system-header></system-header>
        <system-sidebar></system-sidebar>
-       <!-- <support-messenger></support-messenger> -->
        <system-footer></system-footer>
        <!-- <tutorial></tutorial> -->
        <!-- <guide></guide> -->
@@ -220,7 +219,6 @@ export default {
     // 'guide': () => import('modules/guide/Guide.vue'),
     // 'privacy-policy': () => import('modules/docs/PrivacyPolicy.vue'),
     // 'terms-and-conditions': () => import('modules/docs/TermsAndConditions.vue'),
-    'support-messenger': () => import('components/increment/support/Support.vue'),
     // 'tutorial': () => import('components/increment/generic/tutorial/Tutorial.vue'),
     'error-modal': () => import('components/increment/generic/modal/Error.vue'),
     'lazy-loading': () => import('components/increment/generic/lazy/loading.vue')
