@@ -2,17 +2,12 @@ import config from 'src/config.js'
 let APP_EMAIL = 'support@payhiram.ph'
 export default {
   sidebarMenu: [
-    // {accountType: 'ALL', showOnAdmin: true, accountStatus: 'ALL', description: 'Dashboard', icon: 'fa fa-arrow-right', path: 'dashboard', flag: false, subMenu: null}
-      {id: 1, users: 'ALL', parent_id: 0, description: 'Dashboard', icon: 'fa fa-tachometer', path: 'dashboard', flag: false, subMenu: null},
-      {id: 2, users: 'ALL', parent_id: 0, description: 'Post Management', icon: 'fa fa-tachometer', path: 'post_management', flag: false, subMenu: null},
-      {id: 3, users: 'ADMIN', parent_id: 0, description: 'Accounts Management', icon: 'fa fa-tachometer', path: 'account_management', flag: false, subMenu: null},
-      {id: 8, users: 'ADMIN', parent_id: 0, description: 'Billings Managament', icon: 'fa fa-tachometer', path: 'billings_management', flag: false, subMenu: null},
-      {id: 9, users: 'ADMIN', parent_id: 0, description: 'Subscriptions Management', icon: 'fa fa-tachometer', path: 'subscriptions_management', flag: false, subMenu: null},
-      {id: 5, users: 'ADMIN', parent_id: 0, description: 'Accounts Management', icon: 'fa fa-tachometer', path: 'account_management', flag: false, subMenu: null},
-      {id: 4, users: 'USER', parent_id: 0, description: 'Social Media Channels', icon: 'fa fa-tachometer', path: 'social_media_channels', flag: false, subMenu: null},
-      {id: 4, users: 'ALL', parent_id: 0, description: 'Account Settings', icon: 'fa fa-tachometer', path: 'account_settings', flag: false, subMenu: null},
-      {id: 6, users: 'USER', parent_id: 0, description: 'Subscription', icon: 'fa fa-tachometer', path: 'subscriptions', flag: false, subMenu: null},
-      {id: 7, users: 'USER', parent_id: 0, description: 'Payments', icon: 'fa fa-tachometer', path: 'payments', flag: false, subMenu: null}
+    {accountType: 'ALL', showOnAdmin: true, accountStatus: 'ALL', description: 'Dashboard', icon: 'fa fa-tachometer', path: 'dashboard', flag: false, subMenu: null},
+    {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ALL', description: 'Post Management', icon: 'fa fa-tachometer', path: 'post_management', flag: false, subMenu: null},
+    {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ALL', description: 'Billing Management', icon: 'fa fa-tachometer', path: 'billing_management', flag: false, subMenu: null},
+    {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ALL', description: 'Accounts', icon: 'fa fa-users', path: 'accounts', flag: false, subMenu: null},
+    {accountType: 'ALL', showOnAdmin: false, accountStatus: 'ALL', description: 'Payments', icon: 'fa fa-credit-card', path: 'payments', flag: false, subMenu: null},
+    {accountType: 'ALL', showOnAdmin: true, accountStatus: 'ALL', description: 'Settings', icon: 'fa fa-cogs', path: 'settings', flag: false, subMenu: null}
   ],
   menuOff: [
       {id: 1, users: 'ALL', parent_id: 0, description: 'Dashboard', icon: 'fa fa-tachometer', path: 'dashboard', flag: false, subMenu: null}
@@ -21,7 +16,7 @@ export default {
   APP_NAME_HTML: 'askthepros.com',
   APP_EMAIL: APP_EMAIL,
   APP_SITE: 'https://askthepros.com',
-  COMPANY: 'Meat The Sea',
+  COMPANY: 'Ask The Pros',
   COMPANY_URL: 'http://askthepros.com',
   COPYRIGHT: 'askthepros.com ' + new Date().getFullYear(),
   USER_TYPE: [{
