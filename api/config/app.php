@@ -170,7 +170,6 @@ return [
          */
 
 
-        Increment\Messenger\MessengerServiceProvider::class,
         Increment\Account\AccountServiceProvider::class,
         Increment\Common\Payload\PayloadServiceProvider::class,
         Increment\Imarket\Merchant\MerchantServiceProvider::class,
