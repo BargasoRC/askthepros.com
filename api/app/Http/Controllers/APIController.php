@@ -292,11 +292,11 @@ class APIController extends Controller
   }
   
   public function isValid($request, $action = "create", $subTableName = false){
-    unset($this->tableColumns[0]);
+    // unset($this->tableColumns[0]);
     print_r($this->tableColumns);
-    array_pop($this->tableColumns);//deleted at
-    array_pop($this->tableColumns);//updated at
-    array_pop($this->tableColumns);//created at;
+    // array_pop($this->tableColumns);//deleted at
+    // array_pop($this->tableColumns);//updated at
+    // array_pop($this->tableColumns);//created at;
     // $i = 0;
     // foreach ($this->tableColumns as $key => $value) {
     //   if($value == 'updated_at'){
@@ -305,6 +305,13 @@ class APIController extends Controller
     //   $i++;
     //   // code...
     // }
+    $conditions = Array('id', 'created_at', 'updated_at', 'deleted_at');
+    foreach ($conditions as $key => $value) {
+      if (($key = array_search($value, $this->tableColumns)) !== FALSE) {
+        unset($this->tableColumns[$key]);
+      }
+    }
+    
     echo json_encode($this->tableColumns);
     foreach($this->tableColumns as $column){
       $this->validation[$column] = (isset($this->validation[$column])) ? $this->validation[$column] : '';
