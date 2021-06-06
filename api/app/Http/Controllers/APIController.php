@@ -296,6 +296,7 @@ class APIController extends Controller
     unset($this->tableColumns['deleted_at']);
     unset($this->tableColumns['updated_at']);
     unset($this->tableColumns['created_at']);
+    print_r($this->tableColumns);
     // array_pop($this->tableColumns);//deleted at
     // array_pop($this->tableColumns);//updated at
     // array_pop($this->tableColumns);//created at
@@ -303,7 +304,6 @@ class APIController extends Controller
       $this->validation[$column] = (isset($this->validation[$column])) ? $this->validation[$column] : '';
       if(!in_array($column, $this->notRequired) && !isset($this->defaultValue[$column])){//requiring all field by default
         if($action !== "update"){
-          // echo $this->validation[$column].($this->validation[$column] ? "| ":"")."required";
           $this->validation[$column] = $this->validation[$column].($this->validation[$column] ? "| ":"")."required";
         }else if($action === "update"){
           if(in_array($column, $request)){
