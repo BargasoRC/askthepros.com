@@ -1,6 +1,6 @@
 <template>
   <div class="holder">
-    <h3 style="margin-top: 25px;">Welcome to Dashboard!</h3>
+    <h3 style="margin-top: 25px;">Social Media Channels</h3>
     <p>Here are the latest update of activities as of today.</p>
 
     <div class="row" style="justify-content: space-between; display: flex;">

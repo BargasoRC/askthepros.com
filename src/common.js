@@ -6,8 +6,10 @@ export default {
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ALL', description: 'Post Management', icon: 'fa fa-tachometer', path: 'post_management', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ALL', description: 'Billing Management', icon: 'fa fa-tachometer', path: 'billing_management', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ALL', description: 'Accounts', icon: 'fa fa-users', path: 'accounts', flag: false, subMenu: null},
-    {accountType: 'ALL', showOnAdmin: false, accountStatus: 'ALL', description: 'Payments', icon: 'fa fa-credit-card', path: 'payments', flag: false, subMenu: null},
-    {accountType: 'ALL', showOnAdmin: true, accountStatus: 'ALL', description: 'Settings', icon: 'fa fa-cogs', path: 'settings', flag: false, subMenu: null}
+    {accountType: 'ALL', showOnAdmin: false, accountStatus: 'ALL', description: 'Social Media Channels', icon: 'fa fa-credit-card', path: 'channels', flag: false, subMenu: null},
+    {accountType: 'ALL', showOnAdmin: false, accountStatus: 'ALL', description: 'Account Settings', icon: 'fa fa-cogs', path: 'settings', flag: false, subMenu: null},
+    {accountType: 'ALL', showOnAdmin: false, accountStatus: 'ALL', description: 'Subscription', icon: 'fa fa-credit-card', path: 'subscriptions', flag: false, subMenu: null},
+    {accountType: 'ALL', showOnAdmin: false, accountStatus: 'ALL', description: 'Payments', icon: 'fa fa-credit-card', path: 'payments', flag: false, subMenu: null}
   ],
   menuOff: [
       {id: 1, users: 'ALL', parent_id: 0, description: 'Dashboard', icon: 'fa fa-tachometer', path: 'dashboard', flag: false, subMenu: null}

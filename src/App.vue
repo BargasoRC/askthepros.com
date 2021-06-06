@@ -213,7 +213,7 @@ export default {
     'system-header': () => import('modules/frame/Header.vue'),
     'system-sidebar': () => import('modules/frame/Sidebar.vue'),
     'system-content': () => import('modules/frame/Content.vue'),
-    'system-footer': () => import('components/increment/generic/frame/Footer.vue'),
+    'system-footer': () => import('modules/frame/Footer.vue'),
     'system-loading': () => import('components/loader/Loading.vue'),
     // 'landing-footer': () => import('modules/frame/Footer.vue'),
     // 'guide': () => import('modules/guide/Guide.vue'),

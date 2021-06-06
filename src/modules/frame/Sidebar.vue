@@ -4,15 +4,15 @@
       <div class="sidebar">
         <ul class="sidebar-menu">
             <li class="header">
-                <span v-if="menuFlag === true" class="profile-photo">
-                  <span class="profile-image-holder"  v-if="user.profile !== null">
+                <span v-if="menuFlag === true" class="profile-photo"  style="margin-bottom: 25px !important;">
+                  <span class="profile-image-holder"  v-if="user.profile">
                     <img v-bind:src="config.BACKEND_URL + user.profile.url">
                   </span>
                   <i class="fa fa-user-circle-o profile-icon" v-else></i>
                   <i class="fas fa-check text-primary profile-status" v-if="user.status === 'VERIFIED'"></i>
                   Hi {{user.username}}!
                 </span>
-                <i v-bind:class="toggleSidebar + ' pull-right'" aria-hidden="true" v-on:click="changeToggleSidebarIcon()" id="toggleIcon"></i>
+                <!-- <i v-bind:class="toggleSidebar + ' pull-right'" aria-hidden="true" v-on:click="changeToggleSidebarIcon()" id="toggleIcon"></i> -->
             </li>
             <li v-for="item, index in menu" v-bind:class="{ 'active-menu': item.flag === true }" v-on:click="setActive(index)" v-if="((item.accountType === user.type || item.accountType === 'ALL'))" class="menu-holder">
               <i v-bind:class="item.icon" class=" visible"></i> 
