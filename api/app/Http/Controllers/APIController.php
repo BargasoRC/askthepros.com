@@ -293,6 +293,7 @@ class APIController extends Controller
   
   public function isValid($request, $action = "create", $subTableName = false){
     unset($this->tableColumns[0]);
+    echo print_r($this->tableColumns);
     array_pop($this->tableColumns);//deleted at
     array_pop($this->tableColumns);//updated at
     array_pop($this->tableColumns);//created at
