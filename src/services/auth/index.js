@@ -159,7 +159,7 @@ export default {
 
   },
   deaunthenticate(){
-    this.tokenData.loading = false
+    this.tokenData.loading = true
     localStorage.removeItem('usertoken')
     localStorage.removeItem('account_id')
     localStorage.removeItem('google_code')
@@ -170,6 +170,9 @@ export default {
     vue.APIRequest('authenticate/invalidate')
     this.clearNotifTimer()
     this.tokenData.token = null
+    setTimeout(() => {
+      this.tokenData.loading = true
+    }, 1000)
     ROUTER.go('/')
   },
   retrieveNotifications(accountId){
