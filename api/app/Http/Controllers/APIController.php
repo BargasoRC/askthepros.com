@@ -300,6 +300,7 @@ class APIController extends Controller
       $this->validation[$column] = (isset($this->validation[$column])) ? $this->validation[$column] : '';
       if(!in_array($column, $this->notRequired) && !isset($this->defaultValue[$column])){//requiring all field by default
         if($action !== "update"){
+          echo $this->validation[$column].($this->validation[$column] ? "| ":"")."required";
           $this->validation[$column] = $this->validation[$column].($this->validation[$column] ? "| ":"")."required";
         }else if($action === "update"){
           if(in_array($column, $request)){
