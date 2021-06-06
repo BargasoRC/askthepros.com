@@ -293,13 +293,11 @@ class APIController extends Controller
   
   public function isValid($request, $action = "create", $subTableName = false){
     unset($this->tableColumns[0]);
-    unset($this->tableColumns['deleted_at']);
-    unset($this->tableColumns['updated_at']);
-    unset($this->tableColumns['created_at']);
     print_r($this->tableColumns);
-    // array_pop($this->tableColumns);//deleted at
-    // array_pop($this->tableColumns);//updated at
-    // array_pop($this->tableColumns);//created at
+    array_pop($this->tableColumns);//deleted at
+    array_pop($this->tableColumns);//updated at
+    array_pop($this->tableColumns);//created at;
+    print_r($this->tableColumns);
     foreach($this->tableColumns as $column){
       $this->validation[$column] = (isset($this->validation[$column])) ? $this->validation[$column] : '';
       if(!in_array($column, $this->notRequired) && !isset($this->defaultValue[$column])){//requiring all field by default
