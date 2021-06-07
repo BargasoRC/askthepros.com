@@ -4,17 +4,17 @@
       <div class="sidebar">
         <ul class="sidebar-menu">
             <li class="header">
-                <span v-if="menuFlag === true" class="profile-photo">
-                  <span class="profile-image-holder"  v-if="user.profile !== null">
+                <span v-if="menuFlag === true" class="profile-photo"  style="margin-bottom: 25px !important;">
+                  <span class="profile-image-holder"  v-if="user.profile">
                     <img v-bind:src="config.BACKEND_URL + user.profile.url">
                   </span>
                   <i class="fa fa-user-circle-o profile-icon" v-else></i>
                   <i class="fas fa-check text-primary profile-status" v-if="user.status === 'VERIFIED'"></i>
                   Hi {{user.username}}!
                 </span>
-                <i v-bind:class="toggleSidebar + ' pull-right'" aria-hidden="true" v-on:click="changeToggleSidebarIcon()" id="toggleIcon"></i>
+                <!-- <i v-bind:class="toggleSidebar + ' pull-right'" aria-hidden="true" v-on:click="changeToggleSidebarIcon()" id="toggleIcon"></i> -->
             </li>
-            <li v-for="(item, index) in returnMenu" :key="index" :class="item.flag || $route.path === '/' + item.path ? ' active-menu' : ''" v-on:click="setActive(index)" class="menu-holder">
+            <li v-for="item, index in menu" v-bind:class="{ 'active-menu': item.flag === true }" v-on:click="setActive(index)" v-if="((item.accountType === user.type || (user.type === 'ADMIN' && item.showOnAdmin === true)))" class="menu-holder">
               <i v-bind:class="item.icon" class=" visible"></i> 
               <label>{{item.description}}</label>
               <ul class="sub-menu" v-if="item.subMenu !== null">
@@ -24,7 +24,7 @@
                 </li>
               </ul>
             </li>
-            <!-- <li v-for="item, index in menuOff" v-bind:class="{ 'active-menu': item.flag === true }" v-on:click="setActiveOff(index)">
+<!--             <li v-for="item, index in menuOff" v-bind:class="{ 'active-menu': item.flag === true }" v-on:click="setActiveOff(index)" v-if="(item.accountType === user.type || item.accountType === 'ALL')" class="menu-holder-hidden">
               <i v-bind:class="item.icon"></i>
             </li> -->
           </ul>
@@ -50,12 +50,10 @@
       </div>
 
       <div class="content-holder" v-bind:class="hide">
-        <!-- <system-notification></system-notification> -->
         <transition >
           <router-view ></router-view>
         </transition>
       </div>
-    </div>
   </div>  
 </template>
 <style lang="scss">
@@ -70,19 +68,14 @@
 .main-sidebar{
   overflow-y: hidden;
   z-index: 10000;
-}
-
-.sidebar{
-  min-height: 100vh;
-  overflow-y: auto;
+  height: calc(100vh - 60px);
 }
 
 .sidebar-menu{
   list-style: none;
   padding: 0px;
   margin: 0px;
-  min-height: 100vh;
-  overflow-y: auto;
+  height: calc(100vh - 60px);
 }
 
 .sidebar-menu .header{
@@ -124,7 +117,7 @@
 .profile-image-holder img{
   width: 80px;
   height: 80px;
-  border-radius: 50%;
+  border-radius: 5px;
 }
 
 .profile-photo .profile-icon{
@@ -160,8 +153,6 @@
   float: left;
   width: 86%;
   margin-left: 4%;
-  margin-top: 0px;
-  margin-bottom: 0px;
   line-height: 40px;
 }
 
@@ -183,11 +174,11 @@
   height: 35px;
   line-height: 35px;
   margin-left: 5%;
-  color: $primary;
+  color: $darkPrimary;
 }
 
 .active-menu{
-  color: $primary !important;
+  color: $darkPrimary !important;
 }
 
 .menu-holder-hidden{
@@ -197,11 +188,12 @@
   line-height: 50px;
   overflow: hidden;
   text-align: right;
+  display: none;
 }
 
 .menu-holder-hidden i{
   font-size: 20px;
-  padding-right: 5px; 
+  padding-right: 5px;
 }
 
 /*---------------------------------------------------------          
@@ -217,47 +209,42 @@
   }
   .sidebar-collapse{
     display: block;
-    position: fixed; /*- fixed sidebar -*/
   }
   .sidebar-menu .header span{
     display: block;
   }
   .content-holder{
-    width: 80%;
+    width: 81%;
     margin: 60px 0px 0px 0px;
-    margin-right: 1%;
-    float: right; /*- changed float left to right -*/
+    float: left;
   }
   /*  Change with Menu Toggled */
   .main-sidebar.hidden{
     width: 5%;
-    position: fixed; /*- fixed sidebar -*/
   }
   .content-holder.hidden{
     width: 94%;
     margin: 60px 0px 0px 1%;
-    float: right; /*- changed float from left to right -*/
+    float: left;
   }
 }
 
 /*-------------- Medium Screen for Tablets  --------------*/
-@media (min-width: 992px) and (max-width: 1199px){
+@media (max-width: 1199px){
   .main-sidebar{
     width: 23%;
     float: left;
   }
   .content-holder{
-    width: 71%;
+    width: 72%;
     margin: 60px 0px 0px 0px;
-    margin-right: 1%;
-    float: right; /*- changed float from left to right -*/
+    float: left;
   }
   .main-sidebar.active{
     padding-left:15%;
   }
   .sidebar-collapse{
     display: block;
-    position: fixed; /*- fixed sidebar -*/
   }
   .sidebar-menu .header span{
     display: block;
@@ -266,26 +253,58 @@
   /*  Change with Menu Toggled */
   .main-sidebar.hidden{
     width: 5%;
-    position: fixed; /*- fixed sidebar -*/
   }
   .content-holder.hidden{
     width: 94%;
     margin: 60px 0px 0px 1%;
-    float: right; /*- changed float from left to right -*/
+    float: left;
   }
 }
+/*-------------- Small Screen for Mobile Phones  --------------*/
+/*@media screen (min-width: 768px), screen and (max-width: 991px){
+  .main-sidebar{
+    width: 90%;
+    position: absolute;
+    top:0;
+    left: 0;
+    z-index: 10;
+    background: #fff;
+  }
+  .content-holder{
+    width: 96%;
+    margin: 60px 2% 0 2%;
+  }
+  .sm-title{
+    text-align: center;
+  }
+   .sidebar-collapse{
+    display: none;
+  }
+  .sidebar-menu .header span{
+    display: none;
+  }
+  
+  .main-sidebar.hidden{
+     margin-left: 0;
+  }
+  #toggleIcon{
+    display: none;
+  }
+  .force-collapse{
+    display: none;
+  }
+}*/
 
 /*-------------- Extra Small Screen for Mobile Phones --------------*/
 @media (max-width: 991px){
   .main-sidebar{
     width: 100%;
-    position: fixed;
+    position: absolute;
     top:0;
     left: 0;
     z-index: 30;
     background-color: rgba(0,0,0,0.5);
     margin-top: 50px;
-    height: 100vh;
   }
   .content-holder{
     min-height: 10px;
@@ -295,10 +314,9 @@
     float: left;
   }
   .main-sidebar ul{
-    background: $secondary;
-    width: 60%;
+    background: #fff;
+    width: 90%;
     min-height: 400px;
-    height: 100vh;
   }
    .sm-title{
     text-align: center;
@@ -327,6 +345,10 @@
   .collapse.show{
     display: block !important;
   }
+
+  .menu-holder-hidden{
+    display: block;
+  }
 }
 @media (max-width: 239px){
 
@@ -339,17 +361,12 @@
   }
   .main-sidebar{
     width: 90%;
-    position: fixed;
+    position: absolute;
     top:0;
     left: 0;
     z-index: 10;
     background: #fff;
     margin-top: 100px;
-    height: 100vh;
-  }
-
-  .main-sidebar ul{
-    height: 100vh;
   }
 
   .content-holder{
@@ -390,8 +407,8 @@
 <script>
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
-import COMMON from 'src/common.js'
 import ROUTER from 'src/router'
+import COMMON from 'src/common.js'
 export default {
   mounted(){
   },
@@ -413,36 +430,8 @@ export default {
       menuFlag: true
     }
   },
-  components: {
-    // 'system-notification': require('components/increment/generic/system/Notifications.vue')
-  },
-  watch: {
-    '$route' (to, from) {
-      let index = null
-      for(var i = 0; i < COMMON.sidebarMenu.length && !index; i++) {
-        let item = COMMON.sidebarMenu[i]
-        if(to.path === '/' + item.path) {
-          index = i
-        }
-      }
-      if(index !== null){
-        this.setActiveOnWatch(index, to.path)
-      }else{
-        if(this.prevMenu !== null){
-          this.menu[this.prevMenu].flag = false
-        }
-      }
-    }
-  },
-  computed: {
-    returnMenu() {
-      return this.menu.filter(el => {
-        return el.users === this.user.type || el.users === 'ALL'
-      })
-    }
-  },
   methods: {
-    setActive(index, code = null){
+    setActive(index){
       if(this.prevMenu !== index){
         this.menu[this.prevMenu].flag = false
         this.menu[index].flag = true
@@ -453,20 +442,6 @@ export default {
       }
       if(this.menu[index].subMenu === null){
         ROUTER.push('/' + this.menu[this.prevMenu].path)
-        $('.navbar-collapse').collapse('hide')
-      }
-    },
-    setActiveOnWatch(index, path){
-      if(this.prevMenu !== index){
-        this.menu[this.prevMenu].flag = false
-        this.menu[index].flag = true
-        if(this.menu[this.prevMenu].subMenu !== null){
-          this.menu[this.prevMenu].subMenu[this.subPrevMenu].flag = false
-        }
-        this.prevMenu = index
-      }
-      if(this.menu[index].subMenu === null){
-        ROUTER.push(path)
         $('.navbar-collapse').collapse('hide')
       }
     },

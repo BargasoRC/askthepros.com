@@ -8,13 +8,6 @@ export default{
       tokenRequired: false
     }
   }, {
-    path: '/signup/:email/:code',
-    name: 'signup',
-    component: resolve => require(['components/increment/basic/Signup.vue'], resolve),
-    meta: {
-      tokenRequired: false
-    }
-  }, {
     path: '/signup_partner',
     name: 'signupPartner',
     component: resolve => require(['components/increment/basic/SignupPartner.vue'], resolve),
@@ -62,6 +55,48 @@ export default{
     component: resolve => require(['src/modules/home/index.vue'], resolve),
     meta: {
       tokenRequired: false
+    }
+  }, {
+    path: '/dashboard',
+    name: 'home',
+    component: resolve => require(['src/modules/dashboard/index.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
+    path: '/payments',
+    name: 'home',
+    component: resolve => require(['src/modules/payments/index.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
+    path: '/subscriptions',
+    name: 'home',
+    component: resolve => require(['src/modules/subscriptions/index.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
+    path: '/channels',
+    name: 'home',
+    component: resolve => require(['src/modules/channels/index.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
+    path: '/accounts',
+    name: 'home',
+    component: resolve => require(['src/modules/account/accounts.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
+    path: '/settings',
+    name: 'home',
+    component: resolve => require(['src/modules/account/settings.vue'], resolve),
+    meta: {
+      tokenRequired: true
     }
   }
   ]

@@ -44,20 +44,20 @@ class APIController extends Controller
   );
 
   protected $whiteListedDomain = array(
-    'https://pivotsms.com/',
-    'https://www.pivotsms.com/',
-    'http://www.pivotsms.com/',
-    'http://pivotsms.com/',
+    'https://askthepros.com/',
+    'https://www.askthepros.com/',
+    'http://www.askthepros.com/',
+    'http://askthepros.com/',
     'http://localhost:8001/',
-    'com.pivotsms'
+    'com.askthepros'
   );
 
   protected $whiteListedDomainOrigin = array(
-    'https://pivotsms.com',
-    'https://www.pivotsms.com',
-    'http://www.pivotsms.com',
-    'http://pivotsms.com',
-    'com.pivotsms',
+    'https://askthepros.com',
+    'https://www.askthepros.com',
+    'http://www.askthepros.com',
+    'http://askthepros.com',
+    'com.askthepros',
     'http://localhost:8001'
   );
   
@@ -292,10 +292,27 @@ class APIController extends Controller
   }
   
   public function isValid($request, $action = "create", $subTableName = false){
-    unset($this->tableColumns[0]);
-    array_pop($this->tableColumns);//deleted at
-    array_pop($this->tableColumns);//updated at
-    array_pop($this->tableColumns);//created at
+    // unset($this->tableColumns[0]);
+    // print_r($this->tableColumns);
+    // array_pop($this->tableColumns);//deleted at
+    // array_pop($this->tableColumns);//updated at
+    // array_pop($this->tableColumns);//created at;
+    // $i = 0;
+    // foreach ($this->tableColumns as $key => $value) {
+    //   if($value == 'updated_at'){
+    //     $
+    //   }
+    //   $i++;
+    //   // code...
+    // }
+    $conditions = Array('id', 'created_at', 'updated_at', 'deleted_at');
+    foreach ($conditions as $key => $value) {
+      if (($key = array_search($value, $this->tableColumns)) !== FALSE) {
+        unset($this->tableColumns[$key]);
+      }
+    }
+    
+    // echo json_encode($this->tableColumns);
     foreach($this->tableColumns as $column){
       $this->validation[$column] = (isset($this->validation[$column])) ? $this->validation[$column] : '';
       if(!in_array($column, $this->notRequired) && !isset($this->defaultValue[$column])){//requiring all field by default

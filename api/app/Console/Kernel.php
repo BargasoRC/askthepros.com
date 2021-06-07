@@ -13,12 +13,6 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-       'App\Console\Commands\Campaigns',
-       'App\Console\Commands\Upsells',
-       'App\Console\Commands\CartRecoveries',
-       'App\Console\Commands\SMS',
-       'App\Console\Commands\Billing',
-       'App\Console\Commands\SMSUsageChecker'
     ];
 
     /**
@@ -30,13 +24,6 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // syncing data to app
-        $schedule->command('campaigns:run')->everyMinute();
-        $schedule->command('upsells:run')->everyMinute();
-        $schedule->command('cart_recoveries:run')->everyMinute();
-        $schedule->command('billings:run')->everyMinute();
-        $schedule->command('sms:usage')->everyMinute();
-        // manage synq data
-        $schedule->command('sms:run')->everyFiveMinutes();
     }
 
     /**

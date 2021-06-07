@@ -2,8 +2,8 @@
   <div>
     <div class="system-header">
       <a class="navbar-brand" v-on:click="redirect('dashboard')">
-        <img :src="require('../../assets/img/asktheprooslogo-clear.png')" class="logo-brand">
-        <label class="navbar-brand hide-on-mobile text-white" v-html="common.APP_NAME_HTML"></label>
+        <img :src="require('../../assets/img/logo_white.png')" class="logo-brand">
+        <!-- <label class="navbar-brand hide-on-mobile text-white" v-html="common.APP_NAME_HTML"></label> -->
       </a>
     </div>
     <nav class="header-navbar">
@@ -11,7 +11,7 @@
         <i class="fa fa-bars" aria-hidden="true"></i>
       </span>
       <span class="left-menu-icons">
-        <label class="account-type  hide-on-mobile bg-warning" v-if="!common.header.indexOf('status') && user !== null">{{user.type}}</label>
+        <label class="account-type  hide-on-mobile bg-warning" v-if="user !== null && user.merchant">{{user.merchant.name}}</label>
       </span>
       <span class="right-menu-icons">
         <div class="dropdown"> 
@@ -23,7 +23,7 @@
               <span class="dropdown-item-profile">
                 <span class="account-picture text-center">
                   <span class="profile-photo-header">
-                    <span class="profile-image-holder-header"  v-if="user.profile !== null">
+                    <span class="profile-image-holder-header"  v-if="user.profile">
                       <img v-bind:src="config.BACKEND_URL + user.profile.url">
                     </span>
                     <i class="fa fa-user-circle-o" v-else></i>
@@ -64,45 +64,7 @@
           </span>
         </div>
 
-<!--         <div class="dropdown"> 
-          <span class="nav-item" v-bind:class="{'active-menu': settingFlag === true}" data-toggle="dropdown" id="settings" aria-haspopup="true" aria-expanded="false" v-on:click="makeActive('dropdown')" v-bind:onkeypress="makeActive('')">
-            <span>
-              <i class="fa fa-bell"></i>
-            </span>
-            <span class="dropdown-menu dropdown-menu-right" aria-labelledby="settings">
-              <span v-for="item, index in data">
-                <i style="font-size:100%;" class="fa fa-bell">
-                {{item.display}} <p>{{item.created_at_human}}</p></i>
-              </span>
-            </span>
-          </span>
-        </div>     
- -->
-        <div class="dropdown" v-if="user.messages.data !== null"> 
-            <span class="nav-item" data-toggle="dropdown" id="notifications" aria-haspopup="true" aria-expanded="false">
-              <span>
-                <i class="fas fa-envelope" style="font-size: 22px;margin-top: 2px;"></i>
-                <label class="badge badge-danger" style="margin-left: -15px;" v-if="parseInt(user.messages.totalUnreadMessages) > 0">{{user.messages.totalUnreadMessages}}</label>
-              </span>
-              <span class="dropdown-menu dropdown-menu-right dropdown-menu-notification" aria-labelledby="notifications">
-                <span class="notification-header" @click="redirect('/' + common.messagesHeader.path)">
-                  Recent
-                  <label class="badge badge-danger">{{user.messages.totalUnreadMessages}}</label>
-                </span>
-                <span class="notification-item" v-for="item, index in user.messages.data" v-if="user.messages.data !== null" @click="redirect('/' + common.messagesHeader.path + '/' + item.payload, item)">
-                  <span class="notification-title">
-                    {{item.title.username}}
-                    <label class="badge badge-danger" style="margin-left: 5px;" v-if="parseInt(item.total_unread_messages) > 0">{{item.total_unread_messages}}</label>
-                  </span>
-                  <span class="notification-description">{{item.description}}</span>
-                  <span class="notification-date">Posted on {{item.created_at_human}}</span>
-                </span>
-              </span>
-            </span>
-        </div>
-
-
-        <div class="dropdown" v-if="user.notifications.data !== null"> 
+        <div class="dropdown" v-if="user.notifications.data"> 
             <span class="nav-item" v-bind:class="{'active-menu': notifFlag === true}" data-toggle="dropdown" id="notifications" aria-haspopup="true" aria-expanded="false" v-on:click="makeActive('notif')" v-bind:onkeypress="makeActive('')" v-if="user.notifications.data !== null">
               <span>
                 <i class="fa fa-bell"></i>
@@ -473,8 +435,8 @@ body{
 
 
 .logo-brand{
-  width: 25px;
-  height: 25px;
+  width: auto;
+  height: 35px;
 }
 .left-menu-icons .account-type{
   padding: 10px 10px 10px 10px;

@@ -33,14 +33,13 @@ export default {
 }
 </script>
 
-<style scoped lang='scss'>
+<style scoped lang="scss">
 @import '~assets/style/colors.scss';
 .sectionn {
   background-color: $darkPrimary;
   min-height: 60vh;
   width: 100%;
   color: white;
-  font-family: 'Roboto';
 }
 
 .row {

@@ -36,7 +36,6 @@
         "classmap": [
             "database/seeds",
             "database/factories",
-            "packages/increment/messenger/src/",
             "packages/increment/account/src/",
             "packages/increment/imarket/merchant/src/",
             "packages/increment/common/payload/src/",
@@ -44,7 +43,6 @@
         ],
         "psr-4": {
             "App\\": "app/",
-            "Increment\\Messenger\\": "packages/increment/messenger/src/",
             "Increment\\Account\\": "packages/increment/account/src/",
             "Increment\\Imarket\\Merchant\\": "packages/increment/imarket/merchant/src/",
             "Increment\\Common\\Payload\\": "packages/increment/common/payload/src/",
