@@ -160,6 +160,18 @@ export default {
     roundedInput,
     roundedBtn
   },
+  created() {
+    if(new RegExp(/\?.+=.*/g).test(window.location.href) && localStorage.getItem('login_with')) {
+      let url = window.location.href
+      let query = url.substring(url.indexOf('?') + 1)
+      this.APIRequest('social_lite/authenticate/linkedin/callback?' + query, {}, response => {
+        console.log('Verifying authentication response: ', response)
+        localStorage.removeItem('login_with')
+      }, error => {
+        console.log('Verifying authentication error! ', error)
+      })
+    }
+  },
   methods: {
     login(event) {
       if(this.username !== '' && this.password !== '') {
@@ -191,9 +203,27 @@ export default {
     },
     fbLogin(event) {
       console.log('facebook login:::')
+      localStorage.setItem('login_with', 'facebook')
+      this.APIRequest('social_lite/authenticate/facebook/redirect', {}, response => {
+        if(response.data && response.data.url) {
+          console.log('Authentication with facebook response: ', response)
+          window.location.href = response.data.url
+        }
+      }, error => {
+        console.log('Authentication with facebook error! ', error)
+      })
     },
     linkedInLogin(event) {
       console.log('linkedin login:::')
+      localStorage.setItem('login_with', 'linkedin')
+      this.APIRequest('social_lite/authenticate/linkedin/redirect', {}, response => {
+        if(response.data && response.data.url) {
+          console.log('Authentication with linkedin response: ', response)
+          window.location.href = response.data.url
+        }
+      }, error => {
+        console.log('Authentication with linkedin error! ', error)
+      })
     }
   }
 }
