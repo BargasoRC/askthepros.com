@@ -27,5 +27,6 @@ AUTH.checkAuthentication()
 Vue.use(BootstrapVue)
 Vue.use(Router)
 export default new Router({
-  routes: ModuleRoutes.routes
+  routes: ModuleRoutes.routes,
+  mode: 'history'
 })

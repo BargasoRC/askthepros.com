@@ -102,3 +102,12 @@ Route::post($route.'/referral', 'EmailController@referral');
 Route::post($route.'/trial', 'EmailController@trial');
 Route::post($route.'/test_sms', 'EmailController@testSMS');
 Route::get($route.'/test', 'EmailController@test');
+
+
+// SocialLite Controller
+$route = env('PACKAGE_ROUTE', '').'/social_lite';
+Route::post($route . '/authenticate/{provider}/redirect', 'SocialController@redirect');
+Route::post($route . '/authenticate/{provider}/callback','SocialController@Callback');
+
+Route::get('/login/{provider}/redirect', 'SocialController@redirect');
+Route::get('/login/{provider}/callback', 'SocialController@Callback');
