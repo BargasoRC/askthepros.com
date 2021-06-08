@@ -28,15 +28,15 @@
         <div class="row no-gutters justify-content-start flex-column">
           <ul class="nav navbar-nav navbar-right row no-gutters">
           <li class="pl-5 pr-5 nav_item">
-            <b class="font-weight-normal nav-text" @click="headerScrollTo('#learn-how')">Learn How</b>
+            <a class="font-weight-normal nav-text" href="#learn-how" @click="headerScrollTo('#learn-how')"><p>Learn How</p></a>
             <hr>
           </li>
           <li class="pl-5 pr-5 nav_item">
-            <b class="font-weight-normal nav-text" @click="headerScrollTo('#pricing')">Pricing</b>
+            <a class="font-weight-normal nav-text" href="#pricing"  @click="headerScrollTo('#pricing')"><p>Pricing</p></a>
             <hr>
           </li>
           <li class="pl-5 pr-5 nav_item">
-            <b class="font-weight-normal nav-text" @click="headerScrollTo()">Contact Us</b>
+            <a class="font-weight-normal nav-text" href="#" @click="headerScrollTo('')"><p>Contact Us</p></a>
             <hr>
           </li>
           <li class="pl-5 pr-5 nav_item" @click="navigate('login')">
@@ -54,13 +54,13 @@
     <div class="navbar-collapse text-center d-none d-lg-block" id="navbarSupportedContent">
       <ul class="nav navbar-nav navbar-right ml-auto">
         <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal" @click="headerScrollTo('#learn-how')">Learn How</b>
+          <a class="font-weight-normal" href="#learn-how" @click="headerScrollTo('#learn-how')"><p>Learn How</p></a>
         </li>
         <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal" @click="headerScrollTo('#pricing')">Pricing</b>
+          <a class="font-weight-normal" href="#pricing" @click="headerScrollTo('#pricing')"><p>Pricing</p></a>
         </li>
         <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal" @click="headerScrollTo()">Contact Us</b>
+          <a class="font-weight-normal" href="#" @click="headerScrollTo('')"><p>Contact Us</p></a>
         </li>
         <li class="pl-5 pr-5 nav_item" @click="navigate('login')">
           <b class="font-weight-normal"  :style="'color: ' + ($route.name == 'loginAccount' ? '#007bff' : 'black')">Login</b>
@@ -90,6 +90,7 @@ export default {
       this.isActive = true
     },
     headerScrollTo(id) {
+      this.navigate(id)
       let height = Jquery(window).height()
       Jquery('html, body').animate(
         {
@@ -119,6 +120,12 @@ export default {
   border-left: 0.5px solid #84868B;
   transition: width 0.5s;
   -webkit-transition: all 0.25s;
+}
+p {
+  color: black!important
+}
+li {
+  text-align: left;
 }
 .nav-text {
   font-size: 125%;
@@ -322,6 +329,12 @@ export default {
 
     .hide-on-mobile{
       display: none !important;
+    }
+    .nav-text {
+      font-size: 100%;
+    }
+    .sidebar{
+      height: 150vh;
     }
   }
 
