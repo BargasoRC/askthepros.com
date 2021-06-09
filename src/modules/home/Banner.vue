@@ -11,7 +11,7 @@
         <div class="row d-flex justify-content-center button-container" style=""> 
           <div class="col-md-auto d-flex-row position-absolute button-container-button" >
               <dialogueBtn :onClick="login" :icon="'fas fa-sign-in-alt'" :text="'Login'" :styles="{backgroundColor: '#01004E',color: 'white', marginTop: '20px', marginRight:'30px'}"/> 
-              <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register'" :styles="{backgroundColor: '#F1B814',color: 'white', marginTop: '20px'}"/> 
+              <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register'" :icon_position="'right'" :styles="{backgroundColor: '#F1B814',color: 'white', marginTop: '20px'}"/> 
           </div>
         </div>
       </div>
