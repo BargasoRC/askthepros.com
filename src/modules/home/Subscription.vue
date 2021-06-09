@@ -28,7 +28,7 @@
                 <hr/>
               </span>
             </div>
-            <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register Now'" :styles="{backgroundColor: '#01004E',color: 'white', marginTop: '20px'}"/>
+            <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register Now'" :icon_position="'right'"  :styles="{backgroundColor: '#01004E',color: 'white', marginTop: '20px'}"/>
           </div>
         </span>
       </div>

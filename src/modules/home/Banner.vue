@@ -5,12 +5,12 @@
         <div class="row d-flex justify-content-center banner-container-row">
           <h1 class="display-4 banner-container-text">
             <p style="color:#01004E">Become A Local Expert</p>            
-            <p style="color:#01009A">With Automated Social Media<br>Posting.</p>
+            <p style="color:#01009A">With Automated Social Media Posting.</p>
             </h1>
         </div>
         <div class="row d-flex justify-content-center button-container" style=""> 
           <div class="col-md-auto d-flex-row position-absolute button-container-button" >
-              <dialogueBtn :onClick="login" :icon="'fas fa-sign-in-alt'" :text="'Login'" :styles="{backgroundColor: '#01004E',color: 'white', marginTop: '20px', marginRight:'30px'}"/> 
+              <dialogueBtn :onClick="login" :icon="'fas fa-sign-in-alt'" :text="'Login'" :icon_position="'right'" :styles="{backgroundColor: '#01004E',color: 'white', marginTop: '20px', marginRight:'30px'}"/> 
               <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register'" :icon_position="'right'" :styles="{backgroundColor: '#F1B814',color: 'white', marginTop: '20px'}"/> 
           </div>
         </div>
@@ -32,6 +32,10 @@
     position: relative;
     background-position: center top;
 }
+.button-container-button {
+  display: flex;
+  justify-content: left;
+}
 .banner-container {
    padding-top:15%;
    padding-right:0%;
@@ -41,17 +45,17 @@
   padding-left: 30%;
 }
 .banner-container-text {
-  font-weight: 700;
+  font-weight: bold;
 }
 .banner-text {
   font-family: 'Roboto';
-  font-weight:700;
+  font-weight:bold;
   font-size:50px;
   padding-left:30%;
 }
 .button-container {
   margin-top:2%;
-  padding-left:12%;
+  padding-left:0%;
 }
 
 // For Large Screens
@@ -62,7 +66,7 @@
   padding-top: 20%;
 }
 .button-container {
-  padding-left: 10%;
+  padding-left: 0%;
 }
 }
 // For Medium Screens
@@ -85,7 +89,7 @@
 // For Small Screens
 @media (max-width: 767px){
   .banner-container{
-    // padding-top: 30%;
+    padding-top: 30%;
   }
   .banner-container-row {
     padding-left: 0%;
@@ -101,6 +105,7 @@
 }
 @media (max-width:500px){
   .banner-container-text {
+    padding-top: 30%;
     font-size: 30px;
   }
 }

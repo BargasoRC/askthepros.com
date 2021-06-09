@@ -9,9 +9,7 @@
           <div class="SubQoute">
             <h1 class="QouteText" style="color: #01009A">With Automated Social Media Posting.</h1>
           </div>
-          <div class="d-flex justify-content-center pl-5">
-            <img :src="require('assets/img/section3-img.png')" alt="Image" class="w-75" style="height: 100%;">
-          </div>
+          <img :src="require('assets/img/section3-img.png')" alt="Image" style="width: 85%;height:auto">
         </div>
       </div>
       <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xs-5 d-flex justify-content-center LoginCardContainer mb-5">
@@ -262,12 +260,16 @@ export default {
 }
 .QouteText {
   font-size: 50px;
+  font-weight: bold;
 }
 .SubQoute {
   text-align: center;
 }
 .QouteCard {
   width: 80% !important;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  text-align: center;
 }
 .LoginCard {
   width: 475px;
@@ -300,7 +302,7 @@ export default {
     width: 100%;
   }
   .QouteText {
-  font-size: 20px;
+  font-size: 30px;
   }
 }
 @media(max-width: 1200px) {
@@ -308,7 +310,7 @@ export default {
     width: 90% !important;
   }
   .QouteText {
-  font-size: 40px;
+  font-size: 35px;
   }
 }
 @media (max-width: 1150px){
@@ -350,7 +352,10 @@ export default {
     max-width: 100%;
   }
   .QouteText {
-  font-size: 30px;
+  font-size: 35px;
+  }
+    .QouteCard img {
+    width: 100% !important;
   }
 }
 </style>
