@@ -1,12 +1,15 @@
 <template>
   <div>
-    <h1>Post Management</h1>
+    <User></User>
   </div>
 </template>
 
 <script>
+import User from './User.vue'
 export default {
-
+  components: {
+    User
+  }
 }
 </script>
 

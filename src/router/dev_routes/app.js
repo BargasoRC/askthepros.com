@@ -112,6 +112,13 @@ export default{
     meta: {
       tokenRequired: false
     }
+  }, {
+    path: '/post_management/view/:parameter',
+    name: 'post_management',
+    component: resolve => require(['src/modules/postManagement/UserReview.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
   }
   ]
 }
