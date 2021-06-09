@@ -291,7 +291,7 @@ export default {
   },
   updateData(){
     console.log('dashboard')
-    ROUTER.push('/dashboard')
+    ROUTER.push(`/${this.user.type.toLowerCase()}/dashboard`)
   },
   setGoogleCode(code, scope){
     localStorage.setItem('google_code', code)
