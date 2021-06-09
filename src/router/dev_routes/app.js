@@ -57,21 +57,21 @@ export default{
       tokenRequired: false
     }
   }, {
-    path: '/dashboard',
+    path: '/:user/dashboard',
     name: 'home',
     component: resolve => require(['src/modules/dashboard/index.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/payments',
+    path: '/:user/payments',
     name: 'home',
     component: resolve => require(['src/modules/payments/index.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/subscriptions',
+    path: '/:user/subscriptions',
     name: 'home',
     component: resolve => require(['src/modules/subscriptions/index.vue'], resolve),
     meta: {
@@ -85,21 +85,21 @@ export default{
       tokenRequired: true
     }
   }, {
-    path: '/accounts',
+    path: '/:user/accounts',
     name: 'home',
     component: resolve => require(['src/modules/account/accounts.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/settings',
+    path: '/:user/settings',
     name: 'home',
     component: resolve => require(['src/modules/account/settings.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/post_management',
+    path: '/:user/post_management',
     name: 'home',
     component: resolve => require(['src/modules/postManagement/index.vue'], resolve),
     meta: {

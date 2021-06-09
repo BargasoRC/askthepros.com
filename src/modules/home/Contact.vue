@@ -9,9 +9,7 @@
           <div class="SubQoute">
             <h1 class="QouteText" style="color: #01009A">With Automated Social Media Posting.</h1>
           </div>
-          <div class="d-flex justify-content-center pl-5">
-            <img :src="require('assets/img/section3-img.png')" alt="Image" class="w-75" style="height: 100%;">
-          </div>
+          <img :src="require('assets/img/section3-img.png')" alt="Image" style="width: 85%;height:auto">
         </div>
       </div>
       <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xs-5 d-flex justify-content-center LoginCardContainer mb-5">
@@ -20,7 +18,7 @@
             <div class="d-flex justify-content-center pt-5 pb-2 mb-3">
               <b>Contact Us</b>
             </div>
-            <div class="d-flex justify-content-center pb-2 mb-3">
+            <div class="d-flex justify-content-center pb-2 mb-3" style="margin-top: -10px">
               <p>We would love to hear from you!</p>
             </div>
             <div>
@@ -36,7 +34,8 @@
             
             <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-center mt-2">
               <dialogueBtn 
-                :icon="'fas fa-sign-in-alt'"
+                :icon="'fas fa-paper-plane'"
+                :icon_position="'right'" 
                 :text="'Send Message'"
                 :styles="{
                   backgroundColor: '#01004E',
@@ -90,12 +89,16 @@ export default {
 }
 .QouteText {
   font-size: 50px;
+  font-weight: bold;
 }
 .SubQoute {
   text-align: center;
 }
 .QouteCard {
   width: 80% !important;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  text-align: center;
 }
 .LoginCard {
   width: 475px;
@@ -114,11 +117,15 @@ export default {
   align-items: center !important;
   background: none;
   background: white;
+  
 }
 
 @media (max-width: 500px) {
   .LoginCard {
     width: 100%;
+  }
+  .QouteText {
+  font-size: 30px;
   }
 }
 @media(max-width: 1200px) {
@@ -126,8 +133,8 @@ export default {
     width: 90% !important;
   }
   .QouteText {
-  font-size: 40px;
-}
+  font-size: 35px;
+  }
 }
 @media (max-width: 1150px){
   .QouteCardContainer {
@@ -163,12 +170,15 @@ export default {
     max-width: 100%;
   }
   .QouteText {
-  font-size: 30px;
+  font-size: 35px;
   }
   .LoginCardContainer {
     -ms-flex: 0 0 100%;
     flex: 0 0 100%;
     max-width: 100%;
-  }  
+  }
+    .QouteCard img {
+    width: 100% !important;
+  }
 }
 </style>

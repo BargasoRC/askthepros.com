@@ -9,6 +9,7 @@
           <div class="SubQoute">
             <h1 class="QouteText" style="color: #01009A">With Automated Social Media Posting.</h1>
           </div>
+          <img :src="require('assets/img/section3-img.png')" alt="Image" style="width: 85%;height:auto">
         </div>
       </div>
       <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xs-5 d-flex justify-content-center LoginCardContainer mb-5">
@@ -202,12 +203,16 @@ export default {
 }
 .QouteText {
   font-size: 50px;
+  font-weight: bold;
 }
 .SubQoute {
   text-align: center;
 }
 .QouteCard {
   width: 80% !important;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  text-align: center;
 }
 .LoginCard {
   width: 475px;
@@ -222,13 +227,14 @@ export default {
   min-height: 85vh;
 }
 .RowContainer {
-  background: none;
+  background: white;
 }
 .QouteCardContainer {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  background: none;
+  background: white;
+    margin-top: 5%;
 }
 .LoginCardContainer {
   background: none;
@@ -238,10 +244,16 @@ export default {
   .LoginCard {
     width: 100%;
   }
+  .QouteText {
+  font-size: 30px;
+  }
 }
 @media(max-width: 1200px) {
   .QouteCardContainer {
     width: 90% !important;
+  }
+  .QouteText {
+  font-size: 35px;
   }
 }
 @media (max-width: 1150px){
@@ -267,6 +279,9 @@ export default {
     flex: 0 0 60%;
     max-width: 60%;
   }
+  .QouteText {
+  font-size: 35px;
+  }
 }
 @media (max-width: 768px){
   .QouteCardContainer {
@@ -278,6 +293,12 @@ export default {
     -ms-flex: 0 0 100%;
     flex: 0 0 100%;
     max-width: 100%;
+  }
+  .QouteText {
+  font-size: 35px;
+  }
+  .QouteCard img {
+    width: 100% !important;
   }
 }
 </style>
