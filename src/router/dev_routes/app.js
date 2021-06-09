@@ -98,6 +98,13 @@ export default{
     meta: {
       tokenRequired: true
     }
+  }, {
+    path: '/post_management',
+    name: 'home',
+    component: resolve => require(['src/modules/postManagement/index.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
   }
   ]
 }

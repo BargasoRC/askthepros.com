@@ -4,16 +4,22 @@
     :style="styles"
     @click="onClick"
   >
+    <i 
+      :class="icon"
+      style="margin-right: 10px;"
+      v-if="icon_position == 'left'"
+    ></i>
     {{text}} 
     <i 
       :class="icon"
       style="margin-left: 20px;"
+      v-if="icon_position == 'right'"
     ></i>
   </button>
 </template>
 <script>
 export default {
-  props: ['onClick', 'icon', 'text', 'styles']
+  props: ['onClick', 'icon', 'text', 'styles', 'icon_position']
 }
 </script>
 <style lang="scss" scoped>
