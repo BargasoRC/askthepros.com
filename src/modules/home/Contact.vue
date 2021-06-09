@@ -114,11 +114,15 @@ export default {
   align-items: center !important;
   background: none;
   background: white;
+  
 }
 
 @media (max-width: 500px) {
   .LoginCard {
     width: 100%;
+  }
+  .QouteText {
+  font-size: 20px;
   }
 }
 @media(max-width: 1200px) {
@@ -127,7 +131,7 @@ export default {
   }
   .QouteText {
   font-size: 40px;
-}
+  }
 }
 @media (max-width: 1150px){
   .QouteCardContainer {
