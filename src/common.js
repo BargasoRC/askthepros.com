@@ -4,7 +4,7 @@ export default {
   sidebarMenu: [
     // {accountType: 'USER', showOnAdmin: true, accountStatus: 'ALL', description: 'Dashboard', icon: 'fa fa-tachometer', path: 'dashboard', flag: false, subMenu: null},
     {accountType: 'EXPERT', showOnAdmin: true, accountStatus: 'ALL', description: 'Dashboard', icon: 'fa fa-tachometer', path: 'dashboard', flag: false, subMenu: null},
-    {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ALL', description: 'Post Management', icon: 'fa fa-tachometer', path: 'post_management', flag: false, subMenu: null},
+    {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ALL', description: 'Post Management', icon: 'fas fa-play', path: 'post_management', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ALL', description: 'Accounts Management', icon: 'fa fa-tachometer', path: 'accounts', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ALL', description: 'Billing Management', icon: 'fa fa-tachometer', path: 'billing_management', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ALL', description: 'Subscription Management', icon: 'fa fa-tachometer', path: 'subscriptions_management', flag: false, subMenu: null},
