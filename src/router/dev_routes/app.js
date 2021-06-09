@@ -98,6 +98,13 @@ export default{
     meta: {
       tokenRequired: true
     }
+  }, {
+    path: '/contact',
+    name: 'home',
+    component: resolve => require(['src/modules/home/Contact.vue'], resolve),
+    meta: {
+      tokenRequired: false
+    }
   }
   ]
 }

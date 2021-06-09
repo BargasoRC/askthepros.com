@@ -51,7 +51,7 @@
 }
 .button-container {
   margin-top:2%;
-  padding-left:20%;
+  padding-left:12%;
 }
 
 // For Large Screens

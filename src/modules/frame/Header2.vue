@@ -36,7 +36,7 @@
             <hr>
           </li>
           <li class="pl-5 pr-5 nav_item">
-            <a class="font-weight-normal nav-text" href="#" @click="headerScrollTo('')"><p>Contact Us</p></a>
+            <a class="font-weight-normal nav-text" href="#" @click="navigate('contact')"><p>Contact Us</p></a>
             <hr>
           </li>
           <li class="pl-5 pr-5 nav_item" @click="navigate('login')">
@@ -60,7 +60,7 @@
           <a class="font-weight-normal" href="#pricing" @click="headerScrollTo('#pricing')"><p>Pricing</p></a>
         </li>
         <li class="pl-5 pr-5 nav_item">
-          <a class="font-weight-normal" href="#" @click="headerScrollTo('')"><p>Contact Us</p></a>
+          <a class="font-weight-normal" @click="navigate('contact')"><p>Contact Us</p></a>
         </li>
         <li class="pl-5 pr-5 nav_item" @click="navigate('login')">
           <b class="font-weight-normal"  :style="'color: ' + ($route.name == 'loginAccount' ? '#007bff' : 'black')">Login</b>
@@ -140,7 +140,7 @@ li {
   z-index: 100;
 }
 .navbar {
-   background: none !important;
+   background: white !important;
 }
 .navbar-header {
   background: none !important;
