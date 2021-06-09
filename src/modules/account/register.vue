@@ -134,6 +134,7 @@
                 :onClick="register"
                 :icon="'fas fa-sign-in-alt'"
                 :text="'Register now'"
+                :icon_position="'right'"
                 :styles="{
                   backgroundColor: '#F1B814',
                   color: 'white'
@@ -200,6 +201,7 @@
                 :onClick="login"
                 :icon="'fas fa-sign-in-alt'"
                 :text="'Login'"
+                :icon_position="'right'"
                 :styles="{
                   backgroundColor: '#01009A',
                   color: 'white'

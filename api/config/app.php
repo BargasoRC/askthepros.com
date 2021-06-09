@@ -164,6 +164,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         // Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+        'Tymon\JWTAuth\Providers\LaravelServiceProvider',
 
         /*
          * Package Service Providers...
@@ -235,6 +236,8 @@ return [
         // 'JWTAuth'   => Tymon\JWTAuthFacades\JWTAuth::class,
         // 'JWTFactory' => Tymon\JWTAuthFacades\JWTFactory::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'JWTAuth' => 'Tymon\JWTAuth\Facades\JWTAuth',
+        'JWTFactory' => 'Tymon\JWTAuth\Facades\JWTFactory'
     ],
 
 ];
