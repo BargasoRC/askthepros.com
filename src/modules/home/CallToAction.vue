@@ -8,7 +8,7 @@
         <span class="col-md-6">   
             <h1>Connect your Social Media and Automate.</h1>
             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the. </p>
-            <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register Now'" :styles="{backgroundColor: '#F1B814',color: 'white', marginTop: '20px'}"/>
+            <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register Now'" :icon_position="'right'" :styles="{backgroundColor: '#F1B814',color: 'white', marginTop: '20px'}"/>
         </span>
       </div>
     </div>
