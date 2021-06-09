@@ -1,0 +1,174 @@
+<template>
+  <div class="LoginContainer col-sm-12">
+    <div class="row RowContainer">
+      <div class="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xs-7 QouteCardContainer mb-5">
+        <div class="QouteCard">
+          <div class="SubQoute">
+            <h1 class="QouteText" style="color: #01004E">Become A Local Expert</h1>
+          </div>
+          <div class="SubQoute">
+            <h1 class="QouteText" style="color: #01009A">With Automated Social Media Posting.</h1>
+          </div>
+          <div class="d-flex justify-content-center pl-5">
+            <img :src="require('assets/img/section3-img.png')" alt="Image" class="w-75" style="height: 100%;">
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xs-5 d-flex justify-content-center LoginCardContainer mb-5">
+        <div class="card LoginCard">
+          <div class="card-body LoginCardBody">
+            <div class="d-flex justify-content-center pt-5 pb-2 mb-3">
+              <b>Contact Us</b>
+            </div>
+            <div class="d-flex justify-content-center pb-2 mb-3">
+              <p>We would love to hear from you!</p>
+            </div>
+            <div>
+              <p class="pl-2 mt-2"><b>Name</b></p>
+              <input type="text" class="inputField">
+              <p class="pl-2 mt-2"><b>Email</b></p>
+              <input type="text" class="inputField">
+              <p class="pl-2 mt-2"><b>Subject</b></p>
+              <input type="text" class="inputField">
+              <p class="pl-2 mt-2"><b>Content</b></p>
+              <textarea class="mt-2 textArea" name="" id="" cols="30" rows="10"></textarea>
+            </div>
+            
+            <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-center mt-2">
+              <dialogueBtn 
+                :icon="'fas fa-sign-in-alt'"
+                :text="'Send Message'"
+                :styles="{
+                  backgroundColor: '#01004E',
+                  color: 'white'
+                }"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import dialogueBtn from 'src/modules/generic/dialogueBtn'
+import roundedInput from 'src/modules/generic/roundedInput'
+import roundedBtn from 'src/modules/generic/roundedBtn'
+import AUTH from 'src/services/auth'
+export default {
+  data() {
+    return {
+    }
+  },
+  components: {
+    dialogueBtn,
+    roundedInput,
+    roundedBtn
+  },
+  created() {
+  },
+  methods: {
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import "~assets/style/colors.scss";
+.textArea {
+  width:100%;
+  border: 0.25px solid #84868B;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+.inputField {
+  width: 100%;
+  height: 45px;
+  border: 0.25px solid #84868B;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+.QouteText {
+  font-size: 50px;
+}
+.SubQoute {
+  text-align: center;
+}
+.QouteCard {
+  width: 80% !important;
+}
+.LoginCard {
+  width: 475px;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
+  -webkit-box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
+  -moz-box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
+}
+.RowContainer {
+  background: white;
+}
+.QouteCardContainer {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  background: none;
+  background: white;
+}
+
+@media (max-width: 500px) {
+  .LoginCard {
+    width: 100%;
+  }
+}
+@media(max-width: 1200px) {
+  .QouteCardContainer {
+    width: 90% !important;
+  }
+  .QouteText {
+  font-size: 40px;
+}
+}
+@media (max-width: 1150px){
+  .QouteCardContainer {
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  .LoginCardContainer {
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+@media (max-width: 950px){
+  .QouteCardContainer {
+    -ms-flex: 0 0 40%;
+    flex: 0 0 40%;
+    max-width: 40%;
+  }
+  .QouteText {
+  font-size: 35px;
+  }
+  .LoginCardContainer {
+    -ms-flex: 0 0 60%;
+    flex: 0 0 60%;
+    max-width: 60%;
+  }
+}
+@media (max-width: 768px){
+  .QouteCardContainer {
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .QouteText {
+  font-size: 30px;
+  }
+  .LoginCardContainer {
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+  }  
+}
+</style>
