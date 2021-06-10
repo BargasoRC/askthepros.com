@@ -38,7 +38,7 @@
         </div>
         <div class="row no-gutters justify-content-center nav-container">
             <div class="nav_item_m" @click="navigate('contact')">
-              <b class="font-weight-normal nav-text" @click="navigate('contact')" :style="'color: ' + ($route.name == 'contact' ? '#007bff' : 'black')">Contact Us</b>
+              <b class="font-weight-normal nav-text" @click="navigate('contact')" :style="'color: ' + ($route.name == 'contactPage' ? '#007bff' : 'black')">Contact Us</b>
             </div>
         </div>
         <div class="row no-gutters justify-content-center nav-container">
@@ -62,7 +62,7 @@
           <b class="font-weight-normal" href="#pricing" @click="headerScrollTo('#pricing')">Pricing</b>
         </li>
         <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal" @click="navigate('contact')">Contact Us</b>
+          <b class="font-weight-normal" @click="navigate('contact')" :style="'color: ' + ($route.name == 'contactPage' ? '#007bff' : 'black')">Contact Us</b>
         </li>
         <li class="pl-5 pr-5 nav_item" @click="navigate('login')">
           <b class="font-weight-normal"  :style="'color: ' + ($route.name == 'loginAccount' ? '#007bff' : 'black')">Login</b>
@@ -139,7 +139,7 @@ li {
   width: 80%;
 }
 b {
-  color:black!important;
+  color:black;
 }
 b:hover {
   color:#01009A!important;
