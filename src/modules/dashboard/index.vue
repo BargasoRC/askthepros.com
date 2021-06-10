@@ -1,7 +1,7 @@
 <template>
   <div>
     <Admin v-if="user.type === 'ADMIN'"/>
-    <Expert v-if-else="user.type === 'EXPERT'"/>
+    <Expert v-if="user.type === 'EXPERT'"/>
   </div>
 </template>
 
