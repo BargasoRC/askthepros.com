@@ -7,6 +7,7 @@
 
 <script>
 import Admin from './Admin.vue'
+import User from './User.vue'
 import AUTH from 'src/services/auth'
 export default {
   data() {
@@ -15,7 +16,8 @@ export default {
     }
   },
   components: {
-    Admin
+    Admin,
+    User
   }
 }
 </script>
