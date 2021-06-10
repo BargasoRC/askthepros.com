@@ -15,15 +15,16 @@
             class="navbar-toggler" 
             type="button" 
             @click="showSidebar()"
+            style="border:none;color:#01004E"
           >
-          <i class="navbar-toggler-icon"></i>
+          <i class="fas fa-bars fa-2x"></i>
         </button> 
       </a>
     </div>
     <!-- Show when screen is <=991px -->
     <div class="sidebar contianer-fluid" id="navbarSupportedContent d-none d-sm-block" v-if="!isActive">
-        <div class="row w-100  justify-content-end no-gutters"  style="padding-right:20%; padding-top:20%">
-          <i class="fas fa-times fa-2x" @click="showSidebar()"></i>
+        <div class="row w-100  justify-content-end no-gutters"  style="padding-right:20%; padding-top:20%; color:#01004E">
+          <i class="fas fa-times fa-3x" @click="showSidebar()"></i>
         </div>
         <div class="row no-gutters justify-content-center nav-container">
             <div class="nav_item_m" @click="headerScrollTo('#learn-how')">
@@ -37,7 +38,7 @@
         </div>
         <div class="row no-gutters justify-content-center nav-container">
             <div class="nav_item_m" @click="navigate('contact')">
-              <b class="font-weight-normal nav-text" href="#" @click="navigate('contact')">Contact Us</b>
+              <b class="font-weight-normal nav-text" @click="navigate('contact')" :style="'color: ' + ($route.name == 'contactPage' ? '#007bff' : 'black')">Contact Us</b>
             </div>
         </div>
         <div class="row no-gutters justify-content-center nav-container">
@@ -61,7 +62,7 @@
           <b class="font-weight-normal" href="#pricing" @click="headerScrollTo('#pricing')">Pricing</b>
         </li>
         <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal" @click="navigate('contact')">Contact Us</b>
+          <b class="font-weight-normal" @click="navigate('contact')" :style="'color: ' + ($route.name == 'contactPage' ? '#007bff' : 'black')">Contact Us</b>
         </li>
         <li class="pl-5 pr-5 nav_item" @click="navigate('login')">
           <b class="font-weight-normal"  :style="'color: ' + ($route.name == 'loginAccount' ? '#007bff' : 'black')">Login</b>
@@ -92,6 +93,7 @@ export default {
     },
     headerScrollTo(id) {
       this.navigate(id)
+      window.location.reload()
       let height = Jquery(window).height()
       Jquery('html, body').animate(
         {
@@ -105,6 +107,27 @@ export default {
     }
   }
 }
+window.addEventListener('load', function () {
+  Jquery(document).ready(function () {
+    if (window.location.hash === '#learn-how') {
+      let height = Jquery(window).height()
+      Jquery('html, body').animate(
+        {
+          scrollTop: Jquery('#learn-how').offset().top - parseInt(height * 0.0)
+        },
+        500
+      )
+    } else if (window.location.hash === '#pricing') {
+      let height = Jquery(window).height()
+      Jquery('html, body').animate(
+        {
+          scrollTop: Jquery('#services').offset().top - parseInt(height * 0.0)
+        },
+        500
+      )
+    }
+  })
+})
 </script>
 <style scoped lang="scss">
 @import "~assets/style/colors.scss";
@@ -139,6 +162,9 @@ li {
 }
 b {
   color:black;
+}
+b:hover {
+  color:#01009A!important;
 }
 .nav-container:hover{
   background: #01009A;
@@ -268,6 +294,9 @@ b {
   }
 
 @media (max-width: 991px){
+  b {
+  color:black;
+  }
   b:hover {
     color: white;
   }
