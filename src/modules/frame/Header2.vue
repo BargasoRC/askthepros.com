@@ -20,47 +20,48 @@
         </button> 
       </a>
     </div>
-    <!-- Show when screen is <991px -->
+    <!-- Show when screen is <=991px -->
     <div class="sidebar contianer-fluid" id="navbarSupportedContent d-none d-sm-block" v-if="!isActive">
         <div class="row w-100  justify-content-end no-gutters"  style="padding-right:20%; padding-top:20%">
           <i class="fas fa-times fa-2x" @click="showSidebar()"></i>
         </div>
-        <div class="row no-gutters justify-content-start flex-column">
-          <ul class="nav navbar-nav navbar-right row no-gutters">
-          <li class="pl-5 pr-5 nav_item">
-            <a class="font-weight-normal nav-text" href="#learn-how" @click="headerScrollTo('#learn-how')"><p>Learn How</p></a>
-            <hr>
-          </li>
-          <li class="pl-5 pr-5 nav_item">
-            <a class="font-weight-normal nav-text" href="#pricing"  @click="headerScrollTo('#pricing')"><p>Pricing</p></a>
-            <hr>
-          </li>
-          <li class="pl-5 pr-5 nav_item">
-            <a class="font-weight-normal nav-text" href="#" @click="navigate('contact')"><p>Contact Us</p></a>
-            <hr>
-          </li>
-          <li class="pl-5 pr-5 nav_item" @click="navigate('login')">
-            <b class="font-weight-normal nav-text"  :style="'color: ' + ($route.name == 'loginAccount' ? '#007bff' : 'black')">Login</b>
-            <hr>
-          </li>
-          <li class="pl-5 pr-5 nav_item" @click="navigate('signup')">
-            <b class="font-weight-normal nav-text" :style="'color: ' + ($route.name == 'signup' ? '#007bff' : 'black')">Register</b>
-            <hr>
-          </li>
-        </ul>
+        <div class="row no-gutters justify-content-center nav-container">
+            <div class="nav_item_m" @click="headerScrollTo('#learn-how')">
+              <b class="font-weight-normal nav-text" href="#learn-how" @click="headerScrollTo('#learn-how')">Learn How</b>
+            </div>
+        </div>
+        <div class="row no-gutters justify-content-center nav-container">
+            <div class="nav_item_m" @click="headerScrollTo('#pricing')">
+              <b class="font-weight-normal nav-text" href="#pricing"  @click="headerScrollTo('#pricing')">Pricing</b>
+            </div>
+        </div>
+        <div class="row no-gutters justify-content-center nav-container">
+            <div class="nav_item_m" @click="navigate('contact')">
+              <b class="font-weight-normal nav-text" href="#" @click="navigate('contact')">Contact Us</b>
+            </div>
+        </div>
+        <div class="row no-gutters justify-content-center nav-container">
+            <div class="nav_item_m" @click="navigate('login')">
+              <b class="font-weight-normal nav-text" @click="navigate('login')"  :style="'color: ' + ($route.name == 'loginAccount' ? '#007bff' : 'black')">Login</b>
+            </div>
+        </div>
+        <div class="row no-gutters justify-content-center nav-container">
+            <div class="nav_item_m" @click="navigate('login')">
+              <b class="font-weight-normal nav-text" @click="navigate('login')" :style="'color: ' + ($route.name == 'signup' ? '#007bff' : 'black')">Register</b>
+            </div>
         </div>
     </div>
     <!-- Show  when screen is >991px -->
     <div class="navbar-collapse text-center d-none d-lg-block" id="navbarSupportedContent">
       <ul class="nav navbar-nav navbar-right ml-auto">
         <li class="pl-5 pr-5 nav_item">
-          <a class="font-weight-normal" href="#learn-how" @click="headerScrollTo('#learn-how')"><p>Learn How</p></a>
+          <b class="font-weight-normal" href="#learn-how" @click="headerScrollTo('#learn-how')">Learn How</b>
         </li>
         <li class="pl-5 pr-5 nav_item">
-          <a class="font-weight-normal" href="#pricing" @click="headerScrollTo('#pricing')"><p>Pricing</p></a>
+          <b class="font-weight-normal" href="#pricing" @click="headerScrollTo('#pricing')">Pricing</b>
         </li>
         <li class="pl-5 pr-5 nav_item">
-          <a class="font-weight-normal" @click="navigate('contact')"><p>Contact Us</p></a>
+          <b class="font-weight-normal" @click="navigate('contact')">Contact Us</b>
         </li>
         <li class="pl-5 pr-5 nav_item" @click="navigate('login')">
           <b class="font-weight-normal"  :style="'color: ' + ($route.name == 'loginAccount' ? '#007bff' : 'black')">Login</b>
@@ -121,9 +122,6 @@ export default {
   transition: width 0.5s;
   -webkit-transition: all 0.25s;
 }
-p {
-  color: black!important
-}
 li {
   text-align: left;
 }
@@ -132,6 +130,21 @@ li {
 }
 .nav_item {
   cursor: pointer;
+}
+.nav_item_m {
+  border-bottom: 0.5px solid #84868B;
+  margin-top: 20px;
+  padding-bottom: 20px;
+  width: 80%;
+}
+b {
+  color:black;
+}
+.nav-container:hover{
+  background: #01009A;
+}
+.nav-container:hover b{
+  color: white!important;
 }
 .navigationBar {
   width: 100%;
@@ -248,13 +261,16 @@ li {
       width: 10%;
     }
     .logo-brand{
-      width: 80px !important;
-      height: 50px !important;
-      margin-left:-1% !important;
+     width: auto !important;
+      height: 75px !important;
+      margin-left: 5% !important
     }
   }
 
 @media (max-width: 991px){
+  b:hover {
+    color: white;
+  }
   .sidebar {
      display: block;
    }
@@ -283,9 +299,8 @@ li {
       width: 10%;
     }
     .logo-brand{
-      margin-left:-1% !important;
-      width: 80px !important;
-      height: 50px !important;
+     width: auto !important;
+      height: 75px !important;
       margin-left: 5% !important
     }
  }
@@ -315,8 +330,9 @@ li {
     }
 
     .logo-brand{
-      width: 80px !important;
-      height: 50px !important;
+     width: auto !important;
+      height: 70px !important;
+      margin-left: 5% !important
     }
 
     .left-menu-icons{

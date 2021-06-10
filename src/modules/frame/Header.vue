@@ -591,6 +591,11 @@ body{
     .nav-item{
       width: 10%;
     }
+    .logo-brand{
+      width: auto;
+      height: 35px;
+    }
+    
   }
 
 @media (max-width: 991px){
