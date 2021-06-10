@@ -15,15 +15,16 @@
             class="navbar-toggler" 
             type="button" 
             @click="showSidebar()"
+            style="border:none;color:#01004E"
           >
-          <i class="navbar-toggler-icon"></i>
+          <i class="fas fa-bars fa-2x"></i>
         </button> 
       </a>
     </div>
     <!-- Show when screen is <=991px -->
     <div class="sidebar contianer-fluid" id="navbarSupportedContent d-none d-sm-block" v-if="!isActive">
-        <div class="row w-100  justify-content-end no-gutters"  style="padding-right:20%; padding-top:20%">
-          <i class="fas fa-times fa-2x" @click="showSidebar()"></i>
+        <div class="row w-100  justify-content-end no-gutters"  style="padding-right:20%; padding-top:20%; color:#01004E">
+          <i class="fas fa-times fa-3x" @click="showSidebar()"></i>
         </div>
         <div class="row no-gutters justify-content-center nav-container">
             <div class="nav_item_m" @click="headerScrollTo('#learn-how')">
@@ -37,7 +38,7 @@
         </div>
         <div class="row no-gutters justify-content-center nav-container">
             <div class="nav_item_m" @click="navigate('contact')">
-              <b class="font-weight-normal nav-text" href="#" @click="navigate('contact')">Contact Us</b>
+              <b class="font-weight-normal nav-text" @click="navigate('contact')" :style="'color: ' + ($route.name == 'contact' ? '#007bff' : 'black')">Contact Us</b>
             </div>
         </div>
         <div class="row no-gutters justify-content-center nav-container">
