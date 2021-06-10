@@ -93,6 +93,7 @@ export default {
     },
     headerScrollTo(id) {
       this.navigate(id)
+      window.location.reload()
       let height = Jquery(window).height()
       Jquery('html, body').animate(
         {
@@ -106,6 +107,27 @@ export default {
     }
   }
 }
+window.addEventListener('load', function () {
+  Jquery(document).ready(function () {
+    if (window.location.hash === '#learn-how') {
+      let height = Jquery(window).height()
+      Jquery('html, body').animate(
+        {
+          scrollTop: Jquery('#learn-how').offset().top - parseInt(height * 0.0)
+        },
+        500
+      )
+    } else if (window.location.hash === '#pricing') {
+      let height = Jquery(window).height()
+      Jquery('html, body').animate(
+        {
+          scrollTop: Jquery('#services').offset().top - parseInt(height * 0.0)
+        },
+        500
+      )
+    }
+  })
+})
 </script>
 <style scoped lang="scss">
 @import "~assets/style/colors.scss";
