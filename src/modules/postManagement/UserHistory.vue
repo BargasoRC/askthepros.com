@@ -5,10 +5,11 @@
 
     <div style="margin-top: 3%">
         <roundedBtn
+            :onClick="forReview"
             :text="'For Review'"
             class="button"
             :styles="{
-                backgroundColor: colors.primary,
+                backgroundColor: colors.white,
                 color: 'white',
                 width: '15%',
                 borderTopRightRadius: '0px !important',
@@ -17,11 +18,10 @@
             }"
         />
         <roundedBtn
-            :onClick="history"
             :text="'History'"
             class="button1"
             :styles="{
-                backgroundColor: colors.white,
+                backgroundColor: colors.primary,
                 outlineColor: colors.primary,
                 color: 'white',
                 width: '15%',
@@ -31,25 +31,26 @@
             }"
         />
     </div>
-    <p style="margin-top: 5px"><i style="color: red">**</i><i>This section only displays list of post if Automation Settings is set to "Review" not autopost. Post will not be posted on social media channels, unless approved.</i></p>
 
     <table class="table table-bordered table-responsive" v-if="data.length > 0" style="margin-top: 3%">
       <thead>
         <tr>
-          <th scope="col">Date</th>
+          <th scope="col">Date Posted</th>
+          <th scope="col">Time Posted</th>
           <th scope="col">Post Title</th>
-          <th scope="col">Channels To Post</th>
+          <th scope="col">Channels Posted To</th>
+          <th scope="col">Link</th>
           <th scope="col">Status</th>
-          <th scope="col">Review</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(item, index) in data" :key="index">
           <td>{{item.date}}</td>
+          <td>{{item.time}}</td>
           <td>{{item.post_title}}</td>
-          <td>{{item.channels_to_post}}</td>
+          <td>{{item.channels_posted_to}}</td>
+          <td>{{item.link}}</td>
           <td>{{item.status}}</td>
-          <td><i class="fa fa-eye text-primary" style="margin-left: 5px; float: left;" @click="review(item.id)"></i></td>
         </tr>
       </tbody>
     </table>
@@ -77,23 +78,29 @@ export default {
       data: [{
         id: 1,
         date: '05/18/2021',
+        time: '18:00',
         post_title: 'My Post Title',
-        channels_to_post: 'Google My Business, Facebook, LinkedIn',
-        status: 'Pending'
+        channels_posted_to: 'Facebook',
+        link: 'https://cdn2.stylecraze.com/wp-content/uploads/2013/07/47-shutterstock_130738760.jpg',
+        status: 'Posted Automatically'
       },
       {
         id: 2,
         date: '05/18/2021',
+        time: '18:00',
         post_title: 'My Post Title',
-        channels_to_post: 'Google My Business, Facebook, LinkedIn',
-        status: 'Pending'
+        channels_posted_to: 'Google My Business',
+        link: 'https://cdn2.stylecraze.com/wp-content/uploads/2013/07/47-shutterstock_130738760.jpg',
+        status: 'Posted-Reviewed by You'
       },
       {
         id: 3,
         date: '05/18/2021',
+        time: '18:00',
         post_title: 'My Post Title',
-        channels_to_post: 'Google My Business, Facebook, LinkedIn',
-        status: 'Pending'
+        channels_posted_to: 'LinkedIn',
+        link: 'https://cdn2.stylecraze.com/wp-content/uploads/2013/07/47-shutterstock_130738760.jpg',
+        status: 'Posted Automatically'
       }],
       colors: COLORS,
       limit: 5,
@@ -108,11 +115,8 @@ export default {
     Pager
   },
   methods: {
-    review(id){
-      ROUTER.push('post_management/view/' + id)
-    },
-    history(){
-      ROUTER.push('post_management/history')
+    forReview(){
+      ROUTER.push('/user/post_management')
     }
   }
 }
@@ -128,9 +132,10 @@ export default {
 }
 .button{
   border-bottom-right-radius: 0px !important;
-}
-.button1{
   color: $primary !important;
   border: 1px solid $primary !important;
+}
+.button1{
+  border-color: $primary !important;
 }
 </style>

@@ -113,9 +113,16 @@ export default{
       tokenRequired: false
     }
   }, {
-    path: '/post_management/view/:parameter',
+    path: '/:user/post_management/view/:parameter',
     name: 'post_management',
     component: resolve => require(['src/modules/postManagement/UserReview.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
+    path: '/:user/post_management/history',
+    name: 'post_management',
+    component: resolve => require(['src/modules/postManagement/UserHistory.vue'], resolve),
     meta: {
       tokenRequired: true
     }
