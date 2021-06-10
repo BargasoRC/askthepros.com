@@ -139,7 +139,10 @@ li {
   width: 80%;
 }
 b {
-  color:black;
+  color:black!important;
+}
+b:hover {
+  color:#01009A!important;
 }
 .nav-container:hover{
   background: #01009A;
@@ -269,6 +272,9 @@ b {
   }
 
 @media (max-width: 991px){
+  b {
+  color:black;
+  }
   b:hover {
     color: white;
   }
