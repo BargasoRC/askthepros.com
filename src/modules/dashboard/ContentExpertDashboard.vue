@@ -38,6 +38,7 @@
   width: 96%;
   margin-left: 2%;
   margin-right: 2%;
+  margin-bottom: 20vh;
   float: left;
   color: $title;
   min-height: 100vh;
@@ -81,16 +82,16 @@ export default {
         {title: 'Actions', type: 'action'}
       ],
       tableData: [
-        {title: 'My Post Title', channel: 'Google My Business, Facebook, Linkedin', status: 'Draft', created_at: '15/19/2021 at 10:31 pm'},
-        {title: 'My Post Title', channel: 'Google My Business, Linkedin', status: 'Draft', created_at: '15/19/2021 at 10:31 pm'},
-        {title: 'My Post Title', channel: 'Google My Business, Facebook', status: 'Published', created_at: '15/19/2021 at 10:31 pm'},
-        {title: 'My Post Title', channel: 'Google My Business, Facebook, Linkedin', status: 'Draft', created_at: '15/19/2021 at 10:31 pm'},
-        {title: 'My Post Title', channel: 'Google My Business, Linkedin', status: 'Draft', created_at: '15/19/2021 at 10:31 pm'},
-        {title: 'My Post Title', channel: 'Google My Business, Facebook', status: 'Published', created_at: '15/19/2021 at 10:31 pm'},
-        {title: 'My Post Title', channel: 'Facebook, Linkedin', status: 'Published', created_at: '15/19/2021 at 10:31 pm'},
-        {title: 'My Post Title', channel: 'Google My Business, Facebook, Linkedin', status: 'Published', created_at: '15/19/2021 at 10:31 pm'},
-        {title: 'My Post Title', channel: 'Google My Business, Linkedin', status: 'Published', created_at: '15/19/2021 at 10:31 pm'},
-        {title: 'My Post Title', channel: 'Google My Business', status: 'Published', created_at: '15/19/2021 at 10:31 pm'}
+        {title: 'My Post Title 1', channel: 'Google My Business, Facebook, Linkedin', status: 'Draft', created_at: '15/19/2021 at 10:31 pm'},
+        {title: 'My Post Title 2', channel: 'Google My Business, Linkedin', status: 'Draft', created_at: '15/19/2021 at 10:31 pm'},
+        {title: 'My Post Title 3', channel: 'Google My Business, Facebook', status: 'Published', created_at: '15/19/2021 at 10:31 pm'},
+        {title: 'My Post Title 4', channel: 'Google My Business, Facebook, Linkedin', status: 'Draft', created_at: '15/19/2021 at 10:31 pm'},
+        {title: 'My Post Title 5', channel: 'Google My Business, Linkedin', status: 'Draft', created_at: '15/19/2021 at 10:31 pm'},
+        {title: 'My Post Title 6', channel: 'Google My Business, Facebook', status: 'Published', created_at: '15/19/2021 at 10:31 pm'},
+        {title: 'My Post Title 7', channel: 'Facebook, Linkedin', status: 'Published', created_at: '15/19/2021 at 10:31 pm'},
+        {title: 'My Post Title 8', channel: 'Google My Business, Facebook, Linkedin', status: 'Published', created_at: '15/19/2021 at 10:31 pm'},
+        {title: 'My Post Title 9', channel: 'Google My Business, Linkedin', status: 'Published', created_at: '15/19/2021 at 10:31 pm'},
+        {title: 'My Post Title 10', channel: 'Google My Business', status: 'Published', created_at: '15/19/2021 at 10:31 pm'}
       ],
       category: [{
         title: 'Sort',
@@ -114,7 +115,7 @@ export default {
   },
   methods: {
     newPost() {
-      console.log('New Post:::')
+      ROUTER.push('post_management')
     }
   }
 }
