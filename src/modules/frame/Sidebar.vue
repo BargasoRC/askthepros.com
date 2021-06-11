@@ -158,7 +158,8 @@
 
 .menu-holder:hover, .menu-holder i:hover, .menu-holder label:hover, .menu-holder-hidden i:hover{
   cursor: pointer;
-  color: $primary;
+  color: white;
+  background-color: $primary;
 }
 
 .sub-menu{
