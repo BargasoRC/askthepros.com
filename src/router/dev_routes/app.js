@@ -78,9 +78,23 @@ export default{
       tokenRequired: true
     }
   }, {
-    path: '/channels',
-    name: 'home',
+    path: '/:user/channels',
+    name: 'channel',
     component: resolve => require(['src/modules/channels/index.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
+    path: '/:user/channels/branding',
+    name: 'channel',
+    component: resolve => require(['src/modules/channels/Branding.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
+    path: '/:user/channels/automation',
+    name: 'channel',
+    component: resolve => require(['src/modules/channels/AutomationSettings.vue'], resolve),
     meta: {
       tokenRequired: true
     }
