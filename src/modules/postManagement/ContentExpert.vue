@@ -4,9 +4,9 @@
       <div class="column">
         <div class="headerText">Hi {{user.username}}! You can fill up contents of your post by using the field editor or directly on the preview section. For other channel, just click the next and previous action.</div>
         <p class="pl-0 mt-5"><b>Post Title</b></p>
-        <input type="text" class="inputField">
+        <input type="text" class="inputField" placeholder="Write your post title here...">
         <p class="pl-0 mt-5"><b>Description</b></p>
-        <textarea class="textArea" name="" id="" rows="30"></textarea>
+        <textarea class="textArea" name="" id="" rows="30" placeholder="Write your post content here..."></textarea>
         <p class="pl-0 mt-5"><b>Category</b></p>
         <roundedSelectBtn 
           :placeholder="'Select Industry'"
@@ -144,6 +144,7 @@ export default {
   border: 0.25px solid $gray;
   box-sizing: border-box;
   border-radius: 5px;
+  padding: 10px;
 }
 
 .textArea {
@@ -151,6 +152,7 @@ export default {
   border: 0.25px solid $gray;
   box-sizing: border-box;
   border-radius: 5px;
+  padding: 10px;
 }
 
 .Row {

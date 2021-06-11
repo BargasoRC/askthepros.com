@@ -21,7 +21,14 @@
     </button>
     <div 
       class="dropdown-menu"
-      :style="dropdownItemStyles"
+      :style="{
+        ...{
+          borderRadius: '15px',
+          overflow: 'hidden',
+          width: 'calc(100% - 35px)'
+        },
+        ...dropdownItemStyles
+      }"
     >
       <b
         class="dropdown-item font-weight-normal select-item"

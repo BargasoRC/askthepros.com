@@ -114,11 +114,6 @@
                   border: !this.isValid && selectedIndustry == null ? '1px solid red !important' : 'none',
                   marginBottom: !this.isValid && selectedIndustry == null ? '0px' : '35px'
                 }"
-                :dropdownItemStyles="{
-                  borderRadius: '15px',
-                  overflow: 'hidden',
-                  width: 'calc(100% - 35px)'
-                }"
                 :selectedIndex="global.selectedIndustryIndex"
                 @onSelect="onSelect"
               />
