@@ -30,6 +30,7 @@
         :tableData="tableData"
       />
     </div>
+    <p id="pager">Page {{pageNo}} of {{pageTotal}}<i class="fas fa-arrow-left"></i><i class="fas fa-arrow-right"></i></p>
   </div>
 </template>
 <style scoped lang="scss" scoped>
@@ -57,6 +58,19 @@ p {
   color: $title;
 }
 
+#pager {
+  font-weight: bold;
+  float: right;
+  color: $title;
+  margin-top: 5vh;
+}
+
+.fa-arrow-left, .fa-arrow-right {
+  color: $primary;
+  font-weight: bold;
+  font-size: 24px;
+  margin-left: 25px;
+}
 </style>
 <script>
 import Search from 'src/components/increment/ecommerce/filter/Product.vue'
@@ -68,6 +82,8 @@ export default {
   data() {
     return {
       colors: COLORS,
+      pageNo: 1,
+      pageTotal: 1,
       tableActions: [
         {button: `<i class="fas fa-eye ml-2 mr-2" style="color: #01009A;"></i>`},
         {button: `<i class="fas fa-pencil-alt ml-2 mr-2" style="color: #01004E;"></i>`},

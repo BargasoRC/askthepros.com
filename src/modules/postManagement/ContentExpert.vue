@@ -2,11 +2,37 @@
   <div class="holder">
     <div class="row">
       <div class="column">
-        <div class="headerText">Hi Kennette! You can fill up contents of your post by using the field editor or directly on the preview section. For other channel, just click the next and previous action.</div>
-        <p class="pl-2 mt-2"><b>Post Title</b></p>
-        <input type="text" class="inputField">
-        <p class="pl-2 mt-2"><b>Description</b></p>
-        <textarea class="mt-2 textArea" name="" id="" cols="30" rows="30"></textarea>
+        <div class="headerText">Hi {{user.username}}! You can fill up contents of your post by using the field editor or directly on the preview section. For other channel, just click the next and previous action.</div>
+        <p class="pl-0 mt-5"><b>Post Title</b></p>
+        <input type="text" class="inputField" placeholder="Write your post title here...">
+        <p class="pl-0 mt-5"><b>Description</b></p>
+        <textarea class="textArea" name="" id="" rows="30" placeholder="Write your post content here..."></textarea>
+        <p class="pl-0 mt-5"><b>Category</b></p>
+        <roundedSelectBtn 
+          :placeholder="'Select Industry'"
+          :items="returnIndustry"
+          :styles="{
+            background: 'none',
+            color: '#84868B !important',
+            width: '100% !important',
+            borderRadius: '5px !important',
+            border: 'none',
+            marginBottom: !this.isValid && selectedIndustry == null ? '0px' : '35px'
+          }"
+          :dropdownItemStyles="{
+            borderRadius: '5px',
+            overflow: 'hidden',
+            width: 'calc(100% - 50px)'
+          }"
+          :selectedIndex="global.selectedIndustryIndex"
+          @onSelect="onSelect"
+        />
+        <p class="pl-0 mt-5"><b>Post Setting</b></p>
+        <div class="Row">
+          <div class="Column"><Toggle :text="'Facebook'"></Toggle></div>
+          <div class="Column"><Toggle :text="'Google My Business'"></Toggle></div>
+          <div class="Column"><Toggle :text="'Linkedin'"></Toggle></div>
+        </div>
       </div>
       <div class="column">
         <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-end p-0 mb-5 mt-0">
@@ -35,17 +61,41 @@
 
 <script>
 import roundedBtn from 'src/modules/generic/roundedBtn'
-import Input from '../../components/increment/generic/form/Input.vue'
+import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
+import global from 'src/helpers/global'
+import AUTH from 'src/services/auth'
+import Toggle from 'src/modules/generic/toggleSwitch.vue'
+import ROUTER from 'src/router'
 export default {
   data() {
-    return {}
+    return {
+      user: AUTH.user,
+      industry: global.industry,
+      selectedIndustry: null,
+      global: global,
+      errorMessage: ''
+    }
   },
   components: {
-    roundedBtn
+    roundedBtn,
+    roundedSelectBtn,
+    Toggle
+  },
+  computed: {
+    returnIndustry() {
+      return this.industry.map(el => {
+        return el.category
+      })
+    }
   },
   methods: {
-    newPost() {
-      console.log('New Post:::')
+    publish() {
+      console.log('Publish Post:::')
+      ROUTER.push('dashboard')
+    },
+    saveDraft(){
+      console.log('Draft Post:::')
+      ROUTER.push('dashboard')
     }
   }
 }
@@ -69,6 +119,7 @@ export default {
   float: left;
   width: 50%;
   padding: 25px;
+  position: relative;
 }
 
 .row:after {
@@ -90,15 +141,27 @@ export default {
 .inputField {
   width: 100%;
   height: 45px;
-  border: 0.25px solid #84868B;
+  border: 0.25px solid $gray;
   box-sizing: border-box;
   border-radius: 5px;
+  padding: 10px;
 }
 
 .textArea {
   width:100%;
-  border: 0.25px solid #84868B;
+  border: 0.25px solid $gray;
   box-sizing: border-box;
   border-radius: 5px;
+  padding: 10px;
 }
+
+.Row {
+    display: table;
+    border-spacing: 10px; /*Optional*/
+}
+.Column {
+    display: table-cell;
+}
+
+
 </style>
