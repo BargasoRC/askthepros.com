@@ -89,7 +89,10 @@ class AuthenticateController extends Controller
     }else{
       //
     }
-    return response()->json(compact('token'));
+    $response = [];
+    $response['token'] = $token;
+    $response['login_type'] = 'local';
+    return response()->json($response);
   }
   public function deauthenticate(){
     JWTAuth::invalidate(JWTAuth::getToken());
@@ -113,6 +116,7 @@ class AuthenticateController extends Controller
       // if($user){
       //   $user['scope_location'] = app('Increment\Imarket\Location\Http\LocationController')->getColumnValueByParams('account_id', $user['id'], 'code');
       // }
+      $user['login_type'] = 'local';
       return response()->json($user);
   }
   public function customValidate($text){
