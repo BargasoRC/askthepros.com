@@ -108,6 +108,7 @@ Route::get($route.'/test', 'EmailController@test');
 $route = env('PACKAGE_ROUTE', '').'/social_lite';
 Route::post($route . '/authenticate/{provider}/redirect', 'SocialController@redirect');
 Route::post($route . '/authenticate/{provider}/callback','SocialController@Callback');
+Route::post($route . '/verify_token','SocialController@checkToken');
 
 Route::get('/login/{provider}/redirect', 'SocialController@redirect');
 Route::get('/login/{provider}/callback', 'SocialController@Callback');

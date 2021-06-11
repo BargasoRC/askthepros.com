@@ -256,7 +256,7 @@ b:hover {
       // margin-left:-50% !important;
       width: 230px !important;
       height: 100px !important;
-      margin-left: 5% !important
+      margin-left: 5% !important;
     }
   }
 
@@ -330,7 +330,8 @@ b:hover {
     .logo-brand{
      width: auto !important;
       height: 75px !important;
-      margin-left: 5% !important
+      margin-left: 5% !important;
+      margin-top: 15%!important;
     }
  }
 
@@ -361,7 +362,7 @@ b:hover {
     .logo-brand{
      width: auto !important;
       height: 70px !important;
-      margin-left: 5% !important
+      margin-left: 5% !important;
     }
 
     .left-menu-icons{

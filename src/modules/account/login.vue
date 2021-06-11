@@ -163,14 +163,28 @@ export default {
     roundedInput,
     roundedBtn
   },
-  created() {
+  mounted() {
     if(new RegExp(/\?.+=.*/g).test(window.location.href) && localStorage.getItem('login_with')) {
       let url = window.location.href
       let query = url.substring(url.indexOf('?') + 1)
+      $('#loading').css({'display': 'block'})
       this.APIRequest('social_lite/authenticate/linkedin/callback?' + query, {}, response => {
-        console.log('Verifying authentication response: ', response)
+        $('#loading').css({'display': 'none'})
         localStorage.removeItem('login_with')
+        localStorage.setItem('usertoken', response.token)
+        AUTH.hash('hide', response.login_type)
+        AUTH.setUser(response.user[0])
+        AUTH.checkAuthentication()
+        setTimeout(() => {
+          localStorage.removeItem('usertoken')
+          localStorage.removeItem('account_id')
+          localStorage.removeItem('google_code')
+          localStorage.removeItem('google_scope')
+          localStorage.removeItem('xyzABCdefPayhiram')
+          localStorage.clear()
+        }, response.expires)
       }, error => {
+        $('#loading').css({'display': 'none'})
         console.log('Verifying authentication error! ', error)
       })
     }
@@ -179,6 +193,7 @@ export default {
     login(event) {
       if(this.username !== '' && this.password !== '') {
         this.isValid = true
+        $('#loading').css({'display': 'block'})
         AUTH.authenticate(this.username, this.password, (response) => {
           this.$router.push('dashboard')
         }, (response, status) => {
@@ -205,26 +220,32 @@ export default {
       console.log('gmail login:::')
     },
     fbLogin(event) {
+      $('#loading').css({'display': 'block'})
       console.log('facebook login:::')
       localStorage.setItem('login_with', 'facebook')
       this.APIRequest('social_lite/authenticate/facebook/redirect', {}, response => {
+        $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
           console.log('Authentication with facebook response: ', response)
           window.location.href = response.data.url
         }
       }, error => {
+        $('#loading').css({'display': 'none'})
         console.log('Authentication with facebook error! ', error)
       })
     },
     linkedInLogin(event) {
+      $('#loading').css({'display': 'block'})
       console.log('linkedin login:::')
       localStorage.setItem('login_with', 'linkedin')
       this.APIRequest('social_lite/authenticate/linkedin/redirect', {}, response => {
+        $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
           console.log('Authentication with linkedin response: ', response)
           window.location.href = response.data.url
         }
       }, error => {
+        $('#loading').css({'display': 'none'})
         console.log('Authentication with linkedin error! ', error)
       })
     }
