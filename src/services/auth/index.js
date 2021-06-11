@@ -111,6 +111,14 @@ export default {
       }, 1000 * 60 * 60) // 50min
     }
   },
+  hash(type, data) {
+    let text = 'login_type'
+    if(type === 'hide') {
+      localStorage.setItem(text, window.btoa(data))
+    }else if(type === 'show') {
+      return window.atob(localStorage.getItem(text))
+    }
+  },
   authenticate(username, password, callback, errorCallback){
     let vue = new Vue()
     let credentials = {
@@ -121,7 +129,9 @@ export default {
     vue.APIRequest('authenticate', credentials, (response) => {
       this.tokenData.token = response.token
       this.setToken(this.tokenData.token)
+      this.hash('hide', response.login_type)
       vue.APIRequest('authenticate/user', {}, (userInfo) => {
+        console.log('userInfo')
         this.setUser(userInfo, null, null)
       })
     }, (response, status) => {
@@ -133,21 +143,29 @@ export default {
   checkAuthentication(callback, flag = false){
     this.tokenData.verifyingToken = true
     let token = localStorage.getItem('usertoken')
+    let id = localStorage.getItem('account_id')
+    let type = this.hash('show', null)
     if(token){
       if(flag === false){
         this.tokenData.loading = true
       }
       this.setToken(token)
       let vue = new Vue()
-      vue.APIRequest('authenticate/user', {}, (userInfo) => {
+      console.log('TYPE::: ', type)
+      let verifyUrl = type === 'local' ? 'authenticate/user' : 'social_lite/verify_token'
+      let parameters = type === 'local' ? {} : {id: id, token: token}
+      vue.APIRequest(verifyUrl, parameters, (userInfo) => {
         this.setUser(userInfo, null, null)
       }, (response) => {
         this.setToken(null)
         this.tokenData.verifyingToken = false
         this.tokenData.loading = false
+        this.hash('hide', response.login_type)
         ROUTER.push({
           path: this.currentPath
         })
+      }).catch(error => {
+        console.log('ERRRROOORRR:: ', error)
       })
       return true
     }else{
@@ -165,6 +183,7 @@ export default {
     localStorage.removeItem('google_code')
     localStorage.removeItem('google_scope')
     localStorage.removeItem('xyzABCdefPayhiram')
+    localStorage.clear()
     this.setUser(null)
     let vue = new Vue()
     vue.APIRequest('authenticate/invalidate')
