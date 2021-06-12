@@ -5,12 +5,13 @@
 
     <div style="margin-top: 3%">
         <roundedBtn
+            :onClick="connectMedia"
             :text="'Social Media Channels'"
             class="button"
             :styles="{
-                backgroundColor: colors.primary,
+                backgroundColor: 'white',
+                outlineColor: colors.primary,
                 color: 'white',
-                outlineColor: colors.primary,                
                 width: '15%',
                 borderTopRightRadius: '0px !important',
                 borderBotttomLeftRadius: '0px !important',
@@ -33,13 +34,12 @@
             }"
         />
         <roundedBtn
-            :onClick="automationSettings"
             :text="'Automation Settings'"
             class="button2"
             :styles="{
-                backgroundColor: 'white',
-                outlineColor: colors.primary,
+                backgroundColor: colors.primary,
                 color: 'white',
+                outlineColor: colors.primary,  
                 width: '15%',
                 borderTopLeftRadius: '0px !important',
                 borderBottomLeftRadius: '0px !important',
@@ -47,8 +47,8 @@
             }"
         />
     </div>
-    <h3 style="margin-top: 20px;font-size: 20px;">Connect Your Social Media Channels.</h3>
-    <p>We will post the channels you connect.</p>
+    <h3 style="margin-top: 20px;font-size: 20px;">Choose Review Settings.</h3>
+    <p>You can review and edit your posts prior to us sending them to your social media channels.</p>
   </div>
 </template>
 
@@ -66,11 +66,11 @@ export default {
     roundedBtn
   },
   methods: {
+    connectMedia(){
+      ROUTER.push('/user/channels')
+    },
     branding(){
       ROUTER.push('/user/channels/branding')
-    },
-    automationSettings(){
-      ROUTER.push('/user/channels/automation')
     }
   }
 }
@@ -90,7 +90,7 @@ export default {
 .button{
   border-bottom-right-radius: 0px !important;
 }
-.button1, .button2{
+.button1, .button{
   color: $primary !important;
   border: 1px solid $primary !important;
 }
