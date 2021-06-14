@@ -49,7 +49,7 @@
           <td>{{item.time}}</td>
           <td>{{item.post_title}}</td>
           <td>{{item.channels_posted_to}}</td>
-          <td>{{item.link}}</td>
+          <td><a :href="item.link" target="_blank" style="cursor: pointer; color: gray">{{item.link}}</a></td>
           <td>{{item.status}}</td>
         </tr>
       </tbody>
