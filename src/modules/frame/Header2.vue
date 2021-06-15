@@ -121,7 +121,7 @@ window.addEventListener('load', function () {
       let height = Jquery(window).height()
       Jquery('html, body').animate(
         {
-          scrollTop: Jquery('#services').offset().top - parseInt(height * 0.0)
+          scrollTop: Jquery('#pricing').offset().top - parseInt(height * 0.0)
         },
         500
       )
