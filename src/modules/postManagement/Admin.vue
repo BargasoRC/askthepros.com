@@ -26,8 +26,16 @@
         :tableActions="tableActions"
         :tableHeaders="tableHeaders"
         :tableData="tableData"
+        @onAction="onTableAction"
       />
     </div>
+    
+    <Confirmation
+      ref="confirm"
+      :message="'Are you sure do you want to delete this post?'"
+      :title="'Confirmation'"
+      @onConfirm="remove($event)"
+    ></Confirmation>
   </div>
 </template>
 
@@ -35,6 +43,8 @@
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import Search from 'src/components/increment/ecommerce/filter/Product.vue'
 import DataTable from 'src/modules/generic/table'
+import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
+import ROUTER from 'src/router'
 export default {
   data() {
     return {
@@ -171,11 +181,31 @@ export default {
   components: {
     roundedBtn,
     Search,
-    DataTable
+    DataTable,
+    Confirmation
   },
   methods: {
     newPost() {
-      console.log('New Post:::')
+      ROUTER.push('/admin/post_management/edit')
+    },
+    onTableAction(data){
+      console.log('here ', data)
+      if(data.buttonIndex === 0){
+        this.tableData[data.rowIndex]
+        console.log('[preview Here]', this.tableData[data.rowIndex].id)
+      }else if(data.buttonIndex === 1){
+        let id = this.tableData[data.rowIndex].id
+        ROUTER.push('post_management/edit/' + id)
+      }else{
+        let id = this.tableData[data.rowIndex].id
+        this.del(id)
+      }
+    },
+    del(id){
+      this.$refs.confirm.show(id)
+    },
+    remove(id){
+      console.log('[function delete]', id)
     }
   }
 }

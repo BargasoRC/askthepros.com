@@ -48,8 +48,8 @@
         <label for="post_setting"><b>Post Setting</b></label>
         <div class="Row row">
           <div class="Column col-4" style="margin-left: -20%"><Toggle :text="'Facebook'"></Toggle></div>
-          <div class="Column col-4"><Toggle :text="'Google My Business'"></Toggle></div>
-          <div class="Column col-4"><Toggle :text="'Linkedin'"></Toggle></div>
+          <div class="Column col-5"><Toggle :text="'Google My Business'"></Toggle></div>
+          <div class="Column col-3"><Toggle :text="'Linkedin'"></Toggle></div>
         </div>
       </div>
       <br>
@@ -58,22 +58,32 @@
       <Images></Images>
       <br>
       <br>
-
-      <span style="float: right" class="preview"><u><b>Preview</b></u></span>
-      <roundedBtn
-        :text="'Post'"
-        class="button1"
-        :styles="{
-          backgroundColor: colors.primary,
-          color: 'white',
-          width: '10%',
-          marginBottom: '5%'
-        }"
-      />
-      <br>
     </div>
-    <div class="col-6">
-      <h1>hi</h1>
+    <div class="col-6" style="margin-top: 1%">
+      <div class="float-right col-3">
+        <roundedBtn
+            :onClick="publish"
+            :text="'Publish'"
+            :styles="{
+                backgroundColor: colors.primary,
+                outlineColor: colors.primary,
+                color: 'white',
+                width: '15'
+            }"
+        />
+      </div>
+      <div class="float-right col-3">
+        <roundedBtn
+            :onClick="draft"
+            :text="'Save as Draft'"
+            :styles="{
+                backgroundColor: colors.warning,
+                color: 'white',
+                width: '15%',
+                outlineColor: colors.warning
+            }"
+        />
+    </div>
     </div>
   </div>
 </template>
