@@ -14,7 +14,7 @@
             returnData(data, item)
           }}
           <div class="font-weight-normal d-flex justify-content-center">
-            <span v-for="(btn, i) in tableActions" :key="'btn' + i" v-html="btn.button" v-if="item.type === 'action'" @click="edit(1)"></span>
+            <span v-for="(btn, i) in tableActions" :key="'btn' + i" v-html="btn.button" v-if="item.type === 'action'" @click="item.type === 'action' ? buttonAction(i, index) : () => {}"></span>
           </div>
         </th>
       </tr>
@@ -23,9 +23,8 @@
 </template>
 
 <script>
-import ROUTER from 'src/router'
 export default {
-  props: ['tableActions', 'tableHeaders', 'tableData'],
+  props: ['tableActions', 'tableHeaders', 'tableData', 'onAction'],
   methods: {
     returnData(data, item) {
       let temp = ''
@@ -34,8 +33,12 @@ export default {
       }
       return temp
     },
-    edit(id){
-      ROUTER.push('post_management/edit/' + id)
+    buttonAction(index, rowIndex){
+      let temp = {
+        buttonIndex: index,
+        rowIndex: rowIndex
+      }
+      this.$emit('onAction', temp)
     }
   }
 }
