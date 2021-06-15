@@ -48,7 +48,7 @@ export default {
 }
 
 h1 {
-  font-weight: 800;
+  font-weight: 620;
   color: $warning;
   font-size: 35px;
 }
@@ -72,13 +72,18 @@ iframe{
   .col-md-6 h1 {
     margin-top: 10vh;
     font-size: 30px;
+    margin-left: 12%;
+    margin-right: 12%;
   }
   .col-md-6 p {
     font-size: 20px;
+    margin-left: 12%;
+    margin-right: 12%;
   }
 
   .col-md-6 iframe {
     width: 100%;
+    height: 55vh;
   }
 }
 </style>

@@ -98,6 +98,8 @@
   font-size:40px;
   padding-left: 0px;
   text-align: center;
+  margin-left: 15%;
+  margin-right: 15%;
 }
 .button-container-button {
   display: flex;
