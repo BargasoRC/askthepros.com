@@ -13,7 +13,7 @@ class SocialMediaController extends Controller
     public function post(Request $request) {
         // $client = new \GuzzleHttp\Client();
         // $client->setDefaultOption('headers', array(
-        //     'Authorization' => 'Bearer AQVIDSN0G_9xH_gUFhoiHwIFXFFneYuVeVlP-9nsDzChRen5DuUzDxq5y3l7Dks1S7oKRrjLqEQdbQm3tfLOXpPmQQW9UUVha2h_SirQblt8-M-54jBlFok1QhGWGgENTJe9cvFiOSQikE2pFAbmnj6Sanh9Dgfry2CBpJ_ZVvE1d96K4GlFKvQhKoHUQir1_YhYC5nNiAT5qHneSu7igaZKp4fko86aGcJ6U9cklMqQ0qbico6Dab605e6J8t3r',
+        //     'Authorization' => 'Bearer ',
         //     'X-Restli-Protocol-Version' => '2.0.0',
         //     'Content-Type' => 'application/json'
         // ));
@@ -53,7 +53,7 @@ class SocialMediaController extends Controller
         curl_setopt($ch, CURLOPT_URL, 'https://api.linkedin.com/v2/audienceCountsV2?q=targetingCriteria&target.includedTargetingFacets.industries[0]=urn:li:industry:4&target.includedTargetingFacets.seniorities[0]=urn:li:seniority:3&target.includedTargetingFacets.locations[0]=urn:li:country:us&target.includedTargetingFacets.locations[1]=urn:li:country:gb&target.includedTargetingFacets.followedCompanies[0]=urn:li:person');
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'X-Restli-Protocol-Version: 2.0.0',
-            'Authorization: Bearer AQUcxSsL5EJg6uc1N9NyHkQlNGOTNvam-cprp2cBLDyXyEwSEGK26b1FMW2Nq1x9BTModBudB9RxW3LbPqGlL466HtjC3rCopruahAwbwJlZhJfrPpNjOK74rzt-1NymgLZlmERJSwvUlEzksVpBORHf7mgjXmfZE_KvCGOmCfsDRwei7KWJPS_oNTZ0ux3zIGLV6CIPWUheiGAE4vhQ-idUZwWOWKNpN3Nd9l2S3Rgb7Jbst3jAgaAvXy7o8rJB'
+            'Authorization: Bearer '
         ));
         curl_setopt($ch, CURLOPT_HEADER, 0);
 
