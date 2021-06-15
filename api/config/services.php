@@ -39,6 +39,8 @@ return [
         'client_id'     => env('FACEBOOK_CLIENT_ID'),
         'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
         'redirect'      => env('FACEBOOK_URL'),
+        'default_graph_version' => 'v2.12',
+
     ],
     'linkedin' => [
         'client_id'     => env('LINKEDIN_CLIENT_ID'),
