@@ -140,6 +140,13 @@ export default{
     meta: {
       tokenRequired: true
     }
+  }, {
+    path: '/:admin/post_management/edit/:parameter',
+    name: 'post_management',
+    component: resolve => require(['src/modules/postManagement/AdminEdit.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
   }
   ]
 }

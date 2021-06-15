@@ -49,6 +49,24 @@
     </div>
     <h3 style="margin-top: 20px;font-size: 20px;">Choose Review Settings.</h3>
     <p>You can review and edit your posts prior to us sending them to your social media channels.</p>
+    <div style="margin-left: 2%;margin-top: 2%">
+      <input type="radio" id="review" name="automation" value="review">
+      <label for="review">Review</label>
+      <p class="desc">Review – We’ll email you a link to your post so you can edit or approve it.</p><br>
+      <input type="radio" id="autopost" name="automation" value="autopost" checked>
+      <label for="autopost">Autopost</label>
+      <p class="desc">Autopost – We’ll automatically send your post to your connected channels.</p>
+    </div>
+    <p style="margin-top: 2%">You may update this setting as often as you like.</p>
+    <roundedBtn
+      :class="'btnn'"
+      :onClick="udpate"
+      :text="'Update'"
+      :styles="{
+        backgroundColor: '#01004E',
+        color: 'white',
+      }"
+    /> 
   </div>
 </template>
 
@@ -71,6 +89,9 @@ export default {
     },
     branding(){
       ROUTER.push('/user/channels/branding')
+    },
+    update(){
+      console.log('save::::')
     }
   }
 }
@@ -87,6 +108,11 @@ export default {
   color: $title;
   min-height: 100vh;
 }
+
+.btnn {
+  margin-top: 40px;
+}
+
 .button{
   border-bottom-right-radius: 0px !important;
 }
@@ -94,8 +120,18 @@ export default {
   color: $primary !important;
   border: 1px solid $primary !important;
 }
-h3{
+h3, label{
   font-weight: bold;
+}
+
+label {
+  font-size: 15px;
+  margin-left: 1%;
+}
+
+.desc {
+  color: $text;
+  margin-left: 2%;
 }
 
 </style>

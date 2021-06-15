@@ -39,62 +39,119 @@ export default {
   data() {
     return {
       tableActions: [
-        {button: `<i class="fas fa-eye ml-2 mr-2"></i>`}
+        {button: `<i class="fas fa-eye ml-2 mr-2"></i>`},
+        {button: `<i class="fas fa-pencil-alt ml-2 mr-2"></i>`},
+        {button: `<i class="fas fa-trash-alt ml-2 mr-2"></i>`}
       ],
       // table header: should specify;  title, key(will be used as key in table data) and type
       tableHeaders: [
+        {title: 'Post No.', key: 'id', type: 'text'},
         {title: 'Date', key: 'created_at', type: 'text'},
         {title: 'Post Title', key: 'title', type: 'text'},
-        {title: 'Channels to Post', key: 'channel', type: 'text'},
+        {title: 'Category', key: 'category', type: 'text'},
+        {title: 'Channel Actions', key: 'channel', type: 'text'},
+        {title: 'Author', key: 'author', type: 'text'},
         {title: 'status', key: 'status', type: 'text'},
         {title: 'Review', type: 'action'}
       ],
       tableData: [
         {
+          id: 1,
           title: 'Eyes here',
-          channel: 'Youtube channel',
-          status: 'Pending',
+          category: 'Finance',
+          channel: 'Google My Business, Facebook',
+          author: 'Admin1',
+          status: 'Draft',
           created_at: '06/09/2021'
         },
         {
+          id: 2,
           title: 'Eyes here',
-          channel: 'Youtube channel',
-          status: 'Pending',
+          category: 'Marketing',
+          channel: 'Google My Business, Facebook, LinkedIn',
+          status: 'Published',
+          author: 'Client1',
           created_at: '06/09/2021'
         },
         {
+          id: 3,
           title: 'Eyes here',
-          channel: 'Youtube channel',
-          status: 'Pending',
+          category: 'Finance',
+          channel: 'Facebook',
+          author: 'Content Expert 1',
+          status: 'Draft',
           created_at: '06/09/2021'
         },
         {
+          id: 4,
           title: 'Eyes here',
-          channel: 'Youtube channel',
-          status: 'Pending',
+          category: 'Finance',
+          author: 'Admin2',
+          channel: 'LinkedIn, Facebook',
+          status: 'Published',
           created_at: '06/09/2021'
         }
       ],
       category: [{
-        title: 'Sort',
+        title: 'Sort By',
         sorting: [{
-          title: 'Name ascending',
-          payload: 'name',
+          title: 'Post ascending',
+          payload: 'post',
+          payload_value: 'asc',
+          type: 'date'
+        }, {
+          title: 'Post descending',
+          payload: 'post',
+          payload_value: 'desc',
+          type: 'date'
+        }, {
+          title: 'Created ascending',
+          payload: 'created_at',
+          payload_value: 'asc',
+          type: 'date'
+        }, {
+          title: 'Created descending',
+          payload: 'created_at',
+          payload_value: 'desc',
+          type: 'date'
+        }, {
+          title: 'Title ascending',
+          payload: 'title',
           payload_value: 'asc',
           type: 'text'
         }, {
-          title: 'Name descending',
-          payload: 'name',
+          title: 'Title descending',
+          payload: 'title',
           payload_value: 'desc',
           type: 'text'
         }, {
-          title: 'Crop Type ascending',
-          payload: 'crops',
+          title: 'Category ascending',
+          payload: 'category',
           payload_value: 'asc',
           type: 'text'
         }, {
-          title: 'Crop Type descending',
-          payload: 'crops',
+          title: 'Category descending',
+          payload: 'category',
+          payload_value: 'desc',
+          type: 'text'
+        }, {
+          title: 'Channel ascending',
+          payload: 'channel',
+          payload_value: 'asc',
+          type: 'text'
+        }, {
+          title: 'Channel descending',
+          payload: 'channel',
+          payload_value: 'desc',
+          type: 'text'
+        }, {
+          title: 'Author ascending',
+          payload: 'author',
+          payload_value: 'asc',
+          type: 'text'
+        }, {
+          title: 'Author descending',
+          payload: 'author',
           payload_value: 'desc',
           type: 'text'
         }, {
