@@ -13,10 +13,10 @@ class SocialController extends APIController
       if(strtolower($provider) == 'facebook') {
         $scopes = ["publish_actions, manage_pages", "publish_pages"];
       }else if(strtolower($provider) == 'linkedin') {
-        $scropes = [];
+        $scopes = ["r_emailaddress", "r_liteprofile", "w_member_social"];
       }
 
-      $result = Socialite::with($provider)->scopes($scropes)->redirect()->getTargetUrl();
+      $result = Socialite::with($provider)->scopes($scopes)->redirect()->getTargetUrl();
       $this->response['data'] = array('url' => $result);
       return $this->response();
     }
@@ -24,15 +24,15 @@ class SocialController extends APIController
     public function Callback($provider)
     {
       $user = Socialite::driver($provider)->stateless()->user();
-      $acc = Account::firstOrNew(['email' => $user->getEmail()]);
+      $acc = Account::firstOrNew(['username' => $user->getId()]);
       $token = $user->token;
-      if (!$acc->new) {
+      if ($acc->new) {
         $acc->token = $token;
         $acc->save();
       } else {
         $acc->code = $this->generateCode();
-        $acc->username = $user->getEmail();
-        $acc->email = $user->getEmail();
+        $acc->username = $user->getId();
+        $acc->email = $user->getEmail() ? $user->getEmail() : "";
         $acc->account_type = 'USER';
         $acc->status = 'NOT_VERIFIED';
         $acc->token = $token;
