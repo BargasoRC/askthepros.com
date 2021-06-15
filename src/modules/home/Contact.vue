@@ -22,13 +22,13 @@
               <p>We would love to hear from you!</p>
             </div>
             <div>
-              <p class="pl-2 mt-2"><b>Name</b></p>
+              <p class="mt-2"><b>Name</b></p>
               <input type="text" class="inputField">
-              <p class="pl-2 mt-2"><b>Email</b></p>
+              <p class="mt-2"><b>Email</b></p>
               <input type="text" class="inputField">
-              <p class="pl-2 mt-2"><b>Subject</b></p>
+              <p class="mt-2"><b>Subject</b></p>
               <input type="text" class="inputField">
-              <p class="pl-2 mt-2"><b>Content</b></p>
+              <p class="mt-2"><b>Content</b></p>
               <textarea class="mt-2 textArea" name="" id="" cols="30" rows="10"></textarea>
             </div>
             
