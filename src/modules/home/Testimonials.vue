@@ -85,7 +85,7 @@ center {
 }
 
 h1 {
-  font-weight: 800;
+  font-weight: 650;
   color: $warning;
   font-size: 35px;
 }
