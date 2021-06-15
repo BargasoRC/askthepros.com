@@ -10,7 +10,7 @@
         </div>
         <div class="row d-flex justify-content-center button-container" style=""> 
           <div class="col-md-auto d-flex-row position-absolute button-container-button" >
-              <dialogueBtn :onClick="login" :icon="'fas fa-sign-in-alt'" :text="'Login'" :icon_position="'right'" :styles="{backgroundColor: '#01004E',color: 'white', marginTop: '20px', marginRight:'30px'}"/> 
+              <dialogueBtn :onClick="login" :icon="'fas fa-sign-in-alt'" :text="'Login'" :icon_position="'right'" :styles="{backgroundColor: '#01004E',color: 'white', marginTop: '20px', marginRight:'15px'}"/> 
               <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register'" :icon_position="'right'" :styles="{backgroundColor: '#F1B814',color: 'white', marginTop: '20px'}"/> 
           </div>
         </div>
@@ -105,10 +105,22 @@
   display: flex;
   justify-content: center;
 }
-@media (max-width:500px){
+@media (max-width:600px){
   .banner-container-text {
     padding-top: 30%;
+    margin-left: 5%;
+    margin-right: 5%;
     font-size: 30px;
+  }
+  p{
+    margin-left:10%;
+    margin-right:10%;
+  }
+}
+@media (max-width:450px){
+  p{
+    margin-left:5%;
+    margin-right:5%;
   }
 }
 }

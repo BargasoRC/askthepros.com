@@ -6,7 +6,8 @@
         <p class="pl-0 mt-5"><b>Post Title</b></p>
         <input type="text" class="inputField" placeholder="Write your post title here...">
         <p class="pl-0 mt-5"><b>Description</b></p>
-        <textarea class="textArea" name="" id="" rows="30" placeholder="Write your post content here..."></textarea>
+        <textarea class="textArea" name="" id="" rows="30" placeholder="Write your post content here..." v-model='content' @keyup='charCount()'></textarea>
+        <span class="char-count">Character Count: {{count}}</span>
         <p class="pl-0 mt-5"><b>Category</b></p>
         <roundedSelectBtn 
           :placeholder="'Select Industry'"
@@ -73,7 +74,9 @@ export default {
       industry: global.industry,
       selectedIndustry: null,
       global: global,
-      errorMessage: ''
+      errorMessage: '',
+      count: 0,
+      content: ''
     }
   },
   components: {
@@ -96,6 +99,9 @@ export default {
     saveDraft(){
       console.log('Draft Post:::')
       ROUTER.push('dashboard')
+    },
+    charCount(){
+      this.count = this.content.length
     }
   }
 }
@@ -163,5 +169,9 @@ export default {
     display: table-cell;
 }
 
-
+.char-count {
+  font-size: 12px;
+  float: right;
+  color: $text;
+}
 </style>

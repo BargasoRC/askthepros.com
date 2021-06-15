@@ -47,8 +47,34 @@
             }"
         />
     </div>
-    <h3 style="margin-top: 20px;font-size: 20px;">Add Branding.</h3>
-    <p style="width: 45%">These “branding footers” will be added to the end of your social media posts.   They should be one or two short sentences and incorporate your brand name and location. </p>
+    <div class="row">
+      <div class="column">
+        <h3 style="margin-top: 20px;font-size: 20px;">Add Branding.</h3>
+        <p>These “branding footers” will be added to the end of your social media posts.   They should be one or two short sentences and incorporate your brand name and location. </p>
+        <p class="pl-0 mt-5"><b>Branding Footer 1</b></p>
+        <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand1" @keyup="charCount()"></textarea>
+        <span class="char-count">Character Count: {{count1}}</span>
+        <p class="pl-0 mt-4"><b>Branding Footer 2</b></p>
+        <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand2"></textarea>
+        <span class="char-count">Character Count: {{count2}}</span>
+        <p class="pl-0 mt-4"><b>Branding Footer 3</b></p>
+        <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand3"></textarea>
+        <span class="char-count">Character Count: {{count3}}</span>
+        <roundedBtn
+          :class="'btnn'"
+          :onClick="save"
+          :text="'Save'"
+          :styles="{
+            backgroundColor: '#01004E',
+            color: 'white',
+          }"
+        />          
+      </div>
+      <!-- Just remove the style if component is ready -->
+      <div class="column" style="background-color: #01004E; color: white; text-align: center;padding: 30px; border-top-right-radius: 22.5px; border-top-left-radius: 22.5px">
+        <span>Branding Preview here</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -59,7 +85,13 @@ import ROUTER from 'src/router'
 export default {
   data() {
     return {
-      colors: COLORS
+      colors: COLORS,
+      count1: 0,
+      count2: 0,
+      count3: 0,
+      brand1: '',
+      brand2: '',
+      brand3: ''
     }
   },
   components: {
@@ -71,6 +103,12 @@ export default {
     },
     automationSettings(){
       ROUTER.push('/user/channels/automation')
+    },
+    save(){
+      console.log('save::::')
+    },
+    charCount(){
+      this.count1 = this.brand1.length
     }
   }
 }
@@ -97,5 +135,38 @@ export default {
 h3{
   font-weight: bold;
 }
+.textArea {
+  width:100%;
+  border: 0.25px solid $gray;
+  box-sizing: border-box;
+  border-radius: 5px;
+  padding: 10px;
+}
 
+* {
+  box-sizing: border-box;
+}
+
+.column {
+  float: left;
+  width: 50%;
+  padding-left: 20px;
+  padding-right: 20px;
+  position: relative;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.char-count {
+  font-size: 12px;
+  float: right;
+  color: $text;
+}
+
+.btnn {
+  margin-top: 40px;
+}
 </style>
