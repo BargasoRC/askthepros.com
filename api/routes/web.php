@@ -111,4 +111,4 @@ Route::post($route . '/authenticate/{provider}/callback','SocialController@Callb
 Route::post($route . '/verify_token','SocialController@checkToken');
 
 Route::get('/login/{provider}/redirect', 'SocialController@redirect');
-Route::get('/login/{provider}/callback', 'SocialController@Callback');
+Route::get('/social_media/test', 'SocialMediaController@post');
