@@ -43,8 +43,8 @@ export default {
 }
 
 .row {
-  padding-top: 20vh;
-  padding-bottom: 20vh;
+  padding-top: 15vh;
+  padding-bottom: 15vh;
 }
 
 h1 {
@@ -70,7 +70,7 @@ iframe{
     text-align: center;
   }
   .col-md-6 h1 {
-    margin-top: 10vh;
+    margin-top: 8vh;
     font-size: 30px;
     margin-left: 12%;
     margin-right: 12%;
