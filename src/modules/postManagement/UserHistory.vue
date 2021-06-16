@@ -32,50 +32,44 @@
         />
     </div>
 
-    <table class="table table-bordered table-responsive" v-if="data.length > 0" style="margin-top: 3%">
-      <thead>
-        <tr>
-          <th scope="col">Date Posted</th>
-          <th scope="col">Time Posted</th>
-          <th scope="col">Post Title</th>
-          <th scope="col">Channels Posted To</th>
-          <th scope="col">Link</th>
-          <th scope="col">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item, index) in data" :key="index">
-          <td>{{item.date}}</td>
-          <td>{{item.time}}</td>
-          <td>{{item.post_title}}</td>
-          <td>{{item.channels_posted_to}}</td>
-          <td><a :href="item.link" target="_blank" style="cursor: pointer; color: gray">{{item.link}}</a></td>
-          <td>{{item.status}}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="col-sm-12 col-md-12 col-lg-12 mt-5 p-0 pt-5">
+      <DataTable
+        :tableHeaders="tableHeaders"
+        :tableData="tableData"
+        :tableActions="[]"
+      />
+    </div>
 
     <Pager
       :pages="numPages"
       :active="activePage"
       :limit="limit"
-      v-if="data.length > 0"
+      v-if="tableData.length > 0"
     />
 
 
-    <empty v-if="data.length <= 0" :title="'No accounts available!'" :action="'Keep growing.'"></empty>
+    <empty v-if="tableData.length <= 0" :title="'No accounts available!'" :action="'Keep growing.'"></empty>
   </div>
 </template>
 
 <script>
 import roundedBtn from 'src/modules/generic/roundedBtn'
+import DataTable from 'src/modules/generic/table'
 import COLORS from 'src/assets/style/colors.js'
 import Pager from 'src/components/increment/generic/pager/Pager.vue'
 import ROUTER from 'src/router'
 export default {
   data() {
     return {
-      data: [{
+      tableHeaders: [
+        {title: 'Date Posted', key: 'date', type: 'date'},
+        {title: 'Time Posted', key: 'time', type: 'text'},
+        {title: 'Post Title', key: 'post_title', type: 'text'},
+        {title: 'Channel Posted To', key: 'channels_posted_to', type: 'text'},
+        {title: 'Link', key: 'link', type: 'text'},
+        {title: 'Status', key: 'status', type: 'text'}
+      ],
+      tableData: [{
         id: 1,
         date: '05/18/2021',
         time: '18:00',
@@ -111,6 +105,7 @@ export default {
   },
   components: {
     roundedBtn,
+    DataTable,
     'empty': require('components/increment/generic/empty/Empty.vue'),
     Pager
   },

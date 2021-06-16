@@ -84,6 +84,9 @@
             }"
         />
     </div>
+    <div class="imports">
+      <preview></preview>
+    </div>
     </div>
   </div>
 </template>
@@ -97,6 +100,7 @@ import COLORS from 'src/assets/style/colors.js'
 import CONFIG from 'src/config.js'
 import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
 import global from 'src/helpers/global'
+import preview from 'src/modules/generic/preview.vue'
 export default {
   mounted(){
   },
@@ -129,7 +133,8 @@ export default {
     Images,
     Toggle,
     roundedSelectBtn,
-    roundedBtn
+    roundedBtn,
+    preview
   },
   methods: {
   }
@@ -138,6 +143,10 @@ export default {
 
 <style scoped lang="scss" scoped>
 @import "~assets/style/colors.scss";
+.imports{
+  margin-top: 10%;
+}
+
 .form-control{
   margin-bottom: 3%;
 }
