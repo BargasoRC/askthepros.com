@@ -78,7 +78,7 @@ export default {
         title: 'Google My Business',
         payload: 'google',
         description: 'Reap the benefits of automating your Google My Business postings.',
-        stat: false
+        stat: true
       }, {
         index: 1,
         title: 'Facebook',
