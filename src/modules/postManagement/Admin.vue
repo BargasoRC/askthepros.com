@@ -29,6 +29,16 @@
         @onAction="onTableAction"
       />
     </div>
+
+    <Pager
+      :pages="numPages"
+      :active="activePage"
+      :limit="limit"
+      v-if="tableData.length > 0"
+    />
+
+
+    <empty v-if="tableData.length <= 0" :title="'No accounts available!'" :action="'Keep growing.'"></empty>
     
     <Confirmation
       ref="confirm"
@@ -42,6 +52,7 @@
 <script>
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import Search from 'src/components/increment/ecommerce/filter/Product.vue'
+import Pager from 'src/components/increment/generic/pager/Pager.vue'
 import DataTable from 'src/modules/generic/table'
 import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
 import ROUTER from 'src/router'
@@ -49,9 +60,9 @@ export default {
   data() {
     return {
       tableActions: [
-        {button: `<i class="fas fa-eye ml-2 mr-2"></i>`},
-        {button: `<i class="fas fa-pencil-alt ml-2 mr-2"></i>`},
-        {button: `<i class="fas fa-trash-alt ml-2 mr-2"></i>`}
+        {button: `<i class="fas fa-eye ml-2 mr-2" style="color: #01009A !important;"></i>`},
+        {button: `<i class="fas fa-pencil-alt ml-2 mr-2" style="color: #01004E;"></i>`},
+        {button: `<i class="fas fa-trash-alt ml-2 mr-2" style="color: #FF0000;"></i>`}
       ],
       // table header: should specify;  title, key(will be used as key in table data) and type
       tableHeaders: [
@@ -175,14 +186,20 @@ export default {
           payload_value: 'desc',
           type: 'text'
         }]
-      }]
+      }],
+      limit: 5,
+      offset: 0,
+      numPages: null,
+      activePage: 1
     }
   },
   components: {
     roundedBtn,
     Search,
     DataTable,
-    Confirmation
+    Confirmation,
+    'empty': require('components/increment/generic/empty/Empty.vue'),
+    Pager
   },
   methods: {
     newPost() {
