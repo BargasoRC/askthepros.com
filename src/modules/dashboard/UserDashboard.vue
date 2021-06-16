@@ -10,10 +10,11 @@
           <p class="card-text" v-html="item.description"></p>
           <dialogueBtn 
             :onClick="connect(item)"
-            :icon="'fas fa-cog'"
+            :icon="'fas fa-cogs'"
+            :icon_position="'right'"
             :text="'Connect'"
             :styles="{
-              backgroundColor: colors.primary,
+              backgroundColor: colors.darkPrimary,
               color: 'white'
             }"
           />
@@ -21,7 +22,7 @@
       </div>
     </div>
 
-    <div class="row" style="margin-top: 25px">
+    <div class="row latestPost border" style="margin-top: 25px">
       <div class="col-lg-9">
         <h3>Latest Posts</h3>
         <table class="table col-lg-11 table-bordered">
@@ -60,6 +61,14 @@
             </tr>
           </tbody>
         </table>
+          <roundedBtn 
+          :onClick="connect(item)"
+          :text="'View More'"
+          :styles="{
+            backgroundColor: colors.darkPrimary,
+            color: $white
+          }"
+          />
       </div>
       <div class="card col-lg-3"  style="margin-top: 25px;">
         <div class="card-body">
@@ -74,10 +83,11 @@
             :onClick="connect({
               payload: 'brand'
             })"
-            :icon="'fas fa-cog'"
+            :icon="'fas fa-cogs'"
             :text="'Connect'"
+            :icon_position="'right'"
             :styles="{
-              backgroundColor: colors.primary,
+              backgroundColor: colors.darkPrimary,
               color: 'white'
             }"
           />
@@ -95,9 +105,20 @@
   margin-right: 2%;
   float: left;
 }
+.card-text{
+  color: $text;
+}
+.card-title{
+  color: $primary;
+  font-weight: 800;
+}
+.latestPost{
+  max-height: 300vh;
+}
 </style>
 <script>
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
+import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import ROUTER from 'src/router'
 export default {

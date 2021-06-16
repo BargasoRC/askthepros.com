@@ -84,8 +84,8 @@ export default {
 }
 
 .row {
-  padding-top: 20vh;
-  padding-bottom: 20vh;
+  padding-top: 15vh;
+  padding-bottom: 15vh;
 }
 
 h1 {
