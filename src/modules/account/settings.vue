@@ -1,47 +1,167 @@
 <template>
   <div class="holder">
-    <h3 style="margin-top: 25px;">Settings!</h3>
+    <h3 style="">Profile</h3>
+    <p style="border-bottom: 1px solid #aaa; 
+              padding-bottom: 2%"
+            >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis odio.</p>
+    <div class="container my-container">
+      <div class="my-form row">
+        <div class="container col-9 input-form" style="margin-top: -3%;" >
+          <div class="">
+            <p>First Name</p>
+              <roundedInput 
+                      :type="'text'"
+                      :placeholder="''"
+                      :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                      :styles="{
+                        border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                      }"
+                      v-model="username"
+                      class="input-style"
+                    />
+              <br>
+          </div>
+          <div class="">
+            <p>Last Name</p>
+            <roundedInput 
+                  :type="'text'"
+                  :placeholder="''"
+                  :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                  :styles="{
+                    border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                  }"
+                  v-model="username"
+                  class="input-style"
+                />
+              <br> 
+            </div>   
+          <div class="">
+            <p>Business Name</p>
+            <roundedInput 
+                  :type="'text'"
+                  :placeholder="''"
+                  :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                  :styles="{
+                    border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                  }"
+                  v-model="username"
+                  class="input-style"
+                />
+              <br>
+          </div>
+          <div class="">
+            <p>Contact Number</p>
+            <roundedInput 
+                  :type="'text'"
+                  :placeholder="''"
+                  :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                  :styles="{
+                    border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                  }"
+                  v-model="username"
+                  class="input-style"
+                />   
+              <br>
+            </div>
+          </div>    
+        <div class="container col-3 profile-pic" style="float=right;">
+          <div style="float: left;">
+            <h3>Profile picture</h3>
+            <div class=" my-icon">
+              <i class="fa fa-user-circle-o fa-5x" ></i>
+            </div>
+            <dialogueBtn 
+                  :onClick="login"
+                  :icon="'fas fa-sign-in-alt'"
+                  :text="'Change Profile Picture'"
+                  :styles="{
+                    backgroundColor: '#063970',
+                    color: 'white'
+                  }"
+                  style="margin-top: 5%"
+                />
+          </div>
+        </div>
 
-    <div class="row" style="margin-top: 25px">
-      <div class="col-lg-12">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th scope="col">Title</th>
-              <th scope="col">Channels</th>
-              <th scope="col">Links</th>
-              <th scope="col">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">Test</th>
-              <td>Test</td>
-              <td>Test</td>
-              <td>Test</td>
-            </tr>
-            <tr>
-              <th scope="row">Test</th>
-              <td>Test</td>
-              <td>Test</td>
-              <td>Test</td>
-            </tr>
-            <tr>
-              <th scope="row">Test</th>
-              <td>Test</td>
-              <td>Test</td>
-              <td>Test</td>
-            </tr>
-            <tr>
-              <th scope="row">Test</th>
-              <td>Test</td>
-              <td>Test</td>
-              <td>Test</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
+
+    <h3 style="border-bottom: 1px solid #aaa; 
+              padding-bottom: 2%;">Account</h3>
+    
+    <div class="container my-container">
+      <div class="my-form input-form col-9">
+          <p>Username</p>
+          <roundedInput 
+                    :type="'text'"
+                    :placeholder="'Username'"
+                    :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                    :styles="{
+                      border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                    }"
+                    v-model="username"
+                    class="input-style"
+                    style="background-color: lightgrey;"
+                  />
+              <br>
+          <p>Email Address</p>
+          <roundedInput 
+                    :type="'text'"
+                    :placeholder="'example@email.domain'"
+                    :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                    :styles="{
+                      border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                    }"
+                    v-model="username"
+                    class="input-style"
+                    style="background-color: lightgrey;"
+                  />
+              <br>   
+      </div>
+    </div>
+
+    <h3 style="border-bottom: 1px solid #aaa; 
+              padding-bottom: 2%;">Change your Password</h3>
+
+    <div class="container my-container ">
+      <div class="my-form input-form col-9" >
+          <p>New Password</p>
+          <roundedInput 
+                    :type="'text'"
+                    :placeholder="'(Leave blank if unchanged)'"
+                    :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                    :styles="{
+                      border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                    }"
+                    v-model="username"
+                    class="input-style"
+                  />
+              <br>
+          <p>Confirm New Password</p>
+          <roundedInput 
+                    :type="'text'"
+                    :placeholder="'(Leave blank if unchanged)'"
+                    :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                    :styles="{
+                      border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                    }"
+                    v-model="username"
+                    class="input-style"
+                  />
+              <br>   
+      </div>
+    </div>
+
+    <dialogueBtn 
+                  :onClick="login"
+                  :icon="'fas fa-sign-in-alt'"
+                  :text="'Update'"
+                  :styles="{
+                    backgroundColor: '#063970',
+                    color: 'white'
+                  }"
+                  style="margin-bottom: 5%;"
+                />
     
   </div>
 </template>
@@ -53,9 +173,69 @@
   margin-right: 2%;
   float: left;
 }
+
+h3{
+  margin-top: 25px;
+  font-weight: bold;
+  font-size: 21px;
+  
+}
+
+.my-form{
+  padding: 3%;
+}
+
+
+
+.input-form{
+  background-color: none;
+  margin-left: -3%;
+}
+
+.input-style{
+  padding-left: 3%;
+  background-color: none;
+  max-width: 78%;
+  border: 1px solid black;
+}
+
+.input-style ::-moz-placeholder{
+  font-style: italic;
+}
+
+.profile-pic{
+  background-color: none;
+  float: center;
+  margin-top: -5%;
+}
+
+.profile-pic h3{
+  font-weight: bold; 
+  margin-right: 4%; 
+  font-size: 19px;
+}
+
+.my-icon{
+  margin-top: 2%;
+  background-color: rgb(250, 250, 250);
+  color: blue;
+  float: center;
+  height: 220px;
+  width: 210px;
+  size: 80px 80px;
+  text-align: center;
+  padding: 5%;
+  padding-top: 30px;
+  margin-top: 10%;
+  margin-bottom: 5px;
+}
+
+
 </style>
 <script>
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
+import roundedInput from 'src/modules/generic/roundedInput'
+import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import ROUTER from 'src/router'
 export default {
@@ -65,7 +245,9 @@ export default {
     }
   },
   components: {
-    dialogueBtn
+    dialogueBtn,
+    roundedInput,
+    roundedBtn
   },
   methods: {
     connect(item){
