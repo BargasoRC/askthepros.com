@@ -83,7 +83,7 @@ iframe{
 
   .col-md-6 iframe {
     width: 100%;
-    height: 55vh;
+    height: 30vh;
   }
 }
 </style>
