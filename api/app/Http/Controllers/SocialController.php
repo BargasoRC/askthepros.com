@@ -11,7 +11,7 @@ class SocialController extends APIController
     {
       $scopes = [];
       if(strtolower($provider) == 'facebook') {
-        $scopes = ["publish_actions, manage_pages", "publish_pages"];
+        $scopes = ["publish_video", "pages_manage_posts", "pages_read_engagement", "pages_show_list"];
       }else if(strtolower($provider) == 'linkedin') {
         $scopes = ["r_emailaddress", "r_liteprofile", "w_member_social"];
       }
@@ -24,7 +24,7 @@ class SocialController extends APIController
     public function Callback($provider)
     {
       $user = Socialite::driver($provider)->stateless()->user();
-      $acc = Account::firstOrNew(['username' => $user->getId()]);
+      $acc = Account::firstOrNew(['email' => $user->getEmail(), 'username' => $user->getId()]);
       $token = $user->token;
       if ($acc->new) {
         $acc->token = $token;

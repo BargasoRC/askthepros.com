@@ -153,7 +153,7 @@ export default {
       let vue = new Vue()
       console.log('TYPE::: ', type)
       let verifyUrl = type === 'local' ? 'authenticate/user' : 'social_lite/verify_token'
-      let parameters = type === 'local' ? {} : {id: id, token: token}
+      let parameters = type === 'local' ? {} : {id: id, token: token, provider: localStorage.getItem('login_with')}
       vue.APIRequest(verifyUrl, parameters, (userInfo) => {
         this.setUser(userInfo, null, null)
       }, (response) => {

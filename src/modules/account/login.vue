@@ -168,7 +168,7 @@ export default {
       let url = window.location.href
       let query = url.substring(url.indexOf('?') + 1)
       $('#loading').css({'display': 'block'})
-      this.APIRequest('social_lite/authenticate/linkedin/callback?' + query, {}, response => {
+      this.APIRequest(`social_lite/authenticate/${localStorage.getItem('login_with')}/callback?` + query, {}, response => {
         $('#loading').css({'display': 'none'})
         localStorage.removeItem('login_with')
         localStorage.setItem('usertoken', response.token)
@@ -218,6 +218,18 @@ export default {
     },
     gmailLogin(event) {
       console.log('gmail login:::')
+      $('#loading').css({'display': 'block'})
+      localStorage.setItem('login_with', 'google')
+      this.APIRequest('social_lite/authenticate/google/redirect', {}, response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data && response.data.url) {
+          console.log('Authentication with google response: ', response)
+          window.location.href = response.data.url
+        }
+      }, error => {
+        $('#loading').css({'display': 'none'})
+        console.log('Authentication with google error! ', error)
+      })
     },
     fbLogin(event) {
       $('#loading').css({'display': 'block'})
