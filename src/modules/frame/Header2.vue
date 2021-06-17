@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">
+    <div class="navbar-header"> 
+      <a class="navbar-brand" href="#" >
         <img 
           :src="require('../../assets/img/asktheprooslogo-clear.png')" 
           class="logo-brand"
@@ -9,7 +9,7 @@
         />
       </a>
     </div>
-    <div class="navbar-header">
+    <div class="navbar-header" >
       <a href="#">
         <button 
             class="navbar-toggler" 
@@ -22,7 +22,7 @@
       </a>
     </div>
     <!-- Show when screen is <=991px -->
-    <div class="sidebar contianer-fluid" id="navbarSupportedContent d-none d-sm-block" v-if="!isActive">
+    <div class="sidebar contianer-fluid" id="navbarSupportedContent d-none d-sm-block" v-if="!isActive" >
         <div class="row w-100  justify-content-end no-gutters"  style="padding-right:20%; padding-top:20%; color:#01004E">
           <i class="fas fa-times fa-3x" @click="showSidebar()"></i>
         </div>
@@ -188,9 +188,7 @@ b:hover {
   
 }
 .navbar-brand .logo-brand {
-  // width: 100px;
-  // height: 100px;
-  // margin-left: 5% !important
+  margin-top: 5%;
 }
 .nav-link .navbar-brand {
   font-size: 30px;
