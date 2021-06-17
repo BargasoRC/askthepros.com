@@ -5,8 +5,9 @@
         <img :src="require('../../assets/img/logo_white.png')" class="logo-brand">
         <!-- <label class="navbar-brand hide-on-mobile text-white" v-html="common.APP_NAME_HTML"></label> -->
       </a>
+      
     </div>
-    <nav class="header-navbar">
+    <nav class="header-navbar" >
       <span class="navbar-menu-toggler-md" v-bind:class="{'active-menu': menuFlag === true}" data-toggle="collapse" data-target="#idfactory" aria-controls="idfactory" aria-expanded="false" aria-label="Toggle navigation" v-on:click="makeActive('menu')">
         <i class="fa fa-bars" aria-hidden="true"></i>
       </span>
@@ -85,8 +86,16 @@
             </span>
         </div>
 
+        <div v-if="user.type == 'ADMIN'"> 
+          <button type="button" class="btn btn-warning header-button-type">ADMIN</button> 
+        </div>
+        <div v-else>
+          <button type="button" class="btn btn-warning header-button-type">INDUSTRY NAME</button>
+          <button type="button" class="btn btn-warning header-button-type" style="float: right;">COMPANY NAME</button>
+        </div>
+        
       </span>
-
+      
     </nav>
 
          <!-- Confirmation Modal -->
@@ -399,6 +408,10 @@ body{
   background: $primary;
 }
 
+.header-button-type{
+  margin-top: 0%; 
+  margin-left: 2%;
+}
 
 /*--------------------------------------
 
@@ -566,6 +579,10 @@ body{
     .nav-item{
       width: 5% !important;
     }
+    .header-button-type{
+      margin-top: 0.75%; 
+      margin-left: 2%; 
+    }
   }
 
  @media (max-width: 1199px){
@@ -590,6 +607,10 @@ body{
     }
     .nav-item{
       width: 10%;
+    }
+    .header-button-type{
+      margin-top: 0.85%; 
+      margin-left: 2%; 
     }
   }
 
@@ -617,6 +638,10 @@ body{
     }
     .nav-item{
       width: 10%;
+    }
+    .header-button-type{
+      margin-top: 1%; 
+      margin-left: 2%; 
     }
  }
 
@@ -666,6 +691,9 @@ body{
     .logo-brand{
       width: 30px;
       height: 30px;
+    }
+    .header-button-type{
+      display:none;
     }
   }
 </style>
