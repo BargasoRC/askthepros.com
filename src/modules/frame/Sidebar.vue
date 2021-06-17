@@ -8,7 +8,7 @@
                   <span class="profile-image-holder"  v-if="user.profile">
                     <img v-bind:src="config.BACKEND_URL + user.profile.url">
                   </span>
-                  <i class="fa fa-user-circle-o profile-icon" v-else></i>
+                  <i class="fa fa-user-circle profile-icon" v-else></i>
                   <i class="fas fa-check text-primary profile-status" v-if="user.status === 'VERIFIED'"></i>
                   Hi {{user.username}}!
                 </span>

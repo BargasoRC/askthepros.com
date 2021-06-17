@@ -22,10 +22,10 @@
       </div>
     </div>
 
-    <div class="row latestPost border" style="margin-top: 25px">
-      <div class="col-lg-9">
-        <h3>Latest Posts</h3>
-        <table class="table col-lg-11 table-bordered">
+    <div class="row justify-content-between latestPost" style="margin-top: 25px;">
+      <div class="card col-lg-8" style="border-color: light-grey; width: 25%; padding-bottom: 1%; margin-top: 25px;">
+        <h3 id="Tlabel">Latest Posts</h3>
+        <table class="table col-lg-11">
           <thead>
             <tr>
               <th scope="col">Title</th>
@@ -61,16 +61,25 @@
             </tr>
           </tbody>
         </table>
-          <roundedBtn 
-          :onClick="connect(item)"
-          :text="'View More'"
-          :styles="{
-            backgroundColor: colors.darkPrimary,
-            color: $white
-          }"
-          />
+        <div class="row">
+          <div class="col-8 col-sm-6">
+            <div class="justify-content-start" style="margin-top: 25px">
+              <roundedBtn 
+                :onClick="item"
+                :text="'View more'"
+                :styles="{
+                  backgroundColor: colors.darkPrimary,
+                  color: 'white'
+                }"
+              />
+            </div>
+          </div>
+          <div class="col-8 col-sm-6">
+            <p id="pager" class="justify-content-end" style="margin-right: 65px; margin-bottom: 35px">Page To Review: {{forReviewTotal}} <i class="fas fa-arrow-right" id="arrowNext" v-on:click="next()"></i></p>
+          </div>
+        </div>
       </div>
-      <div class="card col-lg-3"  style="margin-top: 25px;">
+      <div class="card col-lg-3"  style="margin-top: 25px; height: 200px;">
         <div class="card-body">
           <h5 class="card-title">Setup Your Brand</h5>
           <p class="card-text">
@@ -112,8 +121,21 @@
   color: $primary;
   font-weight: 800;
 }
-.latestPost{
-  max-height: 300vh;
+#Tlabel{
+  margin-bottom: 15px;
+  margin-top: 15px;
+  font-weight: 800;
+  font-size: 20px;
+}
+#pager {
+  font-weight: bold;
+  float: right;
+  color: $title;
+  margin-top: 5vh;
+}
+#arrowNext{
+  color: $darkPrimary;
+  padding: 7px
 }
 </style>
 <script>
@@ -141,7 +163,8 @@ export default {
     }
   },
   components: {
-    dialogueBtn
+    dialogueBtn,
+    roundedBtn
   },
   methods: {
     connect(item){
