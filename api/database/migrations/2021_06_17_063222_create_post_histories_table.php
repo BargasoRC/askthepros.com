@@ -17,8 +17,8 @@ class CreatePostHistoriesTable extends Migration
             $table->bigIncrements('id');
             $table->string('code')->unique();
             $table->bigInteger('post_id')->nullable(false);
-            $table->string('link')->nullable(false);
-            $table->bigInteger('page_id')->nullable(false);
+            $table->string('link')->nullable(true);
+            $table->string('page_id')->nullable(true);
             $table->bigInteger('account_id')->nullable(false);
             $table->string('status')->nullable(false);
             $table->timestamps();
