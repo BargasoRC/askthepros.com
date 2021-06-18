@@ -9,7 +9,7 @@
           <div class="SubQoute">
             <h1 class="QouteText" style="color: #01009A">With Automated Social Media Posting.</h1>
           </div>
-          <img :src="require('assets/img/section3-img.png')" alt="Image" style="width: 85%;height:auto">
+          <img :src="require('assets/img/section3-img.png')" alt="Image" style="width: 60%;height:auto">
         </div>
       </div>
       <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xs-5 d-flex justify-content-center LoginCardContainer mb-5">
@@ -122,22 +122,22 @@
                 v-if="!this.isValid && selectedIndustry == null"
               >Required Field</p>
             </div>
-            <div class="d-flex justify-content-between">
-              <roundedBtn
+            <div class="d-flex justify-content-center">
+              <!-- <roundedBtn
                 :onClick="forgotPassword"
                 :text="'Forgot your password?'"
                 :styles="{
                   background: 'none',
                   color: '#272727'
                 }"
-              />
+              /> -->
               <dialogueBtn 
                 :onClick="register"
                 :icon="'fas fa-sign-in-alt'"
                 :text="'Register now'"
                 :icon_position="'right'"
                 :styles="{
-                  backgroundColor: '#F1B814',
+                  backgroundColor: colors.darkPrimary,
                   color: 'white'
                 }"
               />
@@ -204,7 +204,7 @@
                 :text="'Login'"
                 :icon_position="'right'"
                 :styles="{
-                  backgroundColor: '#01009A',
+                  backgroundColor: colors.warning,
                   color: 'white'
                 }"
               />
@@ -221,6 +221,7 @@ import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import roundedInput from 'src/modules/generic/roundedInput'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
+import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config'
 import COMMON from 'src/common'
@@ -241,14 +242,16 @@ export default {
       errorMessage: '',
       isValid: true,
       isEmailValid: true,
-      passwordRequirements: ''
+      passwordRequirements: '',
+      colors: COLORS
     }
   },
   components: {
     dialogueBtn,
     roundedInput,
     roundedBtn,
-    roundedSelectBtn
+    roundedSelectBtn,
+    COLORS
   },
   computed: {
     returnIndustry() {
