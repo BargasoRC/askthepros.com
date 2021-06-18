@@ -279,9 +279,18 @@ export default {
           referral_code: null,
           status: 'ADMIN'
         }
+        let parameters = {
+          account_id: 1,
+          name: this.username,
+          email: this.email,
+          addition_informations: JSON.stringify(this.selectedIndustry)
+        }
         $('#loading').css({'display': 'block'})
         this.APIRequest('accounts/create', parameter).then(response => {
           $('#loading').css({'display': 'none'})
+          this.APIRequest('merchants/create', parameters).then(response => {
+            console.log('[fd]', response)
+          })
           console.log('REGISTRATION RESPONSE: ', response)
           if(response.error !== null){
             if(response.error.status === 100){

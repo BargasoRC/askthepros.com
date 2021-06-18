@@ -1,7 +1,7 @@
 <template>
   <div class="holder">
     <h3 style="margin-top: 25px;">Post Management</h3>
-    <p>Connect to your social media channels, then setup your branding and choose your automation.</p>
+    <p style="color: gray">Connect to your social media channels, then setup your branding and choose your automation.</p>
 
     <div style="margin-top: 3%">
         <roundedBtn
@@ -14,15 +14,15 @@
                 width: '15%',
                 borderTopRightRadius: '0px !important',
                 borderBotttomLeftRadius: '0px !important',
-                outlineColor: colors.primary
+                outlineColor: colors.darkPrimary
             }"
         />
         <roundedBtn
             :text="'History'"
             class="button1"
             :styles="{
-                backgroundColor: colors.primary,
-                outlineColor: colors.primary,
+                backgroundColor: colors.darkPrimary,
+                outlineColor: colors.darkPrimary,
                 color: 'white',
                 width: '15%',
                 borderTopLeftRadius: '0px !important',
