@@ -351,7 +351,7 @@ class APIController extends Controller
           }
         }
         if(strpos( $validationKey, "_id" ) !== false){
-          $table = explode(".", str_plural(str_replace("_id", "", $validationKey)));
+          $table = explode(".", Str::plural(str_replace("_id", "", $validationKey)));
           $table = (count($table) > 1) ? $table[1] : $table[0];
           if(strpos( $validationKey, "parent" ) !== false){
             $table = $this->model->getTable();
@@ -399,7 +399,7 @@ class APIController extends Controller
         $this->model = $this->model->with($this->requiredForeignTable);
         for($x = 0; $x < count($this->requiredForeignTable); $x++){
           $singularForeignTable = Str::singular($this->requiredForeignTable[$x]);
-          $pluralForeignTable = str_plural($this->requiredForeignTable[$x]);
+          $pluralForeignTable = Str::plural($this->requiredForeignTable[$x]);
           $this->model = $this->model->leftJoin($pluralForeignTable, $pluralForeignTable.'.id', '=', $tableName.'.'.$singularForeignTable.'_id');
         }
       }
