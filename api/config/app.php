@@ -174,7 +174,8 @@ return [
         Increment\Account\AccountServiceProvider::class,
         Increment\Common\Payload\PayloadServiceProvider::class,
         Increment\Imarket\Merchant\MerchantServiceProvider::class,
-        
+        Increment\Common\Image\ImageServiceProvider::class,
+
         // Increment\Account\AccountServiceProvider::class,
         /*
          * Application Service Providers...
