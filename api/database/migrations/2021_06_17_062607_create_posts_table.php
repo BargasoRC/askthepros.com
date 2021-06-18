@@ -16,13 +16,13 @@ class CreatePostsTable extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('code')->unique();
+            $table->bigInteger('account_id');
             $table->bigInteger('parent')->nullable();
-            $table->string('title')->nullable(false);
-            $table->string('description')->nullable(false);
-            $table->string('channels')->nullable(false);
-            $table->string('url')->nullable(false);
-            $table->bigInteger('account_id')->nullable(false);
-            $table->string('status')->nullable(false);
+            $table->string('title');
+            $table->string('description');
+            $table->string('channels');
+            $table->string('url');
+            $table->string('status');
             $table->timestamps();
             $table->softDeletes();
         });

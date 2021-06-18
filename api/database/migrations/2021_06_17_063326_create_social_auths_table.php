@@ -15,11 +15,11 @@ class CreateSocialAuthsTable extends Migration
     {
         Schema::create('social_auths', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('account_id')->nullable(false);
-            $table->string('type')->nullable(false);
-            $table->string('token')->nullable(false);
-            $table->string('email')->nullable(false);
-            $table->string('details')->nullable(false);
+            $table->bigInteger('account_id');
+            $table->string('type');
+            $table->string('token');
+            $table->string('email');
+            $table->longText('details')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
