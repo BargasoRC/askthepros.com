@@ -1,7 +1,7 @@
 <template>
   <div class="holder">
     <h3 style="margin-top: 25px;font-weight: bold;color: #272727;font-size: 21px;">Welcome to Dashboard!</h3>
-    <p>Here are the latest update of activities as of today.</p>
+    <p class="subwelcome">Here are the latest update of activities as of today.</p>
 
     <div class="row" style="justify-content: space-between; display: flex;">
       <div class="card col-lg-3" v-for="(item, index) in socialMediaBtns" :key="index">
@@ -114,7 +114,7 @@
   margin-right: 2%;
   float: left;
 }
-.card-text{
+.card-text, .subwelcome{
   color: $text;
 }
 .card-title{

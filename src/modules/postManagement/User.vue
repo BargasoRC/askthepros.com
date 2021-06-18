@@ -1,19 +1,19 @@
 <template>
   <div class="holder">
     <h3 style="margin-top: 25px;">Post Management</h3>
-    <p>Connect to your social media channels, then setup your branding and choose your automation.</p>
+    <p style="color: gray">Connect to your social media channels, then setup your branding and choose your automation.</p>
 
     <div style="margin-top: 3%">
         <roundedBtn
             :text="'For Review'"
             class="button"
             :styles="{
-                backgroundColor: colors.primary,
+                backgroundColor: colors.darkPrimary,
                 color: 'white',
                 width: '15%',
                 borderTopRightRadius: '0px !important',
                 borderBotttomLeftRadius: '0px !important',
-                outlineColor: colors.primary
+                outlineColor: colors.darkPrimary
             }"
         />
         <roundedBtn
@@ -22,7 +22,7 @@
             class="button1"
             :styles="{
                 backgroundColor: colors.white,
-                outlineColor: colors.primary,
+                outlineColor: colors.darkPrimary,
                 color: 'white',
                 width: '15%',
                 borderTopLeftRadius: '0px !important',
@@ -31,7 +31,7 @@
             }"
         />
     </div>
-    <p style="margin-top: 5px"><i style="color: red">**</i><i>This section only displays list of post if Automation Settings is set to "Review" not autopost. Post will not be posted on social media channels, unless approved.</i></p>
+    <p style="margin-top: 5px; color: gray"><i style="color: red">**</i><i>This section only displays list of post if Automation Settings is set to "Review" not autopost. Post will not be posted on social media channels, unless approved.</i></p>
 
     <div class="col-sm-12 col-md-12 col-lg-12 mt-5 p-0 pt-5">
       <DataTable 
@@ -108,16 +108,12 @@ export default {
     Pager
   },
   methods: {
-    review(id){
-      ROUTER.push('post_management/view/' + id)
-    },
     history(){
       ROUTER.push('post_management/history')
     },
     onTableAction(data){
-      console.log('here ', data)
-      this.tableData[data.rowIndex]
-      console.log('[preview Here]', this.tableData[data.rowIndex].id)
+      let id = this.tableData[data.rowIndex].id
+      ROUTER.push('post_management/view/' + id)
     }
   }
 }

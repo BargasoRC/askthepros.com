@@ -10,7 +10,7 @@
             class="button"
             :styles="{
                 backgroundColor: 'white',
-                outlineColor: colors.primary,
+                outlineColor: colors.darkPrimary,
                 color: 'white',
                 width: '15%',
                 borderTopRightRadius: '0px !important',
@@ -21,9 +21,9 @@
             :text="'Branding'"
             class="button1"
             :styles="{
-                backgroundColor: colors.primary,
+                backgroundColor: colors.darkPrimary,
                 color: 'white',
-                outlineColor: colors.primary,
+                outlineColor: colors.darkPrimary,
                 width: '15%',
                 borderTopLeftRadius: '0px !important',
                 borderBottomLeftRadius: '0px !important',
@@ -38,7 +38,7 @@
             class="button2"
             :styles="{
                 backgroundColor: 'white',
-                outlineColor: colors.primary,
+                outlineColor: colors.darkPrimary,
                 color: 'white',
                 width: '15%',
                 borderTopLeftRadius: '0px !important',
