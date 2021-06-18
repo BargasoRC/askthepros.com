@@ -37,15 +37,6 @@ class PostController extends APIController
             $post_target->payload_value = $data['category'];
             $post_target->save();
 
-            $post_history = new PostHistory();
-            $post_history->code = $this->generateCode($post_history);
-            $post_history->post_id = $post->id;
-            $post_history->link = null;
-            $post_history->page_id = null;
-            $post_history->page_id = $data['account_id'];
-            $post_history->status = 'PUBLISHED';
-            $post_history->save();
-
             \DB::commit();
 
             $this->response['data'] = 'posted_successfully';
@@ -56,6 +47,17 @@ class PostController extends APIController
             $this->response['error'] = $e->getMessage();
             $this->response['error_status'] = $e->getCode();
         }
+        return $this->response();
+    }
+
+    public function retrieve(Request $request) {
+        $data = $request->all();
+        $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
+                ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
+                ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
+                ->get();
+        $this->response['data'] = $result;
+        $this->response['error'] = null;
         return $this->response();
     }
 
