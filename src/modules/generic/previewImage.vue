@@ -9,7 +9,8 @@
         <div class="scrolling-wrapper d-flex" style="height: 150px">
           <div style="height:100px !important;width:100px !important; border:2px solid gray" id="imageCont" @click="addImage()">
             <i class="fa fa-plus plusIcon" style="font-size:40px;padding:10px; vertical-align:middle;margin-top: 20px;margin-right:1%"></i>
-            <input type="file" id="Image" accept="image/*" @change="setUpFileUpload($event)">
+            <input type="file" id="Image" accept="file_extension|audio/*|video/*|image/*|media_type" @change="setUpFileUpload($event)">
+            <!-- <input type="file" id="Image" accept="image/*" @change="setUpFileUpload($event)"> -->
           </div>
         <div  v-for="item in returnImageList" :key="item.id" :group="item" style="height:100px;width:100px" :class="'imageContainer p-10'">
             <img :src="item.url" class="image" @click="selectImage(item.url)">
@@ -30,11 +31,9 @@
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import COMMON from 'src/common.js'
-import Image from 'src/components/increment/generic/modal/Image.vue'
 import axios from 'axios'
 export default {
-  components: { Image },
-  props: ['productImages'],
+  props: ['productImages', 'formData'],
   data: () => ({
     user: AUTH.user,
     config: CONFIG,
@@ -100,13 +99,14 @@ export default {
         return false
       }else{
         this.file = files[0]
-        let filename = this.file.name.toLowerCase()
-        if(filename.substring(filename.lastIndexOf('.')) === '.png' || filename.substring(filename.lastIndexOf('.')) === '.jpg' || filename.substring(filename.lastIndexOf('.')) === '.jpeg' || filename.substring(filename.lastIndexOf('.')) === '.gif' || filename.substring(filename.lastIndexOf('.')) === '.tif' || filename.substring(filename.lastIndexOf('.')) === '.bmp'){
-          this.createFile(files[0])
-        }else{
-          this.errorMessage = 'Upload images only!'
-          this.file = null
-        }
+        // let filename = this.file.name.toLowerCase()
+        this.createFile(this.file)
+        // if(filename.substring(filename.lastIndexOf('.')) === '.png' || filename.substring(filename.lastIndexOf('.')) === '.jpg' || filename.substring(filename.lastIndexOf('.')) === '.jpeg' || filename.substring(filename.lastIndexOf('.')) === '.gif' || filename.substring(filename.lastIndexOf('.')) === '.tif' || filename.substring(filename.lastIndexOf('.')) === '.bmp'){
+        //   this.createFile(files[0])
+        // }else{
+        //   this.errorMessage = 'Upload images only!'
+        //   this.file = null
+        // }
       }
     },
     createFile(file){
@@ -115,32 +115,32 @@ export default {
       this.upload()
     },
     upload(){
-      if(parseInt(this.file.size / 1024) > 1024){
-        this.errorMessage = 'Allowed size is up to 1 MB only'
-        this.file = null
-        return
-      }
-      this.validateImage(this.file.name)
-      if(this.hasError === true){
-        return
-      }
+      // if(parseInt(this.file.size / 1024) > 1024){
+      //   this.errorMessage = 'Allowed size is up to 1 MB only'
+      //   this.file = null
+      //   return
+      // }
+      // this.validateImage(this.file.name)
+      // if(this.hasError === true){
+      //   return
+      // }
       let formData = new FormData()
+      console.log('[formData]', this.file)
       formData.append('file', this.file)
       formData.append('file_url', this.file.name.replace(' ', '_'))
       formData.append('account_id', this.user.userID)
-      formData.append('category', `product${this.productId}`)
-      $('#loading').css({'display': 'block'})
-      axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
-        $('#loading').css({'display': 'none'})
-        this.hasError = false
-        this.retrieveImage()
-        this.$parent.retrieveFeaturedImages()
-        if(response.data.data !== null){
-          this.retrieveImage()
-          this.$parent.retrieveFeaturedImages()
-        }
-      })
-      this.prevIndex = null
+      this.$emit('formData', formData)
+      // $('#loading').css({'display': 'block'})
+      // axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
+      //   $('#loading').css({'display': 'none'})
+      //   this.hasError = false
+      //   this.retrieveImage()
+      //   this.$parent.retrieveFeaturedImages()
+      //   if(response.data.data !== null){
+      //     this.retrieveImage()
+      //     this.$parent.retrieveFeaturedImages()
+      //   }
+      // })
     },
     removeImage(id){
       let parameter = {
