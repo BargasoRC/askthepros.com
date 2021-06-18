@@ -295,7 +295,16 @@ export default {
                 this.errorMessage = message.email[0]
               }
             }else if(response.data !== null){
+              let parameters = {
+                account_id: 2, // sample account_id. must be response.data.account_id
+                name: this.username,
+                email: this.email,
+                addition_informations: JSON.stringify({industry: this.industry[this.selectedIndustry].category})
+              }
               if(response.data > 0){
+                this.APIRequest('merchants/create', parameters).then(response => {
+                  console.log('[response]', response)
+                })
                 this.login()
               }
             }

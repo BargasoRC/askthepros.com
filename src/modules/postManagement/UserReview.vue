@@ -1,7 +1,7 @@
 <template>
   <div class="holder">
     <h3 style="margin-top: 25px;">Customize Prior To Posting Channels</h3>
-    <p>Review and edit your posts prior to us sending them to your social medial channels. Then, approve once done.</p>
+    <p style="color: gray">Review and edit your posts prior to us sending them to your social medial channels. Then, approve once done.</p>
 
     <h5 class="title">Post Title</h5>
     <textarea class="form-control" placeholder="Type post description" name="post_title" id="post_title" cols="90" rows="10">
