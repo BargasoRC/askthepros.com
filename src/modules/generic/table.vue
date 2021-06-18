@@ -10,12 +10,12 @@
     <tbody>
       <tr v-for="(data, index) in tableData" :key="'table_data' + index">
         <th v-for="(item, ndx) in tableHeaders" :key="'td' + ndx" class="font-weight-normal">
-            <div class="font-weight-bold" v-if="isBold === true">
+            <div class="font-weight-bold" v-if="isBold === false" v-bind:style="{ color : color}">
             {{
             returnData(data, item)
             }}
             </div>
-            <div class="font-weight-normal" v-else-if="isBold === false">
+            <div class="font-weight-normal" v-else-if="isBold === true">
             {{
             returnData(data, item)
             }}
@@ -33,7 +33,8 @@
 export default {
   data() {
     return{
-      isBold: false
+      isBold: false,
+      color: ''
     }
   },
   props: ['tableActions', 'tableHeaders', 'tableData', 'onAction'],
@@ -42,11 +43,22 @@ export default {
       let temp = ''
       if(item.type !== 'action') {
         if(item.key === 'title' || item.key === 'status'){
-          temp = data[item.key]
-          this.isBold = false
-        }else {
+        //   if(item.key === 'status'){
+        //     if(data['status'] === 'Draft' || data['status'] === 'Published'){
+        //       this.color = 'black'
+        //       temp = data[item.key]
+        //     }
+        //   }else if(item.key === 'title'){
+        //     this.color = '#F1B814'
+        //     temp = data[item.key]
+        //   }
+        //   this.isBold = false
+        // }else {
           temp = data[item.key]
           this.isBold = true
+        }else {
+          temp = data[item.key]
+          this.isBold = false
         }
       }
       return temp
