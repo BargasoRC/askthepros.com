@@ -70,49 +70,12 @@ export default {
         {title: 'Date', key: 'created_at', type: 'text'},
         {title: 'Post Title', key: 'title', type: 'text'},
         {title: 'Category', key: 'category', type: 'text'},
-        {title: 'Channel Actions', key: 'channel', type: 'text'},
+        {title: 'Channel Actions', key: 'channels', type: 'text'},
         {title: 'Author', key: 'author', type: 'text'},
         {title: 'status', key: 'status', type: 'text'},
         {title: 'Review', type: 'action'}
       ],
-      tableData: [
-        {
-          id: 1,
-          title: 'Eyes here',
-          category: 'Finance',
-          channel: 'Google My Business, Facebook',
-          author: 'Admin1',
-          status: 'Draft',
-          created_at: '06/09/2021'
-        },
-        {
-          id: 2,
-          title: 'Eyes here',
-          category: 'Marketing',
-          channel: 'Google My Business, Facebook, LinkedIn',
-          status: 'Published',
-          author: 'Client1',
-          created_at: '06/09/2021'
-        },
-        {
-          id: 3,
-          title: 'Eyes here',
-          category: 'Finance',
-          channel: 'Facebook',
-          author: 'Content Expert 1',
-          status: 'Draft',
-          created_at: '06/09/2021'
-        },
-        {
-          id: 4,
-          title: 'Eyes here',
-          category: 'Finance',
-          author: 'Admin2',
-          channel: 'LinkedIn, Facebook',
-          status: 'Published',
-          created_at: '06/09/2021'
-        }
-      ],
+      tableData: [],
       category: [{
         title: 'Sort By',
         sorting: [{
@@ -201,6 +164,9 @@ export default {
     'empty': require('components/increment/generic/empty/Empty.vue'),
     Pager
   },
+  created() {
+    this.retrievePosts()
+  },
   methods: {
     newPost() {
       ROUTER.push('/admin/post_management/edit')
@@ -217,6 +183,17 @@ export default {
         let id = this.tableData[data.rowIndex].id
         this.del(id)
       }
+    },
+    retrievePosts() {
+      let parameter = {}
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('post/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        console.log('RESPONSE: ', response)
+        if(!response.error) {
+          this.tableData = response.data
+        }
+      })
     },
     del(id){
       this.$refs.confirm.show(id)

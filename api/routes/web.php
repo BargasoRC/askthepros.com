@@ -113,7 +113,7 @@ Route::post($route . '/verify_token','SocialController@checkToken');
 // Post Management
 $route = env('PACKAGE_ROUTE', '').'/post';
 Route::post($route . '/create', 'PostController@create');
-Route::post($route . '/upload', 'PostController@upload');
+Route::post($route . '/retrieve', 'PostController@retrieve');
 
 Route::get('/login/{provider}/redirect', 'SocialController@redirect');
 Route::get('/social_media/test', 'SocialMediaController@post');
