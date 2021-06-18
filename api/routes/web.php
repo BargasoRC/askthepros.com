@@ -110,5 +110,10 @@ Route::post($route . '/authenticate/{provider}/redirect', 'SocialController@redi
 Route::post($route . '/authenticate/{provider}/callback','SocialController@Callback');
 Route::post($route . '/verify_token','SocialController@checkToken');
 
+// Post Management
+$route = env('PACKAGE_ROUTE', '').'/post';
+Route::post($route . '/create', 'PostController@create');
+Route::post($route . '/upload', 'PostController@upload');
+
 Route::get('/login/{provider}/redirect', 'SocialController@redirect');
 Route::get('/social_media/test', 'SocialMediaController@post');

@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class PostTarget extends Model
 {
     //
-    protected $table = 'popost_targetst';
+    protected $table = 'post_targets';
     protected $fillable = ['code', 'post_id', 'payload', 'payload_value'];
 }

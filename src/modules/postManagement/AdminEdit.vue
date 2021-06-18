@@ -11,51 +11,78 @@
 
       <div class="form-group">
         <label for="post_title"><b>Post Title</b></label>
-        <input class="form-control" placeholder="Post Title">
+        <input 
+          :class="!this.isValid && title == '' ? 'form-control mb-0' : 'form-control'" 
+          placeholder="Post Title" 
+          :style="{
+            ...!this.isValid && title == '' ? {border: '1px solid red !important'} : '',
+          }"
+          v-model="title"
+        >
+        <p
+          class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
+          v-if="!this.isValid && title == ''"
+        >Required Field</p>
       </div>
 
       <div class="form-group">
         <label for="description"><b>Description</b></label>
-        <textarea class="form-control" placeholder="Add description here" rows="10">
+        <textarea 
+          :class="!this.isValid && description == '' ? 'form-control mb-0' : 'form-control'" 
+          placeholder="Add description here" 
+          rows="10" 
+          :style="{
+            ...!this.isValid && description == '' ? {border: '1px solid red !important'} : '',
+          }"
+          v-model="description"
+        >
         </textarea>
+        <p
+          class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
+          v-if="!this.isValid && description == ''"
+        >Required Field</p>
         <!-- <textarea class="form-control" placeholder="Add more details here" v-model="request.reason" rows="10"> -->
       </div>
 
       <div class="form-group">
         <label for="category"><b>Category</b></label>
         <roundedSelectBtn 
-            :placeholder="'Select Industry'"
-            :items="returnIndustry"
-            :styles="{
-              background: 'none',
-              color: '#84868B !important',
-              width: '100% !important',
-              borderRadius: '5px !important',
-              border: 'none',
-              marginBottom: !this.isValid && selectedIndustry == null ? '0px' : '35px'
-            }"
-            :dropdownItemStyles="{
-              borderRadius: '5px',
-              overflow: 'hidden',
-              width: 'calc(100% - 50px)'
-            }"
-            :selectedIndex="global.selectedIndustryIndex"
-            @onSelect="onSelect"
-          />
+          :placeholder="'Select Industry'"
+          :items="returnIndustry"
+          :styles="{
+            background: 'none',
+            color: '#84868B !important',
+            width: '100% !important',
+            borderRadius: '5px !important',
+            border: 'none',
+            border: !this.isValid && selectedIndustry == null ? '1px solid red !important' : 'none',
+            marginBottom: !this.isValid && selectedIndustry == null ? '0px' : '35px'
+          }"
+          :dropdownItemStyles="{
+            borderRadius: '5px',
+            overflow: 'hidden',
+            width: 'calc(100% - 30px)'
+          }"
+          @onSelect="onSelect"
+        />
+        <p
+          class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
+          v-if="!this.isValid && selectedIndustry == null"
+        >Required Field</p>
       </div>
 
       <div class="form-group" style="margin-top: 3%">
         <label for="post_setting"><b>Post Setting</b></label>
         <div class="Row row">
-          <div class="Column col-4" style="margin-left: -20%"><Toggle :text="'Facebook'"></Toggle></div>
-          <div class="Column col-5"><Toggle :text="'Google My Business'"></Toggle></div>
-          <div class="Column col-3"><Toggle :text="'Linkedin'"></Toggle></div>
+          <div class="Column col-4" style="margin-left: -20%"><Toggle :text="'Facebook'" v-model="facebook"></Toggle></div>
+          <div class="Column col-5"><Toggle :text="'Google My Business'" v-model="googleMyBusiness"></Toggle></div>
+          <div class="Column col-3"><Toggle :text="'Linkedin'" v-model="linkedin"></Toggle></div>
         </div>
       </div>
       <br>
       
       <h5>Files:</h5>
-      <Images></Images>
+      <Images @formData="form"></Images>
       <br>
       <br>
     </div>
@@ -85,7 +112,7 @@
         />
     </div>
     <div class="imports">
-      <preview></preview>
+      <!-- <preview></preview> -->
     </div>
     </div>
   </div>
@@ -101,6 +128,7 @@ import CONFIG from 'src/config.js'
 import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
 import global from 'src/helpers/global'
 import preview from 'src/modules/generic/preview.vue'
+import axios from 'axios'
 export default {
   mounted(){
   },
@@ -126,7 +154,13 @@ export default {
       }],
       errorMessage: null,
       idImage: null,
-      file: null
+      file: null,
+      isValid: true,
+      title: '',
+      description: '',
+      facebook: false,
+      googleMyBusiness: false,
+      linkedin: false
     }
   },
   components: {
@@ -136,13 +170,94 @@ export default {
     roundedBtn,
     preview
   },
+  computed: {
+    returnIndustry() {
+      return this.industry.map(el => {
+        return el.category
+      })
+    }
+  },
   methods: {
+    onSelect(data) {
+      this.selectedIndustry = data.index
+    },
+    publish() {
+      if(this.validate()) {
+        // console.log('publishing....', this.facebook, this.googleMyBusiness, this.linkedin)
+        $('#loading').css({'display': 'block'})
+        axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, this.file).then(response => {
+          $('#loading').css({'display': 'none'})
+          console.log('IMAGE HERE: ', response)
+          $('#loading').css({'display': 'block'})
+          let channels = []
+          this.facebook ? channels.push('FACEBOOK') : null
+          this.googleMyBusiness ? channels.push('GOOGLE_MY_BUSINESS') : ''
+          this.linkedin ? channels.push('LINKEDIN') : ''
+          let parameter = {
+            title: this.title,
+            description: this.description,
+            url: response.data.data,
+            account_id: this.user.userID,
+            status: 'PUBLISHED',
+            channels: JSON.stringify(channels),
+            parent: null,
+            category: this.industry[this.selectedIndustry].category
+          }
+          this.APIRequest('post/create', parameter).then(response => {
+            $('#loading').css({'display': 'none'})
+            console.log('RESPONSE: ', response)
+            if(response.error !== null){
+              this.title = ''
+              this.description = ''
+              this.selectedIndustry = null
+              this.facebook = false
+              this.googleMyBusiness = false
+              this.linkedin = false
+            }
+          })
+          // this.hasError = false
+          // this.retrieveImage()
+          // this.$parent.retrieveFeaturedImages()
+          // if(response.data.data !== null){
+          //   this.retrieveImage()
+          //   this.$parent.retrieveFeaturedImages()
+          // }
+        }).catch(() => {
+          $('#loading').css({'display': 'none'})
+        })
+      }
+    },
+    draft() {
+    },
+    validate() {
+      if(this.title === '' && this.description === '') {
+        this.isValid = false
+        return false
+      }if(this.title === '') {
+        this.isValid = false
+        return false
+      }if(this.description === '') {
+        this.isValid = false
+        return false
+      }
+      return true
+    },
+    form(data){
+      this.file = data
+      console.log('forms: ', data)
+    }
   }
 }
 </script>
 
 <style scoped lang="scss" scoped>
 @import "~assets/style/colors.scss";
+.requiredFieldError {
+  color: $danger;
+  font-size: 10px;
+  margin-left: 20px;
+  margin-bottom: 25px !important;
+}
 .imports{
   margin-top: 10%;
 }

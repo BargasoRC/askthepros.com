@@ -18,53 +18,11 @@
         <div class="dropdown"> 
           <span class="nav-item" v-bind:class="{'active-menu': settingFlag === true}" data-toggle="dropdown" id="settings" aria-haspopup="true" aria-expanded="false" v-on:click="makeActive('dropdown')" v-bind:onkeypress="makeActive('')">
             <span>
-              <i class="fa fa-cog"></i>
-            </span>
-            <span class="dropdown-menu dropdown-menu-right" aria-labelledby="settings">
-              <span class="dropdown-item-profile">
-                <span class="account-picture text-center">
-                  <span class="profile-photo-header">
-                    <span class="profile-image-holder-header"  v-if="user.profile">
-                      <img v-bind:src="config.BACKEND_URL + user.profile.url">
-                    </span>
-                    <i class="fa fa-user-circle-o" v-else></i>
-                  </span>
-                </span>
-                <span class="account-info text-center">{{user.username}}</span>
-              </span>
-              <span class="dropdown-item dropdown-item-menu-title">
-                <label>Personal</label>
-              </span>
-              <span class="dropdown-item" v-on:click="redirect(item.route)" v-for="(item, index) in common.profileMenu" :key="index">
-                <i v-bind:class="item.icon"></i>
-                <label>{{item.title}}</label>
-              </span>
-              <span class="dropdown-item dropdown-item-menu-title">
-                <label>Documents</label>
-              </span>
-              <!--GUIDE-->
-              <span class="dropdown-item" @click="openModal('#guideModal')">
-                <i class="far fa-question-circle"></i>
-                <label>Guide</label>
-              </span>
-              <!--PRIVACY POLICY-->
-              <span class="dropdown-item" @click="openModal('#privacyModal')">
-                <i class="fas fa-shield-alt"></i>
-                <label>Privacy Policy</label>
-              </span>            
-              <!--TERMS AND CONDITIONS-->
-              <span class="dropdown-item" @click="openModal('#termsAndConditionsModal')">
-                <i class="fa fa-handshake-o"></i>
-                <label>Terms and Conditions</label>
-              </span>
-              <span class="dropdown-item" v-on:click="logOut()">
-                <i class="fas fa-sign-out-alt"></i>
-                  <label>Logout</label>
-                </span>
+              <i class="fas fa-sign-out-alt" v-on:click="logOut()"></i>
             </span>
           </span>
         </div>
-
+        <!-- notifications component -->
         <div class="dropdown" v-if="user.notifications.data"> 
             <span class="nav-item" v-bind:class="{'active-menu': notifFlag === true}" data-toggle="dropdown" id="notifications" aria-haspopup="true" aria-expanded="false" v-on:click="makeActive('notif')" v-bind:onkeypress="makeActive('')" v-if="user.notifications.data !== null">
               <span>
@@ -89,10 +47,12 @@
         <div v-if="user.type == 'ADMIN'"> 
           <button type="button" class="btn btn-warning header-button-type">ADMIN</button> 
         </div>
-        <div v-else>
-          <button type="button" class="btn btn-warning header-button-type">INDUSTRY NAME</button>
-          <button type="button" class="btn btn-warning header-button-type" style="float: right;">COMPANY NAME</button>
+        <div v-else-if="user.type == 'USER'">
+          <button type="button" class="btn btn-warning header-button-type"><p>INDUSTRY NAME</p></button>
+          <button type="button" class="btn btn-warning header-button-type" style="float: right;"><p>COMPANY NAME</p></button>
         </div>
+        <div v-else>
+          <button type="button" class="btn btn-warning header-button-type"><p>CONTENT EXPERT</p></button></div>
         
       </span>
       
@@ -173,13 +133,13 @@ body{
     height: 50px;
     font-size: 24px;
     width: 18%;
-    background: $darkPrimary;
+    background: $primary;
     text-align: center;
     position: fixed;
   }
   
   .header-navbar{
-    background: $primary;
+    background: $darkPrimary;
     height: 50px;
     float: left;
     width: 82%;
@@ -409,9 +369,10 @@ body{
 }
 
 .header-button-type{
-  margin-top: 0%; 
-  margin-left: 2%;
+     margin-top: 7px;
+     margin-left: 2%;
 }
+
 
 /*--------------------------------------
 
@@ -579,10 +540,7 @@ body{
     .nav-item{
       width: 5% !important;
     }
-    .header-button-type{
-      margin-top: 0.75%; 
-      margin-left: 2%; 
-    }
+    
   }
 
  @media (max-width: 1199px){
@@ -641,7 +599,8 @@ body{
     }
     .header-button-type{
       margin-top: 1%; 
-      margin-left: 2%; 
+      margin-left: 2%;
+
     }
  }
 
@@ -669,6 +628,11 @@ body{
       width: 20%;
     }
 
+    .header-button-type{
+      margin-top: 2%; 
+      margin-left: 2%;
+    }
+
     .logo-brand{
       width: 30px;
       height: 30px;
@@ -687,13 +651,19 @@ body{
     }
   }
 
-  @media (max-width: 300px){
+  @media (max-width: 411px){
     .logo-brand{
       width: 30px;
       height: 30px;
     }
     .header-button-type{
-      display:none;
+      width: 85px;
+      height: 16px;
+      margin-top: 2%;
+    }
+    .header-button-type p{
+      font-size: 72%;
+      margin-left: -4%;
     }
   }
 </style>
