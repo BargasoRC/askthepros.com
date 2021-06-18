@@ -9,7 +9,7 @@
             :text="'New Post'"
             :icon_position="'right'"
             :styles="{
-                backgroundColor: '#01009A',
+                backgroundColor: '#01004E',
                 color: 'white'
             }"
         />
@@ -19,7 +19,7 @@
         :category="category"
         :activeCategoryIndex="0"
         :activeSortingIndex="0"
-        @changeSortEvent="() => {} "
+        @changeSortEvent="() => {} "  
         :grid="['list']"
       />
     </div>
@@ -29,8 +29,16 @@
         :tableHeaders="tableHeaders"
         :tableData="tableData"
       />
-    </div>
-    <p id="pager">Page {{pageNo}} of {{pageTotal}}<i class="fas fa-arrow-left"></i><i class="fas fa-arrow-right"></i></p>
+    </div >
+    <div class="row d-flex flex-row">
+      <div class="col d-flex justify-content-end">
+        <p id="">Page {{pageNo}} of {{pageTotal}}
+         </p>
+        <i class="fas fa-arrow-left" style="color: #01004E
+"></i><i class="fas fa-arrow-right" style="color: #01004E
+"></i>  
+      </div>
+    </div>    
   </div>
 </template>
 <style scoped lang="scss" scoped>
@@ -73,7 +81,7 @@ p {
 }
 </style>
 <script>
-import Search from 'src/components/increment/ecommerce/filter/Product.vue'
+import Search from 'src/components/increment/ecommerce/filter/Product2.vue'
 import DataTable from 'src/modules/generic/table'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
@@ -110,7 +118,7 @@ export default {
         {title: 'My Post Title 10', channel: 'Google My Business', status: 'Published', created_at: '15/19/2021 at 10:31 pm'}
       ],
       category: [{
-        title: 'Sort',
+        title: 'Sort By',
         sorting: [
           {title: 'Created Ascending', payload: 'created_at', payload_value: 'asc', type: 'text'},
           {title: 'Created Descending', payload: 'created_at', payload_value: 'desc', type: 'text'},

@@ -10,9 +10,16 @@
     <tbody>
       <tr v-for="(data, index) in tableData" :key="'table_data' + index">
         <th v-for="(item, ndx) in tableHeaders" :key="'td' + ndx" class="font-weight-normal">
-          {{
+            <div class="font-weight-bold" v-if="isBold === true">
+            {{
             returnData(data, item)
-          }}
+            }}
+            </div>
+            <div class="font-weight-normal" v-else-if="isBold === false">
+            {{
+            returnData(data, item)
+            }}
+            </div>
           <div class="font-weight-normal d-flex justify-content-center">
             <span v-for="(btn, i) in tableActions" :key="'btn' + i" v-html="btn.button" v-if="item.type === 'action'" @click="item.type === 'action' ? buttonAction(i, index) : () => {}"></span>
           </div>
@@ -24,12 +31,23 @@
 
 <script>
 export default {
+  data() {
+    return{
+      isBold: false
+    }
+  },
   props: ['tableActions', 'tableHeaders', 'tableData', 'onAction'],
   methods: {
     returnData(data, item) {
       let temp = ''
       if(item.type !== 'action') {
-        temp = data[item.key]
+        if(item.key === 'title' || item.key === 'status'){
+          temp = data[item.key]
+          this.isBold = false
+        }else {
+          temp = data[item.key]
+          this.isBold = true
+        }
       }
       return temp
     },
