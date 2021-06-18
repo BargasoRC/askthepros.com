@@ -1,7 +1,7 @@
 <template>
   <div>
     <label class="switch" :style="styles">
-      <input type="checkbox" @click="onClick">
+      <input type="checkbox" @input="onChange">
       <span class="slider round"></span>
     </label>
     <span style="margin-left: 20px">{{text}}</span>
@@ -9,7 +9,17 @@
 </template>
 <script>
 export default {
-  props: ['onClick', 'styles', 'text']
+  props: ['onClick', 'styles', 'text'],
+  data() {
+    return {
+      isOnClickPresent: false
+    }
+  },
+  methods: {
+    onChange(event) {
+      this.$emit('input', event.target.checked)
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

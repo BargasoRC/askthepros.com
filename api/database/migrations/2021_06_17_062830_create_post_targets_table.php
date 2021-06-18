@@ -16,9 +16,9 @@ class CreatePostTargetsTable extends Migration
         Schema::create('post_targets', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('code')->unique();
-            $table->bigInteger('post_id')->nullable(false);
+            $table->bigInteger('post_id');
             $table->string('payload')->nullable();
-            $table->string('payload_value')->nullable(false);
+            $table->string('payload_value');
             $table->timestamps();
             $table->softDeletes();
         });

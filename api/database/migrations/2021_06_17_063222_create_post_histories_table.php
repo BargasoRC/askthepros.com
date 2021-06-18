@@ -16,11 +16,11 @@ class CreatePostHistoriesTable extends Migration
         Schema::create('post_histories', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('code')->unique();
-            $table->bigInteger('post_id')->nullable(false);
-            $table->string('link')->nullable(false);
-            $table->bigInteger('page_id')->nullable(false);
-            $table->bigInteger('account_id')->nullable(false);
-            $table->string('status')->nullable(false);
+            $table->bigInteger('post_id');
+            $table->string('link')->nullable();
+            $table->string('page_id');
+            $table->bigInteger('account_id');
+            $table->string('status');
             $table->timestamps();
             $table->softDeletes();
         });

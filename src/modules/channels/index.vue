@@ -1,16 +1,16 @@
 <template>
   <div class="holder">
     <h3 style="margin-top: 25px;font-size: 25px;">Social Media Integration</h3>
-    <p>Connect to your social media channels, then setup your branding and choose your automation.</p>
+    <p class="subheads">Connect to your social media channels, then setup your branding and choose your automation.</p>
 
     <div style="margin-top: 3%">
         <roundedBtn
             :text="'Social Media Channels'"
             class="button"
             :styles="{
-                backgroundColor: colors.primary,
+                backgroundColor: colors.darkPrimary,
                 color: 'white',
-                outlineColor: colors.primary,                
+                outlineColor: colors.darkPrimary,                
                 width: '15%',
                 borderTopRightRadius: '0px !important',
                 borderBotttomLeftRadius: '0px !important',
@@ -22,8 +22,8 @@
             class="button1"
             :styles="{
                 backgroundColor: 'white',
-                outlineColor: colors.primary,
-                color: 'white',
+                outlineColor: colors.darkPrimary,
+                color: colors.darkPrimary,
                 width: '15%',
                 borderTopLeftRadius: '0px !important',
                 borderBottomLeftRadius: '0px !important',
@@ -38,8 +38,8 @@
             class="button2"
             :styles="{
                 backgroundColor: 'white',
-                outlineColor: colors.primary,
-                color: 'white',
+                outlineColor: colors.darkPrimary,
+                color: colors.darkPrimary,
                 width: '15%',
                 borderTopLeftRadius: '0px !important',
                 borderBottomLeftRadius: '0px !important',
@@ -48,7 +48,7 @@
         />
     </div>
     <h3 style="margin-top: 20px;font-size: 20px;">Connect Your Social Media Channels.</h3>
-    <p>We will post the channels you connect.</p>
+    <p class="subheads">We will post the channels you connect.</p>
     <div class="row">
       <div class="column"  v-for="(item, index) in socialCards" :key="index">
         <div class="card">
@@ -146,6 +146,9 @@ h3{
   content: "";
   display: table;
   clear: both;
+}
+.subheads{
+  color: $text;
 }
 
 @media screen and (max-width: 600px) {
