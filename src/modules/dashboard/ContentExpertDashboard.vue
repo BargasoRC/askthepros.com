@@ -32,10 +32,9 @@
     </div >
     <div class="row d-flex flex-row">
       <div class="col d-flex justify-content-end">
-        <p id="">Page {{pageNo}} of {{pageTotal}}
+        <p style="font-weight:bold; color:black">Page {{pageNo}} of {{pageTotal}}
          </p>
-        <i class="fas fa-arrow-left" style="color: #01004E
-"></i><i class="fas fa-arrow-right" style="color: #01004E
+        <i class="fas fa-arrow-left" style="color: #01004E"></i><i class="fas fa-arrow-right" style="color: #01004E
 "></i>  
       </div>
     </div>    

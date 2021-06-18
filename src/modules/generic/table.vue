@@ -43,7 +43,8 @@ export default {
       let temp = ''
       if(item.type !== 'action') {
         if(item.key === 'title' || item.key === 'status'){
-        //   if(item.key === 'status'){
+        //  Uncomment if coloring in status is needed
+        //   if(item.key === 'status'){ // Why does this color title in black while status becomes colored?? The conditions dont match
         //     if(data['status'] === 'Draft' || data['status'] === 'Published'){
         //       this.color = 'black'
         //       temp = data[item.key]
