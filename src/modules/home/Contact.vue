@@ -9,7 +9,7 @@
           <div class="SubQoute">
             <h1 class="QouteText" style="color: #01009A">With Automated Social Media Posting.</h1>
           </div>
-          <img :src="require('assets/img/section3-img.png')" alt="Image" style="width: 85%;height:auto">
+          <img :src="require('assets/img/section3-img.png')" alt="Image" style="width: 60%;height:auto">
         </div>
       </div>
       <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xs-5 d-flex justify-content-center LoginCardContainer mb-5">
