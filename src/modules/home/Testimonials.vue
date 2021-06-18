@@ -5,7 +5,7 @@
         <p id="topheader">TESTIMONIALS</p>
         <h1>What our clients says about us.</h1>
       </center>
-      <div class="row holder">
+      <div class="row holder" id="tcard">
         <div class="column single-card" v-for="(item, index) in testimonials" :key="index">
           <div class="card-image"><img id="company" :src="item.company"></div>
           <p><i class="fas fa-quote-left"></i></p>
@@ -72,8 +72,12 @@ export default {
 }
 
 center {
-  padding-top: 20vh;
+  padding-top: 15vh;
 }
+#tcard{
+  padding-bottom: 15vh;
+}
+
 
 * {
   box-sizing: border-box;
@@ -85,7 +89,7 @@ center {
 }
 
 h1 {
-  font-weight: 800;
+  font-weight: 650;
   color: $warning;
   font-size: 35px;
 }

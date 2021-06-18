@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">
+    <div class="navbar-header"> 
+      <a class="navbar-brand" href="#" >
         <img 
           :src="require('../../assets/img/asktheprooslogo-clear.png')" 
           class="logo-brand"
@@ -9,58 +9,60 @@
         />
       </a>
     </div>
-    <div class="navbar-header">
+    <div class="navbar-header" >
       <a href="#">
         <button 
             class="navbar-toggler" 
             type="button" 
             @click="showSidebar()"
+            style="border:none;color:#01004E"
           >
-          <i class="navbar-toggler-icon"></i>
+          <i class="fas fa-bars fa-2x"></i>
         </button> 
       </a>
     </div>
-    <!-- Show when screen is <991px -->
-    <div class="sidebar contianer-fluid" id="navbarSupportedContent d-none d-sm-block" v-if="!isActive">
-        <div class="row w-100  justify-content-end no-gutters"  style="padding-right:20%; padding-top:20%">
-          <i class="fas fa-times fa-2x" @click="showSidebar()"></i>
+    <!-- Show when screen is <=991px -->
+    <div class="sidebar contianer-fluid" id="navbarSupportedContent d-none d-sm-block" v-if="!isActive" >
+        <div class="row w-100  justify-content-end no-gutters"  style="padding-right:20%; padding-top:20%; color:#01004E">
+          <i class="fas fa-times fa-3x" @click="showSidebar()"></i>
         </div>
-        <div class="row no-gutters justify-content-start flex-column">
-          <ul class="nav navbar-nav navbar-right row no-gutters">
-          <li class="pl-5 pr-5 nav_item">
-            <b class="font-weight-normal nav-text" @click="headerScrollTo('#learn-how')">Learn How</b>
-            <hr>
-          </li>
-          <li class="pl-5 pr-5 nav_item">
-            <b class="font-weight-normal nav-text" @click="headerScrollTo('#pricing')">Pricing</b>
-            <hr>
-          </li>
-          <li class="pl-5 pr-5 nav_item">
-            <b class="font-weight-normal nav-text" @click="headerScrollTo()">Contact Us</b>
-            <hr>
-          </li>
-          <li class="pl-5 pr-5 nav_item" @click="navigate('login')">
-            <b class="font-weight-normal nav-text"  :style="'color: ' + ($route.name == 'loginAccount' ? '#007bff' : 'black')">Login</b>
-            <hr>
-          </li>
-          <li class="pl-5 pr-5 nav_item" @click="navigate('signup')">
-            <b class="font-weight-normal nav-text" :style="'color: ' + ($route.name == 'signup' ? '#007bff' : 'black')">Register</b>
-            <hr>
-          </li>
-        </ul>
+        <div class="row no-gutters justify-content-center nav-container">
+            <div class="nav_item_m" @click="headerScrollTo('#learn-how')">
+              <b class="font-weight-normal nav-text" href="#learn-how" @click="headerScrollTo('#learn-how')">Learn How</b>
+            </div>
+        </div>
+        <div class="row no-gutters justify-content-center nav-container">
+            <div class="nav_item_m" @click="headerScrollTo('#pricing')">
+              <b class="font-weight-normal nav-text" href="#pricing"  @click="headerScrollTo('#pricing')">Pricing</b>
+            </div>
+        </div>
+        <div class="row no-gutters justify-content-center nav-container">
+            <div class="nav_item_m" @click="navigate('contact')">
+              <b class="font-weight-normal nav-text" @click="navigate('contact')" :style="'color: ' + ($route.name == 'contactPage' ? '#007bff' : 'black')">Contact Us</b>
+            </div>
+        </div>
+        <div class="row no-gutters justify-content-center nav-container">
+            <div class="nav_item_m" @click="navigate('login')">
+              <b class="font-weight-normal nav-text" @click="navigate('login')"  :style="'color: ' + ($route.name == 'loginAccount' ? '#007bff' : 'black')">Login</b>
+            </div>
+        </div>
+        <div class="row no-gutters justify-content-center nav-container">
+            <div class="nav_item_m" @click="navigate('login')">
+              <b class="font-weight-normal nav-text" @click="navigate('login')" :style="'color: ' + ($route.name == 'signup' ? '#007bff' : 'black')">Register</b>
+            </div>
         </div>
     </div>
     <!-- Show  when screen is >991px -->
     <div class="navbar-collapse text-center d-none d-lg-block" id="navbarSupportedContent">
       <ul class="nav navbar-nav navbar-right ml-auto">
         <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal" @click="headerScrollTo('#learn-how')">Learn How</b>
+          <b class="font-weight-normal" href="#learn-how" @click="headerScrollTo('#learn-how')">Learn How</b>
         </li>
         <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal" @click="headerScrollTo('#pricing')">Pricing</b>
+          <b class="font-weight-normal" href="#pricing" @click="headerScrollTo('#pricing')">Pricing</b>
         </li>
         <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal" @click="headerScrollTo()">Contact Us</b>
+          <b class="font-weight-normal" @click="navigate('contact')" :style="'color: ' + ($route.name == 'contactPage' ? '#007bff' : 'black')">Contact Us</b>
         </li>
         <li class="pl-5 pr-5 nav_item" @click="navigate('login')">
           <b class="font-weight-normal"  :style="'color: ' + ($route.name == 'loginAccount' ? '#007bff' : 'black')">Login</b>
@@ -90,6 +92,8 @@ export default {
       this.isActive = true
     },
     headerScrollTo(id) {
+      this.navigate(id)
+      window.location.reload()
       let height = Jquery(window).height()
       Jquery('html, body').animate(
         {
@@ -103,6 +107,27 @@ export default {
     }
   }
 }
+window.addEventListener('load', function () {
+  Jquery(document).ready(function () {
+    if (window.location.hash === '#learn-how') {
+      let height = Jquery(window).height()
+      Jquery('html, body').animate(
+        {
+          scrollTop: Jquery('#learn-how').offset().top - parseInt(height * 0.0)
+        },
+        500
+      )
+    } else if (window.location.hash === '#pricing') {
+      let height = Jquery(window).height()
+      Jquery('html, body').animate(
+        {
+          scrollTop: Jquery('#pricing').offset().top - parseInt(height * 0.0)
+        },
+        500
+      )
+    }
+  })
+})
 </script>
 <style scoped lang="scss">
 @import "~assets/style/colors.scss";
@@ -120,11 +145,32 @@ export default {
   transition: width 0.5s;
   -webkit-transition: all 0.25s;
 }
+li {
+  text-align: left;
+}
 .nav-text {
   font-size: 125%;
 }
 .nav_item {
   cursor: pointer;
+}
+.nav_item_m {
+  border-bottom: 0.5px solid #84868B;
+  margin-top: 20px;
+  padding-bottom: 20px;
+  width: 80%;
+}
+b {
+  color:black;
+}
+b:hover {
+  color:#01009A!important;
+}
+.nav-container:hover{
+  background: #01009A;
+}
+.nav-container:hover b{
+  color: white!important;
 }
 .navigationBar {
   width: 100%;
@@ -133,7 +179,7 @@ export default {
   z-index: 100;
 }
 .navbar {
-   background: none !important;
+   background: white !important;
 }
 .navbar-header {
   background: none !important;
@@ -142,9 +188,7 @@ export default {
   
 }
 .navbar-brand .logo-brand {
-  // width: 100px;
-  // height: 100px;
-  // margin-left: 5% !important
+  margin-top: 5%;
 }
 .nav-link .navbar-brand {
   font-size: 30px;
@@ -210,7 +254,7 @@ export default {
       // margin-left:-50% !important;
       width: 230px !important;
       height: 100px !important;
-      margin-left: 5% !important
+      margin-left: 5% !important;
     }
   }
 
@@ -241,13 +285,19 @@ export default {
       width: 10%;
     }
     .logo-brand{
-      width: 80px !important;
-      height: 50px !important;
-      margin-left:-1% !important;
+     width: auto !important;
+      height: 75px !important;
+      margin-left: 5% !important
     }
   }
 
 @media (max-width: 991px){
+  b {
+  color:black;
+  }
+  b:hover {
+    color: white;
+  }
   .sidebar {
      display: block;
    }
@@ -276,10 +326,10 @@ export default {
       width: 10%;
     }
     .logo-brand{
-      margin-left:-1% !important;
-      width: 80px !important;
-      height: 50px !important;
-      margin-left: 5% !important
+     width: auto !important;
+      height: 75px !important;
+      margin-left: 5% !important;
+      margin-top: 15%!important;
     }
  }
 
@@ -308,8 +358,9 @@ export default {
     }
 
     .logo-brand{
-      width: 80px !important;
-      height: 50px !important;
+     width: auto !important;
+      height: 70px !important;
+      margin-left: 5% !important;
     }
 
     .left-menu-icons{
@@ -322,6 +373,12 @@ export default {
 
     .hide-on-mobile{
       display: none !important;
+    }
+    .nav-text {
+      font-size: 100%;
+    }
+    .sidebar{
+      height: 150vh;
     }
   }
 

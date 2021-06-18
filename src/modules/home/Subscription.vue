@@ -14,10 +14,6 @@
             @onSelect="onIndustrySelect"
           />
           </div>
-          <!-- <select v-model="selected">
-            <option disabled value="">Industry</option>
-            <option v-for="(item, index) in industry" :key="index">{{item.category}}</option>
-          </select> -->
           <img :src="require('assets/img/section3-img.png')"/>
         </span>
         <span class="col-md-5" style="text-align: center;">
@@ -32,7 +28,7 @@
                 <hr/>
               </span>
             </div>
-            <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register Now'" :styles="{backgroundColor: '#01004E',color: 'white', marginTop: '20px'}"/>
+            <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register Now'" :icon_position="'right'"  :styles="{backgroundColor: '#01004E',color: 'white', marginTop: '20px'}"/>
           </div>
         </span>
       </div>
@@ -88,8 +84,8 @@ export default {
 }
 
 .row {
-  padding-top: 20vh;
-  padding-bottom: 20vh;
+  padding-top: 15vh;
+  padding-bottom: 15vh;
 }
 
 h1 {

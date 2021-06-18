@@ -19,6 +19,7 @@ use App\UserAuth;
 use Increment\Account\Models\Account;
 use App\LoginLogger;
 use App\Jobs\Email;
+use Illuminate\Support\Str;
 
 class APIController extends Controller
 {
@@ -247,7 +248,7 @@ class APIController extends Controller
             if(!isset($childID[$childTable])){
               $childID[$childTable] = array();
             }
-            $child[str_singular($this->model->getTable()).'_id'] = $this->model->id;
+            $child[Str::singular($this->model->getTable()).'_id'] = $this->model->id;
             $foreignTable = $this->model->newModel($childTable, $child);
             foreach($child as $childKey => $childValue){
               $foreignTable->$childKey = $childValue;
@@ -259,7 +260,7 @@ class APIController extends Controller
               if(!isset($childID[$childTable])){
                 $childID[$childTable] = array();
               }
-              $childValue[str_singular($this->model->getTable()).'_id'] = $this->model->id;
+              $childValue[Str::singular($this->model->getTable()).'_id'] = $this->model->id;
               $foreignTable = $this->model->newModel($childTable, $childValue);
               foreach($childValue as $childValueKey => $childValueValue){
                 if($childValueValue == null || $childValueValue == "" || empty($childValueValue)){
@@ -350,7 +351,7 @@ class APIController extends Controller
           }
         }
         if(strpos( $validationKey, "_id" ) !== false){
-          $table = explode(".", str_plural(str_replace("_id", "", $validationKey)));
+          $table = explode(".", Str::plural(str_replace("_id", "", $validationKey)));
           $table = (count($table) > 1) ? $table[1] : $table[0];
           if(strpos( $validationKey, "parent" ) !== false){
             $table = $this->model->getTable();
@@ -392,13 +393,13 @@ class APIController extends Controller
       }
       $this->localization();
       $tableName = $this->model->getTable();
-      $singularTableName = str_singular($tableName);
+      $singularTableName = Str::singular($tableName);
       $tableColumns = $this->model->getTableColumns();
       if($this->requiredForeignTable){
         $this->model = $this->model->with($this->requiredForeignTable);
         for($x = 0; $x < count($this->requiredForeignTable); $x++){
-          $singularForeignTable = str_singular($this->requiredForeignTable[$x]);
-          $pluralForeignTable = str_plural($this->requiredForeignTable[$x]);
+          $singularForeignTable = Str::singular($this->requiredForeignTable[$x]);
+          $pluralForeignTable = Str::plural($this->requiredForeignTable[$x]);
           $this->model = $this->model->leftJoin($pluralForeignTable, $pluralForeignTable.'.id', '=', $tableName.'.'.$singularForeignTable.'_id');
         }
       }
@@ -522,7 +523,7 @@ class APIController extends Controller
               if(isset($child["id"]) && $child["id"]*1) { // update
                 $pk = $child["id"];
                 unset($child["id"]);
-                $result = $this->model->find($this->model->id)->$childTable()->where('id', $pk)->where(str_singular($this->model->getTable()).'_id', $request["id"])->update($child);
+                $result = $this->model->find($this->model->id)->$childTable()->where('id', $pk)->where(Str::singular($this->model->getTable()).'_id', $request["id"])->update($child);
               }else if(!isset($childTableValue['no_create_on_update'])){
                 $result = $this->model->find($this->model->id)->$childTable()->create($child)->id;
               }
@@ -538,7 +539,7 @@ class APIController extends Controller
                   unset($childValue["id"]);
                   $foreignTable = $this->model->find($this->model->id)->$childTable()
                     ->where('id', $pk)
-                    ->where(str_singular($this->model->getTable()).'_id', $request["id"]);
+                    ->where(Str::singular($this->model->getTable()).'_id', $request["id"]);
                   foreach($childValue as $childValueKey => $childValueValue){
                     if($childValueValue == null || $childValueValue == ""){
                       $foreignTable->$childValueKey = $childValueValue;
@@ -549,7 +550,7 @@ class APIController extends Controller
                   // $foreignTable->save($foreignTable);
 
                 }else{ //create
-                  $childValue[str_singular($this->model->getTable()).'_id'] = $this->model->id;
+                  $childValue[Str::singular($this->model->getTable()).'_id'] = $this->model->id;
                   $foreignTable = $this->model->newModel($childTable, $childValue);
                   // foreach($childValue as $childValueKey => $childValueValue){
                   //   if($childValueValue == null || $childValueValue == ""){

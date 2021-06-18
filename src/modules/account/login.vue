@@ -9,6 +9,7 @@
           <div class="SubQoute">
             <h1 class="QouteText" style="color: #01009A">With Automated Social Media Posting.</h1>
           </div>
+          <img :src="require('assets/img/section3-img.png')" alt="Image" style="width: 60%;height:auto">
         </div>
       </div>
       <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xs-5 d-flex justify-content-center LoginCardContainer mb-5">
@@ -62,8 +63,9 @@
                 :onClick="login"
                 :icon="'fas fa-sign-in-alt'"
                 :text="'Login'"
+                :icon_position="'right'"
                 :styles="{
-                  backgroundColor: '#01009A',
+                  backgroundColor: colors.darkPrimary,
                   color: 'white'
                 }"
               />
@@ -91,7 +93,7 @@
                 <div class="col-sm-4 col-md-4 col-lg-4">
                   <roundedBtn
                     :onClick="fbLogin"
-                    :icon="'fab fa-facebook-f'"
+                    :icon="'fa fa-facebook'"
                     :text="'Sign In'"
                     :styles="{
                       background: 'none',
@@ -106,7 +108,7 @@
                 <div class="col-sm-4 col-md-4 col-lg-4">
                   <roundedBtn
                     :onClick="linkedInLogin"
-                    :icon="'fab fa-linkedin-in'"
+                    :icon="'fab fa-linkedin-square'"
                     :text="'Sign In'"
                     :styles="{
                       background: 'none',
@@ -128,8 +130,9 @@
                 :onClick="register"
                 :icon="'fas fa-sign-in-alt'"
                 :text="'Register Now'"
+                :icon_position="'right'"
                 :styles="{
-                  backgroundColor: '#F1B814',
+                  backgroundColor: colors.warning,
                   color: 'white'
                 }"
               />
@@ -145,6 +148,7 @@
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import roundedInput from 'src/modules/generic/roundedInput'
 import roundedBtn from 'src/modules/generic/roundedBtn'
+import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
 export default {
   data() {
@@ -152,7 +156,8 @@ export default {
       username: '',
       password: '',
       errorMessage: '',
-      isValid: true
+      isValid: true,
+      colors: COLORS
     }
   },
   components: {
@@ -160,14 +165,28 @@ export default {
     roundedInput,
     roundedBtn
   },
-  created() {
+  mounted() {
     if(new RegExp(/\?.+=.*/g).test(window.location.href) && localStorage.getItem('login_with')) {
       let url = window.location.href
       let query = url.substring(url.indexOf('?') + 1)
-      this.APIRequest('social_lite/authenticate/linkedin/callback?' + query, {}, response => {
-        console.log('Verifying authentication response: ', response)
+      $('#loading').css({'display': 'block'})
+      this.APIRequest(`social_lite/authenticate/${localStorage.getItem('login_with')}/callback?` + query, {}, response => {
+        $('#loading').css({'display': 'none'})
         localStorage.removeItem('login_with')
+        localStorage.setItem('usertoken', response.token)
+        AUTH.hash('hide', response.login_type)
+        AUTH.setUser(response.user[0])
+        AUTH.checkAuthentication()
+        setTimeout(() => {
+          localStorage.removeItem('usertoken')
+          localStorage.removeItem('account_id')
+          localStorage.removeItem('google_code')
+          localStorage.removeItem('google_scope')
+          localStorage.removeItem('xyzABCdefPayhiram')
+          localStorage.clear()
+        }, response.expires)
       }, error => {
+        $('#loading').css({'display': 'none'})
         console.log('Verifying authentication error! ', error)
       })
     }
@@ -176,6 +195,7 @@ export default {
     login(event) {
       if(this.username !== '' && this.password !== '') {
         this.isValid = true
+        $('#loading').css({'display': 'block'})
         AUTH.authenticate(this.username, this.password, (response) => {
           this.$router.push('dashboard')
         }, (response, status) => {
@@ -200,28 +220,46 @@ export default {
     },
     gmailLogin(event) {
       console.log('gmail login:::')
+      $('#loading').css({'display': 'block'})
+      localStorage.setItem('login_with', 'google')
+      this.APIRequest('social_lite/authenticate/google/redirect', {}, response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data && response.data.url) {
+          console.log('Authentication with google response: ', response)
+          window.location.href = response.data.url
+        }
+      }, error => {
+        $('#loading').css({'display': 'none'})
+        console.log('Authentication with google error! ', error)
+      })
     },
     fbLogin(event) {
+      $('#loading').css({'display': 'block'})
       console.log('facebook login:::')
       localStorage.setItem('login_with', 'facebook')
       this.APIRequest('social_lite/authenticate/facebook/redirect', {}, response => {
+        $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
           console.log('Authentication with facebook response: ', response)
           window.location.href = response.data.url
         }
       }, error => {
+        $('#loading').css({'display': 'none'})
         console.log('Authentication with facebook error! ', error)
       })
     },
     linkedInLogin(event) {
+      $('#loading').css({'display': 'block'})
       console.log('linkedin login:::')
       localStorage.setItem('login_with', 'linkedin')
       this.APIRequest('social_lite/authenticate/linkedin/redirect', {}, response => {
+        $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
           console.log('Authentication with linkedin response: ', response)
           window.location.href = response.data.url
         }
       }, error => {
+        $('#loading').css({'display': 'none'})
         console.log('Authentication with linkedin error! ', error)
       })
     }
@@ -257,12 +295,16 @@ export default {
 }
 .QouteText {
   font-size: 50px;
+  font-weight: bold;
 }
 .SubQoute {
   text-align: center;
 }
 .QouteCard {
   width: 80% !important;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  text-align: center;
 }
 .LoginCard {
   width: 475px;
@@ -277,26 +319,34 @@ export default {
   min-height: 85vh;
 }
 .RowContainer {
-  background: none;
+  background: white;
 }
 .QouteCardContainer {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
   background: none;
+  margin-top: 5%;
 }
 .LoginCardContainer {
   background: none;
+  max-height: 65vh;
 }
 
 @media (max-width: 500px) {
   .LoginCard {
     width: 100%;
   }
+  .QouteText {
+  font-size: 30px;
+  }
 }
 @media(max-width: 1200px) {
   .QouteCardContainer {
     width: 90% !important;
+  }
+  .QouteText {
+  font-size: 35px;
   }
 }
 @media (max-width: 1150px){
@@ -322,6 +372,9 @@ export default {
     flex: 0 0 60%;
     max-width: 60%;
   }
+  .QouteText {
+  font-size: 35px;
+  }
 }
 @media (max-width: 768px){
   .QouteCardContainer {
@@ -333,6 +386,12 @@ export default {
     -ms-flex: 0 0 100%;
     flex: 0 0 100%;
     max-width: 100%;
+  }
+  .QouteText {
+  font-size: 35px;
+  }
+    .QouteCard img {
+    width: 100% !important;
   }
 }
 </style>

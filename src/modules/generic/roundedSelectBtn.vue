@@ -27,7 +27,7 @@
           overflow: 'hidden',
           width: 'calc(100% - 35px)'
         },
-        dropdownItemStyles
+        ...dropdownItemStyles
       }"
     >
       <b

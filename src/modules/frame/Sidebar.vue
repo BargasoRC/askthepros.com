@@ -8,7 +8,7 @@
                   <span class="profile-image-holder"  v-if="user.profile">
                     <img v-bind:src="config.BACKEND_URL + user.profile.url">
                   </span>
-                  <i class="fa fa-user-circle-o profile-icon" v-else></i>
+                  <i class="fa fa-user-circle profile-icon" v-else></i>
                   <i class="fas fa-check text-primary profile-status" v-if="user.status === 'VERIFIED'"></i>
                   Hi {{user.username}}!
                 </span>
@@ -158,7 +158,8 @@
 
 .menu-holder:hover, .menu-holder i:hover, .menu-holder label:hover, .menu-holder-hidden i:hover{
   cursor: pointer;
-  color: $primary;
+  // color: white;
+  // background-color: $primary;
 }
 
 .sub-menu{
@@ -178,7 +179,7 @@
 }
 
 .active-menu{
-  color: $darkPrimary !important;
+  color: white !important;
 }
 
 .menu-holder-hidden{
@@ -441,7 +442,7 @@ export default {
         this.prevMenu = index
       }
       if(this.menu[index].subMenu === null){
-        ROUTER.push('/' + this.menu[this.prevMenu].path)
+        ROUTER.push(`/${this.user.type.toLowerCase()}/` + this.menu[this.prevMenu].path)
         $('.navbar-collapse').collapse('hide')
       }
     },
@@ -452,7 +453,7 @@ export default {
         this.prevMenu = index
       }
       if(this.menuOff[index].subMenu === null){
-        ROUTER.push('/' + this.menuOff[this.prevMenu].path)
+        ROUTER.push(`/${this.user.type.toLowerCase()}/` + this.menuOff[this.prevMenu].path)
         $('.navbar-collapse').collapse('hide')
       }
     },
@@ -477,7 +478,7 @@ export default {
           this.subPrevMenu = subIndex
         }
       }
-      ROUTER.push('/' + this.menu[this.prevMenu].subMenu[this.subPrevMenu].path)
+      ROUTER.push(`/${this.user.type.toLowerCase()}/` + this.menu[this.prevMenu].subMenu[this.subPrevMenu].path)
       $('.navbar-collapse').collapse('hide')
     },
     changeToggleSidebarIcon(){

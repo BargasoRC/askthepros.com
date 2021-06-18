@@ -13,7 +13,7 @@
     <i 
       :class="icon"
       style="margin-left: 20px;"
-      v-if="!icon_position == 'left'"
+      v-if="icon_position == 'right'"
     ></i>
   </button>
 </template>

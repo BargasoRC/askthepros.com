@@ -1,7 +1,7 @@
 <template>
   <div class="LoginContainer col-sm-12">
     <div class="row RowContainer">
-      <div class="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xs-7 QouteCardContainer mb-5">
+      <div class="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xs-7 QouteCardContainer mb-5 ">
         <div class="QouteCard">
           <div class="SubQoute">
             <h1 class="QouteText" style="color: #01004E">Become A Local Expert</h1>
@@ -9,6 +9,7 @@
           <div class="SubQoute">
             <h1 class="QouteText" style="color: #01009A">With Automated Social Media Posting.</h1>
           </div>
+          <img :src="require('assets/img/section3-img.png')" alt="Image" style="width: 60%;height:auto">
         </div>
       </div>
       <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xs-5 d-flex justify-content-center LoginCardContainer mb-5">
@@ -121,21 +122,22 @@
                 v-if="!this.isValid && selectedIndustry == null"
               >Required Field</p>
             </div>
-            <div class="d-flex justify-content-between">
-              <roundedBtn
+            <div class="d-flex justify-content-center">
+              <!-- <roundedBtn
                 :onClick="forgotPassword"
                 :text="'Forgot your password?'"
                 :styles="{
                   background: 'none',
                   color: '#272727'
                 }"
-              />
+              /> -->
               <dialogueBtn 
                 :onClick="register"
                 :icon="'fas fa-sign-in-alt'"
                 :text="'Register now'"
+                :icon_position="'right'"
                 :styles="{
-                  backgroundColor: '#F1B814',
+                  backgroundColor: colors.darkPrimary,
                   color: 'white'
                 }"
               />
@@ -200,8 +202,9 @@
                 :onClick="login"
                 :icon="'fas fa-sign-in-alt'"
                 :text="'Login'"
+                :icon_position="'right'"
                 :styles="{
-                  backgroundColor: '#01009A',
+                  backgroundColor: colors.warning,
                   color: 'white'
                 }"
               />
@@ -218,6 +221,7 @@ import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import roundedInput from 'src/modules/generic/roundedInput'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
+import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config'
 import COMMON from 'src/common'
@@ -238,14 +242,16 @@ export default {
       errorMessage: '',
       isValid: true,
       isEmailValid: true,
-      passwordRequirements: ''
+      passwordRequirements: '',
+      colors: COLORS
     }
   },
   components: {
     dialogueBtn,
     roundedInput,
     roundedBtn,
-    roundedSelectBtn
+    roundedSelectBtn,
+    COLORS
   },
   computed: {
     returnIndustry() {
@@ -289,7 +295,16 @@ export default {
                 this.errorMessage = message.email[0]
               }
             }else if(response.data !== null){
+              let parameters = {
+                account_id: 2, // sample account_id. must be response.data.account_id
+                name: this.username,
+                email: this.email,
+                addition_informations: JSON.stringify({industry: this.industry[this.selectedIndustry].category})
+              }
               if(response.data > 0){
+                this.APIRequest('merchants/create', parameters).then(response => {
+                  console.log('[response]', response)
+                })
                 this.login()
               }
             }
@@ -371,12 +386,16 @@ export default {
 }
 .QouteText {
   font-size: 50px;
+  font-weight: bold;
 }
 .SubQoute {
   text-align: center;
 }
 .QouteCard {
   width: 80% !important;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  text-align: center;
 }
 .RegisterCard {
   width: 475px;
@@ -392,13 +411,14 @@ export default {
   background-color: transparent !important;
 }
 .RowContainer {
-  background-color: transparent !important;
+  background-color: white !important;
 }
 .QouteCardContainer {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
   background-color: transparent !important;
+  margin-top: 5%;
 }
 .LoginCardContainer {
   background-color: transparent !important;
@@ -407,6 +427,9 @@ export default {
 @media (max-width: 500px) {
   .RegisterCard {
     width: 100%;
+  }
+  .QouteText {
+  font-size: 30px;
   }
 }
 @media(max-width: 1200px) {
@@ -437,6 +460,9 @@ export default {
     flex: 0 0 60%;
     max-width: 60%;
   }
+  .QouteText {
+  font-size: 35px;
+  }
 }
 @media (max-width: 768px){
   .QouteCardContainer {
@@ -448,6 +474,12 @@ export default {
     -ms-flex: 0 0 100%;
     flex: 0 0 100%;
     max-width: 100%;
+  }
+  .QouteText {
+  font-size: 35px;
+  }
+  .QouteCard img {
+    width: 100% !important;
   }
 }
 </style>

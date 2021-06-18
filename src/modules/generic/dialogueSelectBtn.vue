@@ -29,7 +29,7 @@
           overflow: 'hidden',
           minWidth: '200px'
         },
-        dropdownItemStyles
+        ...dropdownItemStyles
       }"
     >
       <b

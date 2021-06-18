@@ -57,44 +57,93 @@ export default{
       tokenRequired: false
     }
   }, {
-    path: '/dashboard',
+    path: '/:user/dashboard',
     name: 'home',
     component: resolve => require(['src/modules/dashboard/index.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/payments',
+    path: '/:user/payments',
     name: 'home',
     component: resolve => require(['src/modules/payments/index.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/subscriptions',
+    path: '/:user/subscriptions',
     name: 'home',
     component: resolve => require(['src/modules/subscriptions/index.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/channels',
-    name: 'home',
+    path: '/:user/channels',
+    name: 'channel',
     component: resolve => require(['src/modules/channels/index.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/accounts',
+    path: '/:user/channels/branding',
+    name: 'channel',
+    component: resolve => require(['src/modules/channels/Branding.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
+    path: '/:user/channels/automation',
+    name: 'channel',
+    component: resolve => require(['src/modules/channels/AutomationSettings.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
+    path: '/:user/accounts',
     name: 'home',
     component: resolve => require(['src/modules/account/accounts.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/settings',
+    path: '/:user/settings',
     name: 'home',
     component: resolve => require(['src/modules/account/settings.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
+    path: '/:user/post_management',
+    name: 'home',
+    component: resolve => require(['src/modules/postManagement/index.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
+    path: '/contact',
+    name: 'contactPage',
+    component: resolve => require(['src/modules/home/Contact.vue'], resolve),
+    meta: {
+      tokenRequired: false
+    }
+  }, {
+    path: '/:user/post_management/view/:parameter',
+    name: 'post_management',
+    component: resolve => require(['src/modules/postManagement/UserReview.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
+    path: '/:user/post_management/history',
+    name: 'post_management',
+    component: resolve => require(['src/modules/postManagement/UserHistory.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
+    path: '/:user/post_management/edit/:parameter?',
+    name: 'post_management',
+    component: resolve => require(['src/modules/postManagement/AdminEdit.vue'], resolve),
     meta: {
       tokenRequired: true
     }

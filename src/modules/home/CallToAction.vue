@@ -8,7 +8,7 @@
         <span class="col-md-6">   
             <h1>Connect your Social Media and Automate.</h1>
             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the. </p>
-            <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register Now'" :styles="{backgroundColor: '#F1B814',color: 'white', marginTop: '20px'}"/>
+            <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register Now'" :icon_position="'right'" :styles="{backgroundColor: '#F1B814',color: 'white', marginTop: '20px'}"/>
         </span>
       </div>
     </div>
@@ -43,12 +43,12 @@ export default {
 }
 
 .row {
-  padding-top: 20vh;
-  padding-bottom: 20vh;
+  padding-top: 15vh;
+  padding-bottom: 15vh;
 }
 
 h1 {
-  font-weight: 800;
+  font-weight: 620;
   color: $warning;
   font-size: 35px;
 }
@@ -70,15 +70,20 @@ iframe{
     text-align: center;
   }
   .col-md-6 h1 {
-    margin-top: 10vh;
+    margin-top: 8vh;
     font-size: 30px;
+    margin-left: 12%;
+    margin-right: 12%;
   }
   .col-md-6 p {
     font-size: 20px;
+    margin-left: 12%;
+    margin-right: 12%;
   }
 
   .col-md-6 iframe {
     width: 100%;
+    height: 30vh;
   }
 }
 </style>
