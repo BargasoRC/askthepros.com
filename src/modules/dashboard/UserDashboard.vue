@@ -89,11 +89,9 @@
             Setup your branding now!
           </p>
           <dialogueBtn 
-            :onClick="connect({
-              payload: 'brand'
-            })"
+            :onClick="setup"
             :icon="'fas fa-cogs'"
-            :text="'Connect'"
+            :text="'Setup'"
             :icon_position="'right'"
             :styles="{
               backgroundColor: colors.darkPrimary,
@@ -167,6 +165,9 @@ export default {
     roundedBtn
   },
   methods: {
+    setup(){
+      ROUTER.push('channels/branding')
+    },
     connect(item){
       // ROUTER.push('/' + item.payload)
     }
