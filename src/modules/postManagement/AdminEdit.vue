@@ -1,94 +1,96 @@
 <template>
-  <div class="holder row">
-    <div class="col-6">
-      <div class="card">
-        <div class="container">
-          <p>Hi {{user.username}}! You can fill up contents of your post by using the field editor
-            or directly on the preview section. For other channel, just click the next and previous action.
-          </p>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="card">
+          <div class="container">
+            <p>Hi {{user.username}}! You can fill up contents of your post by using the field editor
+              or directly on the preview section. For other channel, just click the next and previous action.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="post_title"><b>Post Title</b></label>
-        <input 
-          :class="!this.isValid && title == '' ? 'form-control mb-0' : 'form-control'" 
-          placeholder="Post Title" 
-          :style="{
-            ...!this.isValid && title == '' ? {border: '1px solid red !important'} : '',
-          }"
-          v-model="title"
-        >
-        <p
-          class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
-          v-if="!this.isValid && title == ''"
-        >Required Field</p>
-      </div>
-
-      <div class="form-group">
-        <label for="description"><b>Description</b></label>
-        <textarea 
-          :class="!this.isValid && description == '' ? 'form-control mb-0' : 'form-control'" 
-          placeholder="Add description here" 
-          rows="10" 
-          :style="{
-            ...!this.isValid && description == '' ? {border: '1px solid red !important'} : '',
-          }"
-          v-model="description"
-        >
-        </textarea>
-        <p
-          class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
-          v-if="!this.isValid && description == ''"
-        >Required Field</p>
-        <!-- <textarea class="form-control" placeholder="Add more details here" v-model="request.reason" rows="10"> -->
-      </div>
-
-      <div class="form-group">
-        <label for="category"><b>Category</b></label>
-        <roundedSelectBtn 
-          :placeholder="'Select Industry'"
-          :items="returnIndustry"
-          :styles="{
-            background: 'none',
-            color: '#84868B !important',
-            width: '100% !important',
-            borderRadius: '5px !important',
-            border: 'none',
-            border: !this.isValid && selectedIndustry == null ? '1px solid red !important' : 'none',
-            marginBottom: !this.isValid && selectedIndustry == null ? '0px' : '35px'
-          }"
-          :dropdownItemStyles="{
-            borderRadius: '5px',
-            overflow: 'hidden',
-            width: 'calc(100% - 30px)'
-          }"
-          @onSelect="onSelect"
-        />
-        <p
-          class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
-          v-if="!this.isValid && selectedIndustry == null"
-        >Required Field</p>
-      </div>
-
-      <div class="form-group" style="margin-top: 3%">
-        <label for="post_setting"><b>Post Setting</b></label>
-        <div class="Row row">
-          <div class="Column col-4" style="margin-left: -20%"><Toggle :text="'Facebook'" v-model="facebook"></Toggle></div>
-          <div class="Column col-5"><Toggle :text="'Google My Business'" v-model="googleMyBusiness"></Toggle></div>
-          <div class="Column col-3"><Toggle :text="'Linkedin'" v-model="linkedin"></Toggle></div>
+        <div class="form-group">
+          <label for="post_title"><b>Post Title</b></label>
+          <input 
+            :class="!this.isValid && title == '' ? 'form-control mb-0' : 'form-control'" 
+            placeholder="Post Title" 
+            :style="{
+              ...!this.isValid && title == '' ? {border: '1px solid red !important'} : '',
+            }"
+            v-model="title"
+          >
+          <p
+            class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
+            v-if="!this.isValid && title == ''"
+          >Required Field</p>
         </div>
+
+        <div class="form-group">
+          <label for="description"><b>Description</b></label>
+          <textarea 
+            :class="!this.isValid && description == '' ? 'form-control mb-0' : 'form-control'" 
+            placeholder="Add description here" 
+            rows="10" 
+            :style="{
+              ...!this.isValid && description == '' ? {border: '1px solid red !important'} : '',
+            }"
+            v-model="description"
+          >
+          </textarea>
+          <p
+            class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
+            v-if="!this.isValid && description == ''"
+          >Required Field</p>
+          <!-- <textarea class="form-control" placeholder="Add more details here" v-model="request.reason" rows="10"> -->
+        </div>
+
+        <div class="form-group">
+          <label for="category"><b>Category</b></label>
+          <roundedSelectBtn 
+            :placeholder="'Select Industry'"
+            :items="returnIndustry"
+            :styles="{
+              background: 'none',
+              color: '#84868B !important',
+              width: '100% !important',
+              borderRadius: '5px !important',
+              border: 'none',
+              border: !this.isValid && selectedIndustry == null ? '1px solid red !important' : 'none',
+              marginBottom: !this.isValid && selectedIndustry == null ? '0px' : '35px'
+            }"
+            :dropdownItemStyles="{
+              borderRadius: '5px',
+              overflow: 'hidden',
+              width: 'calc(100% - 30px)'
+            }"
+            @onSelect="onSelect"
+          />
+          <p
+            class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
+            v-if="!this.isValid && selectedIndustry == null"
+          >Required Field</p>
+        </div>
+
+        <div class="form-group" style="margin-top: 3%">
+          <label for="post_setting"><b>Post Setting</b></label>
+          <div class="Row row">
+            <div class="Column col-4" style="margin-left: -20%"><Toggle :text="'Facebook'" v-model="facebook"></Toggle></div>
+            <div class="Column col-5"><Toggle :text="'Google My Business'" v-model="googleMyBusiness"></Toggle></div>
+            <div class="Column col-3"><Toggle :text="'Linkedin'" v-model="linkedin"></Toggle></div>
+          </div>
+        </div>
+        <br>
+        
+        <h5>Files:</h5>
+        <Images @formData="form"></Images>
+        <br>
+        <br>
       </div>
-      <br>
-      
-      <h5>Files:</h5>
-      <Images @formData="form"></Images>
-      <br>
-      <br>
-    </div>
-    <div class="col-6" style="margin-top: 1%">
-      <div class="float-right col-3">
-        <roundedBtn
+      <div class="col-sm-4">
+        <div class="col-sm-12 d-flex justify-content-end mt-4 pt-2">
+          <roundedBtn
+            class="ml-1 mr-1"
             :onClick="publish"
             :text="'Publish'"
             :styles="{
@@ -97,10 +99,9 @@
                 color: 'white',
                 width: '15'
             }"
-        />
-      </div>
-      <div class="float-right col-3">
-        <roundedBtn
+          />
+          <roundedBtn
+            class="ml-1 mr-1"
             :onClick="draft"
             :text="'Save as Draft'"
             :styles="{
@@ -109,11 +110,12 @@
                 width: '15%',
                 outlineColor: colors.warning
             }"
-        />
-    </div>
-    <div class="imports">
-      <!-- <preview></preview> -->
-    </div>
+          />
+        </div>
+        <div class="col-sm-12 mt-5">
+          <preview></preview>
+        </div>
+      </div>
     </div>
   </div>
 </template>
