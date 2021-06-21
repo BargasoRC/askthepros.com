@@ -330,7 +330,6 @@ export default {
 }
 .LoginCardContainer {
   background: none;
-  max-height: 65vh;
 }
 
 @media (max-width: 500px) {

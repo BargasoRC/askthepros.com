@@ -1,7 +1,7 @@
 <template>
   <div class="holder">
     <h3 style="margin-top: 25px;font-size: 25px;">Social Media Integration</h3>
-    <p>Connect to your social media channels, then setup your branding and choose your automation.</p>
+    <p class="subheads">Connect to your social media channels, then setup your branding and choose your automation.</p>
 
     <div style="margin-top: 3%">
         <roundedBtn
@@ -50,7 +50,7 @@
     <div class="row">
       <div class="column">
         <h3 style="margin-top: 20px;font-size: 20px;">Add Branding.</h3>
-        <p>These “branding footers” will be added to the end of your social media posts.   They should be one or two short sentences and incorporate your brand name and location. </p>
+        <p class="subheads">These “branding footers” will be added to the end of your social media posts.   They should be one or two short sentences and incorporate your brand name and location. </p>
         <p class="pl-0 mt-5"><b>Branding Footer 1</b></p>
         <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand1" @keyup="charCount()"></textarea>
         <span class="char-count">Character Count: {{count1}}</span>
@@ -137,7 +137,7 @@ h3{
 }
 .textArea {
   width:100%;
-  border: 0.25px solid $gray;
+  border: 0.25px solid $darkPrimary;
   box-sizing: border-box;
   border-radius: 5px;
   padding: 10px;
@@ -168,5 +168,8 @@ h3{
 
 .btnn {
   margin-top: 40px;
+}
+.subheads{
+  color: $text;
 }
 </style>
