@@ -80,7 +80,7 @@ p {
 }
 </style>
 <script>
-import Search from 'src/components/increment/ecommerce/filter/Product2.vue'
+import Search from 'src/modules/generic/Product.vue'
 import DataTable from 'src/modules/generic/table'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
