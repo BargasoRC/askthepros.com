@@ -16,10 +16,10 @@ class CreatePagesTable extends Migration
         Schema::create('pages', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('code')->unique();
-            $table->bigInteger('account_id')->nullable(false);
-            $table->string('type')->nullable(false);
-            $table->string('page')->nullable(false);
-            $table->string('details')->nullable(false);
+            $table->bigInteger('account_id');
+            $table->string('type');
+            $table->string('page');
+            $table->longText('details')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

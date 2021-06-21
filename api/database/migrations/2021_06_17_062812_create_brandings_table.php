@@ -16,8 +16,8 @@ class CreateBrandingsTable extends Migration
         Schema::create('brandings', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('code')->unique();
-            $table->string('details')->nullable(false);
-            $table->bigInteger('account_id')->nullable(false);
+            $table->longText('details');
+            $table->bigInteger('account_id');
             $table->timestamps();
             $table->softDeletes();
         });
