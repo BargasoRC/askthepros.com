@@ -6,12 +6,12 @@
             </div>
     <div class="">
       <div class="my-form row my-row">
-        <div class=" col-9 input-form"  >
+        <div class=" col-md-9 input-form"  >
           <div class="">
             <p>First Name</p>
               <roundedInput 
                       :type="'text'"
-                      :placeholder="''"
+                      :placeholder="'Enter your first name here'"
                       :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
                       :styles="{
                         border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
@@ -25,7 +25,7 @@
             <p>Last Name</p>
             <roundedInput 
                   :type="'text'"
-                  :placeholder="''"
+                  :placeholder="'Enter your last name here'"
                   :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
                   :styles="{
                     border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
@@ -39,7 +39,7 @@
             <p>Business Name</p>
             <roundedInput 
                   :type="'text'"
-                  :placeholder="''"
+                  :placeholder="'Enter your business name here'"
                   :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
                   :styles="{
                     border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
@@ -53,7 +53,7 @@
             <p>Contact Number</p>
             <roundedInput 
                   :type="'text'"
-                  :placeholder="''"
+                  :placeholder="'Enter your contact number here'"
                   :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
                   :styles="{
                     border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
@@ -67,7 +67,7 @@
             <p>Address</p>
             <roundedInput 
                   :type="'text'"
-                  :placeholder="''"
+                  :placeholder="'Enter your address details here'"
                   :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
                   :styles="{
                     border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
@@ -81,7 +81,7 @@
             <p>Route</p>
             <roundedInput 
                   :type="'text'"
-                  :placeholder="''"
+                  :placeholder="'Enter route'"
                   :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
                   :styles="{
                     border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
@@ -95,7 +95,7 @@
             <p>Locality</p>
             <roundedInput 
                   :type="'text'"
-                  :placeholder="''"
+                  :placeholder="'Enter locality'"
                   :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
                   :styles="{
                     border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
@@ -109,7 +109,7 @@
             <p>Region</p>
             <roundedInput 
                   :type="'text'"
-                  :placeholder="''"
+                  :placeholder="'Enter region'"
                   :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
                   :styles="{
                     border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
@@ -123,7 +123,7 @@
             <p>Country</p>
             <roundedInput 
                   :type="'text'"
-                  :placeholder="''"
+                  :placeholder="'Enter country'"
                   :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
                   :styles="{
                     border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
@@ -137,7 +137,7 @@
             <p>Postal/Zip Code</p>
             <roundedInput 
                   :type="'text'"
-                  :placeholder="''"
+                  :placeholder="'Enter postal/zip code info'"
                   :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
                   :styles="{
                     border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
@@ -149,22 +149,24 @@
             </div>
 
           </div>    
-        <div class=" col-3 profile-pic" style="float=right; margin-top: 1%;">
+        <div class=" col-md-3 profile-pic" style="float=right; margin-top: 1%;">
           <div style="float: left;">
             <h3>Profile picture</h3>
             <div class=" my-icon">
-              <i class="fa fa-user-circle-o fa-5x" aria-hidden="true"></i>
+              <i class="fas fa-user-circle" aria-hidden="true" style=""></i>
             </div>
-            <dialogueBtn 
+            <div>
+              <roundedBtn 
                   :onClick="login"
                   :icon="'fas fa-sign-in-alt'"
                   :text="'Change Profile Picture'"
                   :styles="{
                     backgroundColor: '#063970',
-                    color: 'white'
+                    color: 'white',
                   }"
-                  style="margin-top: 5%"
+                  style="margin-top: 15%;"
                 />
+            </div>
           </div>
         </div>
       </div>
@@ -209,34 +211,45 @@
 
     <div class="my-form">
       <div class="input-form col-9" >
-          <p>New Password</p>
-          <roundedInput 
-                    :type="'text'"
+          <div>
+            <p>New Password</p>
+              <roundedInput 
+                        :type="'password'"
+                        :placeholder="'(Leave blank if unchanged)'"
+                        :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                        :styles="{
+                          border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                        }"
+                        v-model="username"
+                        class="input-style"
+                        id="password-field"
+                      />
+                      <span class="fa fa-fw fa-eye field-icon"></span>
+                  <br>
+          </div>
+
+          <div>
+            <p>Confirm New Password</p>
+            <roundedInput 
+                    :type="'password'"
                     :placeholder="'(Leave blank if unchanged)'"
-                    :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                    :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField' "
                     :styles="{
                       border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
                     }"
                     v-model="username"
                     class="input-style"
+                    id="toggle-field"
                   />
-              <br>
-          <p>Confirm New Password</p>
-          <roundedInput 
-                    :type="'text'"
-                    :placeholder="'(Leave blank if unchanged)'"
-                    :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
-                    :styles="{
-                      border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
-                    }"
-                    v-model="username"
-                    class="input-style "
-                  />
+                  <div>
+                    <span class="fa fa-fw fa-eye field-icon" onclick="showPassword()"></span>
+                  </div>
+          </div>
         <br>
       </div>
     </div>
 
-    <dialogueBtn 
+    <roundedBtn 
                   :onClick="login"
                   :icon="'fas fa-sign-in-alt'"
                   :text="'Update'"
@@ -287,9 +300,7 @@ h3{
 }
 
 .profile-pic{
-  background-color: none;
   float: center;
-  margin-top: -5%;
 }
 
 .profile-pic h3{
@@ -299,20 +310,30 @@ h3{
 }
 
 .my-icon{
-  margin-top: 2%;
   background-color: none;
-  color: blue;
-  float: center;
-  height: 220px;
-  width: 210px;
-  size: 80px 80px;
+  color: $primary;
+  float: left;
+  max-height: 14.375rem;
+  max-width: 12.5rem;
   text-align: center;
-  padding: 5%;
-  padding-top: 30px;
-  margin-top: 10%;
-  margin-bottom: 5px;
+  font-size: 170px;
+  margin-top: -15%;
 }
 
+.field-icon {
+  float: right;
+  margin-top: -29px;
+  margin-right: 24%;
+  position: relative;
+  z-index: 2;
+}
+/*
+@media (max-width: 768px){
+  .profile-pic{
+    margin-left: -16%;
+  }
+}
+*/
 
 </style>
 <script>
@@ -320,10 +341,12 @@ import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import roundedInput from 'src/modules/generic/roundedInput'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
+import $ from 'jquery'
 import ROUTER from 'src/router'
 export default {
   data() {
     return {
+      eyeToggle: false,
       colors: COLORS
     }
   },
@@ -335,7 +358,11 @@ export default {
   methods: {
     connect(item){
       // ROUTER.push('/' + item.payload)
+    },
+    showPassword(){
+      this.eyeToggle = !this.eyeToggle
     }
   }
 }
+
 </script>
