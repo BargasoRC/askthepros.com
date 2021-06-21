@@ -39,18 +39,7 @@ export default {
     config: CONFIG,
     common: COMMON,
     selectedImage: null,
-    imagesList: [{
-      id: 1,
-      url: 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/gettyimages-1194330423-612x612-1612545493.jpg?crop=0.627xw:1.00xh;0.0176xw,0&resize=640:*'
-    },
-    {
-      id: 2,
-      url: 'https://www.gardendesign.com/pictures/images/675x529Max/site_3/helianthus-yellow-flower-pixabay_11863.jpg'
-    },
-    {
-      id: 3,
-      url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Bachelor%27s_button%2C_Basket_flower%2C_Boutonniere_flower%2C_Cornflower_-_3.jpg/1200px-Bachelor%27s_button%2C_Basket_flower%2C_Boutonniere_flower%2C_Cornflower_-_3.jpg'
-    }],
+    imagesList: [],
     errorMessage: null,
     idImage: null,
     file: null,

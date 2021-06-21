@@ -1,12 +1,13 @@
 <template>
-  <div class="holder">
-    <div class="container row">
-      <i class="fas fa-chevron-left col-4" style="color: white; margin-top: 1%;"></i>
-      <p class="col-4" style="color: white; text-align: center; margin-top: 1%;">Facebook Preview</p>
-      <i class="fas fa-chevron-right col-4" style="color: white; text-align: -webkit-right; margin-top: 1%;"></i>
-    </div>
-    <div class="card">
-
+  <div class="container-fluid p-0">
+    <div class="card preview_card">
+      <div class="card-header preview_card_header d-flex justify-content-between text-white">
+        <i class="fas fa-chevron-left mb-0 pb-0"></i>
+        <p class="pb-0 mb-0">Facebook Preview</p>
+        <i class="fas fa-chevron-right mb-0 pb-0"></i>
+      </div>
+      <div class="card-body preview_card_body">
+      </div>
     </div>
   </div>
 </template>
@@ -42,6 +43,13 @@ export default {
 
 <style scoped lang="scss" scoped>
 @import "~assets/style/colors.scss";
+.preview_card_header {
+  background-color: $darkPrimary;
+  align-items: center;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  min-height: 45px;
+}
 .holder{
   width: 96%;
   margin-left: 2%;
@@ -53,12 +61,11 @@ export default {
   border-top-right-radius: 25%;
   padding-top: 2%;
 }
-.card{
-  background-color: black;
-  border-color: black;
-  padding: 10%;
-  margin-left: -15px;
-  margin-right: inherit;
-  height: 75vh;
+.preview_card {
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+.preview_card_body {
+  min-height: calc(100vh - 250px);
 }
 </style>
