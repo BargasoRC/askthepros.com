@@ -72,7 +72,9 @@
       </div>
       <!-- Just remove the style if component is ready -->
       <div class="column" style="background-color: #01004E; color: white; text-align: center;padding: 30px; border-top-right-radius: 22.5px; border-top-left-radius: 22.5px">
+        <i class="fa fa-angle-left fa-2x justify-content-start" aria-hidden="true" style="float: left;"></i>
         <span>Branding Preview here</span>
+        <i class="fa fa-angle-right fa-2x justify-content-end" aria-hidden="true" style="float: right;"></i>
       </div>
     </div>
   </div>
