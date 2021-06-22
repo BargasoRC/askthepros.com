@@ -87,7 +87,7 @@
         <br>
         
         <b>File(s)</b>
-        <Images @formData="form" v-if="!isClearing"></Images>
+        <Images @formData="form" v-if="!isClearing" @filePreview="storeImages"></Images>
         <br>
         <br>
       </div>
@@ -95,7 +95,7 @@
         <div class="col-sm-12 d-flex justify-content-end mt-4 pt-2">
           <roundedBtn
             class="ml-1 mr-1"
-            :onClick="publish"
+            :onClick="() => save('PUBLISH')"
             :text="'Publish'"
             :styles="{
                 backgroundColor: colors.primary,
@@ -106,18 +106,18 @@
           />
           <roundedBtn
             class="ml-1 mr-1"
-            :onClick="draft"
+            :onClick="() => save('DRAFT')"
             :text="'Save as Draft'"
             :styles="{
-                backgroundColor: colors.warning,
-                color: 'white',
-                width: '15%',
-                outlineColor: colors.warning
+              backgroundColor: colors.warning,
+              color: 'white',
+              width: '15%',
+              outlineColor: colors.warning
             }"
           />
         </div>
         <div class="col-sm-12 mt-5">
-          <preview></preview>
+          <preview :description="returnDescription" :files="returnImagesList"></preview>
         </div>
       </div>
     </div>
@@ -146,18 +146,7 @@ export default {
       industry: global.industry,
       selectedIndustry: null,
       global: global,
-      imagesList: [{
-        id: 1,
-        url: '/storage/image/asktheprooslogo.jpg'
-      },
-      {
-        id: 2,
-        url: '/storage/image/asktheprooslogo.jpg'
-      },
-      {
-        id: 3,
-        url: '/storage/image/asktheprooslogo.jpg'
-      }],
+      imagesList: [],
       errorMessage: null,
       idImage: null,
       file: null,
@@ -182,13 +171,22 @@ export default {
       return this.industry.map(el => {
         return el.category
       })
+    },
+    returnImagesList() {
+      return this.imagesList
+    },
+    returnDescription() {
+      return this.description
     }
   },
   methods: {
+    storeImages(data) {
+      this.imagesList = data
+    },
     onSelect(data) {
       this.selectedIndustry = data.index
     },
-    publish() {
+    save(status) {
       if(this.validate()) {
         $('#loading').css({'display': 'block'})
         axios.post(this.config.BACKEND_URL + '/file/upload?token=' + AUTH.tokenData.token, this.file).then(response => {
@@ -204,7 +202,7 @@ export default {
             description: this.description,
             url: JSON.stringify(response.data.data),
             account_id: this.user.userID,
-            status: 'PUBLISHED',
+            status: status,
             channels: JSON.stringify(channels),
             parent: null,
             category: this.industry[this.selectedIndustry].category
@@ -220,6 +218,7 @@ export default {
               this.googleMyBusiness = false
               this.linkedin = false
               this.isClearing = false
+              this.imagesList = []
             }
           })
         }).catch(() => {
