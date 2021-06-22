@@ -68,7 +68,6 @@
   float: left;
   height: 50px;
 }
-
 .text-primary{
   color: $primary !important;
 }
@@ -76,7 +75,6 @@
   height: 50px !important;
   width: 100% !important;
 }
-
 .input-group{
   margin-bottom: 10px !important;
 }
@@ -100,7 +98,6 @@
   border-top-right-radius: 0px !important;
   border-bottom-right-radius: 0px !important;
 }
-
 .search-icon{
   position: absolute;
   font-size: 24px;
@@ -108,14 +105,12 @@
   top: 0px;
   z-index: 1000;
 }
-
 .mx-datepicker,
 .mx-input-wrapper {
   width: 100%;
   position: unset;
   display: unset;
 }
-
 .form-group{
   margin-bottom: 0px !important;
 }
@@ -123,7 +118,6 @@
   width: 33% !important;
   float: left;
 }
-
 .form-control-custom{
   border: 0px !important;
   height: 35px !important;
@@ -138,7 +132,6 @@
   color: #01004E;
   box-sizing: border-box;
 }
-
 @media (max-width: 650px){
   .dropdown {
       width: 20%;
@@ -146,7 +139,6 @@
   .dropdown-title {
     font-size: 10px;
   }
-
   .search-icon{
     right: 50px;
   }
