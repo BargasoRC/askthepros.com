@@ -15,13 +15,13 @@
         />
     </div>
     <div class="col-sm-12 col-md-12 col-lg-12 mt-5 mb-5 p-0">
-      <!-- <Search 
+      <Search 
         :category="category"
         :activeCategoryIndex="0"
         :activeSortingIndex="0"
         @changeSortEvent="() => {} "  
         :grid="['list']"
-      /> -->
+      />
     </div>
     <div class="col-sm-12 col-md-12 col-lg-12 mt-5 p-0 pt-5">
       <DataTable 
@@ -80,6 +80,7 @@ p {
 }
 </style>
 <script>
+import Search from 'src/components/increment/generic/filter/BasicVersion3.vue'
 import DataTable from 'src/modules/generic/table'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
@@ -132,6 +133,7 @@ export default {
   },
   components: {
     roundedBtn,
+    Search,
     DataTable
   },
   methods: {
