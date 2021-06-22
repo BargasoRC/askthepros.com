@@ -1,28 +1,36 @@
 <template>
-  <div class="product-image" style="position: relative;">
+  <div class="col-sm-12 p-0 mt-3" style="position: relative;">
     <!-- <label class="remove-image text-danger" id="featured-image-remove" @click="removeImage(imagesData.featured !== null ? imagesData.featured[0].id : null)" v-if="selectedImage === null && imagesData.featured !== null">
       <i class="fa fa-times"></i>
     </label> -->
     <div>
       <div class="other-image">
       </div>
-        <div class="scrolling-wrapper d-flex" style="height: 150px">
-          <div style="height:100px !important;width:100px !important; border:2px solid gray" id="imageCont" @click="addImage()">
-            <i class="fa fa-plus plusIcon" style="font-size:40px;padding:10px; vertical-align:middle;margin-top: 20px;margin-right:1%"></i>
-            <input type="file" id="Image" accept="file_extension|audio/*|video/*|image/*|media_type" @change="setUpFileUpload($event)">
-            <!-- <input type="file" id="Image" accept="image/*" @change="setUpFileUpload($event)"> -->
-          </div>
-        <div  v-for="item in returnImageList" :key="item.id" :group="item" style="height:100px;width:100px" :class="'imageContainer p-10'">
-            <img :src="item.url" class="image" @click="selectImage(item.url)">
-            <!-- <img :src="config.BACKEND_URL + item.url" class="image" @click="selectImage(item.url)"> -->
-            <label class="middle"  @click="deleteImage(item.id)" v-if="item.status !== 'featured'">
+      <div class="scrolling-wrapper custom_scroll d-flex" style="height: 130px">
+        <div v-for="item in returnImageList" :key="item.id" :group="item" style="height:100px;width:100px"
+          :class="'imageContainer p-10'">
+          <img :src="item.url" class="image" @click="selectImage(item.url)">
+          <!-- <img :src="config.BACKEND_URL + item.url" class="image" @click="selectImage(item.url)"> -->
+          <label class="middle" @click="deleteImage(item.id)" v-if="item.status !== 'featured'">
               <i class="fa fa-times-circle text"></i>
-            </label>
+          </label>
             <!-- <div v-if="imagesData.featured !== null">
-              <p style="position:relative;font-weight:bold" :class="{'ImageLabel': item.url !== imagesData.featured[0].url}"><i class="fa fa-check" style="color: #cae166"></i> Featured</p>
-            </div> -->
+          <p style="position:relative;font-weight:bold" :class="{'ImageLabel': item.url !== imagesData.featured[0].url}"><i class="fa fa-check" style="color: #cae166"></i> Featured</p>
+        </div> -->
         </div>
       </div>
+      <div class="d-flex justify-content-start mt-5">
+        <button id="imageCont" type="button" class="btn add_file" @click="addImage()">Add File</button>
+        <input type="file" id="Image" accept="file_extension|audio/*|video/*|image/*|media_type"
+          @change="setUpFileUpload($event)">
+      </div>
+      <!-- <div style="height:100px !important;width:100px !important; border:2px solid gray" id="imageCont"
+          @click="addImage()">
+          <i class="fa fa-plus plusIcon"
+              style="font-size:40px;padding:10px; vertical-align:middle;margin-top: 20px;margin-right:1%"></i>
+          <input type="file" id="Image" accept="file_extension|audio/*|video/*|image/*|media_type"
+              @change="setUpFileUpload($event)">
+      </div> -->
     </div>
   </div>
 </template>
@@ -44,7 +52,9 @@ export default {
     idImage: null,
     file: null,
     productId: null,
-    hasError: false
+    hasError: false,
+    files: [],
+    fileUrls: []
   }),
   mounted(){
     // this.retrieveImage()
@@ -56,6 +66,9 @@ export default {
     //     }
     //   })
     // }
+    this.imagesList = []
+    this.files = []
+    this.fileUrls = []
   },
   computed: {
     returnImageList(){
@@ -114,11 +127,24 @@ export default {
       //   return
       // }
       let formData = new FormData()
-      console.log('[formData]', this.file)
-      formData.append('file', this.file)
-      formData.append('file_url', this.file.name.replace(' ', '_'))
+      this.files.push(this.file)
+      this.fileUrls.push(this.file.name.replace(' ', '_'))
+      this.files.forEach((el, index) => {
+        formData.append('file' + index, el)
+      })
+      formData.append('file_url', this.fileUrls)
       formData.append('account_id', this.user.userID)
       this.$emit('formData', formData)
+      var reader = new FileReader()
+      let self = this
+      reader.onloadend = function() {
+        let temp = {
+          id: self.imagesList.length + 1,
+          url: reader.result
+        }
+        self.imagesList.push(temp)
+      }
+      reader.readAsDataURL(this.file)
       // $('#loading').css({'display': 'block'})
       // axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
       //   $('#loading').css({'display': 'none'})
@@ -142,15 +168,18 @@ export default {
       })
     },
     deleteImage(id){
-      let params = {
-        id: id
-      }
-      $('#loading').css({display: 'block'})
-      axios.post(this.config.BACKEND_URL + '/images/delete?token=' + AUTH.tokenData.token, params).then(response => {
-        $('#loading').css({display: 'none'})
-        this.retrieveImage()
-        // this.$parent.retrieve()
+      this.imagesList = this.imagesList.filter(el => {
+        return el.id !== id
       })
+      // let params = {
+      //   id: id
+      // }
+      // $('#loading').css({display: 'block'})
+      // axios.post(this.config.BACKEND_URL + '/images/delete?token=' + AUTH.tokenData.token, params).then(response => {
+      //   $('#loading').css({display: 'none'})
+      //   this.retrieveImage()
+      //   // this.$parent.retrieve()
+      // })
     },
     retrieveImage(){
       this.productId = this.productImages.id
@@ -191,6 +220,23 @@ export default {
 
 <style scoped lang="scss" scoped>
 @import "~assets/style/colors.scss";
+.add_file {
+  outline: none;
+  box-shadow: none;
+  border: 1px solid $title;
+  border-radius: 10px;
+  min-width: 120px;
+  background-color: $hover;
+  color: $text;
+}
+.add_file:hover {
+  background-color: $hover !important;
+}
+.add_file:focus {
+  outline: none;
+  box-shadow: none;
+  color: $text !important;
+}
 .ImageLabel{
   display: none;
 }
@@ -268,7 +314,7 @@ export default {
   text-align: center;
 }
 .product-image{
-  width: 90%;
+  width: 100%;
   margin-left: 2%;
   margin-right: 2%;
   margin-top: 2%;
@@ -325,6 +371,23 @@ label{
 .remove-image:hover{
   cursor: pointer;
 }
+.custom_scroll::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px white;
+  background: white;
+	background-color: #F5F5F5;
+}
+.custom_scroll::-webkit-scrollbar
+{
+  width: 10px;
+  height: 10px;
+}
+.custom_scroll::-webkit-scrollbar-thumb
+{
+	background: rgb(217, 217, 235);
+  width: 10em;
+}
+
 @media (max-width: 992px){
   .product-image{
     width: 100%;

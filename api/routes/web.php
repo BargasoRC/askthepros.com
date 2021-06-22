@@ -115,5 +115,8 @@ $route = env('PACKAGE_ROUTE', '').'/post';
 Route::post($route . '/create', 'PostController@create');
 Route::post($route . '/retrieve', 'PostController@retrieve');
 
+$route = env('PACKAGE_ROUTE', '').'/file';
+Route::post($route . '/upload', 'FileUploadController@upload');
+
 Route::get('/login/{provider}/redirect', 'SocialController@redirect');
 Route::get('/social_media/test', 'SocialMediaController@post');

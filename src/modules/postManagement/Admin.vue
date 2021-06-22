@@ -13,13 +13,13 @@
       />
     </div>
     <div class="col-sm-12 col-md-12 col-lg-12 mt-5 mb-5 p-0">
-      <!-- <Search 
+      <Search 
         :category="category"
         :activeCategoryIndex="0"
         :activeSortingIndex="0"
         @changeSortEvent="() => {} "
         :grid="['list']"
-      /> -->
+      />
     </div>
     <div class="col-sm-12 col-md-12 col-lg-12 mt-5 p-0 pt-5">
       <DataTable 
@@ -55,6 +55,7 @@ import Pager from 'src/components/increment/generic/pager/Pager.vue'
 import DataTable from 'src/modules/generic/table'
 import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
 import ROUTER from 'src/router'
+import Search from 'src/components/increment/generic/filter/Basic'
 export default {
   data() {
     return {
@@ -160,7 +161,8 @@ export default {
     DataTable,
     Confirmation,
     'empty': require('components/increment/generic/empty/Empty.vue'),
-    Pager
+    Pager,
+    Search
   },
   created() {
     this.retrievePosts()
