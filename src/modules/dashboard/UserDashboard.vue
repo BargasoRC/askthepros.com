@@ -9,7 +9,7 @@
           <h5 class="card-title">{{item.title}}</h5>
           <p class="card-text" v-html="item.description"></p>
           <dialogueBtn 
-            :onClick="connect(item)"
+            :onClick="(event) => connect(item)"
             :icon="'fas fa-cogs'"
             :icon_position="'right'"
             :text="'Connect'"
@@ -65,7 +65,7 @@
           <div class="col-8 col-sm-6">
             <div class="justify-content-start" style="margin-top: 25px">
               <roundedBtn 
-                :onClick="item"
+                :onClick="() => {}"
                 :text="'View more'"
                 :styles="{
                   backgroundColor: colors.darkPrimary,
@@ -157,7 +157,8 @@ export default {
         payload: 'linkedin',
         description: 'Reap the benefits of automating your Google My Business postings. <br /><br />Setup and link your account now!'
       }],
-      colors: COLORS
+      colors: COLORS,
+      forReviewTotal: ''
     }
   },
   components: {
@@ -169,6 +170,7 @@ export default {
       ROUTER.push('channels/branding')
     },
     connect(item){
+      console.log('Connecting...')
       // ROUTER.push('/' + item.payload)
     }
   }
