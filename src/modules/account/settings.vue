@@ -1,14 +1,14 @@
 <template>
   <div class="holder" >
-    <div style="border-bottom: 1px solid #aaa; 
-              padding-bottom: 2%">
+    <div class="my-title">
     <h3 style="">Profile</h3>
             </div>
     <div class="">
       <div class="my-form row my-row">
         <div class=" col-md-9 input-form"  >
-          <div class="">
-            <p>First Name</p>
+          <div class="row">
+            <div class="col-md-6">
+              <p>First Name</p>
               <roundedInput 
                       :type="'text'"
                       :placeholder="'Enter your first name here'"
@@ -16,26 +16,29 @@
                       :styles="{
                         border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
                       }"
-                      v-model="username"
+                      v-model="firstname"
                       class="input-style"
                     />
               <br>
-          </div>
-          <div class="">
-            <p>Last Name</p>
-            <roundedInput 
-                  :type="'text'"
-                  :placeholder="'Enter your last name here'"
-                  :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
-                  :styles="{
-                    border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
-                  }"
-                  v-model="username"
-                  class="input-style"
-                />
+            </div>
+            <div class="col-md-6" >
+              <p>Last Name</p>
+              <roundedInput 
+                    :type="'text'"
+                    :placeholder="'Enter your last name here'"
+                    :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                    :styles="{
+                      border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                    }"
+                    v-model="lastname"
+                    class="input-style"
+                  />
               <br> 
-            </div>   
-          <div class="">
+            </div> 
+            
+          </div>
+          <div class="row">
+            <div class="col-md-6">
             <p>Business Name</p>
             <roundedInput 
                   :type="'text'"
@@ -44,12 +47,12 @@
                   :styles="{
                     border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
                   }"
-                  v-model="username"
+                  v-model="businessname"
                   class="input-style"
                 />
               <br>
           </div>
-          <div class="">
+          <div class="col-md-6">
             <p>Contact Number</p>
             <roundedInput 
                   :type="'text'"
@@ -58,95 +61,12 @@
                   :styles="{
                     border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
                   }"
-                  v-model="username"
+                  v-model="contactnumber"
                   class="input-style"
                 />   
               <br>
             </div>
-            <div class="">
-            <p>Address</p>
-            <roundedInput 
-                  :type="'text'"
-                  :placeholder="'Enter your address details here'"
-                  :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
-                  :styles="{
-                    border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
-                  }"
-                  v-model="username"
-                  class="input-style"
-                />   
-              <br>
-            </div>
-            <div class="">
-            <p>Route</p>
-            <roundedInput 
-                  :type="'text'"
-                  :placeholder="'Enter route'"
-                  :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
-                  :styles="{
-                    border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
-                  }"
-                  v-model="username"
-                  class="input-style"
-                />   
-              <br>
-            </div>
-            <div class="">
-            <p>Locality</p>
-            <roundedInput 
-                  :type="'text'"
-                  :placeholder="'Enter locality'"
-                  :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
-                  :styles="{
-                    border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
-                  }"
-                  v-model="username"
-                  class="input-style"
-                />   
-              <br>
-            </div>
-            <div class="">
-            <p>Region</p>
-            <roundedInput 
-                  :type="'text'"
-                  :placeholder="'Enter region'"
-                  :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
-                  :styles="{
-                    border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
-                  }"
-                  v-model="username"
-                  class="input-style"
-                />   
-              <br>
-            </div>
-            <div class="">
-            <p>Country</p>
-            <roundedInput 
-                  :type="'text'"
-                  :placeholder="'Enter country'"
-                  :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
-                  :styles="{
-                    border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
-                  }"
-                  v-model="username"
-                  class="input-style"
-                />   
-              <br>
-            </div>
-            <div class="">
-            <p>Postal/Zip Code</p>
-            <roundedInput 
-                  :type="'text'"
-                  :placeholder="'Enter postal/zip code info'"
-                  :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
-                  :styles="{
-                    border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
-                  }"
-                  v-model="username"
-                  class="input-style"
-                />   
-              <br>
-            </div>
+          </div>
 
           </div>    
         <div class=" col-md-3 profile-pic" style="float=right; margin-top: 1%;">
@@ -164,6 +84,7 @@
                     backgroundColor: '#063970',
                     color: 'white',
                   }"
+                  v-model="imgupload"
                   style="margin-top: 15%;"
                 />
             </div>
@@ -171,47 +92,141 @@
         </div>
       </div>
     </div>
-
-    <h3 style="border-bottom: 1px solid #aaa; 
-              padding-bottom: 2%;">Account</h3>
-    
-    <div class="my-form">
-      <div class="input-form col-9">
-          <p>Username</p>
-          <roundedInput 
-                    :type="'text'"
-                    :placeholder="'Username'"
-                    :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
-                    :styles="{
-                      border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
-                    }"
-                    v-model="username"
-                    class="input-style"
-                    style="background-color: lightgrey;"
-                  />
+  <div class="my-title"><h3>Address</h3></div>
+    <br>
+        <div class="row">
+          <div class="col-md-9">
+            <div class="row"> 
+              <div class="col-md-6">
+                <p>Route</p>
+                <roundedInput 
+                        :type="'text'"
+                        :placeholder="'Enter your route here'"
+                        :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                        :styles="{
+                          border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                        }"
+                        v-model="route"
+                        class="input-style"
+                      />
+                      <br>
+              </div>
               <br>
-          <p>Email Address</p>
-          <roundedInput 
-                    :type="'text'"
-                    :placeholder="'example@email.domain'"
-                    :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
-                    :styles="{
-                      border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
-                    }"
-                    v-model="username"
-                    class="input-style"
-                    style="background-color: lightgrey;"
-                  />
-              <br>   
+              <div class="col-md-6" >
+                <p>City</p>
+                <roundedInput 
+                      :type="'text'"
+                      :placeholder="'Enter your city here'"
+                      :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                      :styles="{
+                        border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                      }"
+                      v-model="city"
+                      class="input-style"
+                    />
+                    <br> 
+              </div>
+            </div>
+            <div class="row">
+              <div class=" col-md-6">
+                <p>Region</p>
+                <roundedInput 
+                        :type="'text'"
+                        :placeholder="'Enter your region here'"
+                        :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                        :styles="{
+                          border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                        }"
+                        v-model="region"
+                        class="input-style"
+                      />
+                <br>
+              </div>
+              <div class="col-md-6" >
+                <p>Country</p>
+                <roundedInput 
+                      :type="'text'"
+                      :placeholder="'Enter your country here'"
+                      :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                      :styles="{
+                        border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                      }"
+                      v-model="country"
+                      class="input-style"
+                    />
+                <br> 
+            </div> 
+            
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <p>Postal/Zip Code</p>
+                <roundedInput 
+                        :type="'text'"
+                        :placeholder="'Enter your postal/zip code here'"
+                        :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                        :styles="{
+                          border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                        }"
+                        v-model="postal_zip_code"
+                        class="input-style"
+                      />
+                      <br>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    <div class="my-title"><h3>Account</h3></div>
+    <br>
+    <div class="">
+      <div class="row">
+        <div class="col-md-9">
+          <div class="row">
+            <div class="col-md-6">
+              <p>Username</p>
+              <roundedInput 
+                        :type="'text'"
+                        :placeholder="'Username'"
+                        :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                        :styles="{
+                          border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                        }"
+                        v-model="username"
+                        class="input-style"
+                        style="background-color: lightgrey;"
+                        
+                      />
+                <br>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+                <p>Email Address</p>
+                <roundedInput 
+                          :type="'text'"
+                          :placeholder="'example@email.domain'"
+                          :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                          :styles="{
+                            border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                          }"
+                          v-model="username"
+                          class="input-style"
+                          style="background-color: lightgrey;"
+                        />
+                  <br>  
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <h3 style="border-bottom: 1px solid #aaa; 
-              padding-bottom: 2%;">Change your Password</h3>
-
-    <div class="my-form">
-      <div class="input-form col-9" >
-          <div>
+    <div class="my-title"><h3>Change Your Password</h3></div>
+    <br>
+    <div class="row">
+      <div class="col-md-9">
+        <div class="row" >
+          <div class="col-md-6">
             <p>New Password</p>
               <roundedInput 
                         :type="'password'"
@@ -227,8 +242,9 @@
                       <span class="fa fa-fw fa-eye field-icon"></span>
                   <br>
           </div>
-
-          <div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
             <p>Confirm New Password</p>
             <roundedInput 
                     :type="'password'"
@@ -245,8 +261,8 @@
                     <span class="fa fa-fw fa-eye field-icon" onclick="showPassword()"></span>
                   </div>
           </div>
-        <br>
-      </div>
+        </div>
+      </div>      
     </div>
 
     <roundedBtn 
@@ -257,7 +273,7 @@
                     backgroundColor: '#063970',
                     color: 'white'
                   }"
-                  style="margin-bottom: 5%;"
+                  style="margin-bottom: 5%; margin-top: 5%;"
                 />
     
   </div>
@@ -271,15 +287,21 @@
   float: left;
 }
 
+.my-title{
+  border-bottom: solid 1px black;
+  max-width: 74%;
+}
+
 h3{
   margin-top: 25px;
   font-weight: bold;
   font-size: 21px;
-  
+  padding-bottom: 1%;
 }
 
 .my-form{
-  padding: 3%;
+  padding-left: 3%;
+  padding-top: 3%;
   margin-left: -3%;
 }
 
