@@ -19,19 +19,21 @@
               <b>Register with AskThePros</b>
             </div>
             <div>
+              <p class="mt-2"><b>Username</b></p>
               <p
                 class="mb-2 pb-0 errorMessage"
                 v-if="errorMessage != ''"
               >{{errorMessage}}</p>
               <roundedInput 
                 :type="'text'"
-                :placeholder="'Username'"
+                :placeholder="'Your username here...'"
                 :class="!this.isValid && username == '' ? 'mb-0 ' : ' registrationField'"
                 :styles="{
                   border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
                 }"
                 v-model="username"
               />
+              <p class="mt-2"><b>Email</b></p>
               <p
                 class="mb-0 pb-0 requiredFieldError"
                 v-if="!this.isValid && username == ''"
@@ -54,6 +56,7 @@
                 :
                   'Required Field'
               }}</p>
+              <p class="mt-2"><b>Your password here...</b></p>
               <roundedInput 
                 :type="'password'"
                 :placeholder="'Password'"
@@ -78,9 +81,10 @@
                   :
                   'Required Field'
               }}</p>
+              <p class="mt-2"><b>Confirm Password</b></p>
               <roundedInput 
                 :type="'password'"
-                :placeholder="'Confirm Password'"
+                :placeholder="'Retype Password'"
                 :class="!this.isValid && (password == '' || password != cpassword || passwordRequirements != '') ? 'mb-0 ' : ' registrationField'"
                 :styles="{
                   border: !this.isValid && (password == '' || password != cpassword || passwordRequirements != '') ? '1px solid red !important' : 'none',
@@ -102,6 +106,7 @@
                   :
                   'Required Field'
               }}</p>
+              <p class="mt-2"><b>Industry</b></p>
               <roundedSelectBtn 
                 :placeholder="'Select Industry'"
                 :items="returnIndustry"

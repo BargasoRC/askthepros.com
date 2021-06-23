@@ -65,7 +65,7 @@
           <div class="col-8 col-sm-6">
             <div class="justify-content-start" style="margin-top: 25px">
               <roundedBtn 
-                :onClick="item"
+                :onClick="more"
                 :text="'View more'"
                 :styles="{
                   backgroundColor: colors.darkPrimary,
@@ -75,7 +75,7 @@
             </div>
           </div>
           <div class="col-8 col-sm-6">
-            <p id="pager" class="justify-content-end" style="margin-right: 65px; margin-bottom: 35px">Page To Review: {{forReviewTotal}} <i class="fas fa-arrow-right" id="arrowNext" v-on:click="next()"></i></p>
+            <p id="pager" class="justify-content-end" style="margin-right: 65px; margin-bottom: 35px">Page To Review: {{Total}} <i class="fas fa-arrow-right" id="arrowNext" v-on:click="morePreview()"></i></p>
           </div>
         </div>
       </div>
@@ -133,7 +133,8 @@
 }
 #arrowNext{
   color: $darkPrimary;
-  padding: 7px
+  padding: 7px;
+  cursor: pointer;
 }
 </style>
 <script>
@@ -157,7 +158,8 @@ export default {
         payload: 'linkedin',
         description: 'Reap the benefits of automating your Google My Business postings. <br /><br />Setup and link your account now!'
       }],
-      colors: COLORS
+      colors: COLORS,
+      Total: 0
     }
   },
   components: {
@@ -170,6 +172,12 @@ export default {
     },
     connect(item){
       // ROUTER.push('/' + item.payload)
+    },
+    more(){
+      ROUTER.push('post_management/history')
+    },
+    morePreview(){
+      ROUTER.push('post_management')
     }
   }
 }

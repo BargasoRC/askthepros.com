@@ -52,8 +52,8 @@
         <h3 style="margin-top: 20px;font-size: 20px;">Add Branding.</h3>
         <p class="subheads">These “branding footers” will be added to the end of your social media posts.   They should be one or two short sentences and incorporate your brand name and location. </p>
         <p class="pl-0 mt-5"><b>Branding Footer 1</b></p>
-        <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand1" @keyup="charCount()"></textarea>
-        <span class="char-count">Character Count: {{count1}}</span>
+        <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model='brand' @keyup='charCount()'></textarea>
+        <span class="char-count">Character Count: {{count}}</span>
         <p class="pl-0 mt-4"><b>Branding Footer 2</b></p>
         <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand2"></textarea>
         <span class="char-count">Character Count: {{count2}}</span>
@@ -88,10 +88,10 @@ export default {
   data() {
     return {
       colors: COLORS,
-      count1: 0,
+      count: 0,
       count2: 0,
       count3: 0,
-      brand1: '',
+      brand: '',
       brand2: '',
       brand3: ''
     }
@@ -110,7 +110,7 @@ export default {
       console.log('save::::')
     },
     charCount(){
-      this.count1 = this.brand1.length
+      this.count = this.brand.length
     }
   }
 }
