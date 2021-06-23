@@ -1,20 +1,24 @@
 <template>
   <div>
-    <User />
+    <Admin v-if="user.type === 'ADMIN'"/>
   </div>
 </template>
+
 <script>
-import User from './user.vue'
+import Admin from './admin'
+import AUTH from 'src/services/auth'
 export default {
   data() {
-    return {}
+    return {
+      user: AUTH.user
+    }
   },
   components: {
-    User
-  },
-  methods: {}
+    Admin
+  }
 }
 </script>
 <style scoped lang="scss" scoped>
 @import "~assets/style/colors.scss";
+
 </style>
