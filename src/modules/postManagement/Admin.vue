@@ -19,6 +19,18 @@
         :activeSortingIndex="0"
         @changeSortEvent="() => {} "
         :grid="['list']"
+        :sortByStyle="{
+          background: '#01004E !important',
+          color: 'white'
+        }"
+        :dropDownStyle="{
+          border: '1px solid #01004E !important',
+          background: 'none !important',
+          color: '#272727 !important',
+          borderLeft: '0px',
+          outline: 'none !important',
+          boxShadow: 'none !important'
+        }"
       />
     </div>
     <div class="col-sm-12 col-md-12 col-lg-12 mt-5 p-0 pt-5">

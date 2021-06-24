@@ -9,7 +9,7 @@
           <h5 class="card-title">{{item.title}}</h5>
           <p class="card-text" v-html="item.description"></p>
           <dialogueBtn 
-            :onClick="connect(item)"
+            :onClick="(event) => connect(item)"
             :icon="'fas fa-cogs'"
             :icon_position="'right'"
             :text="'Connect'"
@@ -65,7 +65,7 @@
           <div class="col-8 col-sm-6">
             <div class="justify-content-start" style="margin-top: 25px">
               <roundedBtn 
-                :onClick="more"
+                :onClick="() => {}"
                 :text="'View more'"
                 :styles="{
                   backgroundColor: colors.darkPrimary,
@@ -75,7 +75,7 @@
             </div>
           </div>
           <div class="col-8 col-sm-6">
-            <p id="pager" class="justify-content-end" style="margin-right: 65px; margin-bottom: 35px">Page To Review: {{Total}} <i class="fas fa-arrow-right" id="arrowNext" v-on:click="morePreview()"></i></p>
+            <p id="pager" class="justify-content-end" style="margin-right: 65px; margin-bottom: 35px">Page To Review: {{forReviewTotal}} <i class="fas fa-arrow-right" id="arrowNext" v-on:click="next()"></i></p>
           </div>
         </div>
       </div>
@@ -133,8 +133,7 @@
 }
 #arrowNext{
   color: $darkPrimary;
-  padding: 7px;
-  cursor: pointer;
+  padding: 7px
 }
 </style>
 <script>
@@ -159,7 +158,7 @@ export default {
         description: 'Reap the benefits of automating your Google My Business postings. <br /><br />Setup and link your account now!'
       }],
       colors: COLORS,
-      Total: 0
+      forReviewTotal: ''
     }
   },
   components: {
@@ -171,13 +170,8 @@ export default {
       ROUTER.push('channels/branding')
     },
     connect(item){
+      console.log('Connecting...')
       // ROUTER.push('/' + item.payload)
-    },
-    more(){
-      ROUTER.push('post_management/history')
-    },
-    morePreview(){
-      ROUTER.push('post_management')
     }
   }
 }

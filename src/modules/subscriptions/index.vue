@@ -1,48 +1,7 @@
 <template>
-  <div class="holder">
-    <h3 style="margin-top: 25px;">Subscriptions!</h3>
-
-    <div class="row" style="margin-top: 25px">
-      <div class="col-lg-12">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th scope="col">Title</th>
-              <th scope="col">Channels</th>
-              <th scope="col">Links</th>
-              <th scope="col">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">Test</th>
-              <td>Test</td>
-              <td>Test</td>
-              <td>Test</td>
-            </tr>
-            <tr>
-              <th scope="row">Test</th>
-              <td>Test</td>
-              <td>Test</td>
-              <td>Test</td>
-            </tr>
-            <tr>
-              <th scope="row">Test</th>
-              <td>Test</td>
-              <td>Test</td>
-              <td>Test</td>
-            </tr>
-            <tr>
-              <th scope="row">Test</th>
-              <td>Test</td>
-              <td>Test</td>
-              <td>Test</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    
+  <div>
+    <User v-if="user.type === 'USER'"/>
+    <Admin v-if="user.type === 'ADMIN'"/>
   </div>
 </template>
 <style scoped lang="scss" scoped>
@@ -58,19 +17,21 @@
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import COLORS from 'src/assets/style/colors.js'
 import ROUTER from 'src/router'
+import User from './user'
+import Admin from './admin'
+import AUTH from 'src/services/auth'
 export default {
   data() {
     return {
-      colors: COLORS
+      colors: COLORS,
+      user: AUTH.user
     }
   },
   components: {
-    dialogueBtn
+    dialogueBtn,
+    User,
+    Admin
   },
-  methods: {
-    connect(item){
-      // ROUTER.push('/' + item.payload)
-    }
-  }
+  methods: {}
 }
 </script>

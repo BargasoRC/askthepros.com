@@ -8,7 +8,20 @@
       :activeSortingIndex="0"
       @changeSortEvent="retrieve($event.sort, $event.filter)"
       @changeStyle="manageGrid($event)"
-      :grid="['list', 'th-large']"></basic-filter>
+      :grid="['list', 'th-large']"
+      :sortByStyle="{
+        background: '#01004E !important',
+        color: 'white'
+      }"
+      :dropDownStyle="{
+        border: '1px solid #01004E !important',
+        background: 'none !important',
+        color: '#272727 !important',
+        borderLeft: '0px',
+        outline: 'none !important',
+        boxShadow: 'none !important'
+      }"
+    />
     
     <table class="table table-bordered table-responsive" v-if="data.length > 0">
       <thead>

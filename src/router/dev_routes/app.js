@@ -147,6 +147,28 @@ export default{
     meta: {
       tokenRequired: true
     }
+  }, {
+    path: '/:user/checkout',
+    name: 'payment_checkout',
+    component: resolve => require(['src/modules/payments/checkout.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
+    path: '/:user/subscriptions_management',
+    name: 'subscriptions_management',
+    component: resolve => require(['src/modules/subscriptions/index.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/:user/billing_management',
+    name: 'billing_management',
+    component: resolve => require(['src/modules/billing/index.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
   }
   ]
 }
