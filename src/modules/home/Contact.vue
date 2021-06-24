@@ -27,7 +27,7 @@
               <p class="mt-2"><b>Email</b></p>
               <p
                 class="mb-0 pb-0 requiredFieldError"
-                v-if="this.isValid = false"
+                v-if="!this.isValid == false"
               >{{
                 isEmailValid? 'Invalid Email' : 'Required Field'
               }}</p>
