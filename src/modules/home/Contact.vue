@@ -23,17 +23,24 @@
             </div>
             <div>
               <p class="mt-2"><b>Name</b></p>
-              <input type="text" class="inputField">
+              <input type="text" class="inputField" v-model="name">
               <p class="mt-2"><b>Email</b></p>
-              <input type="text" class="inputField">
+              <p
+                class="mb-0 pb-0 requiredFieldError"
+                v-if="!this.isValid == false"
+              >{{
+                isEmailValid? 'Invalid Email' : 'Required Field'
+              }}</p>
+              <input type="email" class="inputField" v-model="email">
               <p class="mt-2"><b>Subject</b></p>
-              <input type="text" class="inputField">
+              <input type="text" class="inputField" v-model="subject">
               <p class="mt-2"><b>Content</b></p>
-              <textarea class="mt-2 textArea" name="" id="" cols="30" rows="10"></textarea>
+              <textarea class="mt-2 textArea" name="" id="" cols="30" rows="10" v-model="content"></textarea>
             </div>
             
             <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-center mt-2">
               <dialogueBtn 
+                :onClick="send"
                 :icon="'fas fa-paper-plane'"
                 :icon_position="'right'" 
                 :text="'Send Message'"
@@ -55,9 +62,16 @@ import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import roundedInput from 'src/modules/generic/roundedInput'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import AUTH from 'src/services/auth'
+import global from 'src/helpers/global'
 export default {
   data() {
     return {
+      name: '',
+      email: '',
+      subject: '',
+      content: '',
+      isValid: true,
+      isEmailValid: true
     }
   },
   components: {
@@ -68,12 +82,34 @@ export default {
   created() {
   },
   methods: {
+    validate() {
+      let email = this.email
+      if(email === ''){
+        this.isValid = false
+        return false
+      }else if(!global.validateEmail(email)) {
+        this.isValid = false
+        this.isEmailValid = false
+        return false
+      }
+      return true
+    },
+    send(event){
+      if(this.validate()){
+        // Insert Send Message Method Here
+      }
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 @import "~assets/style/colors.scss";
+.requiredFieldError {
+  color: $danger;
+  font-size: 10px;
+  margin-bottom: 10px !important;
+}
 .textArea {
   width:100%;
   border: 0.25px solid #84868B;
