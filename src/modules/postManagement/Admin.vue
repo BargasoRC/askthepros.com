@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container-fluid">
     <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-end p-0 mb-5 mt-5">
       <roundedBtn 
         :onClick="newPost"
@@ -37,7 +37,7 @@
       <DataTable 
         :tableActions="tableActions"
         :tableHeaders="tableHeaders"
-        :tableData="tableData"
+        :tableData="returnTableData"
         @onAction="onTableAction"
       />
     </div>
@@ -178,6 +178,14 @@ export default {
   },
   created() {
     this.retrievePosts()
+  },
+  computed: {
+    returnTableData() {
+      return this.tableData.filter((el, ndx) => {
+        el.channels = JSON.parse(el.channels).join(', ').replaceAll('_', ' ')
+        return el
+      })
+    }
   },
   methods: {
     newPost() {

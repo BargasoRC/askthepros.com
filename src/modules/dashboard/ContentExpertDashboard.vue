@@ -27,7 +27,7 @@
       <DataTable 
         :tableActions="tableActions"
         :tableHeaders="tableHeaders"
-        :tableData="tableData"
+        :tableData="returnTableData"
       />
     </div >
     <div class="row d-flex flex-row">
@@ -84,10 +84,11 @@ import Search from 'src/components/increment/generic/filter/BasicVersion3.vue'
 import DataTable from 'src/modules/generic/table'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
-import ROUTER from 'src/router'
+import AUTH from 'src/services/auth'
 export default {
   data() {
     return {
+      user: AUTH.user,
       colors: COLORS,
       pageNo: 1,
       pageTotal: 1,
@@ -100,22 +101,11 @@ export default {
       tableHeaders: [
         {title: 'Date', key: 'created_at', type: 'text'},
         {title: 'Post Title', key: 'title', type: 'text'},
-        {title: 'Channel Actions', key: 'channel', type: 'text'},
+        {title: 'Channel Actions', key: 'channels', type: 'text'},
         {title: 'Status', key: 'status', type: 'text'},
         {title: 'Actions', type: 'action'}
       ],
-      tableData: [
-        {title: 'My Post Title 1', channel: 'Google My Business, Facebook, Linkedin', status: 'Draft', created_at: '15/19/2021 at 10:31 pm'},
-        {title: 'My Post Title 2', channel: 'Google My Business, Linkedin', status: 'Draft', created_at: '15/19/2021 at 10:31 pm'},
-        {title: 'My Post Title 3', channel: 'Google My Business, Facebook', status: 'Published', created_at: '15/19/2021 at 10:31 pm'},
-        {title: 'My Post Title 4', channel: 'Google My Business, Facebook, Linkedin', status: 'Draft', created_at: '15/19/2021 at 10:31 pm'},
-        {title: 'My Post Title 5', channel: 'Google My Business, Linkedin', status: 'Draft', created_at: '15/19/2021 at 10:31 pm'},
-        {title: 'My Post Title 6', channel: 'Google My Business, Facebook', status: 'Published', created_at: '15/19/2021 at 10:31 pm'},
-        {title: 'My Post Title 7', channel: 'Facebook, Linkedin', status: 'Published', created_at: '15/19/2021 at 10:31 pm'},
-        {title: 'My Post Title 8', channel: 'Google My Business, Facebook, Linkedin', status: 'Published', created_at: '15/19/2021 at 10:31 pm'},
-        {title: 'My Post Title 9', channel: 'Google My Business, Linkedin', status: 'Published', created_at: '15/19/2021 at 10:31 pm'},
-        {title: 'My Post Title 10', channel: 'Google My Business', status: 'Published', created_at: '15/19/2021 at 10:31 pm'}
-      ],
+      tableData: [],
       category: [{
         title: 'Sort By',
         sorting: [
@@ -136,9 +126,33 @@ export default {
     Search,
     DataTable
   },
+  created() {
+    this.retrievePosts()
+  },
+  computed: {
+    returnTableData() {
+      return this.tableData.filter((el, ndx) => {
+        el.channels = JSON.parse(el.channels).join(', ').replaceAll('_', ' ')
+        return el
+      })
+    }
+  },
   methods: {
     newPost() {
-      ROUTER.push('post_management')
+      this.$router.push(`/${this.user.type.toLowerCase()}/post_management`)
+    },
+    retrievePosts() {
+      let parameter = {
+        account_id: this.user.userID
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('post/retrieve_by_user', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        console.log('RESPONSE: ', response)
+        if(!response.error) {
+          this.tableData = response.data
+        }
+      })
     }
   }
 }

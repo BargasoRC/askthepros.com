@@ -114,6 +114,7 @@ Route::post($route . '/verify_token','SocialController@checkToken');
 $route = env('PACKAGE_ROUTE', '').'/post';
 Route::post($route . '/create', 'PostController@create');
 Route::post($route . '/retrieve', 'PostController@retrieve');
+Route::post($route . '/retrieve_by_user', 'PostController@retrieveByUser');
 
 $route = env('PACKAGE_ROUTE', '').'/file';
 Route::post($route . '/upload', 'FileUploadController@upload');
