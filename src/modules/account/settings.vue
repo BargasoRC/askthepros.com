@@ -76,8 +76,9 @@
               <i class="fas fa-user-circle" aria-hidden="true" style=""></i>
             </div>
             <div>
-              <roundedBtn 
-                  :onClick="login"
+             
+              <span @click="addImage()">
+                <roundedBtn
                   :icon="'fas fa-sign-in-alt'"
                   :text="'Change Profile Picture'"
                   :styles="{
@@ -87,7 +88,10 @@
                   v-model="imgupload"
                   style="margin-top: 15%;"
                 />
-            </div>
+                     <input ref="image" type="file" accept="images/*" @change="setUpFileUpload($event)" id="newImage">
+              </span>
+              
+            </div>  
           </div>
         </div>
       </div>
@@ -210,7 +214,7 @@
                           :styles="{
                             border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
                           }"
-                          v-model="username"
+                          v-model="email"
                           class="input-style"
                           style="background-color: lightgrey;"
                         />
@@ -266,15 +270,15 @@
     </div>
 
     <roundedBtn 
-                  :onClick="login"
-                  :icon="'fas fa-sign-in-alt'"
-                  :text="'Update'"
-                  :styles="{
-                    backgroundColor: '#063970',
-                    color: 'white'
-                  }"
-                  style="margin-bottom: 5%; margin-top: 5%;"
-                />
+      :onClick="update_account"
+      :icon="'fas fa-sign-in-alt'"
+      :text="'Update'"
+      :styles="{
+        backgroundColor: '#063970',
+        color: 'white'
+      }"
+      style="margin-bottom: 5%; margin-top: 5%;"
+    />
     
   </div>
 </template>
@@ -285,6 +289,10 @@
   margin-left: 2%;
   margin-right: 2%;
   float: left;
+}
+
+.hidden-button{
+  background: blue;
 }
 
 .my-title{
@@ -363,13 +371,36 @@ import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import roundedInput from 'src/modules/generic/roundedInput'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
+import AUTH from 'src/services/auth'
+import CONFIG from 'src/config.js'
+import axios from 'axios'
 import $ from 'jquery'
 import ROUTER from 'src/router'
 export default {
   data() {
     return {
       eyeToggle: false,
-      colors: COLORS
+      colors: COLORS,
+      firstname: '',
+      middlename: '',
+      lastname: '',
+      businessname: '',
+      contactnumber: '',
+      user: AUTH.user,
+      config: CONFIG,
+      errorMessage: null,
+      data: null,
+      file: null,
+      copiedIndex: null,
+      address: [{
+        route: '',
+        city: '',
+        region: '',
+        country: '',
+        postal_zip_code: ''
+      }],
+      username: '',
+      email: ''
     }
   },
   components: {
@@ -381,8 +412,85 @@ export default {
     connect(item){
       // ROUTER.push('/' + item.payload)
     },
-    showPassword(){
-      this.eyeToggle = !this.eyeToggle
+    update_account(event){
+      let condition = {
+        condition: [
+          {
+            value: this.user.userID,
+            clause: '=',
+            column: 'account_id'
+          }
+        ],
+        offset: 0,
+        limit: 1
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('account_informations/retrieve', condition).then(response => {
+        $('#loading').css({'display': 'none'})
+        let parameter = {
+          id: response.data[0].id,
+          account_id: this.user.userID,
+          first_name: this.firstname,
+          middle_name: this.middlename,
+          last_name: this.lastname,
+          cellular_number: this.contactnumber,
+          address: {
+            'route': this.route,
+            'city': this.city,
+            'region': this.region,
+            'country': this.country,
+            'zipcode': this.postal_zip_code
+          }
+        }
+        $('#loading').css({'display': 'block'})
+        this.APIRequest('account_informations/update', parameter).then(response => {
+          $('#loading').css({'display': 'none'})
+          console.log('RESPONSE: ', response)
+          if(!response.error) {
+            console.log('UPDATE RESPONSE: ', response)
+          }
+        })
+        $('#loading').css({'display': 'block'})
+        this.APIRequest('account/update', parameter).then(response => {
+          $('#loading').css({'display': 'none'})
+          console.log('RESPONSE: ', response)
+          console.log(parameter)
+          if(!response.error) {
+            console.log('UPDATE RESPONSE: ', response)
+          }
+        })
+      })
+    },
+    addImage(){
+      $('#image')[0].click()
+      alert('here')
+    },
+    setUpFileUpload(event){
+      let files = event.target.files || event.dataTransfer.files
+      if(!files.length){
+        return false
+      }else{
+        this.file = files[0]
+        this.createFile(files[0])
+      }
+    },
+    createFile(file){
+      let fileReader = new FileReader()
+      fileReader.readAsDataURL(event.target.files[0])
+      this.upload()
+    },
+    upload(){
+      let formData = new FormData()
+      formData.append('file', this.file)
+      formData.append('file_url', this.file.name)
+      formData.append('account_id', this.user.userID)
+      $('#loading').css({'display': 'block'})
+      axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data.data !== null){
+          this.search()
+        }
+      })
     }
   }
 }
