@@ -6,7 +6,7 @@
         <p class="pb-0 mb-0">{{previewTypes[previewIndex]}} Preview</p>
         <i class="fas fa-chevron-right mb-0 pb-0" @click="changeView('increment')"></i>
       </div>
-      <div class="card-body preview_card_body">
+      <div class="card-body preview_card_body" :style="previewBodyStyle ? {...previewBodyStyle} : {}">
         <div class="col-sm-12 d-flex justify-content-start post_header p-0">
           <div>
             <i class="fas fa-user-circle avatar"></i>
@@ -106,7 +106,7 @@ import COLORS from 'src/assets/style/colors.js'
 import CONFIG from 'src/config.js'
 import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
 export default {
-  props: ['description', 'files', 'footer'],
+  props: ['description', 'files', 'footer', 'previewBodyStyle'],
   mounted(){
   },
   data() {

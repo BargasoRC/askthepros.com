@@ -1,5 +1,7 @@
 <template>
-  <div class="holder">
+  <div class="holder" :style="{
+    position: 'relative'
+  }">
     <h3 style="margin-top: 25px;">Customize Prior To Posting Channels</h3>
     <p style="color: gray">Review and edit your posts prior to us sending them to your social medial channels. Then, approve once done.</p>
 
@@ -23,7 +25,7 @@
     <Toggle :text="'LinkedIn'"></Toggle>
     <br>
     <br>
-    <span style="float: right" class="preview"><u><b>Preview</b></u></span>
+    <span style="float: right" class="preview" @click="preview()"><u><b>Preview</b></u></span>
     <roundedBtn
       :text="'Post'"
       class="button1"
@@ -35,6 +37,9 @@
       }"
     />
     <br>
+    <review
+    ref="preview"
+    ></review>
   </div>
 </template>
 
@@ -44,6 +49,7 @@ import Images from 'src/modules/generic/previewImage.vue'
 import Toggle from 'src/modules/generic/toggleSwitch.vue'
 import COLORS from 'src/assets/style/colors.js'
 import CONFIG from 'src/config.js'
+import review from './UserPreview.vue'
 export default {
   mounted(){
   },
@@ -71,9 +77,14 @@ export default {
   components: {
     Images,
     Toggle,
-    roundedBtn
+    roundedBtn,
+    review
   },
   methods: {
+    preview(){
+      console.log('[here]')
+      this.$refs.preview.show()
+    }
   }
 }
 </script>
@@ -141,6 +152,7 @@ textarea{
   bottom: 50px;
 }
 .preview{
-  color: $primary
+  color: $primary;
+  cursor: pointer;
 }
 </style>
