@@ -23,7 +23,14 @@
             </div>
             <div>
               <p class="mt-2"><b>Name</b></p>
-              <input type="text" class="inputField" v-model="name">
+              <p
+                class="mb-0 pb-0 requiredFieldError"
+                v-if="this.name == '' && isValid === false"
+              >{{
+                'Required Field'
+              }}</p>
+              <input type="text" class="inputField" :style="{border: isValid === false && this.name == ''? '1px solid red': ''}" v-model="name">
+
               <p class="mt-2"><b>Email</b></p>
               <p
                 class="mb-0 pb-0 requiredFieldError"
@@ -31,11 +38,25 @@
               >{{
                 isEmailValid? 'Invalid Email' : 'Required Field'
               }}</p>
-              <input type="email" class="inputField" :style="{border: isValid === false? '1px solid red': ''}" v-model="email">
+              <input type="email" class="inputField" :style="{border: isValid === false && this.email == ''? '1px solid red': ''}" v-model="email">
+              
               <p class="mt-2"><b>Subject</b></p>
-              <input type="email" class="inputField" v-model="subject">
+              <p
+                class="mb-0 pb-0 requiredFieldError"
+                v-if="this.subject == '' && isValid === false"
+              >{{
+                'Required Field'
+              }}</p>
+              <input type="text" class="inputField" :style="{border: isValid === false && this.subject == ''? '1px solid red': '1px solid'}" v-model="subject">
+
               <p class="mt-2"><b>Content</b></p>
-              <textarea class="mt-2 textArea" name="" id="" cols="30" rows="10" v-model="content"></textarea>
+              <p
+                class="mb-0 pb-0 requiredFieldError"
+                v-if="this.content == '' && isValid === false"
+              >{{
+                'Required Field'
+              }}</p>
+              <textarea class="mt-2 textArea" name="" id="" cols="30" rows="10" :style="{border: isValid === false && this.content === ''? '1px solid red': ''}" v-model="content"></textarea>
             </div>
             
             <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-center mt-2">
@@ -70,8 +91,8 @@ export default {
       email: '',
       subject: '',
       content: '',
-      isValid: true,
-      isEmailValid: true
+      isValid: true, // made this as the controller to control whether the form gets passed. Gets passed as long as true
+      isEmailValid: false
     }
   },
   components: {
@@ -96,7 +117,11 @@ export default {
     },
     send(event){
       if(this.validate()){
+        this.isValid = true
         // Insert Send Message Method Here
+      }else {
+        this.isValid = false
+        // Method here
       }
     }
   }
