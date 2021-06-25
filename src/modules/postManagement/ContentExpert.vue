@@ -38,6 +38,7 @@
             :style="{
               ...!this.isValid && description == '' ? {border: '1px solid red !important'} : '',
             }"
+            @keyup="charCount()"
             v-model="description"
           >
           </textarea>
@@ -45,6 +46,7 @@
             class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
             v-if="!this.isValid && description == ''"
           >Required Field</p>
+          <p style="text-align: right; font-size: 12px; color: gray;">Character count: {{character}}</p>
           <!-- <textarea class="form-control" placeholder="Add more details here" v-model="request.reason" rows="10"> -->
         </div>
 
@@ -90,17 +92,6 @@
         <div class="col-sm-12 d-flex justify-content-end mt-4 pt-2">
           <roundedBtn
             class="ml-1 mr-1"
-            :onClick="() => save('PUBLISH')"
-            :text="'Publish'"
-            :styles="{
-                backgroundColor: colors.primary,
-                outlineColor: colors.primary,
-                color: 'white',
-                width: '15'
-            }"
-          />
-          <roundedBtn
-            class="ml-1 mr-1"
             :onClick="() => save('DRAFT')"
             :text="'Save as Draft'"
             :styles="{
@@ -108,6 +99,17 @@
               color: 'white',
               width: '15%',
               outlineColor: colors.warning
+            }"
+          />
+          <roundedBtn
+            class="ml-1 mr-1"
+            :onClick="() => save('PUBLISH')"
+            :text="'Publish'"
+            :styles="{
+                backgroundColor: colors.darkPrimary,
+                outlineColor: colors.darkPrimary,
+                color: 'white',
+                width: '15'
             }"
           />
         </div>
@@ -148,7 +150,8 @@ export default {
       facebook: false,
       googleMyBusiness: false,
       linkedin: false,
-      isClearing: false
+      isClearing: false,
+      character: 0
     }
   },
   components: {
@@ -226,6 +229,10 @@ export default {
         return false
       }
       return true
+    },
+    charCount(){
+      console.log('charcounting..')
+      this.character = this.description.length
     }
   }
 }
@@ -243,9 +250,9 @@ export default {
   margin-top: 10%;
 }
 
-.form-control{
-  margin-bottom: 3%;
-}
+// .form-control{
+//   margin-bottom: 3%;
+// }
 
 .Row {
   display: table;
@@ -268,6 +275,7 @@ export default {
   background-color: $warning;
   text-align: center;
   word-break: break-word;
+  color: white;
 }
 
 .holder{
@@ -282,7 +290,6 @@ export default {
 textarea{
   padding: 2%;
   box-sizing: border-box;
-  border-color: $primary;
 }
 .scrolling-wrapper {
   overflow-x: scroll;
