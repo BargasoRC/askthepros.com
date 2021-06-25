@@ -5,46 +5,47 @@
 
     <div style="margin-top: 3%">
         <roundedBtn
-            :text="'Social Media Channels'"
-            class="button"
-            :styles="{
-                backgroundColor: colors.darkPrimary,
-                color: 'white',
-                outlineColor: colors.darkPrimary,                
-                width: '15%',
-                borderTopRightRadius: '0px !important',
-                borderBotttomLeftRadius: '0px !important',
-            }"
+          :text="'Social Media Channels'"
+          class="button"
+          :styles="{
+            backgroundColor: colors.darkPrimary,
+            color: 'white',
+            outlineColor: colors.darkPrimary,                
+            width: '15%',
+            borderTopRightRadius: '0px !important',
+            borderBotttomLeftRadius: '0px !important',
+          }"
+          :onClick="() => {}"
         />
         <roundedBtn
-            :onClick="branding"
-            :text="'Branding'"
-            class="button1"
-            :styles="{
-                backgroundColor: 'white',
-                outlineColor: colors.darkPrimary,
-                color: colors.darkPrimary,
-                width: '15%',
-                borderTopLeftRadius: '0px !important',
-                borderBottomLeftRadius: '0px !important',
-                borderTopRightRadius: '0px !important',
-                borderBottomRightRadius: '0px !important',
-                marginLeft: '-5px'
-            }"
+          :text="'Branding'"
+          class="button1"
+          :styles="{
+            backgroundColor: 'white',
+            outlineColor: colors.darkPrimary,
+            color: colors.darkPrimary,
+            width: '15%',
+            borderTopLeftRadius: '0px !important',
+            borderBottomLeftRadius: '0px !important',
+            borderTopRightRadius: '0px !important',
+            borderBottomRightRadius: '0px !important',
+            marginLeft: '-5px'
+          }"
+          :onClick="branding"
         />
         <roundedBtn
-            :onClick="automationSettings"
-            :text="'Automation Settings'"
-            class="button2"
-            :styles="{
-                backgroundColor: 'white',
-                outlineColor: colors.darkPrimary,
-                color: colors.darkPrimary,
-                width: '15%',
-                borderTopLeftRadius: '0px !important',
-                borderBottomLeftRadius: '0px !important',
-                marginLeft: '-5px'
-            }"
+          :text="'Automation Settings'"
+          class="button2"
+          :styles="{
+            backgroundColor: 'white',
+            outlineColor: colors.darkPrimary,
+            color: colors.darkPrimary,
+            width: '15%',
+            borderTopLeftRadius: '0px !important',
+            borderBottomLeftRadius: '0px !important',
+            marginLeft: '-5px'
+          }"
+          :onClick="automationSettings"
         />
     </div>
     <h3 style="margin-top: 20px;font-size: 20px;">Connect Your Social Media Channels.</h3>
@@ -98,12 +99,14 @@ export default {
     roundedBtn
   },
   methods: {
-    branding(){
-      ROUTER.push('/user/channels/branding')
+    branding(e) {
+      this.$router.push('/user/channels/branding')
     },
-    automationSettings(){
-      ROUTER.push('/user/channels/automation')
-    }
+    automationSettings(e) {
+      this.$router.push('/user/channels/automation')
+    },
+    connect(e) {},
+    disconnect(e) {}
   }
 }
 </script>
