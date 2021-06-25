@@ -27,13 +27,13 @@
               <p class="mt-2"><b>Email</b></p>
               <p
                 class="mb-0 pb-0 requiredFieldError"
-                v-if="!this.isValid == false"
+                v-if="this.isValid == false"
               >{{
                 isEmailValid? 'Invalid Email' : 'Required Field'
               }}</p>
-              <input type="email" class="inputField" v-model="email">
+              <input type="email" class="inputField" :style="{border: isValid === false? '1px solid red': ''}" v-model="email">
               <p class="mt-2"><b>Subject</b></p>
-              <input type="text" class="inputField" v-model="subject">
+              <input type="email" class="inputField" v-model="subject">
               <p class="mt-2"><b>Content</b></p>
               <textarea class="mt-2 textArea" name="" id="" cols="30" rows="10" v-model="content"></textarea>
             </div>

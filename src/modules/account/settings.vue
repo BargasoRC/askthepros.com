@@ -400,7 +400,8 @@ export default {
         postal_zip_code: ''
       }],
       username: '',
-      email: ''
+      email: '',
+      isValid: true
     }
   },
   components: {
