@@ -23,14 +23,19 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-12 p-0 mt-5 mb-3" v-if="(returnDescription !== '' && returnDescription) || (files && files.length) > 0">
+        <div class="col-sm-12 p-0 mt-5 mb-4" v-if="(returnDescription !== '' && returnDescription) || (files && (files ? files.length : 0)) > 0">
           <p class="mb-0 p-0">
             {{returnDescription}}
           </p>
         </div>
-        <div class="col-sm-12 p-0 d-flex justify-content-between file_container" v-if="(returnDescription !== '' && returnDescription) || files && files.length > 0">
+        <div class="col-sm-12" v-for="(el, ndx) in footer" :key="'footer' + ndx" v-if="(returnDescription !== '' || !returnDescription) && (files ? files.length : 0) > 0">
+          <p class="mb-0 p-0">
+            {{el}}
+          </p>
+        </div>
+        <div class="col-sm-12 p-0 d-flex justify-content-between file_container" v-if="(returnDescription !== '' && returnDescription) || files && (files ? files.length : 0) > 0">
           <div v-for="(el, ndx) in returnFiles" :key="ndx + String(el.id)"
-            :class="'file_width ' + (([1, 3, 4].includes(files.length) || files.length >= 5) && ndx === 0 ? 'whole_page ' : '') + (files.length >= 4 && ndx !== 0 ? 'compressed ' : '')" :style="{
+            :class="'file_width ' + (([1, 3, 4].includes((files ? files.length : 0)) || (files ? files.length : 0) >= 5) && ndx === 0 ? 'whole_page ' : '') + ( (files ? files.length : 0) >= 4 && ndx !== 0 ? 'compressed ' : '')" :style="{
               background: `url(${el.url})`,
               backgroundRepeat: 'no-repeat',
               backgroundSize: 'cover',
@@ -55,7 +60,7 @@
             }"></i> {{files.length - 4}}</b>
           </div>
         </div>
-        <div class="col-sm-12 p-0" v-if="(returnDescription === '' || !returnDescription) && files.length <= 0">
+        <div class="col-sm-12 p-0" v-if="(returnDescription === '' || !returnDescription) && (files ? files.length : 0) <= 0">
           <div class="col-sm-12 p-0 mt-5" :style="{
             height: '17px',
             backgroundColor: '#ededed'
@@ -73,7 +78,12 @@
             backgroundColor: '#ededed'
           }">
           </div>
-          <div class="col-sm-12 p-0 d-flex justify-content-between file_container">
+          <div class="col-sm-12 p-0" v-for="(el, ndx) in footer" :key="'footer' + ndx">
+            <p class="mb-0 p-0">
+              {{el}}
+            </p>
+          </div>
+          <div class="col-sm-12 mt-3 p-0 d-flex justify-content-between file_container">
             <div v-for="(el, ndx) in blank" :key="ndx + String(el.id)"
               :class="'file_width ' + ((blank.length === 3 || blank.length === 1) && ndx === 0 ? 'whole_page' : '')"
               :style="{
@@ -96,7 +106,7 @@ import COLORS from 'src/assets/style/colors.js'
 import CONFIG from 'src/config.js'
 import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
 export default {
-  props: ['description', 'files'],
+  props: ['description', 'files', 'footer'],
   mounted(){
   },
   data() {
@@ -120,9 +130,9 @@ export default {
       return this.description
     },
     returnFiles() {
-      return this.files.filter((el, index) => {
+      return (this.filter ? this.files.filter((el, index) => {
         return index <= 3
-      })
+      }) : [])
     }
   },
   methods: {

@@ -20,8 +20,8 @@ export default {
   data() {
     return {
       tableActions: [
-        {button: `<i class="fas fa-pencil-alt ml-2 mr-2" style="color: #01004E;"></i>`},
-        {button: `<i class="fas fa-pause ml-2 mr-2" style="color: #01009A !important;"></i>`},
+        {button: `<i class="fas fa-pencil-alt ml-2 mr-2" style="color: #01009A;"></i>`},
+        {button: `<i class="fas fa-pause ml-2 mr-2" style="color: #01004E !important;"></i>`},
         {button: `<i class="fas fa-trash-alt ml-2 mr-2" style="color: #FF0000;"></i>`}
       ],
       tableHeaders: [
@@ -29,7 +29,8 @@ export default {
         {title: 'Subscription', key: 'subscription', type: 'text'},
         {title: 'Active', key: 'active', type: 'text'},
         {title: 'Created', key: 'created_at', type: 'text'},
-        {title: 'Card Expiration', key: 'expiration', type: 'text'}
+        {title: 'Card Expiration', key: 'expiration', type: 'text'},
+        {title: 'Actions', type: 'action'}
       ],
       tableData: [
         {
