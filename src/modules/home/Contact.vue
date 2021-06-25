@@ -29,7 +29,7 @@
               >{{
                 'Required Field'
               }}</p>
-              <input type="text" class="inputField" :style="{border: isValid === false? '1px solid red': ''}" v-model="name">
+              <input type="text" class="inputField" :style="{border: isValid === false && this.name == ''? '1px solid red': ''}" v-model="name">
 
               <p class="mt-2"><b>Email</b></p>
               <p
@@ -38,7 +38,7 @@
               >{{
                 isEmailValid? 'Invalid Email' : 'Required Field'
               }}</p>
-              <input type="email" class="inputField" :style="{border: isValid === false? '1px solid red': ''}" v-model="email">
+              <input type="email" class="inputField" :style="{border: isValid === false && this.email == ''? '1px solid red': ''}" v-model="email">
               
               <p class="mt-2"><b>Subject</b></p>
               <p
@@ -47,7 +47,7 @@
               >{{
                 'Required Field'
               }}</p>
-              <input type="email" class="inputField" :style="{border: isValid === false? '1px solid red': ''}" v-model="subject">
+              <input type="text" class="inputField" :style="{border: isValid === false && this.subject == ''? '1px solid red': '1px solid'}" v-model="subject">
 
               <p class="mt-2"><b>Content</b></p>
               <p
@@ -56,7 +56,7 @@
               >{{
                 'Required Field'
               }}</p>
-              <textarea class="mt-2 textArea" name="" id="" cols="30" rows="10" :style="{border: isValid === false? '1px solid red': ''}" v-model="content"></textarea>
+              <textarea class="mt-2 textArea" name="" id="" cols="30" rows="10" :style="{border: isValid === false && this.content === ''? '1px solid red': ''}" v-model="content"></textarea>
             </div>
             
             <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-center mt-2">
