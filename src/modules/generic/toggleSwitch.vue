@@ -64,11 +64,11 @@ export default {
 }
 
 input:checked + .slider {
-  background-color: $primary;
+  background-color: $darkPrimary;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px $primary;
+  box-shadow: 0 0 1px $darkPrimary;
 }
 
 input:checked + .slider:before {
