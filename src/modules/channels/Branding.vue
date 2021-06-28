@@ -87,10 +87,10 @@ export default {
   data() {
     return {
       colors: COLORS,
-      count1: 0,
+      count: 0,
       count2: 0,
       count3: 0,
-      brand1: '',
+      brand: '',
       brand2: '',
       brand3: ''
     }
@@ -115,7 +115,7 @@ export default {
       console.log('save::::')
     },
     charCount(){
-      this.count1 = this.brand1.length
+      this.count = this.brand.length
     }
   }
 }
