@@ -401,8 +401,8 @@ export default {
       }],
       username: '',
       email: '',
-      isValid: true
-    }
+      isValid: true 
+    } 
   },
   components: {
     dialogueBtn,
