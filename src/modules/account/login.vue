@@ -288,7 +288,7 @@ export default {
 }
 .orSeparatorB {
   margin-top: 15px;
-  margin-bottom: 35px;
+  margin-bottom: 20px;
 }
 .LoginField {
   margin-bottom: 35px;
