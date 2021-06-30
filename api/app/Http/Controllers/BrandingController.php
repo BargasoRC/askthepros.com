@@ -16,7 +16,7 @@ class BrandingController extends Controller
     $data = $request->all();
     $data['code'] = $this->generateCode();
     if($this->checkIfExist($data) == false){
-      $this->model = new Plan();
+      $this->model = new Branding();
       $this->insertDB($data);
       return $this->response();       
     }else{
@@ -27,7 +27,7 @@ class BrandingController extends Controller
   }
 
   public function checkIfExist($data){
-    $result = Plan::where('account_id', '=', $data['account_id'])->get();
+    $result = Branding::where('account_id', '=', $data['account_id'])->get();
     return sizeof($result) > 0 ? true : false;
   }
 
