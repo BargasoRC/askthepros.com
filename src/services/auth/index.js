@@ -167,6 +167,9 @@ export default {
       }).catch(error => {
         console.log('ERRRROOORRR:: ', error)
       })
+
+      this.retrieveAccountProfileAndInformation(id)
+
       return true
     }else{
       this.tokenData.verifyingToken = false
@@ -175,6 +178,32 @@ export default {
       return false
     }
 
+  },
+  retrieveAccountProfileAndInformation(id) {
+    let condition = {
+      condition: [
+        {
+          value: id,
+          clause: '=',
+          column: 'account_id'
+        }
+      ],
+      offset: 0,
+      limit: 1
+    }
+    let vue = new Vue()
+    vue.APIRequest('account_informations/retrieve', condition, response => {
+      this.user.information = response.data[0]
+    }, error => {
+      error
+    })
+    vue.APIRequest('account_profiles/retrieve', condition, response => {
+      if(response.data.length > 0) {
+        this.user.profile = response.data[0]
+      }
+    }, error => {
+      error
+    })
   },
   deaunthenticate(){
     this.tokenData.loading = true

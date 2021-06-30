@@ -45,6 +45,7 @@
                 borderBottomLeftRadius: '0px !important',
                 marginLeft: '-5px'
             }"
+            :onClick="() => {}"
         />
     </div>
     <h3 style="margin-top: 20px;font-size: 20px;">Choose Review Settings.</h3>
@@ -60,7 +61,7 @@
     <p class="subheads" style="margin-top: 2%">You may update this setting as often as you like.</p>
     <roundedBtn
       :class="'btnn'"
-      :onClick="udpate"
+      :onClick="update"
       :text="'Update'"
       :styles="{
         backgroundColor: '#01004E',

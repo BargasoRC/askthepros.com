@@ -11,8 +11,8 @@
           :class="'imageContainer p-10'">
           <img :src="item.url" class="image" @click="selectImage(item.url)">
           <!-- <img :src="config.BACKEND_URL + item.url" class="image" @click="selectImage(item.url)"> -->
-          <label class="middle" @click="deleteImage(item.id)" v-if="item.status !== 'featured'">
-              <i class="fa fa-times-circle text"></i>
+          <label class="middle">
+            <i class="fa fa-times-circle text"  @click="deleteImage(item.id)" v-if="item.status !== 'featured'"></i>
           </label>
             <!-- <div v-if="imagesData.featured !== null">
           <p style="position:relative;font-weight:bold" :class="{'ImageLabel': item.url !== imagesData.featured[0].url}"><i class="fa fa-check" style="color: #cae166"></i> Featured</p>
@@ -145,6 +145,7 @@ export default {
         self.imagesList.push(temp)
       }
       reader.readAsDataURL(this.file)
+      this.$emit('filePreview', this.imagesList)
       // $('#loading').css({'display': 'block'})
       // axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
       //   $('#loading').css({'display': 'none'})
@@ -168,9 +169,22 @@ export default {
       })
     },
     deleteImage(id){
-      this.imagesList = this.imagesList.filter(el => {
+      this.imagesList = this.imagesList.filter((el, index) => {
+        if(el.id === id){
+          this.files.splice(index, 1)
+        }
         return el.id !== id
       })
+      this.$emit('filePreview', this.imagesList)
+      let formData = new FormData()
+      this.files.push(this.file)
+      this.fileUrls.push(this.file.name.replace(' ', '_'))
+      this.files.forEach((el, index) => {
+        formData.append('file' + index, el)
+      })
+      formData.append('file_url', this.fileUrls)
+      formData.append('account_id', this.user.userID)
+      this.$emit('formData', formData)
       // let params = {
       //   id: id
       // }
@@ -309,9 +323,10 @@ export default {
 .middle {
   transition: .5s ease;
   opacity: 0;
-  transform: translate(45%, -220%);
+  transform: translate(300%, -215%);
   -ms-transform: translate(-50%, -50%);
   text-align: center;
+
 }
 .product-image{
   width: 100%;

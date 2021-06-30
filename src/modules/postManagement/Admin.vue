@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container-fluid">
     <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-end p-0 mb-5 mt-5">
       <roundedBtn 
         :onClick="newPost"
@@ -19,13 +19,25 @@
         :activeSortingIndex="0"
         @changeSortEvent="() => {} "
         :grid="['list']"
+        :sortByStyle="{
+          background: '#01004E !important',
+          color: 'white'
+        }"
+        :dropDownStyle="{
+          border: '1px solid #01004E !important',
+          background: 'none !important',
+          color: '#272727 !important',
+          borderLeft: '0px',
+          outline: 'none !important',
+          boxShadow: 'none !important'
+        }"
       />
     </div>
     <div class="col-sm-12 col-md-12 col-lg-12 mt-5 p-0 pt-5">
       <DataTable 
         :tableActions="tableActions"
         :tableHeaders="tableHeaders"
-        :tableData="tableData"
+        :tableData="returnTableData"
         @onAction="onTableAction"
       />
     </div>
@@ -166,6 +178,14 @@ export default {
   },
   created() {
     this.retrievePosts()
+  },
+  computed: {
+    returnTableData() {
+      return this.tableData.filter((el, ndx) => {
+        el.channels = JSON.parse(el.channels).join(', ').replaceAll('_', ' ')
+        return el
+      })
+    }
   },
   methods: {
     newPost() {

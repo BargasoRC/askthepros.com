@@ -38,6 +38,7 @@
             :style="{
               ...!this.isValid && description == '' ? {border: '1px solid red !important'} : '',
             }"
+            @keyup="charCount()"
             v-model="description"
           >
           </textarea>
@@ -45,9 +46,10 @@
             class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
             v-if="!this.isValid && description == ''"
           >Required Field</p>
+          <p style="text-align: right; font-size: 12px; color: gray;">Character count: {{character}}</p>
           <!-- <textarea class="form-control" placeholder="Add more details here" v-model="request.reason" rows="10"> -->
         </div>
-
+        
         <div class="form-group">
           <label for="category"><b>Category</b></label>
           <roundedSelectBtn 
@@ -87,7 +89,7 @@
         <br>
         
         <b>File(s)</b>
-        <Images @formData="form" v-if="!isClearing"></Images>
+        <Images @formData="form" v-if="!isClearing" @filePreview="storeImages"></Images>
         <br>
         <br>
       </div>
@@ -95,29 +97,29 @@
         <div class="col-sm-12 d-flex justify-content-end mt-4 pt-2">
           <roundedBtn
             class="ml-1 mr-1"
-            :onClick="publish"
+            :onClick="() => save('DRAFT')"
+            :text="'Save as Draft'"
+            :styles="{
+              backgroundColor: colors.warning,
+              color: 'white',
+              width: '15%',
+              outlineColor: colors.warning
+            }"
+          />
+          <roundedBtn
+            class="ml-1 mr-1"
+            :onClick="() => save('PUBLISH')"
             :text="'Publish'"
             :styles="{
-                backgroundColor: colors.primary,
+                backgroundColor: colors.darkPrimary,
                 outlineColor: colors.primary,
                 color: 'white',
                 width: '15'
             }"
           />
-          <roundedBtn
-            class="ml-1 mr-1"
-            :onClick="draft"
-            :text="'Save as Draft'"
-            :styles="{
-                backgroundColor: colors.warning,
-                color: 'white',
-                width: '15%',
-                outlineColor: colors.warning
-            }"
-          />
         </div>
         <div class="col-sm-12 mt-5">
-          <preview></preview>
+          <preview :description="returnDescription" :files="returnImagesList"></preview>
         </div>
       </div>
     </div>
@@ -146,18 +148,7 @@ export default {
       industry: global.industry,
       selectedIndustry: null,
       global: global,
-      imagesList: [{
-        id: 1,
-        url: '/storage/image/asktheprooslogo.jpg'
-      },
-      {
-        id: 2,
-        url: '/storage/image/asktheprooslogo.jpg'
-      },
-      {
-        id: 3,
-        url: '/storage/image/asktheprooslogo.jpg'
-      }],
+      imagesList: [],
       errorMessage: null,
       idImage: null,
       file: null,
@@ -167,7 +158,8 @@ export default {
       facebook: false,
       googleMyBusiness: false,
       linkedin: false,
-      isClearing: false
+      isClearing: false,
+      character: 0
     }
   },
   components: {
@@ -182,13 +174,22 @@ export default {
       return this.industry.map(el => {
         return el.category
       })
+    },
+    returnImagesList() {
+      return this.imagesList
+    },
+    returnDescription() {
+      return this.description
     }
   },
   methods: {
+    storeImages(data) {
+      this.imagesList = data
+    },
     onSelect(data) {
       this.selectedIndustry = data.index
     },
-    publish() {
+    save(status) {
       if(this.validate()) {
         $('#loading').css({'display': 'block'})
         axios.post(this.config.BACKEND_URL + '/file/upload?token=' + AUTH.tokenData.token, this.file).then(response => {
@@ -204,7 +205,7 @@ export default {
             description: this.description,
             url: JSON.stringify(response.data.data),
             account_id: this.user.userID,
-            status: 'PUBLISHED',
+            status: status,
             channels: JSON.stringify(channels),
             parent: null,
             category: this.industry[this.selectedIndustry].category
@@ -220,6 +221,7 @@ export default {
               this.googleMyBusiness = false
               this.linkedin = false
               this.isClearing = false
+              this.imagesList = []
             }
           })
         }).catch(() => {
@@ -245,6 +247,10 @@ export default {
     form(data){
       this.file = data
       console.log('forms: ', data)
+    },
+    charCount(){
+      console.log('charcounting..')
+      this.character = this.description.length
     }
   }
 }
@@ -262,9 +268,9 @@ export default {
   margin-top: 10%;
 }
 
-.form-control{
-  margin-bottom: 3%;
-}
+// .form-control{
+//   margin-bottom: 3%;
+// }
 
 .Row {
   display: table;
@@ -287,6 +293,7 @@ export default {
   background-color: $warning;
   text-align: center;
   word-break: break-word;
+  color: white;
 }
 
 .holder{
@@ -301,7 +308,6 @@ export default {
 textarea{
   padding: 2%;
   box-sizing: border-box;
-  border-color: $primary;
 }
 .scrolling-wrapper {
   overflow-x: scroll;
