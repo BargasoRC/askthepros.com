@@ -9,7 +9,7 @@
           <h5 class="card-title">{{item.title}}</h5>
           <p class="card-text" v-html="item.description"></p>
           <dialogueBtn 
-            :onClick="connect(item)"
+            :onClick="(event) => connect(item)"
             :icon="'fas fa-cogs'"
             :icon_position="'right'"
             :text="'Connect'"
@@ -65,7 +65,7 @@
           <div class="col-8 col-sm-6">
             <div class="justify-content-start" style="margin-top: 25px">
               <roundedBtn 
-                :onClick="item"
+                :onClick="viewMore"
                 :text="'View more'"
                 :styles="{
                   backgroundColor: colors.darkPrimary,
@@ -75,7 +75,7 @@
             </div>
           </div>
           <div class="col-8 col-sm-6">
-            <p id="pager" class="justify-content-end" style="margin-right: 65px; margin-bottom: 35px">Page To Review: {{forReviewTotal}} <i class="fas fa-arrow-right" id="arrowNext" v-on:click="next()"></i></p>
+            <p id="pager" class="justify-content-end" style="margin-right: 65px; margin-bottom: 35px">Page To Review: {{forReviewTotal}} <i class="fas fa-arrow-right" id="arrowNext" v-on:click="preview()"></i></p>
           </div>
         </div>
       </div>
@@ -89,11 +89,9 @@
             Setup your branding now!
           </p>
           <dialogueBtn 
-            :onClick="connect({
-              payload: 'brand'
-            })"
+            :onClick="setup"
             :icon="'fas fa-cogs'"
-            :text="'Connect'"
+            :text="'Setup'"
             :icon_position="'right'"
             :styles="{
               backgroundColor: colors.darkPrimary,
@@ -141,6 +139,7 @@
 <script>
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import roundedBtn from 'src/modules/generic/roundedBtn'
+import AUTH from 'src/services/auth'
 import COLORS from 'src/assets/style/colors.js'
 import ROUTER from 'src/router'
 export default {
@@ -159,7 +158,9 @@ export default {
         payload: 'linkedin',
         description: 'Reap the benefits of automating your Google My Business postings. <br /><br />Setup and link your account now!'
       }],
-      colors: COLORS
+      colors: COLORS,
+      forReviewTotal: '',
+      user: AUTH.user
     }
   },
   components: {
@@ -167,7 +168,17 @@ export default {
     roundedBtn
   },
   methods: {
+    setup(){
+      ROUTER.push('channels/branding')
+    },
+    viewMore() {
+      this.$router.push(`/${this.user.type.toLowerCase()}/post_management`)
+    },
+    preview() {
+      this.$router.push(`/${this.user.type.toLowerCase()}/post_management`)
+    },
     connect(item){
+      console.log('Connecting...')
       // ROUTER.push('/' + item.payload)
     }
   }

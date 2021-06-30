@@ -1,78 +1,78 @@
 <template>
-  <div class="holder">
-    <h3 style="margin-top: 25px;font-size: 25px;">Social Media Integration</h3>
-    <p>Connect to your social media channels, then setup your branding and choose your automation.</p>
-
-    <div style="margin-top: 3%">
-        <roundedBtn
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-7">
+        <div class="col-sm-12">
+          <h3 style="margin-top: 25px;font-size: 25px;">Social Media Integration</h3>
+          <p class="subheads">Connect to your social media channels, then setup your branding and choose your automation.</p>
+        </div>
+        <div class="col-sm-12 mt-3">
+          <roundedBtn
             :onClick="connectMedia"
             :text="'Social Media Channels'"
             class="button"
             :styles="{
-                backgroundColor: 'white',
-                outlineColor: colors.darkPrimary,
-                color: 'white',
-                width: '15%',
-                borderTopRightRadius: '0px !important',
-                borderBotttomLeftRadius: '0px !important',
+              backgroundColor: 'white',
+              outlineColor: colors.darkPrimary,
+              color: 'white',
+              borderTopRightRadius: '0px !important',
+              borderBotttomLeftRadius: '0px !important',
             }"
-        />
-        <roundedBtn
+          />
+          <roundedBtn
             :text="'Branding'"
             class="button1"
             :styles="{
-                backgroundColor: colors.darkPrimary,
-                color: 'white',
-                outlineColor: colors.darkPrimary,
-                width: '15%',
-                borderTopLeftRadius: '0px !important',
-                borderBottomLeftRadius: '0px !important',
-                borderTopRightRadius: '0px !important',
-                borderBottomRightRadius: '0px !important',
-                marginLeft: '-5px'
+              backgroundColor: colors.darkPrimary,
+              color: 'white',
+              outlineColor: colors.darkPrimary,
+              borderTopLeftRadius: '0px !important',
+              borderBottomLeftRadius: '0px !important',
+              borderTopRightRadius: '0px !important',
+              borderBottomRightRadius: '0px !important',
+              marginLeft: '-5px'
             }"
-        />
-        <roundedBtn
+            :onClick="() => {}"
+          />
+          <roundedBtn
             :onClick="automationSettings"
             :text="'Automation Settings'"
             class="button2"
             :styles="{
-                backgroundColor: 'white',
-                outlineColor: colors.darkPrimary,
-                color: 'white',
-                width: '15%',
-                borderTopLeftRadius: '0px !important',
-                borderBottomLeftRadius: '0px !important',
-                marginLeft: '-5px'
+              backgroundColor: 'white',
+              outlineColor: colors.darkPrimary,
+              color: 'white',
+              borderTopLeftRadius: '0px !important',
+              borderBottomLeftRadius: '0px !important',
+              marginLeft: '-5px'
             }"
-        />
-    </div>
-    <div class="row">
-      <div class="column">
-        <h3 style="margin-top: 20px;font-size: 20px;">Add Branding.</h3>
-        <p>These “branding footers” will be added to the end of your social media posts.   They should be one or two short sentences and incorporate your brand name and location. </p>
-        <p class="pl-0 mt-5"><b>Branding Footer 1</b></p>
-        <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand1" @keyup="charCount()"></textarea>
-        <span class="char-count">Character Count: {{count1}}</span>
-        <p class="pl-0 mt-4"><b>Branding Footer 2</b></p>
-        <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand2"></textarea>
-        <span class="char-count">Character Count: {{count2}}</span>
-        <p class="pl-0 mt-4"><b>Branding Footer 3</b></p>
-        <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand3"></textarea>
-        <span class="char-count">Character Count: {{count3}}</span>
-        <roundedBtn
-          :class="'btnn'"
-          :onClick="save"
-          :text="'Save'"
-          :styles="{
-            backgroundColor: '#01004E',
-            color: 'white',
-          }"
-        />          
+          />
+        </div>
+        <div class="col-sm-12">
+          <h3 style="margin-top: 20px;font-size: 20px;">Add Branding.</h3>
+          <p class="subheads">These “branding footers” will be added to the end of your social media posts.   They should be one or two short sentences and incorporate your brand name and location. </p>
+          <p class="pl-0 mt-5"><b>Branding Footer 1</b></p>
+          <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand1" @keyup="charCount()"></textarea>
+          <span class="char-count">Character Count: {{count1}}</span>
+          <p class="pl-0 mt-4"><b>Branding Footer 2</b></p>
+          <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand2"></textarea>
+          <span class="char-count">Character Count: {{count2}}</span>
+          <p class="pl-0 mt-4"><b>Branding Footer 3</b></p>
+          <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand3"></textarea>
+          <span class="char-count">Character Count: {{count3}}</span>
+          <roundedBtn
+            :class="'btnn'"
+            :onClick="save"
+            :text="'Save'"
+            :styles="{
+              backgroundColor: '#01004E',
+              color: 'white',
+            }"
+          />
+        </div>
       </div>
-      <!-- Just remove the style if component is ready -->
-      <div class="column" style="background-color: #01004E; color: white; text-align: center;padding: 30px; border-top-right-radius: 22.5px; border-top-left-radius: 22.5px">
-        <span>Branding Preview here</span>
+      <div class="col-sm-5 mt-5">
+        <Preview :footer="returnBranding" />
       </div>
     </div>
   </div>
@@ -82,33 +82,40 @@
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import ROUTER from 'src/router'
+import Preview from 'src/modules/generic/preview.vue'
 export default {
   data() {
     return {
       colors: COLORS,
-      count1: 0,
+      count: 0,
       count2: 0,
       count3: 0,
-      brand1: '',
+      brand: '',
       brand2: '',
       brand3: ''
     }
   },
   components: {
-    roundedBtn
+    roundedBtn,
+    Preview
+  },
+  computed: {
+    returnBranding() {
+      return [this.brand1, this.brand2, this.brand3]
+    }
   },
   methods: {
     connectMedia(){
-      ROUTER.push('/user/channels')
+      this.$router.push('/user/channels')
     },
     automationSettings(){
-      ROUTER.push('/user/channels/automation')
+      this.$router.push('/user/channels/automation')
     },
     save(){
       console.log('save::::')
     },
     charCount(){
-      this.count1 = this.brand1.length
+      this.count = this.brand.length
     }
   }
 }
@@ -137,7 +144,7 @@ h3{
 }
 .textArea {
   width:100%;
-  border: 0.25px solid $gray;
+  border: 0.25px solid $darkPrimary;
   box-sizing: border-box;
   border-radius: 5px;
   padding: 10px;
@@ -168,5 +175,8 @@ h3{
 
 .btnn {
   margin-top: 40px;
+}
+.subheads{
+  color: $text;
 }
 </style>

@@ -288,7 +288,7 @@ export default {
 }
 .orSeparatorB {
   margin-top: 15px;
-  margin-bottom: 35px;
+  margin-bottom: 20px;
 }
 .LoginField {
   margin-bottom: 35px;
@@ -313,8 +313,10 @@ export default {
   box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
   -webkit-box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
   -moz-box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
+  max-height: 42.5rem;
 }
-.LoginCardBody {}
+.LoginCardBody {
+}
 .LoginContainer {
   min-height: 85vh;
 }
@@ -330,12 +332,12 @@ export default {
 }
 .LoginCardContainer {
   background: none;
-  max-height: 65vh;
 }
 
 @media (max-width: 500px) {
   .LoginCard {
     width: 100%;
+    max-height: 50.5rem;
   }
   .QouteText {
   font-size: 30px;

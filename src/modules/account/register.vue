@@ -19,13 +19,14 @@
               <b>Register with AskThePros</b>
             </div>
             <div>
+              <p class="mt-2"><b>Username</b></p>
               <p
                 class="mb-2 pb-0 errorMessage"
                 v-if="errorMessage != ''"
               >{{errorMessage}}</p>
               <roundedInput 
                 :type="'text'"
-                :placeholder="'Username'"
+                :placeholder="'Your username here...'"
                 :class="!this.isValid && username == '' ? 'mb-0 ' : ' registrationField'"
                 :styles="{
                   border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
@@ -36,6 +37,7 @@
                 class="mb-0 pb-0 requiredFieldError"
                 v-if="!this.isValid && username == ''"
               >Required Field</p>
+              <p class="mt-2"><b>Email</b></p>
               <roundedInput 
                 :type="'text'"
                 :placeholder="'Email Address'"
@@ -54,9 +56,10 @@
                 :
                   'Required Field'
               }}</p>
+              <p class="mt-2"><b>Password</b></p>
               <roundedInput 
                 :type="'password'"
-                :placeholder="'Password'"
+                :placeholder="'Your password here...'"
                 :class="!this.isValid && (password == '' || password != cpassword || passwordRequirements != '') ? 'mb-0 ' : ' registrationField'"
                 :styles="{
                   border: !this.isValid && (password == '' || password != cpassword || passwordRequirements != '') ? '1px solid red !important' : 'none',
@@ -78,9 +81,10 @@
                   :
                   'Required Field'
               }}</p>
+              <p class="mt-2"><b>Confirm Password</b></p>
               <roundedInput 
                 :type="'password'"
-                :placeholder="'Confirm Password'"
+                :placeholder="'Retype Password'"
                 :class="!this.isValid && (password == '' || password != cpassword || passwordRequirements != '') ? 'mb-0 ' : ' registrationField'"
                 :styles="{
                   border: !this.isValid && (password == '' || password != cpassword || passwordRequirements != '') ? '1px solid red !important' : 'none',
@@ -102,6 +106,7 @@
                   :
                   'Required Field'
               }}</p>
+              <p class="mt-2"><b>Industry</b></p>
               <roundedSelectBtn 
                 :placeholder="'Select Industry'"
                 :items="returnIndustry"
@@ -243,7 +248,8 @@ export default {
       isValid: true,
       isEmailValid: true,
       passwordRequirements: '',
-      colors: COLORS
+      colors: COLORS,
+      user: AUTH.user
     }
   },
   components: {
@@ -296,7 +302,7 @@ export default {
               }
             }else if(response.data !== null){
               let parameters = {
-                account_id: 2, // sample account_id. must be response.data.account_id
+                account_id: this.user.userID, // sample account_id. must be response.data.account_id
                 name: this.username,
                 email: this.email,
                 addition_informations: JSON.stringify({industry: this.industry[this.selectedIndustry].category})

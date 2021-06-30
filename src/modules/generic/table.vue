@@ -10,7 +10,7 @@
     <tbody>
       <tr v-for="(data, index) in tableData" :key="'table_data' + index">
         <th v-for="(item, ndx) in tableHeaders" :key="'td' + ndx" class="font-weight-normal">
-            <div class="font-weight-bold" v-if="isBold === false" v-bind:style="{ color : color}">
+            <!-- <div class="font-weight-bold" v-if="isBold === false" v-bind:style="{ color : color}">
             {{
             returnData(data, item)
             }}
@@ -19,7 +19,8 @@
             {{
             returnData(data, item)
             }}
-            </div>
+            </div> -->
+            {{returnData(data, item)}}
           <div class="font-weight-normal d-flex justify-content-center">
             <span v-for="(btn, i) in tableActions" :key="'btn' + i" v-html="btn.button" v-if="item.type === 'action'" @click="item.type === 'action' ? buttonAction(i, index) : () => {}"></span>
           </div>

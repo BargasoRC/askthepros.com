@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-sm-8">
+      <div class="col-sm-7">
         <div class="card">
           <div class="container">
             <p>Hi {{user.username}}! You can fill up contents of your post by using the field editor
@@ -17,6 +17,9 @@
             placeholder="Post Title" 
             :style="{
               ...!this.isValid && title == '' ? {border: '1px solid red !important'} : '',
+              ...{
+                height: '45px'
+              }
             }"
             v-model="title"
           >
@@ -35,6 +38,7 @@
             :style="{
               ...!this.isValid && description == '' ? {border: '1px solid red !important'} : '',
             }"
+            @keyup="charCount()"
             v-model="description"
           >
           </textarea>
@@ -42,9 +46,10 @@
             class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
             v-if="!this.isValid && description == ''"
           >Required Field</p>
+          <p style="text-align: right; font-size: 12px; color: gray;">Character count: {{character}}</p>
           <!-- <textarea class="form-control" placeholder="Add more details here" v-model="request.reason" rows="10"> -->
         </div>
-
+        
         <div class="form-group">
           <label for="category"><b>Category</b></label>
           <roundedSelectBtn 
@@ -65,6 +70,7 @@
               width: 'calc(100% - 30px)'
             }"
             @onSelect="onSelect"
+            v-if="!isClearing"
           />
           <p
             class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
@@ -75,45 +81,45 @@
         <div class="form-group" style="margin-top: 3%">
           <label for="post_setting"><b>Post Setting</b></label>
           <div class="Row row">
-            <div class="Column col-4" style="margin-left: -20%"><Toggle :text="'Facebook'" v-model="facebook"></Toggle></div>
-            <div class="Column col-5"><Toggle :text="'Google My Business'" v-model="googleMyBusiness"></Toggle></div>
-            <div class="Column col-3"><Toggle :text="'Linkedin'" v-model="linkedin"></Toggle></div>
+            <div class="Column col-4" style="margin-left: -20%"><Toggle :text="'Facebook'" v-model="facebook" v-if="!isClearing"/></div>
+            <div class="Column col-5"><Toggle :text="'Google My Business'" v-model="googleMyBusiness" v-if="!isClearing"/></div>
+            <div class="Column col-3"><Toggle :text="'Linkedin'" v-model="linkedin" v-if="!isClearing"/></div>
           </div>
         </div>
         <br>
         
-        <h5>Files:</h5>
-        <Images @formData="form"></Images>
+        <b>File(s)</b>
+        <Images @formData="form" v-if="!isClearing" @filePreview="storeImages"></Images>
         <br>
         <br>
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-5">
         <div class="col-sm-12 d-flex justify-content-end mt-4 pt-2">
           <roundedBtn
             class="ml-1 mr-1"
-            :onClick="publish"
+            :onClick="() => save('DRAFT')"
+            :text="'Save as Draft'"
+            :styles="{
+              backgroundColor: colors.warning,
+              color: 'white',
+              width: '15%',
+              outlineColor: colors.warning
+            }"
+          />
+          <roundedBtn
+            class="ml-1 mr-1"
+            :onClick="() => save('PUBLISH')"
             :text="'Publish'"
             :styles="{
-                backgroundColor: colors.primary,
+                backgroundColor: colors.darkPrimary,
                 outlineColor: colors.primary,
                 color: 'white',
                 width: '15'
             }"
           />
-          <roundedBtn
-            class="ml-1 mr-1"
-            :onClick="draft"
-            :text="'Save as Draft'"
-            :styles="{
-                backgroundColor: colors.warning,
-                color: 'white',
-                width: '15%',
-                outlineColor: colors.warning
-            }"
-          />
         </div>
         <div class="col-sm-12 mt-5">
-          <preview></preview>
+          <preview :description="returnDescription" :files="returnImagesList"></preview>
         </div>
       </div>
     </div>
@@ -142,18 +148,7 @@ export default {
       industry: global.industry,
       selectedIndustry: null,
       global: global,
-      imagesList: [{
-        id: 1,
-        url: '/storage/image/asktheprooslogo.jpg'
-      },
-      {
-        id: 2,
-        url: '/storage/image/asktheprooslogo.jpg'
-      },
-      {
-        id: 3,
-        url: '/storage/image/asktheprooslogo.jpg'
-      }],
+      imagesList: [],
       errorMessage: null,
       idImage: null,
       file: null,
@@ -162,7 +157,9 @@ export default {
       description: '',
       facebook: false,
       googleMyBusiness: false,
-      linkedin: false
+      linkedin: false,
+      isClearing: false,
+      character: 0
     }
   },
   components: {
@@ -177,17 +174,25 @@ export default {
       return this.industry.map(el => {
         return el.category
       })
+    },
+    returnImagesList() {
+      return this.imagesList
+    },
+    returnDescription() {
+      return this.description
     }
   },
   methods: {
+    storeImages(data) {
+      this.imagesList = data
+    },
     onSelect(data) {
       this.selectedIndustry = data.index
     },
-    publish() {
+    save(status) {
       if(this.validate()) {
-        // console.log('publishing....', this.facebook, this.googleMyBusiness, this.linkedin)
         $('#loading').css({'display': 'block'})
-        axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, this.file).then(response => {
+        axios.post(this.config.BACKEND_URL + '/file/upload?token=' + AUTH.tokenData.token, this.file).then(response => {
           $('#loading').css({'display': 'none'})
           console.log('IMAGE HERE: ', response)
           $('#loading').css({'display': 'block'})
@@ -198,32 +203,27 @@ export default {
           let parameter = {
             title: this.title,
             description: this.description,
-            url: response.data.data,
+            url: JSON.stringify(response.data.data),
             account_id: this.user.userID,
-            status: 'PUBLISHED',
+            status: status,
             channels: JSON.stringify(channels),
             parent: null,
             category: this.industry[this.selectedIndustry].category
           }
+          this.isClearing = true
           this.APIRequest('post/create', parameter).then(response => {
             $('#loading').css({'display': 'none'})
-            console.log('RESPONSE: ', response)
-            if(response.error !== null){
+            if(response.error === null){
               this.title = ''
               this.description = ''
               this.selectedIndustry = null
               this.facebook = false
               this.googleMyBusiness = false
               this.linkedin = false
+              this.isClearing = false
+              this.imagesList = []
             }
           })
-          // this.hasError = false
-          // this.retrieveImage()
-          // this.$parent.retrieveFeaturedImages()
-          // if(response.data.data !== null){
-          //   this.retrieveImage()
-          //   this.$parent.retrieveFeaturedImages()
-          // }
         }).catch(() => {
           $('#loading').css({'display': 'none'})
         })
@@ -247,6 +247,10 @@ export default {
     form(data){
       this.file = data
       console.log('forms: ', data)
+    },
+    charCount(){
+      console.log('charcounting..')
+      this.character = this.description.length
     }
   }
 }
@@ -264,9 +268,9 @@ export default {
   margin-top: 10%;
 }
 
-.form-control{
-  margin-bottom: 3%;
-}
+// .form-control{
+//   margin-bottom: 3%;
+// }
 
 .Row {
   display: table;
@@ -289,6 +293,7 @@ export default {
   background-color: $warning;
   text-align: center;
   word-break: break-word;
+  color: white;
 }
 
 .holder{
@@ -303,7 +308,6 @@ export default {
 textarea{
   padding: 2%;
   box-sizing: border-box;
-  border-color: $primary;
 }
 .scrolling-wrapper {
   overflow-x: scroll;

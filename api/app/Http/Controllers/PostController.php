@@ -61,6 +61,18 @@ class PostController extends APIController
         return $this->response();
     }
 
+    public function retrieveByUser(Request $request) {
+      $data = $request->all();
+      $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
+              ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
+              ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
+              ->where('posts.account_id', '=', $data['account_id'])
+              ->get();
+      $this->response['data'] = $result;
+      $this->response['error'] = null;
+      return $this->response();
+  }
+
     public function generateCode($db){
         $code = substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 32);
         $codeExist = $db::where('code', '=', $code)->get();

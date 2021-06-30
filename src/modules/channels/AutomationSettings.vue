@@ -1,7 +1,7 @@
 <template>
   <div class="holder">
     <h3 style="margin-top: 25px;font-size: 25px;">Social Media Integration</h3>
-    <p>Connect to your social media channels, then setup your branding and choose your automation.</p>
+    <p class="subheads">Connect to your social media channels, then setup your branding and choose your automation.</p>
 
     <div style="margin-top: 3%">
         <roundedBtn
@@ -45,10 +45,11 @@
                 borderBottomLeftRadius: '0px !important',
                 marginLeft: '-5px'
             }"
+            :onClick="() => {}"
         />
     </div>
     <h3 style="margin-top: 20px;font-size: 20px;">Choose Review Settings.</h3>
-    <p>You can review and edit your posts prior to us sending them to your social media channels.</p>
+    <p class="subheads">You can review and edit your posts prior to us sending them to your social media channels.</p>
     <div style="margin-left: 2%;margin-top: 2%">
       <input type="radio" id="review" name="automation" value="review">
       <label for="review">Review</label>
@@ -57,10 +58,10 @@
       <label for="autopost">Autopost</label>
       <p class="desc">Autopost – We’ll automatically send your post to your connected channels.</p>
     </div>
-    <p style="margin-top: 2%">You may update this setting as often as you like.</p>
+    <p class="subheads" style="margin-top: 2%">You may update this setting as often as you like.</p>
     <roundedBtn
       :class="'btnn'"
-      :onClick="udpate"
+      :onClick="update"
       :text="'Update'"
       :styles="{
         backgroundColor: '#01004E',
@@ -133,5 +134,7 @@ label {
   color: $text;
   margin-left: 2%;
 }
-
+.subheads{
+  color: $text;
+}
 </style>
