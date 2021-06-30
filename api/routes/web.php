@@ -121,3 +121,11 @@ Route::post($route . '/upload', 'FileUploadController@upload');
 
 Route::get('/login/{provider}/redirect', 'SocialController@redirect');
 Route::get('/social_media/test', 'SocialMediaController@post');
+
+$route = env('PACKAGE_ROUTE', '').'/plans/';
+$controller = 'PlanController@';
+Route::post($route.'create', $controller."create");
+Route::post($route.'update', $controller."update");
+Route::post($route.'retrieve', $controller."retrieve");
+Route::post($route.'delete', $controller."delete");
+Route::get($route.'test', $controller."test");
