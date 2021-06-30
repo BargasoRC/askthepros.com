@@ -22,6 +22,7 @@
               <p>We would love to hear from you!</p>
             </div>
             <div>
+              <!-- Name -->
               <p class="mt-2"><b>Name</b></p>
               <p
                 class="mb-0 pb-0 requiredFieldError"
@@ -30,16 +31,22 @@
                 'Required Field'
               }}</p>
               <input type="text" class="inputField" :style="{border: isValid === false && this.name == ''? '1px solid red': ''}" v-model="name">
-
+              <!-- Email -->
               <p class="mt-2"><b>Email</b></p>
               <p
                 class="mb-0 pb-0 requiredFieldError"
-                v-if="this.isValid == false"
+                v-if="this.isValid == false && this.email == ''"
               >{{
-                isEmailValid? 'Invalid Email' : 'Required Field'
+                'Required Field' 
+              }}</p>
+              <p
+                class="mb-0 pb-0 requiredFieldError"
+                v-if="this.isValid == false && this.email != ''"
+              >{{
+                this.isEmailValid ? '' : 'Invalid Email'
               }}</p>
               <input type="email" class="inputField" :style="{border: isValid === false && this.email == ''? '1px solid red': ''}" v-model="email">
-              
+              <!-- Subject -->
               <p class="mt-2"><b>Subject</b></p>
               <p
                 class="mb-0 pb-0 requiredFieldError"
@@ -48,7 +55,7 @@
                 'Required Field'
               }}</p>
               <input type="text" class="inputField" :style="{border: isValid === false && this.subject == ''? '1px solid red': '1px solid'}" v-model="subject">
-
+              <!-- Content -->
               <p class="mt-2"><b>Content</b></p>
               <p
                 class="mb-0 pb-0 requiredFieldError"
@@ -92,7 +99,7 @@ export default {
       subject: '',
       content: '',
       isValid: true, // made this as the controller to control whether the form gets passed. Gets passed as long as true
-      isEmailValid: false
+      isEmailValid: true
     }
   },
   components: {
@@ -116,12 +123,13 @@ export default {
       return true
     },
     send(event){
-      if(this.validate()){
+      if(this.validate() && this.name !== '' && this.subject !== '' && this.content !== ''){
         this.isValid = true
-        // Insert Send Message Method Here
+        this.isEmailValid = true
+        // Send Message Method Here
       }else {
         this.isValid = false
-        // Method here
+        // Another method here
       }
     }
   }

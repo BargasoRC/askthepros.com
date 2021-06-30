@@ -33,11 +33,11 @@
                 }"
                 v-model="username"
               />
-              <p class="mt-2"><b>Email</b></p>
               <p
                 class="mb-0 pb-0 requiredFieldError"
                 v-if="!this.isValid && username == ''"
               >Required Field</p>
+              <p class="mt-2"><b>Email</b></p>
               <roundedInput 
                 :type="'text'"
                 :placeholder="'Email Address'"
@@ -56,10 +56,10 @@
                 :
                   'Required Field'
               }}</p>
-              <p class="mt-2"><b>Your password here...</b></p>
+              <p class="mt-2"><b>Password</b></p>
               <roundedInput 
                 :type="'password'"
-                :placeholder="'Password'"
+                :placeholder="'Your password here...'"
                 :class="!this.isValid && (password == '' || password != cpassword || passwordRequirements != '') ? 'mb-0 ' : ' registrationField'"
                 :styles="{
                   border: !this.isValid && (password == '' || password != cpassword || passwordRequirements != '') ? '1px solid red !important' : 'none',

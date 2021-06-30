@@ -122,3 +122,35 @@ Route::post($route . '/upload', 'FileUploadController@upload');
 
 Route::get('/login/{provider}/redirect', 'SocialController@redirect');
 Route::get('/social_media/test', 'SocialMediaController@post');
+
+$route = env('PACKAGE_ROUTE', '').'/plans/';
+$controller = 'PlanController@';
+Route::post($route.'create', $controller."create");
+Route::post($route.'update', $controller."update");
+Route::post($route.'retrieve', $controller."retrieve");
+Route::post($route.'delete', $controller."delete");
+Route::get($route.'test', $controller."test");
+
+
+$route = env('PACKAGE_ROUTE', '').'/billins/';
+$controller = 'BillingController@';
+Route::post($route.'retrieve', $controller."retrieve");
+Route::get($route.'test', $controller."test");
+
+
+$route = env('PACKAGE_ROUTE', '').'/brandings/';
+$controller = 'BrandingController@';
+Route::post($route.'create', $controller."create");
+Route::post($route.'update', $controller."update");
+Route::post($route.'retrieve', $controller."retrieve");
+Route::post($route.'delete', $controller."delete");
+Route::get($route.'test', $controller."test");
+
+
+$route = env('PACKAGE_ROUTE', '').'/pages/';
+$controller = 'PageController@';
+Route::post($route.'create', $controller."create");
+Route::post($route.'update', $controller."update");
+Route::post($route.'retrieve', $controller."retrieve");
+Route::post($route.'delete', $controller."delete");
+Route::get($route.'test', $controller."test");
