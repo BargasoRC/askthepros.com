@@ -104,6 +104,126 @@
     
   </div>
 </template>
+<script>
+import dialogueBtn from 'src/modules/generic/dialogueBtn'
+import roundedBtn from 'src/modules/generic/roundedBtn'
+import AUTH from 'src/services/auth'
+import COLORS from 'src/assets/style/colors.js'
+import ROUTER from 'src/router'
+export default {
+  data() {
+    return {
+      socialMediaBtns: [{
+        title: 'Google My Business',
+        payload: 'google',
+        description: 'Reap the benefits of automating your Google My Business postings. <br /><br />Setup and link your account now!'
+      }, {
+        title: 'Facebook',
+        payload: 'facebook',
+        description: 'Reap the benefits of automating your Google My Business postings. <br /><br />Setup and link your account now!'
+      }, {
+        title: 'Linkedin',
+        payload: 'linkedin',
+        description: 'Reap the benefits of automating your Google My Business postings. <br /><br />Setup and link your account now!'
+      }],
+      colors: COLORS,
+      forReviewTotal: '',
+      user: AUTH.user
+    }
+  },
+  components: {
+    dialogueBtn,
+    roundedBtn
+  },
+  created() {
+    this.connectCallback()
+  },
+  methods: {
+    setup(){
+      ROUTER.push('channels/branding')
+    },
+    viewMore() {
+      this.$router.push(`/${this.user.type.toLowerCase()}/post_management`)
+    },
+    preview() {
+      this.$router.push(`/${this.user.type.toLowerCase()}/post_management`)
+    },
+    connect(item){
+      if(item.payload === 'google') {
+        this.connectToGmail()
+      }else if(item.payload === 'facebook') {
+        this.connectToFb()
+      }else if(item.payload === 'linkedin') {
+        this.connectToLinkedIn()
+      }
+    },
+    connectToGmail() {
+      console.log('gmail login:::')
+      $('#loading').css({'display': 'block'})
+      localStorage.setItem('connect_with', 'google')
+      this.APIRequest('social_lite/authenticate/google_connect/redirect', {}, response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data && response.data.url) {
+          console.log('Authentication with google response: ', response)
+          window.location.href = response.data.url
+        }
+      }, error => {
+        $('#loading').css({'display': 'none'})
+        console.log('Authentication with google error! ', error)
+      })
+    },
+    connectToFb() {
+      $('#loading').css({'display': 'block'})
+      console.log('facebook login:::')
+      localStorage.setItem('connect_with', 'facebook')
+      this.APIRequest('social_lite/authenticate/facebook_connect/redirect', {}, response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data && response.data.url) {
+          console.log('Authentication with facebook response: ', response)
+          window.location.href = response.data.url
+        }
+      }, error => {
+        $('#loading').css({'display': 'none'})
+        console.log('Authentication with facebook error! ', error)
+      })
+    },
+    connectToLinkedIn() {
+      $('#loading').css({'display': 'block'})
+      console.log('linkedin login:::')
+      localStorage.setItem('connect_with', 'linkedin')
+      this.APIRequest('social_lite/authenticate/linkedin_connect/redirect', {}, response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data && response.data.url) {
+          console.log('Authentication with linkedin response: ', response)
+          window.location.href = response.data.url
+        }
+      }, error => {
+        $('#loading').css({'display': 'none'})
+        console.log('Authentication with linkedin error! ', error)
+      })
+    },
+    connectCallback() {
+      if(new RegExp(/\?.+=.*/g).test(window.location.href) && localStorage.getItem('connect_with')) {
+        let url = window.location.href
+        let query = url.substring(url.indexOf('?') + 1)
+        $('#loading').css({'display': 'block'})
+        this.APIRequest(`social_lite/account/${localStorage.getItem('connect_with')}/connect?` + query, {}, response => {
+          $('#loading').css({'display': 'none'})
+          console.log('connect response: ', response)
+          localStorage.removeItem('connect_with')
+          this.$router.push(`/${this.user.type.toLowerCase()}/dashboard`)
+        }, error => {
+          $('#loading').css({'display': 'none'})
+          this.$router.push(`/${this.user.type.toLowerCase()}/dashboard`)
+          localStorage.removeItem('connect_with')
+          console.log('Verifying authentication error! ', error)
+        })
+      }
+    }
+  }
+}
+</script>
+
 <style scoped lang="scss" scoped>
 @import "~assets/style/colors.scss";
 .holder{
@@ -136,51 +256,3 @@
   padding: 7px
 }
 </style>
-<script>
-import dialogueBtn from 'src/modules/generic/dialogueBtn'
-import roundedBtn from 'src/modules/generic/roundedBtn'
-import AUTH from 'src/services/auth'
-import COLORS from 'src/assets/style/colors.js'
-import ROUTER from 'src/router'
-export default {
-  data() {
-    return {
-      socialMediaBtns: [{
-        title: 'Google My Business',
-        payload: 'google',
-        description: 'Reap the benefits of automating your Google My Business postings. <br /><br />Setup and link your account now!'
-      }, {
-        title: 'Facebook',
-        payload: 'facebook',
-        description: 'Reap the benefits of automating your Google My Business postings. <br /><br />Setup and link your account now!'
-      }, {
-        title: 'Linkedin',
-        payload: 'linkedin',
-        description: 'Reap the benefits of automating your Google My Business postings. <br /><br />Setup and link your account now!'
-      }],
-      colors: COLORS,
-      forReviewTotal: '',
-      user: AUTH.user
-    }
-  },
-  components: {
-    dialogueBtn,
-    roundedBtn
-  },
-  methods: {
-    setup(){
-      ROUTER.push('channels/branding')
-    },
-    viewMore() {
-      this.$router.push(`/${this.user.type.toLowerCase()}/post_management`)
-    },
-    preview() {
-      this.$router.push(`/${this.user.type.toLowerCase()}/post_management`)
-    },
-    connect(item){
-      console.log('Connecting...')
-      // ROUTER.push('/' + item.payload)
-    }
-  }
-}
-</script>

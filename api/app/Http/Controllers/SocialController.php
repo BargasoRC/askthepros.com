@@ -4,19 +4,29 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Increment\Account\Models\Account;
+use App\SocialAuths;
 use Socialite;
 class SocialController extends APIController
 {
     public function redirect($provider)
     {
       $scopes = [];
-      if(strtolower($provider) == 'facebook') {
+      $_provider = '';
+      $redirect_uri = '';
+      if(strtolower($provider) == 'facebook' || strtolower($provider) == 'facebook_connect') {
         $scopes = ["publish_video", "pages_manage_posts", "pages_read_engagement", "pages_show_list"];
-      }else if(strtolower($provider) == 'linkedin') {
+        $_provider = 'facebook';
+        $redirect_uri = $provider == 'facebook' ? env('FACEBOOK_URL') : env('CONNECT_CALLBACK_URL');
+      }else if(strtolower($provider) == 'linkedin' || strtolower($provider) == 'linkedin_connect') {
         $scopes = ["r_emailaddress", "r_liteprofile", "w_member_social"];
+        $_provider = 'linkedin';
+        $redirect_uri = $provider == 'linkedin' ? env('LINKEDIN_URL') : env('CONNECT_CALLBACK_URL');
+      }else if(strtolower($provider) == 'google' || strtolower($provider) == 'google_connect') {
+        $_provider = 'google';
+        $redirect_uri = $provider == 'google' ? env('GOOGLE_URL') : env('CONNECT_CALLBACK_URL');
       }
 
-      $result = Socialite::with($provider)->scopes($scopes)->redirect()->getTargetUrl();
+      $result = Socialite::driver($_provider)->with(['redirect_uri' => $redirect_uri])->scopes($scopes)->redirect()->getTargetUrl();
       $this->response['data'] = array('url' => $result);
       return $this->response();
     }
@@ -48,6 +58,35 @@ class SocialController extends APIController
         'avatar' => $user->getAvatar(),
         'login_type' => 'social_lite',
       ]);
+    }
+
+    public function connect($provider) {
+      $redirect_uri = '';
+      if(strtolower($provider) == 'facebook') {
+        $redirect_uri = env('CONNECT_CALLBACK_URL');
+      }else if(strtolower($provider) == 'linkedin' || strtolower($provider) == 'linkedin_connect') {
+        $redirect_uri = env('CONNECT_CALLBACK_URL');
+      }else if(strtolower($provider) == 'google' || strtolower($provider) == 'google_connect') {
+        $redirect_uri = env('CONNECT_CALLBACK_URL');
+      }
+
+      $result = Socialite::driver($provider)->with(['redirect_uri' => $redirect_uri])->stateless()->user();
+      // $social_auth = SocialAuths::firstOrNew(['account_id' => $id, 'type' => $provider]);
+      // $token = $user->token;
+      // if($social_auth->new){
+      //   $social_auth->token = $token;
+      //   $social_auth->save();
+      // } else {
+      //   $social_auth->id = $id;
+      //   $social_auth->type = $provider;
+      //   $social_auth->token = $token;
+      //   $social_auth->email = $user->getEmail() ? $user->getEmail() : "";
+      //   $social_auth->details = json_encode($user);
+      //   $social_auth->save();
+      // }
+
+      $this->response['data'] = $user;
+      return $this->response();
     }
 
     public function checkToken(Request $request)
