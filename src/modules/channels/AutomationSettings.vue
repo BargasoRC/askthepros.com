@@ -77,7 +77,8 @@ import ROUTER from 'src/router'
 export default {
   data() {
     return {
-      colors: COLORS
+      colors: COLORS,
+      selected: 'autopost'
     }
   },
   components: {
