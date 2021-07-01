@@ -59,6 +59,7 @@
       <p class="desc">Autopost – We’ll automatically send your post to your connected channels.</p>
     </div>
     <p class="subheads" style="margin-top: 2%">You may update this setting as often as you like.</p>
+    <p class="updateMessage" style="margin-top: 2%; color:#51DB78" v-if="updateMessage != ''">{{updateMessage}}</p>
     <roundedBtn
       :class="'btnn'"
       :onClick="update"
@@ -84,7 +85,8 @@ export default {
       id: null,
       colors: COLORS,
       selected: '',
-      status: ''
+      status: '',
+      updateMessage: ''
     }
   },
   mounted(){
@@ -108,6 +110,7 @@ export default {
       this.APIRequest('payloads/update', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         this.retrieve()
+        this.updateMessage = 'Automation settings successfully updated!'
       })
     },
     automate(data){
@@ -149,7 +152,7 @@ export default {
 }
 
 .btnn {
-  margin-top: 40px;
+  margin-top: 30px;
 }
 
 .button{
