@@ -31,7 +31,7 @@
               <p
                 class="mb-0 pb-0 invalidEmail"
                 v-if="!this.isEmailError"
-              >Invalid email</p>
+              >{{email == '' ? 'Required Field' :'Invalid email'}}</p>
             </div>
             <div class="message mt-2 mb-2">
               <i v-if="showResponse" class="resetPasswordMessage">We send recory email to yor email address at <u>{{email}}</u>. Please give us a moment, it may take few minutes. Please check your email address to continue.</i>
@@ -102,7 +102,7 @@
             <div class="d-flex justify-content-center orSeparatorB">
               <b>OR</b>
             </div>
-            <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-center">
+            <div class="col-sm-12 mb-3 col-md-12 col-lg-12 d-flex justify-content-center">
               <dialogueBtn 
                 :onClick="login"
                 :icon="'fas fa-sign-in-alt'"
@@ -159,7 +159,7 @@ export default {
     },
     login(event) {
       console.log('login:::')
-      this.$router.push('/')
+      this.$router.push('/login')
     },
     forgotPassword(event) {
       console.log('forgot password:::')
@@ -196,7 +196,7 @@ export default {
 }
 .orSeparatorB {
   margin-top: 15px;
-  margin-bottom: 35px;
+  margin-bottom: 20px;
 }
 .LoginField {
   margin-bottom: 35px;
@@ -238,6 +238,7 @@ export default {
 }
 .LoginCardContainer {
   background: none;
+  height: calc(100% + 10px);
 }
 
 @media (max-width: 500px) {
