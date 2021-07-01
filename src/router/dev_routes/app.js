@@ -170,5 +170,13 @@ export default{
       tokenRequired: true
     }
   }
+  // {
+  //   path: '/:user/no_subscriptions',
+  //   name: 'no_subscriptions',
+  //   component: resolve => require(['src/modules/subscriptions/index.vue'], resolve),
+  //   meta: {
+  //     tokenRequired: true
+  //   }
+  // }
   ]
 }

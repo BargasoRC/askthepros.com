@@ -104,7 +104,7 @@
             </div>
             <div class="col-sm-12 mb-3 col-md-12 col-lg-12 d-flex justify-content-center">
               <dialogueBtn 
-                :onClick="login"
+                :onClick="redirect"
                 :icon="'fas fa-sign-in-alt'"
                 :text="'Login'"
                 :styles="{
@@ -157,9 +157,12 @@ export default {
         this.isEmailError = false
       }
     },
+    redirect(event){
+      this.$router.push('/login')
+    },
     login(event) {
       console.log('login:::')
-      this.$router.push('/login')
+      this.$router.push('/')
     },
     forgotPassword(event) {
       console.log('forgot password:::')
