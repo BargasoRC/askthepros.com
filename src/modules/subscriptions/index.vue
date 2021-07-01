@@ -17,7 +17,7 @@
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import COLORS from 'src/assets/style/colors.js'
 import ROUTER from 'src/router'
-import User from './user'
+import User from './user2'
 import Admin from './admin'
 import AUTH from 'src/services/auth'
 export default {

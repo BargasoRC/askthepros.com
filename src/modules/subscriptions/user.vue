@@ -1,44 +1,16 @@
 <template>
   <div class="container-fluid">
     <div class="mt-5">
-      <h2 style="font-weight: bold"> Subscriptions </h2>
+      <h2> Subscriptions </h2>
     </div>
-    <div>
-      <p style="margin-top: 0px; font-size: 20px; color: grey">You have no active subscriptions to display. Select your membership now to get better experience with automated media posting.</p>
-    </div>
-    <!-- <div class="table_container">
+    <div class="table_container">
       <DataTable 
         :tableActions="tableActions"
         :tableHeaders="tableHeaders"
         :tableData="tableData"
         @onAction="onTableAction"
       />
-    </div> -->
-    <span class="col-md-5" style="text-align: center;">
-          <div class="pricing">
-            <div class="layer1">
-              <h6>Industry</h6>
-              <p> 129 USD / Month</p>
-            </div>
-            <div class="layer2">
-              <span>
-                <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
-                <hr/>
-                <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
-                <hr/>
-                <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
-                <hr/>
-                <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
-                <hr/>
-                <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
-                <hr/>
-                <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
-                <hr/>
-              </span>
-            </div>
-            <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register Now'" :icon_position="'right'"  :styles="{backgroundColor: '#01004E',color: 'white', marginTop: '20px'}"/>
-          </div>
-        </span>
+    </div>
   </div>
 </template>
 
@@ -85,15 +57,6 @@ export default {
       ]
     }
   },
-  mounted(){
-  },
-  computed: {
-    returnIndustry() {
-      return this.industry.map(el => {
-        return el.category
-      })
-    }
-  },
   components: {
     DataTable
   },
@@ -113,85 +76,4 @@ export default {
   border-bottom: 1px solid $hover;
   margin-top: 40px;
 }
-.sectionn {
-  background-color: $white;
-  min-height: 100vh;
-  width: 100%;
-}
-
-.row {
-  padding-top: 15vh;
-  padding-bottom: 15vh;
-}
-
-h1 {
-  font-weight: 700;
-  color: $title;
-  font-size: 35px;
-}
-
-p {
-  margin-top: 20px;
-  font-size: 24px;
-  color: $title;
-}
-
-img {
-  width: 85%;
-  height: auto;
-}
-
-.pricing{
-  text-align: center;
-  min-height: 60vh;
-  border: 0.5px solid $text;
-  margin-left: 35%;
-  border-top-left-radius: 22.5px;
-  border-top-right-radius: 22.5px;
-  width: 25%;
-  padding-bottom: 30px;
-}
-
-.pricing .layer1 {
-  background-color: $primary;
-  border-top-left-radius: 22.5px;
-  border-top-right-radius: 22.5px;
-  height: 115px;
-  padding-top: 35px;
-}
-
-.pricing .layer1 h6{
-  color: $warning;
-  font-size: 24px;
-}
-
-.pricing .layer1 p{
-  margin-top: -5px;
-  color: $white;
-  font-size: 14px;
-}
-
-.pricing .layer2 {
-  padding-left: 40px;
-  padding-right: 40px;
-  padding-top: 10px;
-  padding-bottom: 40px;
-  text-align: left;
-}
-
-.pricing .layer2 p {
-  font-weight: 300;
-  color: $text;
-  font-size: 12px;
-}
-
-.fa-check {
-  font-size: 24px;
-  color: $success;
-}
-
-hr {
-  background-color: $text;
-}
-
 </style>
