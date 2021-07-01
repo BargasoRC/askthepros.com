@@ -150,6 +150,7 @@ import roundedInput from 'src/modules/generic/roundedInput'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
+import ROUTER from 'src/router'
 export default {
   data() {
     return {
@@ -157,7 +158,8 @@ export default {
       password: '',
       errorMessage: '',
       isValid: true,
-      colors: COLORS
+      colors: COLORS,
+      user: AUTH.user
     }
   },
   components: {
@@ -185,8 +187,10 @@ export default {
           localStorage.removeItem('xyzABCdefPayhiram')
           localStorage.clear()
         }, response.expires)
+        ROUTER.push(`/${response.user[0].account_type.toLowerCase()}/dashboard`)
       }, error => {
         $('#loading').css({'display': 'none'})
+        localStorage.removeItem('login_with')
         console.log('Verifying authentication error! ', error)
       })
     }
@@ -197,7 +201,9 @@ export default {
         this.isValid = true
         $('#loading').css({'display': 'block'})
         AUTH.authenticate(this.username, this.password, (response) => {
-          this.$router.push('dashboard')
+          $('#loading').css({'display': 'none'})
+          console.log('LOGIN response:', response)
+          ROUTER.push(`/${this.user.type.toLowerCase()}/dashboard`)
         }, (response, status) => {
           $('#loading').css({'display': 'none'})
           if(status === 401){

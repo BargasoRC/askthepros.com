@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Branding;
 use Carbon\Carbon;
 
-class BrandingController extends Controller
+class BrandingController extends APIController
 {
   function __construct(){
     $this->model = new Branding();

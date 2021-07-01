@@ -131,8 +131,9 @@ export default {
       this.setToken(this.tokenData.token)
       this.hash('hide', response.login_type)
       vue.APIRequest('authenticate/user', {}, (userInfo) => {
-        console.log('userInfo')
         this.setUser(userInfo, null, null)
+        this.retrieveAccountProfileAndInformation(userInfo.id)
+        callback(response)
       })
     }, (response, status) => {
       if(errorCallback){
@@ -161,9 +162,9 @@ export default {
         this.tokenData.verifyingToken = false
         this.tokenData.loading = false
         this.hash('hide', response.login_type)
-        ROUTER.push({
-          path: this.currentPath
-        })
+        // ROUTER.push({
+        //   path: this.currentPath
+        // })
       }).catch(error => {
         console.log('ERRRROOORRR:: ', error)
       })
@@ -212,6 +213,7 @@ export default {
     localStorage.removeItem('google_code')
     localStorage.removeItem('google_scope')
     localStorage.removeItem('xyzABCdefPayhiram')
+    localStorage.removeItem('connect_with')
     localStorage.clear()
     this.setUser(null)
     let vue = new Vue()
@@ -338,8 +340,8 @@ export default {
     }
   },
   updateData(){
-    console.log('dashboard')
-    ROUTER.push(`/${this.user.type.toLowerCase()}/dashboard`)
+    // console.log('dashboard')
+    // ROUTER.push(`/${this.user.type.toLowerCase()}/dashboard`)
   },
   setGoogleCode(code, scope){
     localStorage.setItem('google_code', code)

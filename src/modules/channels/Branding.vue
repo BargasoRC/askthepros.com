@@ -48,21 +48,21 @@
             }"
           />
         </div>
-        <div class="col-sm-12">
+        <div class="col-sm-12 mb-5">
           <h3 style="margin-top: 20px;font-size: 20px;">Add Branding.</h3>
           <p class="subheads">These “branding footers” will be added to the end of your social media posts.   They should be one or two short sentences and incorporate your brand name and location. </p>
           <p class="pl-0 mt-5"><b>Branding Footer 1</b></p>
-          <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand1" @keyup="charCount()"></textarea>
-          <span class="char-count">Character Count: {{count1}}</span>
+          <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand1"></textarea>
+          <span class="char-count">Character Count: {{brand1.length}}</span>
           <p class="pl-0 mt-4"><b>Branding Footer 2</b></p>
           <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand2"></textarea>
-          <span class="char-count">Character Count: {{count2}}</span>
+          <span class="char-count">Character Count: {{brand2.length}}</span>
           <p class="pl-0 mt-4"><b>Branding Footer 3</b></p>
           <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand3"></textarea>
-          <span class="char-count">Character Count: {{count3}}</span>
+          <span class="char-count">Character Count: {{brand3.length}}</span>
           <roundedBtn
             :class="'btnn'"
-            :onClick="save"
+            :onClick="saveBrandings"
             :text="'Save'"
             :styles="{
               backgroundColor: '#01004E',
@@ -83,6 +83,7 @@ import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import ROUTER from 'src/router'
 import Preview from 'src/modules/generic/preview.vue'
+import AUTH from 'src/services/auth'
 export default {
   data() {
     return {
@@ -90,9 +91,10 @@ export default {
       count: 0,
       count2: 0,
       count3: 0,
-      brand: '',
+      brand1: '',
       brand2: '',
-      brand3: ''
+      brand3: '',
+      user: AUTH.user
     }
   },
   components: {
@@ -104,6 +106,9 @@ export default {
       return [this.brand1, this.brand2, this.brand3]
     }
   },
+  created() {
+    this.retrieveBrandings()
+  },
   methods: {
     connectMedia(){
       this.$router.push('/user/channels')
@@ -111,11 +116,75 @@ export default {
     automationSettings(){
       this.$router.push('/user/channels/automation')
     },
-    save(){
-      console.log('save::::')
-    },
     charCount(){
       this.count = this.brand.length
+    },
+    saveBrandings() {
+      let parameter = {
+        condition: [
+          {
+            value: this.user.userID,
+            clause: '=',
+            column: 'account_id'
+          }
+        ],
+        offset: 0,
+        limit: 1
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('brandings/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        let brandings = {
+          account_id: this.user.userID,
+          details: JSON.stringify({
+            brand1: this.brand1,
+            brand2: this.brand2,
+            brand3: this.brand3
+          })
+        }
+        let url = ''
+        if(response.data.length > 0) {
+          url = 'brandings/update'
+          brandings.id = response.data[0].id
+        }else if(response.data.length === 0) {
+          url = 'brandings/create'
+        }
+        let self = this
+
+        this.APIRequest(url, brandings).then(response => {
+          self.retrieveBrandings()
+        })
+      }).catch(error => {
+        $('#loading').css({'display': 'none'})
+        error
+      })
+    },
+    retrieveBrandings() {
+      let parameter = {
+        condition: [
+          {
+            value: this.user.userID,
+            clause: '=',
+            column: 'account_id'
+          }
+        ],
+        offset: 0,
+        limit: 1
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('brandings/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        console.log('Brandings response: ', response)
+        if(response.data.length > 0) {
+          let brandings = JSON.parse(response.data[0].details)
+          this.brand1 = brandings.brand1
+          this.brand2 = brandings.brand2
+          this.brand3 = brandings.brand3
+        }
+      }).catch(error => {
+        $('#loading').css({'display': 'none'})
+        error
+      })
     }
   }
 }
