@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Branding extends Model
+class Branding extends APIModel
 {
     //
     protected $table = 'brandings';

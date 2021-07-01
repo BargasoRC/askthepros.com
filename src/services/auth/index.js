@@ -133,6 +133,7 @@ export default {
       vue.APIRequest('authenticate/user', {}, (userInfo) => {
         this.setUser(userInfo, null, null)
         this.retrieveAccountProfileAndInformation(userInfo.id)
+        callback(response)
       })
     }, (response, status) => {
       if(errorCallback){

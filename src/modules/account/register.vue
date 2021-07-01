@@ -18,12 +18,12 @@
             <div class="d-flex justify-content-center pt-5 pb-5 mb-3">
               <b>Register with AskThePros</b>
             </div>
+            <p
+              class="mb-2 pb-0 errorMessage"
+              v-if="errorMessage != ''"
+            >{{errorMessage}}</p>
             <div>
               <p class="mt-2"><b>Username</b></p>
-              <p
-                class="mb-2 pb-0 errorMessage"
-                v-if="errorMessage != ''"
-              >{{errorMessage}}</p>
               <roundedInput 
                 :type="'text'"
                 :placeholder="'Your username here...'"
@@ -289,10 +289,11 @@ export default {
           status: 'ADMIN'
         }
         $('#loading').css({'display': 'block'})
-        this.APIRequest('accounts/create', parameter).then(response => {
+        this.APIRequest('account/create', parameter).then(response => {
           $('#loading').css({'display': 'none'})
-          console.log('REGISTRATION RESPONSE: ', response)
-          if(response.error !== null){
+          if(response.data !== null) {
+            this.createMerchantAndPayload(response.data)
+          }else if(response.error !== null){
             if(response.error.status === 100){
               let message = response.error.message
               if(typeof message.username !== undefined && typeof message.username !== 'undefined'){
@@ -300,23 +301,35 @@ export default {
               }else if(typeof message.email !== undefined && typeof message.email !== 'undefined'){
                 this.errorMessage = message.email[0]
               }
-            }else if(response.data !== null){
-              let parameters = {
-                account_id: this.user.userID, // sample account_id. must be response.data.account_id
-                name: this.username,
-                email: this.email,
-                addition_informations: JSON.stringify({industry: this.industry[this.selectedIndustry].category})
-              }
-              if(response.data > 0){
-                this.APIRequest('merchants/create', parameters).then(response => {
-                  console.log('[response]', response)
-                })
-                this.login()
-              }
             }
           }
         })
       }
+    },
+    async createMerchantAndPayload(id) {
+      let merchant = {
+        account_id: id,
+        name: this.username,
+        email: this.email,
+        addition_informations: JSON.stringify({industry: this.industry[this.selectedIndustry].category})
+      }
+      let payload = {
+        account_id: id,
+        payload: 'automation_settings',
+        payload_value: 'ON'
+      }
+      this.APIRequest('merchants/create', merchant).then(response => {
+        console.log('MERCHANT RESPONSE: ', response)
+      }).catch(error => {
+        console.log('MERCHANT ERROR', error)
+      })
+      this.APIRequest('payloads/create', payload).then(response => {
+        console.log('PAYLOAD RESPONSE: ', response)
+      }).catch(error => {
+        console.log('PAYLOAD ERROR', error)
+      })
+
+      await this.login()
     },
     validate() {
       let email = this.email

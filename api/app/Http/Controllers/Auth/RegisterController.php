@@ -2,70 +2,78 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
-use App\Http\Controllers\Controller;
+use Increment\Account\Models\Account;
+use Increment\Account\Models\AccountInformation;
+use Increment\Account\Models\BillingInformation;
+use App\Http\Controllers\EmailController;
+use App\Http\Controllers\APIController;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Foundation\Auth\RegistersUsers;
 
-class RegisterController extends Controller
+class RegisterController extends APIController
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
+  /**
+   * Created this controller so that the type INDUSTRY of the user will be created
+   */
+  public function __construct()
+  {
+    $this->model = new Account();
+    $this->validation = array(  
+      "email" => "unique:accounts",
+      "username"  => "unique:accounts"
+    );
+    $this->notRequired = array(
+      'token'
+    );
+  }
 
-    use RegistersUsers;
-
+  public function create(Request $request){
     /**
-     * Where to redirect users after registration.
-     *
-     * @var string
+     * Initially removed the email verification, to successfully register and create INDUSTRY
      */
-    protected $redirectTo = '/home';
+    $request = $request->all();
+    $referralCode = $request['referral_code'];
+    $invitationPassword = $request['password'];
+    $dataAccount = array(
+      'code'  => $this->generateCode(),
+      'password'        => Hash::make($request['password']),
+      'status'          => 'NOT_VERIFIED',
+      'email'           => $request['email'],
+      'username'        => $request['username'],
+      'account_type'    => $request['account_type'],
+      'created_at'      => Carbon::now()
+    );
+    $this->model = new Account();
+    $this->insertDB($dataAccount, true);
+    
+    return $this->response();
+  }
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('guest');
+  public function createDetails($accountId, $type){
+    $info = new AccountInformation();
+    $info->account_id = $accountId;
+    $info->created_at = Carbon::now();
+    $info->save();
+
+    $billing = new BillingInformation();
+    $billing->account_id = $accountId;
+    $billing->created_at = Carbon::now();
+    $billing->save();
+    if(env('NOTIFICATION_SETTING_FLAG') == true){
+      app('App\Http\Controllers\NotificationSettingController')->insert($accountId);
     }
+  }
 
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
+  public function generateCode(){
+    $code = 'acc_'.substr(str_shuffle($this->codeSource), 0, 60);
+    $codeExist = Account::where('code', '=', $code)->get();
+    if(sizeof($codeExist) > 0){
+      $this->generateCode();
+    }else{
+      return $code;
     }
-
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return \App\User
-     */
-    protected function create(array $data)
-    {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
-    }
+  }
 }

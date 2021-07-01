@@ -73,6 +73,10 @@ Route::get('/migrate', function () {
     //
 });
 
+/* Account */
+$route = env('PACKAGE_ROUTE', '').'/account';
+Route::post($route. '/create', 'Auth\RegisterController@create');
+
 /* Authentication Router */
 $route = env('PACKAGE_ROUTE', '').'/authenticate';
 Route::resource($route, 'AuthenticateController', ['only' => ['index']]);

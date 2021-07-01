@@ -201,7 +201,9 @@ export default {
         this.isValid = true
         $('#loading').css({'display': 'block'})
         AUTH.authenticate(this.username, this.password, (response) => {
-          this.$router.push(`/${this.user.type.toLowerCase()}/dashboard`)
+          $('#loading').css({'display': 'none'})
+          console.log('LOGIN response:', response)
+          ROUTER.push(`/${this.user.type.toLowerCase()}/dashboard`)
         }, (response, status) => {
           $('#loading').css({'display': 'none'})
           if(status === 401){
