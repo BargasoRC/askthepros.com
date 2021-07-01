@@ -51,10 +51,10 @@
     <h3 style="margin-top: 20px;font-size: 20px;">Choose Review Settings.</h3>
     <p class="subheads">You can review and edit your posts prior to us sending them to your social media channels.</p>
     <div style="margin-left: 2%;margin-top: 2%">
-      <input type="radio" id="review" name="automation" value="review">
+      <input type="radio" id="review" name="automation" value="review" @click="automate('off')" :checked="selected=='review'">
       <label for="review">Review</label>
       <p class="desc">Review – We’ll email you a link to your post so you can edit or approve it.</p><br>
-      <input type="radio" id="autopost" name="automation" value="autopost" checked>
+      <input type="radio" id="autopost" name="automation" value="autopost" @click="automate('on')" :checked="selected=='autopost'">
       <label for="autopost">Autopost</label>
       <p class="desc">Autopost – We’ll automatically send your post to your connected channels.</p>
     </div>
@@ -75,12 +75,21 @@
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import ROUTER from 'src/router'
+import AUTH from 'src/services/auth'
+import axios from 'axios'
+import $ from 'jquery'
 export default {
   data() {
     return {
+      user: AUTH.user,
+      id: null,
       colors: COLORS,
-      selected: 'autopost'
+      selected: '',
+      status: ''
     }
+  },
+  mounted(){
+    this.retrieve()
   },
   components: {
     roundedBtn
@@ -93,7 +102,36 @@ export default {
       ROUTER.push('/user/channels/branding')
     },
     update(){
-      console.log('save::::')
+      let parameter = {
+        id: this.id,
+        payload_value: this.status
+      }
+      this.APIRequest('payloads/update', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        this.retrieve()
+      })
+    },
+    automate(data){
+      this.status = data
+      if(data === 'off'){
+        this.selected = 'review'
+      }else if(data === 'on'){
+        this.selected = 'autopost'
+      }
+    },
+    retrieve(){
+      this.APIRequest('payloads/retrieve').then(response => {
+        $('#loading').css({'display': 'none'})
+        for (let item = 0; item < response.data.length; item++) {
+          if(response.data[item].account_id === this.user.userID){
+            this.id = response.data[item].id
+            console.log('RESPONSE: ', response.data[item])
+            this.status = response.data[item].payload_value
+            break
+          }
+        }
+        this.automate(this.status)
+      })
     }
   }
 }
