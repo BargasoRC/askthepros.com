@@ -90,7 +90,6 @@ export default {
     }
   },
   mounted(){
-    $('#loading').css({'display': 'none'})
     this.retrieve()
   },
   components: {
@@ -108,8 +107,10 @@ export default {
         id: this.id,
         payload_value: this.status
       }
+      $('#loading').css({'display': 'block'})
       this.APIRequest('payloads/update', parameter).then(response => {
         this.retrieve()
+        $('#loading').css({'display': 'none'})
         this.updateMessage = 'Automation settings successfully updated!'
       })
     },
@@ -122,7 +123,9 @@ export default {
       }
     },
     retrieve(){
+      $('#loading').css({'display': 'block'})
       this.APIRequest('payloads/retrieve').then(response => {
+        $('#loading').css({'display': 'none'})
         for (let item = 0; item < response.data.length; item++) {
           if(response.data[item].account_id === this.user.userID){
             this.id = response.data[item].id
