@@ -1,41 +1,52 @@
 <template>
   <div class="container-fluid">
     <div class="mt-5">
-      <h2 style="font-weight: bold"> Subscriptions </h2>
+      <h2> Subscriptions </h2>
     </div>
-    <div>
-      <p style="margin-top: 0px; font-size: 20px; color: grey">You have no active subscriptions to display. Select your membership now to get better experience with automated media posting.</p>
+    <div class="mt-2">
+      <p style="margin-top: 0px; font-size: 1rem; color: grey">You have no active subscriptions to display. Select your membership now to get better experience with automated media posting.</p>
     </div>
-    <span class="col-md-5" style="text-align: center;">
-          <div class="pricing">
-            <div class="layer1">
-              <h6>Industry</h6>
-              <p> 129 USD / Month</p>
-            </div>
-            <div class="layer2">
-              <span>
-                <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
-                <hr/>
-                <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
-                <hr/>
-                <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
-                <hr/>
-                <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
-                <hr/>
-                <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
-                <hr/>
-                <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
-                <hr/>
-              </span>
-            </div>
-            <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register Now'" :icon_position="'right'"  :styles="{backgroundColor: '#01004E',color: 'white', marginTop: '20px'}"/>
-          </div>
-        </span>
+    <div class="col-md-12 mt-5 d-flex justify-content-center">
+      <div class="pricing col-sm-3 p-0 pb-5">
+        <div class="layer1">
+          <h6>Industry</h6>
+          <p> 129 USD / Month</p>
+        </div>
+        <div class="layer2">
+          <span>
+            <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
+            <hr/>
+            <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
+            <hr/>
+            <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
+            <hr/>
+            <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
+            <hr/>
+            <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
+            <hr/>
+            <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
+            <hr/>
+          </span>
+        </div>
+        <dialogueBtn 
+          :onClick="() => {}"
+          :icon="'fas fa-sign-in-alt'" 
+          :text="'Register Now'" 
+          :icon_position="'right'"  
+          :styles="{
+            backgroundColor: '#01004E',
+            color: 'white', 
+            marginTop: '20px'
+          }"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import DataTable from 'src/modules/generic/table'
+import dialogueBtn from 'src/modules/generic/dialogueBtn'
 export default {
   data() {
     return {
@@ -87,7 +98,8 @@ export default {
     }
   },
   components: {
-    DataTable
+    DataTable,
+    dialogueBtn
   },
   methods: {
     onTableAction(data) {
@@ -135,12 +147,12 @@ img {
 
 .pricing{
   text-align: center;
-  min-height: 60vh;
+  // min-height: 60vh;
   border: 0.5px solid $text;
-  margin-left: 35%;
+  // margin-left: 35%;
   border-top-left-radius: 22.5px;
   border-top-right-radius: 22.5px;
-  width: 25%;
+  // width: 30%;
   padding-bottom: 30px;
 }
 

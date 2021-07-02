@@ -101,7 +101,58 @@
         </div>
       </div>
     </div>
-    
+    <div class="modal fade" id="subscriptionModal" tabindex="-1" role="dialog" aria-labelledby="subscriptionModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header subscriptionModalHeader">
+            <h5 
+              class="modal-title text-warning text-center" 
+              id="subscriptionModalLabel"
+              :style="{
+                textAlign: 'center',
+                position: 'fixed',
+                left: '50%',
+                transform: 'translate(-50%) !important'
+              }"
+            >
+              Welcome
+            </h5>
+            <button 
+              type="button" 
+              class="close" 
+              data-dismiss="modal" 
+              aria-label="Close"
+              :style="{
+                position: 'absolute',
+                right: 0,
+                top: 0,
+                marginTop: '6px',
+                marginRight: '10px'
+              }"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body text-center">
+            <p> Reap the benefits of automating your social media channels postings. </p>
+            <b>SUBSCRIBE TO MANAGE YOUR SOCIAL POSTING</b>
+          </div>
+          <div class="modal-footer d-flex justify-content-center subscriptionModalFooter">
+             <roundedBtn
+                data-dismiss="modal" 
+                :onClick="subscribe"
+                :text="'Subscribe'"
+                :icon_position="'right'"
+                :icon="'far fa-thumbs-up'"
+                :styles="{
+                  backgroundColor: colors.darkPrimary,
+                  color: 'white'
+                }"
+              />
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -135,9 +186,6 @@ export default {
     dialogueBtn,
     roundedBtn
   },
-  created() {
-    this.connectCallback()
-  },
   methods: {
     setup(){
       ROUTER.push('channels/branding')
@@ -149,76 +197,31 @@ export default {
       this.$router.push(`/${this.user.type.toLowerCase()}/post_management`)
     },
     connect(item){
-      if(item.payload === 'google') {
-        this.connectToGmail()
-      }else if(item.payload === 'facebook') {
-        this.connectToFb()
-      }else if(item.payload === 'linkedin') {
-        this.connectToLinkedIn()
+      let parameter = {
+        condition: [
+          {
+            value: this.user.userID,
+            clause: '=',
+            column: 'account_id'
+          }
+        ],
+        offset: 0,
+        limit: 1
       }
-    },
-    connectToGmail() {
-      console.log('gmail login:::')
       $('#loading').css({'display': 'block'})
-      localStorage.setItem('connect_with', 'google')
-      this.APIRequest('social_lite/authenticate/google_connect/redirect', {}, response => {
+      this.APIRequest('plans/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        if(response.data && response.data.url) {
-          console.log('Authentication with google response: ', response)
-          window.location.href = response.data.url
+        console.log('Brandings response: ', response)
+        if(response.data.length === 0) {
+          $('#subscriptionModal').modal('show')
         }
-      }, error => {
+      }).catch(error => {
         $('#loading').css({'display': 'none'})
-        console.log('Authentication with google error! ', error)
+        error
       })
     },
-    connectToFb() {
-      $('#loading').css({'display': 'block'})
-      console.log('facebook login:::')
-      localStorage.setItem('connect_with', 'facebook')
-      this.APIRequest('social_lite/authenticate/facebook_connect/redirect', {}, response => {
-        $('#loading').css({'display': 'none'})
-        if(response.data && response.data.url) {
-          console.log('Authentication with facebook response: ', response)
-          window.location.href = response.data.url
-        }
-      }, error => {
-        $('#loading').css({'display': 'none'})
-        console.log('Authentication with facebook error! ', error)
-      })
-    },
-    connectToLinkedIn() {
-      $('#loading').css({'display': 'block'})
-      console.log('linkedin login:::')
-      localStorage.setItem('connect_with', 'linkedin')
-      this.APIRequest('social_lite/authenticate/linkedin_connect/redirect', {}, response => {
-        $('#loading').css({'display': 'none'})
-        if(response.data && response.data.url) {
-          console.log('Authentication with linkedin response: ', response)
-          window.location.href = response.data.url
-        }
-      }, error => {
-        $('#loading').css({'display': 'none'})
-        console.log('Authentication with linkedin error! ', error)
-      })
-    },
-    connectCallback() {
-      if(new RegExp(/\?.+=.*/g).test(window.location.href) && localStorage.getItem('connect_with')) {
-        let url = window.location.href
-        let query = url.substring(url.indexOf('?') + 1)
-        $('#loading').css({'display': 'block'})
-        this.APIRequest(`social_lite/account/${localStorage.getItem('connect_with')}/connect?` + query, {}, response => {
-          $('#loading').css({'display': 'none'})
-          console.log('connect response: ', response)
-          localStorage.removeItem('connect_with')
-          this.$router.push(`/${this.user.type.toLowerCase()}/dashboard`)
-        }, error => {
-          $('#loading').css({'display': 'none'})
-          this.$router.push(`/${this.user.type.toLowerCase()}/dashboard`)
-          localStorage.removeItem('connect_with')
-          console.log('Verifying authentication error! ', error)
-        })
-      }
+    subscribe() {
+      this.$router.push(`/${this.user.type.toLowerCase()}/subscriptions`)
     }
   }
 }
@@ -226,6 +229,14 @@ export default {
 
 <style scoped lang="scss" scoped>
 @import "~assets/style/colors.scss";
+.subscriptionModalHeader {
+  min-height: 80px;
+  border-bottom: 0px;
+}
+.subscriptionModalFooter {
+  min-height: 80px;
+  border-top: 0px;
+}
 .holder{
   width: 96%;
   margin-left: 2%;

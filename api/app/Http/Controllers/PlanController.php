@@ -15,7 +15,7 @@ class PlanController extends APIController
 
   public function retrieve(Request $request) {
     $data = $request->all();
-    $result = Plan::where('merchant_id', '=', $data['merchant_id'])
+    $result = Plan::where('account_id', '=', $data['condition'][0]['value'])
     ->where(function($e) {
       $e->whereDate('end_date', '>', Carbon::now())
       ->orWhere('end_date', '=', null);
