@@ -104,6 +104,8 @@ export default {
   methods: {
     onTableAction(data) {
       console.log('Table Action: ', data)
+    },
+    currentPlan(){
     }
   }
 }
