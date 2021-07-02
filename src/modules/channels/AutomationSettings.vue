@@ -51,10 +51,10 @@
     <h3 style="margin-top: 20px;font-size: 20px;">Choose Review Settings.</h3>
     <p class="subheads">You can review and edit your posts prior to us sending them to your social media channels.</p>
     <div style="margin-left: 2%;margin-top: 2%">
-      <input type="radio" id="review" name="automation" value="review" @click="automate('off')" :checked="selected=='review'">
+      <input type="radio" id="review" name="automation" value="review" @click="automate('OFF')" :checked="selected=='review'">
       <label for="review">Review</label>
       <p class="desc">Review – We’ll email you a link to your post so you can edit or approve it.</p><br>
-      <input type="radio" id="autopost" name="automation" value="autopost" @click="automate('on')" :checked="selected=='autopost'">
+      <input type="radio" id="autopost" name="automation" value="autopost" @click="automate('ON')" :checked="selected=='autopost'">
       <label for="autopost">Autopost</label>
       <p class="desc">Autopost – We’ll automatically send your post to your connected channels.</p>
     </div>
@@ -107,21 +107,23 @@ export default {
         id: this.id,
         payload_value: this.status
       }
+      $('#loading').css({'display': 'block'})
       this.APIRequest('payloads/update', parameter).then(response => {
-        $('#loading').css({'display': 'none'})
         this.retrieve()
+        $('#loading').css({'display': 'none'})
         this.updateMessage = 'Automation settings successfully updated!'
       })
     },
     automate(data){
       this.status = data
-      if(data === 'off'){
+      if(data === 'OFF'){
         this.selected = 'review'
-      }else if(data === 'on'){
+      }else if(data === 'ON'){
         this.selected = 'autopost'
       }
     },
     retrieve(){
+      $('#loading').css({'display': 'block'})
       this.APIRequest('payloads/retrieve').then(response => {
         $('#loading').css({'display': 'none'})
         for (let item = 0; item < response.data.length; item++) {
