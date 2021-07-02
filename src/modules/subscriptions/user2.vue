@@ -28,7 +28,10 @@
                 <hr/>
               </span>
             </div>
-            <dialogueBtn :onClick="register" :icon="'fas fa-sign-in-alt'" :text="'Register Now'" :icon_position="'right'"  :styles="{backgroundColor: '#01004E',color: 'white', marginTop: '20px'}"/>
+            <dialogueBtn :onClick="currentPlan" 
+            :icon="'fas fa-sign-in-alt'" 
+            :text="'Current Plan'" :icon_position="'right'"  
+            :styles="{backgroundColor: '#01004E',color: 'white', marginTop: '20px'}"/>
           </div>
         </span>
   </div>
@@ -36,6 +39,7 @@
 
 <script>
 import DataTable from 'src/modules/generic/table'
+import dialogueBtn from 'src/modules/generic/dialogueBtn'
 export default {
   data() {
     return {
@@ -87,11 +91,14 @@ export default {
     }
   },
   components: {
-    DataTable
+    DataTable,
+    dialogueBtn
   },
   methods: {
     onTableAction(data) {
       console.log('Table Action: ', data)
+    },
+    currentPlan(){
     }
   }
 }
