@@ -1,9 +1,9 @@
 <template>
   <div class="container-fluid">
-    <div class="mt-5">
+    <div class="mt-5" v-if="!isEmpty">
       <h2> Subscriptions </h2>
     </div>
-    <div class="table_container">
+    <div class="table_container" v-if="!isEmpty">
       <DataTable 
         :tableActions="tableActions"
         :tableHeaders="tableHeaders"
@@ -11,11 +11,14 @@
         @onAction="onTableAction"
       />
     </div>
+    <Plan v-if="isEmpty"/>
   </div>
 </template>
 
 <script>
+import Plan from './plan'
 import DataTable from 'src/modules/generic/table'
+import AUTH from 'src/services/auth'
 export default {
   data() {
     return {
@@ -54,15 +57,46 @@ export default {
           created_at: new Date().toLocaleDateString(),
           expiration: new Date().toLocaleDateString()
         }
-      ]
+      ],
+      isEmpty: true,
+      user: AUTH.user
     }
   },
   components: {
-    DataTable
+    DataTable,
+    Plan
+  },
+  created() {
+    this.retrieveSubscriptions()
   },
   methods: {
     onTableAction(data) {
       console.log('Table Action: ', data)
+    },
+    retrieveSubscriptions(){
+      let parameter = {
+        condition: [
+          {
+            value: this.user.userID,
+            clause: '=',
+            column: 'account_id'
+          }
+        ],
+        offset: 0,
+        limit: 1
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('plans/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data.length === 0) {
+          this.isEmpty = true
+        }else if(response.data.lenght > 0) {
+          this.isEmpty = false
+        }
+      }).catch(error => {
+        $('#loading').css({'display': 'none'})
+        error
+      })
     }
   }
 }

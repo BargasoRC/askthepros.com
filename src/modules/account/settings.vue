@@ -11,16 +11,16 @@
           <div class="col-md-6">
             <p>First Name</p>
             <roundedInput :type="'text'" :placeholder="'Enter your first name here'"
-              :class="!this.isValidProfile && firstname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                        border: !this.isValidProfile && firstname == '' ? '1px solid red !important' : 'none',
+              :class="!this.isValidProfile && !firstname ? 'mb-0 ' : ' SettingsField'" :styles="{
+                        border: !this.isValidProfile && !firstname ? '1px solid red !important' : 'none',
                       }" v-model="firstname" class="input-style" />
             
           </div>
           <div class="col-md-6">
             <p>Last Name</p>
             <roundedInput :type="'text'" :placeholder="'Enter your last name here'"
-              :class="!this.isValidProfile && lastname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                      border: !this.isValidProfile && lastname == '' ? '1px solid red !important' : 'none',
+              :class="!this.isValidProfile && !lastname ? 'mb-0 ' : ' SettingsField'" :styles="{
+                      border: !this.isValidProfile && !lastname ? '1px solid red !important' : 'none',
                     }" v-model="lastname" class="input-style" />
             
           </div>
@@ -30,16 +30,16 @@
           <div class="col-md-6">
             <p>Business Name</p>
             <roundedInput :type="'text'" :placeholder="'Enter your business name here'"
-              :class="!this.isValidProfile && businessname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                    border: !this.isValidProfile && businessname == '' ? '1px solid red !important' : 'none',
+              :class="!this.isValidProfile && !businessname ? 'mb-0 ' : ' SettingsField'" :styles="{
+                    border: !this.isValidProfile && !businessname ? '1px solid red !important' : 'none',
                   }" v-model="businessname" class="input-style" />
             
           </div>
           <div class="col-md-6">
             <p>Contact Number</p>
             <roundedInput :type="'text'" :placeholder="'Enter your contact number here'"
-              :class="!this.isValidProfile && contactnumber == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                    border: !this.isValidProfile && contactnumber == '' ? '1px solid red !important' : 'none',
+              :class="!this.isValidProfile && !contactnumber ? 'mb-0 ' : ' SettingsField'" :styles="{
+                    border: !this.isValidProfile && !contactnumber ? '1px solid red !important' : 'none',
                   }" v-model="contactnumber" class="input-style" />
             
           </div>
@@ -263,17 +263,49 @@ export default {
       return this.user.profile
     }
   },
+  watch: {
+    username: function(val) {
+      this.username = val
+    },
+    firstname: function(val) {
+      this.firstname = val
+    },
+    lastname: function(val) {
+      this.lastname = val
+    },
+    contactnumber: function(val) {
+      this.contactnumber = val
+    },
+    route: function(val) {
+      this.route = val
+    },
+    city: function(val) {
+      this.city = val
+    },
+    region: function(val) {
+      this.region = val
+    },
+    country: function(val) {
+      this.country = val
+    },
+    postalZipCode: function(val) {
+      this.postalZipCode = val
+    },
+    email: function(val) {
+      this.email = val
+    }
+  },
   mounted() {
     this.username = this.user.username
     this.firstname = this.user.information.first_name
     this.lastname = this.user.information.last_name
     this.contactnumber = this.user.information.cellular_number
     let address = JSON.parse(this.user.information.address)
-    this.route = address.route
-    this.city = address.city
-    this.region = address.region
-    this.country = address.country
-    this.postalZipCode = address.zipcode
+    this.route = address ? address.route : ''
+    this.city = address ? address.city : ''
+    this.region = address ? address.region : ''
+    this.country = address ? address.country : ''
+    this.postalZipCode = address ? address.zipcode : ''
     this.email = this.user.email
   },
   methods: {
@@ -295,7 +327,7 @@ export default {
         offset: 0,
         limit: 1
       }
-      if(this.firstname !== '' || this.lastname !== '' || this.businessname !== '' || this.contactnumber !== '') {
+      if(this.isValidProfile) {
         let parameter = {
           id: this.user.information.id,
           account_id: this.user.userID,
@@ -313,7 +345,7 @@ export default {
           }
         })
       }
-      if(this.route !== '' || this.region !== '' || this.city !== '' || this.postalZipCode !== '' || this.city !== '' || this.country !== ''){
+      if(this.isValidAddress){
         let parameter = {
           id: this.user.information.id,
           account_id: this.user.userID,
@@ -334,7 +366,7 @@ export default {
           }
         })
       }
-      if(this.username !== '' || this.email !== '') {
+      if(this.isValidAccount) {
         let acc = {
           id: this.user.userID,
           code: this.user.code,
@@ -456,28 +488,28 @@ export default {
     },
     validate() {
       if(this.firstname !== '' || this.lastname !== '' || this.businessname !== '' || this.contactnumber !== '') {
-        if(this.firstname === '' || this.lastname === '' || this.businessname === '' || this.contactnumber === '') {
+        if(!this.firstname || !this.lastname || !this.businessname || !this.contactnumber) {
           this.isValidProfile = false
         }else{
           this.isValidProfile = true
         }
       }
       if(this.route !== '' || this.region !== '' || this.city !== '' || this.postalZipCode !== '' || this.city !== '' || this.country !== '') {
-        if(this.route === '' || this.region === '' || this.city === '' || this.postalZipCode === '' || this.city === '' || this.country === '') {
+        if(!this.route || !this.region || !this.city || !this.postalZipCode || !this.city || !this.country) {
           this.isValidAddress = false
         }else {
           this.isValidAddress = true
         }
       }
       if(this.username !== '' || this.email !== '') {
-        if(this.username === '' || this.email === '') {
+        if(!this.username || !this.email) {
           this.isValidAccount = false
         }else {
           this.isValidAccount = true
         }
       }
       if(this.password !== '' || this.cPassword !== '') {
-        if(this.password === '' || this.cPassword === '') {
+        if(!this.password || !this.cPassword) {
           this.isValidPassword = false
         }else {
           this.isValidPassword = true

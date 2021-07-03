@@ -6,6 +6,6 @@ class Plan extends APIModel
 {
     protected $table = 'plans';
     protected $fillable = [
-        'merchant_id', 'account_id' ,'plan', 'amount', 'currency', 'code'
+     'account_id' ,'plan', 'amount', 'currency', 'code'
     ];
 }
