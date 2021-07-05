@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PostTarget extends Model
+class PostTarget extends APIModel
 {
     //
     protected $table = 'post_targets';

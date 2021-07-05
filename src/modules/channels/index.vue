@@ -70,6 +70,7 @@ import roundedBtn from 'src/modules/generic/roundedBtn'
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import COLORS from 'src/assets/style/colors.js'
 import ROUTER from 'src/router'
+import AUTH from 'src/services/auth'
 export default {
   data() {
     return {
@@ -79,7 +80,7 @@ export default {
         title: 'Google My Business',
         payload: 'google',
         description: 'Reap the benefits of automating your Google My Business postings.',
-        stat: true
+        stat: false
       }, {
         index: 1,
         title: 'Facebook',
@@ -92,7 +93,9 @@ export default {
         payload: 'linkedin',
         description: 'Reap the benefits of automating your Linkedin postings.',
         stat: false
-      }]
+      }],
+      user: AUTH.user,
+      socialAuths: []
     }
   },
   components: {
@@ -100,8 +103,38 @@ export default {
   },
   created() {
     this.connectCallback()
+    this.retrieveSocialAuths()
   },
   methods: {
+    retrieveSocialAuths() {
+      let condition = {
+        condition: [
+          {
+            value: this.user.userID,
+            clause: '=',
+            column: 'account_id'
+          }
+        ],
+        offset: 0,
+        limit: 3
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('social_auths/retrieve', condition).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data){
+          this.socialAuths = response.data
+          response.data.forEach((el, ndx) => {
+            let index = this.socialCards.findIndex(le => le.payload.toLowerCase() === el.type.toLowerCase())
+            if(index >= 0) {
+              this.socialCards[index].stat = true
+            }
+          })
+        }
+      }).catch(error => {
+        error
+        $('#loading').css({'display': 'none'})
+      })
+    },
     branding(e) {
       this.$router.push('/user/channels/branding')
     },
@@ -110,19 +143,19 @@ export default {
     },
     connect(item) {
       if(item.payload === 'google') {
-        this.connectToGmail()
+        this.connectToGmail(item.payload)
       }else if(item.payload === 'facebook') {
-        this.connectToFb()
+        this.connectToFb(item.payload)
       }else if(item.payload === 'linkedin') {
-        this.connectToLinkedIn()
+        this.connectToLinkedIn(item.payload)
       }
     },
     disconnect(e) {},
-    connectToGmail() {
+    connectToGmail(payload) {
       console.log('gmail login:::')
       $('#loading').css({'display': 'block'})
-      localStorage.setItem('connect_with', 'google')
-      this.APIRequest('social_lite/authenticate/google_connect/redirect', {}, response => {
+      localStorage.setItem('connect_with', payload)
+      this.APIRequest(`social_lite/account/${payload}/redirect`, {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
           console.log('Authentication with google response: ', response)
@@ -133,11 +166,11 @@ export default {
         console.log('Authentication with google error! ', error)
       })
     },
-    connectToFb() {
+    connectToFb(payload) {
       $('#loading').css({'display': 'block'})
       console.log('facebook login:::')
-      localStorage.setItem('connect_with', 'facebook')
-      this.APIRequest('social_lite/authenticate/facebook_connect/redirect', {}, response => {
+      localStorage.setItem('connect_with', payload)
+      this.APIRequest(`social_lite/account/${payload}/redirect`, {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
           console.log('Authentication with facebook response: ', response)
@@ -148,11 +181,11 @@ export default {
         console.log('Authentication with facebook error! ', error)
       })
     },
-    connectToLinkedIn() {
+    connectToLinkedIn(payload) {
       $('#loading').css({'display': 'block'})
       console.log('linkedin login:::')
-      localStorage.setItem('connect_with', 'linkedin')
-      this.APIRequest('social_lite/authenticate/linkedin_connect/redirect', {}, response => {
+      localStorage.setItem('connect_with', payload)
+      this.APIRequest(`social_lite/account/${payload}/redirect`, {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
           console.log('Authentication with linkedin response: ', response)
@@ -168,14 +201,25 @@ export default {
         let url = window.location.href
         let query = url.substring(url.indexOf('?') + 1)
         $('#loading').css({'display': 'block'})
-        this.APIRequest(`social_lite/account/${localStorage.getItem('connect_with')}/connect?` + query, {}, response => {
+        let provider = localStorage.getItem('connect_with')
+        let providerConnect = ''
+        if(provider === 'linkedin') {
+          providerConnect = 'linkedinConnect'
+        }else if(provider === 'facebook') {
+          providerConnect = 'facebookConnect'
+        }else if(provider === 'google') {
+          providerConnect = 'googleConnect'
+        }
+        this.APIRequest(`social_lite/account/${provider}/${providerConnect}?` + query, {
+          id: this.user.userID
+        }, response => {
           $('#loading').css({'display': 'none'})
           console.log('connect response: ', response)
           localStorage.removeItem('connect_with')
-          this.$router.push(`/${this.user.type.toLowerCase()}/dashboard`)
+          ROUTER.push(`/${this.user.type.toLowerCase()}/channels`)
         }, error => {
           $('#loading').css({'display': 'none'})
-          this.$router.push(`/${this.user.type.toLowerCase()}/dashboard`)
+          ROUTER.push(`/${this.user.type.toLowerCase()}/channels`)
           localStorage.removeItem('connect_with')
           console.log('Verifying authentication error! ', error)
         })

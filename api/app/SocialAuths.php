@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SocialAuths extends Model
+class SocialAuths extends APIModel
 {
     //
     protected $table = 'social_auths';
