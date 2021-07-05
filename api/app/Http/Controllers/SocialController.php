@@ -18,7 +18,7 @@ class SocialController extends APIController
         $_provider = 'facebook';
         $redirect_uri = $provider == 'facebook' ? env('FACEBOOK_URL') : env('CONNECT_CALLBACK_URL');
       }else if(strtolower($provider) == 'linkedin' || strtolower($provider) == 'linkedin_connect') {
-        $scopes = ["r_emailaddress", "r_liteprofile", "w_member_social"];
+        $scopes = ["r_emailaddress", "r_liteprofile", "w_member_social", "r_fullprofile"];
         $_provider = 'linkedin';
         $redirect_uri = $provider == 'linkedin' ? env('LINKEDIN_URL') : env('CONNECT_CALLBACK_URL');
       }else if(strtolower($provider) == 'google' || strtolower($provider) == 'google_connect') {
@@ -60,33 +60,67 @@ class SocialController extends APIController
       ]);
     }
 
-    public function connect($provider) {
+    public function connectRedirect($provider)
+    {
+      $scopes = [];
       $redirect_uri = '';
       if(strtolower($provider) == 'facebook') {
+        $scopes = ["publish_video", "pages_manage_posts", "pages_read_engagement", "pages_show_list"];
         $redirect_uri = env('CONNECT_CALLBACK_URL');
-      }else if(strtolower($provider) == 'linkedin' || strtolower($provider) == 'linkedin_connect') {
+      }else if(strtolower($provider) == 'linkedin') {
+        $scopes = ["r_emailaddress", "r_liteprofile", "w_member_social"];
         $redirect_uri = env('CONNECT_CALLBACK_URL');
-      }else if(strtolower($provider) == 'google' || strtolower($provider) == 'google_connect') {
+      }else if(strtolower($provider) == 'google') {
         $redirect_uri = env('CONNECT_CALLBACK_URL');
       }
 
-      $result = Socialite::driver($provider)->with(['redirect_uri' => $redirect_uri])->stateless()->user();
-      // $social_auth = SocialAuths::firstOrNew(['account_id' => $id, 'type' => $provider]);
-      // $token = $user->token;
-      // if($social_auth->new){
-      //   $social_auth->token = $token;
-      //   $social_auth->save();
-      // } else {
-      //   $social_auth->id = $id;
-      //   $social_auth->type = $provider;
-      //   $social_auth->token = $token;
-      //   $social_auth->email = $user->getEmail() ? $user->getEmail() : "";
-      //   $social_auth->details = json_encode($user);
-      //   $social_auth->save();
-      // }
+      $result = Socialite::driver($provider)->with(['redirect_uri' => $redirect_uri])->scopes($scopes)->redirect()->getTargetUrl();
+      $this->response['data'] = array('url' => $result);
+      return $this->response();
+    }
+
+    public function linkedinConnect(Request $request, $provider) {
+      /**
+       * first api call retrieves USER TOKEN
+       * second api call retrieves USER INFO 
+       * third api call retrieves USER EMAIL ADDRESS
+       */
+      $data = $request->all();
+      $redirect_id = env('LINKEDIN_CLIENT_ID');
+      $redirect_client_secret = env('LINKEDIN_CLIENT_SECRET');
+      $url = 'https://www.linkedin.com/oauth/v2/accessToken?grant_type=authorization_code&client_id='.$redirect_id.'&client_secret='.$redirect_client_secret.'&code='.$request->query('code').'&redirect_uri='. env('CONNECT_CALLBACK_URL');
+      $token = $this->getCurl($url);
+      $url = 'https://api.linkedin.com/v2/me';
+      $headers =  array(
+        'Authorization: Bearer '.$token->access_token,
+        'cache-control: no-cache',
+        'X-Restli-Protocol-Version: 2.0.0'
+      );
+      $user = $this->getCurl($url, $headers);
+      $url = 'https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))';
+      $emailAddress = $this->getCurl($url, $headers);
+      $handle = (array)$emailAddress->elements[0];
+      
+      $this->saveSocialAuths($data['id'], $token->access_token, $handle['handle~']->emailAddress, $user, $provider);
 
       $this->response['data'] = $user;
       return $this->response();
+    }
+
+    public function saveSocialAuths($user, $token, $email, $social_user, $provider) {
+      $social_auth = SocialAuths::firstOrNew(['account_id' => $user, 'type' => $provider]);
+      $token = $token;
+      if($social_auth->new){
+        $social_auth->token = $token;
+        $social_auth->save();
+      } else {
+        $social_auth->account_id = $user;
+        $social_auth->type = $provider;
+        $social_auth->token = $token;
+        $social_auth->email = $email ? $email : "";
+        $social_auth->details = json_encode($social_user);
+        $social_auth->save();
+      }
     }
 
     public function checkToken(Request $request)
@@ -131,5 +165,16 @@ class SocialController extends APIController
         } else {
             return $code;
         }
+    }
+
+    public function getCurl($url, $headers = []) {
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $url);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+      $response = curl_exec($ch);
+      $result = json_decode($response);
+      curl_close($ch);
+      return $result;
     }
 }

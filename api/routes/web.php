@@ -112,7 +112,8 @@ Route::get($route.'/test', 'EmailController@test');
 $route = env('PACKAGE_ROUTE', '').'/social_lite';
 Route::post($route . '/authenticate/{provider}/redirect', 'SocialController@redirect');
 Route::post($route . '/authenticate/{provider}/callback','SocialController@Callback');
-Route::post($route . '/account/{provider}/connect','SocialController@connect');
+Route::post($route . '/account/{provider}/redirect','SocialController@connectRedirect');
+Route::post($route . '/account/{provider}/linkedinConnect','SocialController@linkedinConnect');
 Route::post($route . '/verify_token','SocialController@checkToken');
 
 // Post Management
@@ -144,6 +145,14 @@ Route::get($route.'test', $controller."test");
 
 $route = env('PACKAGE_ROUTE', '').'/brandings/';
 $controller = 'BrandingController@';
+Route::post($route.'create', $controller."create");
+Route::post($route.'update', $controller."update");
+Route::post($route.'retrieve', $controller."retrieve");
+Route::post($route.'delete', $controller."delete");
+Route::get($route.'test', $controller."test");
+
+$route = env('PACKAGE_ROUTE', '').'/social_auths/';
+$controller = 'SocialAuthController@';
 Route::post($route.'create', $controller."create");
 Route::post($route.'update', $controller."update");
 Route::post($route.'retrieve', $controller."retrieve");
