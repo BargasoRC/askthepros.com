@@ -29,9 +29,9 @@
           </span>
         </div>
         <dialogueBtn 
-          :onClick="() => {}"
+          :onClick="() => { redirect('checkout')}"
           :icon="'fas fa-sign-in-alt'" 
-          :text="'Register Now'" 
+          :text="'Current Plan'" 
           :icon_position="'right'"  
           :styles="{
             backgroundColor: '#01004E',
@@ -106,6 +106,9 @@ export default {
       console.log('Table Action: ', data)
     },
     currentPlan(){
+    },
+    redirect(parameter){
+      this.$router.push(parameter)
     }
   }
 }
