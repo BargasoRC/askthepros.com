@@ -180,6 +180,7 @@ b:hover {
 }
 .navbar {
    background: white !important;
+   z-index: 11;
 }
 .navbar-header {
   background: none !important;

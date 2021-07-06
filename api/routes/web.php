@@ -113,6 +113,7 @@ $route = env('PACKAGE_ROUTE', '').'/social_lite';
 Route::post($route . '/authenticate/{provider}/redirect', 'SocialController@redirect');
 Route::post($route . '/authenticate/{provider}/callback','SocialController@Callback');
 Route::post($route . '/account/{provider}/redirect','SocialController@connectRedirect');
+Route::post($route . '/account/{provider}/callback','SocialController@connectCallBack');
 Route::post($route . '/account/{provider}/linkedinConnect','SocialController@linkedinConnect');
 Route::post($route . '/verify_token','SocialController@checkToken');
 

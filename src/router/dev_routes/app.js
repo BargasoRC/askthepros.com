@@ -169,7 +169,7 @@ export default{
     meta: {
       tokenRequired: true
     }
-  }
+  },
   // {
   //   path: '/:user/no_subscriptions',
   //   name: 'no_subscriptions',
@@ -178,5 +178,13 @@ export default{
   //     tokenRequired: true
   //   }
   // }
+  {
+    path: '/authentication',
+    name: 'authentication',
+    component: resolve => require(['src/modules/generic/authentication.vue'], resolve),
+    meta: {
+      tokenRequired: false
+    }
+  }
   ]
 }
