@@ -8,30 +8,22 @@
     </div>
     <div class="col-md-12 mt-5 d-flex justify-content-center">
       <div class="pricing col-sm-3 p-0 pb-5">
-        <div class="layer1">
-          <h6>Industry</h6>
-          <p> 129 USD / Month</p>
-        </div>
-        <div class="layer2">
-          <span>
-            <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
-            <hr/>
-            <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
-            <hr/>
-            <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
-            <hr/>
-            <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
-            <hr/>
-            <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
-            <hr/>
-            <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Item</p>
-            <hr/>
-          </span>
+        <div v-for="(item, index1) in industry" :key="index1">
+          <div class="layer1" v-if="item.category == auth.user.data.merchant.addition_informations.industry">
+            <h6>{{item.category}}</h6>
+            <p> {{item.price}}} USD / Month</p>
+            <div class="layer2">
+              <span v-for="(list, index2) in industry[index1].benefit" :key="index2">
+                <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;{{list}}</p>
+                <hr/>            
+              </span>
+            </div>
+          </div>
         </div>
         <dialogueBtn 
-          :onClick="() => {}"
+          :onClick="() => { redirect('checkout')}"
           :icon="'fas fa-sign-in-alt'" 
-          :text="'Register Now'" 
+          :text="'Current Plan'" 
           :icon_position="'right'"  
           :styles="{
             backgroundColor: '#01004E',
@@ -50,42 +42,8 @@ import dialogueBtn from 'src/modules/generic/dialogueBtn'
 export default {
   data() {
     return {
-      tableActions: [
-        {button: `<i class="fas fa-pencil-alt ml-2 mr-2" style="color: #01009A;"></i>`},
-        {button: `<i class="fas fa-pause ml-2 mr-2" style="color: #01004E !important;"></i>`},
-        {button: `<i class="fas fa-trash-alt ml-2 mr-2" style="color: #FF0000;"></i>`}
-      ],
-      tableHeaders: [
-        {title: 'Membership', key: 'membership', type: 'text'},
-        {title: 'Subscription', key: 'subscription', type: 'text'},
-        {title: 'Active', key: 'active', type: 'text'},
-        {title: 'Created', key: 'created_at', type: 'text'},
-        {title: 'Card Expiration', key: 'expiration', type: 'text'},
-        {title: 'Actions', type: 'action'}
-      ],
-      tableData: [
-        {
-          membership: 'Managed Social Media Posting',
-          active: 'Yes',
-          subscription: 'Enabled \n Month 1 - $299 (includes one-time set up fee $199) then $99/mo. auto-billed. Cancel anytime. Expires: June 16, 2021',
-          created_at: new Date().toLocaleDateString(),
-          expiration: new Date().toLocaleDateString()
-        },
-        {
-          membership: 'Managed Social Media Posting',
-          active: 'Yes',
-          subscription: 'Enabled \n Month 1 - $299 (includes one-time set up fee $199) then $99/mo. auto-billed. Cancel anytime. Expires: June 16, 2021',
-          created_at: new Date().toLocaleDateString(),
-          expiration: new Date().toLocaleDateString()
-        },
-        {
-          membership: 'Managed Social Media Posting',
-          active: 'Yes',
-          subscription: 'Enabled \n Month 1 - $299 (includes one-time set up fee $199) then $99/mo. auto-billed. Cancel anytime. Expires: June 16, 2021',
-          created_at: new Date().toLocaleDateString(),
-          expiration: new Date().toLocaleDateString()
-        }
-      ]
+      selected: 0,
+      industry: global.industry
     }
   },
   mounted(){
@@ -106,6 +64,9 @@ export default {
       console.log('Table Action: ', data)
     },
     currentPlan(){
+    },
+    redirect(parameter){
+      this.$router.push(parameter)
     }
   }
 }
