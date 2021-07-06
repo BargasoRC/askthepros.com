@@ -31,7 +31,8 @@ export default {
     ledger: {
       amount: 0,
       currency: 'PHP'
-    }
+    },
+    merchant: null
   },
   messenger: {
     messages: [],
@@ -169,7 +170,9 @@ export default {
         console.log('ERRRROOORRR:: ', error)
       })
 
-      this.retrieveAccountProfileAndInformation(id)
+      if(!this.user.information) {
+        this.retrieveAccountProfileAndInformation(id)
+      }
 
       return true
     }else{
@@ -180,7 +183,7 @@ export default {
     }
 
   },
-  retrieveAccountProfileAndInformation(id) {
+  async retrieveAccountProfileAndInformation(id) {
     let condition = {
       condition: [
         {
@@ -205,6 +208,13 @@ export default {
     }, error => {
       error
     })
+    vue.APIRequest('merchants/retrieve', condition, response => {
+      if(response.data.length > 0) {
+        this.user.merchant = response.data[0]
+      }
+    }, error => {
+      error
+    })
   },
   deaunthenticate(){
     this.tokenData.loading = true
@@ -217,13 +227,15 @@ export default {
     localStorage.clear()
     this.setUser(null)
     let vue = new Vue()
-    vue.APIRequest('authenticate/invalidate')
     this.clearNotifTimer()
-    this.tokenData.token = null
-    setTimeout(() => {
-      this.tokenData.loading = true
-    }, 1000)
-    ROUTER.go('/')
+    vue.APIRequest('authenticate/invalidate').then((response) => {
+      this.tokenData.token = null
+      this.tokenData.loading = false
+      ROUTER.push('/')
+    })
+    // setTimeout(() => {
+    //   this.tokenData.loading = false
+    // }, 1000)
   },
   retrieveNotifications(accountId){
     let vue = new Vue()

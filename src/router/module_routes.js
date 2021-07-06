@@ -6,7 +6,7 @@ let beforeEnter = (to, from, next) => {
   let userID = parseInt(localStorage.getItem('account_id'))
   let token = localStorage.getItem('usertoken')
   if(token !== null && userID > 0){
-    if(to.path === '/' || to.meta.tokenRequired === false){
+    if((to.path === '/' || to.meta.tokenRequired === false) && to.path !== '/authentication'){
       next({path: `/${AUTH.user.type.toLowerCase()}/dashboard`})
     }else{
       next()

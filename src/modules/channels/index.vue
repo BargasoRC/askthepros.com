@@ -102,7 +102,6 @@ export default {
     roundedBtn
   },
   created() {
-    this.connectCallback()
     this.retrieveSocialAuths()
   },
   methods: {
@@ -155,7 +154,7 @@ export default {
       console.log('gmail login:::')
       $('#loading').css({'display': 'block'})
       localStorage.setItem('connect_with', payload)
-      this.APIRequest(`social_lite/account/${payload}/redirect`, {}, response => {
+      this.APIRequest(`social_lite/authenticate/${payload}/redirect`, {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
           console.log('Authentication with google response: ', response)
@@ -170,7 +169,7 @@ export default {
       $('#loading').css({'display': 'block'})
       console.log('facebook login:::')
       localStorage.setItem('connect_with', payload)
-      this.APIRequest(`social_lite/account/${payload}/redirect`, {}, response => {
+      this.APIRequest(`social_lite/authenticate/${payload}/redirect`, {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
           console.log('Authentication with facebook response: ', response)
@@ -185,7 +184,7 @@ export default {
       $('#loading').css({'display': 'block'})
       console.log('linkedin login:::')
       localStorage.setItem('connect_with', payload)
-      this.APIRequest(`social_lite/account/${payload}/redirect`, {}, response => {
+      this.APIRequest(`social_lite/authenticate/${payload}/redirect`, {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
           console.log('Authentication with linkedin response: ', response)
@@ -195,35 +194,6 @@ export default {
         $('#loading').css({'display': 'none'})
         console.log('Authentication with linkedin error! ', error)
       })
-    },
-    connectCallback() {
-      if(new RegExp(/\?.+=.*/g).test(window.location.href) && localStorage.getItem('connect_with')) {
-        let url = window.location.href
-        let query = url.substring(url.indexOf('?') + 1)
-        $('#loading').css({'display': 'block'})
-        let provider = localStorage.getItem('connect_with')
-        let providerConnect = ''
-        if(provider === 'linkedin') {
-          providerConnect = 'linkedinConnect'
-        }else if(provider === 'facebook') {
-          providerConnect = 'facebookConnect'
-        }else if(provider === 'google') {
-          providerConnect = 'googleConnect'
-        }
-        this.APIRequest(`social_lite/account/${provider}/${providerConnect}?` + query, {
-          id: this.user.userID
-        }, response => {
-          $('#loading').css({'display': 'none'})
-          console.log('connect response: ', response)
-          localStorage.removeItem('connect_with')
-          ROUTER.push(`/${this.user.type.toLowerCase()}/channels`)
-        }, error => {
-          $('#loading').css({'display': 'none'})
-          ROUTER.push(`/${this.user.type.toLowerCase()}/channels`)
-          localStorage.removeItem('connect_with')
-          console.log('Verifying authentication error! ', error)
-        })
-      }
     }
   }
 }

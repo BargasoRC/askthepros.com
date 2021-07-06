@@ -167,34 +167,7 @@ export default {
     roundedInput,
     roundedBtn
   },
-  mounted() {
-    if(new RegExp(/\?.+=.*/g).test(window.location.href) && localStorage.getItem('login_with')) {
-      let url = window.location.href
-      let query = url.substring(url.indexOf('?') + 1)
-      $('#loading').css({'display': 'block'})
-      this.APIRequest(`social_lite/authenticate/${localStorage.getItem('login_with')}/callback?` + query, {}, response => {
-        $('#loading').css({'display': 'none'})
-        localStorage.removeItem('login_with')
-        localStorage.setItem('usertoken', response.token)
-        AUTH.hash('hide', response.login_type)
-        AUTH.setUser(response.user[0])
-        AUTH.checkAuthentication()
-        setTimeout(() => {
-          localStorage.removeItem('usertoken')
-          localStorage.removeItem('account_id')
-          localStorage.removeItem('google_code')
-          localStorage.removeItem('google_scope')
-          localStorage.removeItem('xyzABCdefPayhiram')
-          localStorage.clear()
-        }, response.expires)
-        ROUTER.push(`/${response.user[0].account_type.toLowerCase()}/dashboard`)
-      }, error => {
-        $('#loading').css({'display': 'none'})
-        localStorage.removeItem('login_with')
-        console.log('Verifying authentication error! ', error)
-      })
-    }
-  },
+  mounted() {},
   methods: {
     login(event) {
       if(this.username !== '' && this.password !== '') {

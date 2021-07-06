@@ -42,8 +42,8 @@
   padding: 10px;
 }
 .container {
-   min-height:100%;
-   position:relative;
+  min-height:100%;
+  position:relative;
 }
 
 /*
