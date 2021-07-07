@@ -131,10 +131,10 @@ export default {
       this.tokenData.token = response.token
       this.setToken(this.tokenData.token)
       this.hash('hide', response.login_type)
-      vue.APIRequest('authenticate/user', {}, (userInfo) => {
+      vue.APIRequest('authenticate/user', {}, async (userInfo) => {
         this.setUser(userInfo, null, null)
         this.retrieveAccountProfileAndInformation(userInfo.id)
-        callback(response)
+        await callback(response)
       })
     }, (response, status) => {
       if(errorCallback){

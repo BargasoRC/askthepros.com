@@ -48,7 +48,7 @@
           <button type="button" class="btn btn-warning header-button-type">ADMIN</button> 
         </div>
         <div v-else-if="user.type == 'USER'">
-          <button type="button" class="btn btn-warning header-button-type"><p>INDUSTRY NAME</p></button>
+          <!-- <button type="button" class="btn btn-warning header-button-type"><p>INDUSTRY NAME</p></button> -->
           <button type="button" class="btn btn-warning header-button-type" style="float: right;"><p>COMPANY NAME</p></button>
         </div>
         <div v-else>

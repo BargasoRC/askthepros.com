@@ -307,6 +307,7 @@ export default {
     this.country = address ? address.country : ''
     this.postalZipCode = address ? address.zipcode : ''
     this.email = this.user.email
+    this.businessname = this.user.merchant ? this.user.merchant.name : ''
   },
   methods: {
     connect(item){

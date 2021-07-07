@@ -58,7 +58,7 @@
           <p v-if="!item.stat">Setup and link your account now!</p>
           <p v-if="item.stat">Your account has successfully <span style="color: #51DB78">CONNECTED</span>.</p>
           <roundedBtn v-if="!item.stat" :onClick="(event) => connect(item)" :text="'Connect'" :styles="{backgroundColor: '#01004E', color: 'white', height: '45px', width: '150px'}"/>
-          <roundedBtn v-if="item.stat" :onClick="disconnect" :text="'Remove'" :styles="{backgroundColor: 'white', border: '1px solid #01004E', color: '#01004E', height: '45px', width: '150px'}"/>
+          <roundedBtn v-if="item.stat" :onClick="(e) => disconnect(item)" :text="'Remove'" :styles="{backgroundColor: 'white', border: '1px solid #01004E', color: '#01004E', height: '45px', width: '150px'}"/>
         </div>
       </div>
     </div>
@@ -149,7 +149,21 @@ export default {
         this.connectToLinkedIn(item.payload)
       }
     },
-    disconnect(e) {},
+    disconnect(item) {
+      let index = this.socialAuths.findIndex(le => le.type.toLowerCase() === item.payload.toLowerCase())
+      let parameter = {
+        id: this.socialAuths[index].id
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('social_auths/delete', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        let index = this.socialCards.findIndex(le => le.payload.toLowerCase() === item.payload.toLowerCase())
+        this.socialCards[index].stat = false
+      }).catch(error => {
+        error
+        $('#loading').css({'display': 'none'})
+      })
+    },
     connectToGmail(payload) {
       console.log('gmail login:::')
       $('#loading').css({'display': 'block'})
