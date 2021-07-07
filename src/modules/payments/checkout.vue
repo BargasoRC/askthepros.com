@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid mb-5">
 		<h2 class="mt-5">Checkout Summary</h2>
 		<hr />
 		<div>
@@ -42,9 +42,9 @@
           color: 'red'
         }">*</i>Name on the card:</p>
         <input 
-          :class="!this.isValid && cardName == '' ? 'form-control mb-0' : 'form-control'"
+          :class="!isValid && cardName == '' ? 'form-control mb-0' : 'form-control'"
           :style="{
-            ...!this.isValid && cardName == '' ? {border: '1px solid red !important'} : '',
+            ...!isValid && cardName == '' ? {border: '1px solid red !important'} : '',
             ...{
               height: '45px'
             }
@@ -53,18 +53,18 @@
         >
         <p
           class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
-          v-if="!this.isValid && cardName == ''"
+          v-if="!isValid && cardName == ''"
         >Required Field</p>
       </div>
       <div class="mt-3">
         <p class="mb-2"><i :style="{
           color: 'red'
-        }">*</i>Credit card:</p>
+        }">*</i>Credit Number:</p>
         <input 
-          :class="!this.isValid && cardNumber == '' ? 'form-control mb-0' : 'form-control'"
+          :class="!isValid && cardNumber == '' ? 'form-control mb-0' : 'form-control'"
           placeholder="Card number"
           :style="{
-            ...!this.isValid && cardNumber == '' ? {border: '1px solid red !important'} : '',
+            ...!isValid && cardNumber == '' ? {border: '1px solid red !important'} : '',
             ...{
               height: '45px'
             }
@@ -73,7 +73,48 @@
         >
         <p
           class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
-          v-if="!this.isValid && cardNumber == ''"
+          v-if="!isValid && cardNumber == ''"
+        >Required Field</p>
+      </div>
+      <div class="mt-3">
+        <p class="mb-2"><i :style="{
+          color: 'red'
+        }">*</i>Expiration</p>
+        <input 
+          :class="!isValid && cardExpiration == '' ? 'form-control mb-0' : 'form-control'"
+          placeholder="MM / YY"
+          :type="'date'"
+          :style="{
+            ...!isValid && cardExpiration == '' ? {border: '1px solid red !important'} : '',
+            ...{
+              height: '45px'
+            }
+          }"
+          v-model="cardExpiration"
+        >
+        <p
+          class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
+          v-if="!isValid && cardNumber == ''"
+        >Required Field</p>
+      </div>
+      <div class="mt-3">
+        <p class="mb-2"><i :style="{
+          color: 'red'
+        }">*</i>CVC</p>
+        <input 
+          :class="!isValid && cardCVC == '' ? 'form-control mb-0' : 'form-control'"
+          placeholder="MM / YY"
+          :style="{
+            ...!isValid && cardCVC == '' ? {border: '1px solid red !important'} : '',
+            ...{
+              height: '45px'
+            }
+          }"
+          v-model="cardCVC"
+        >
+        <p
+          class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
+          v-if="!isValid && cardNumber == ''"
         >Required Field</p>
       </div>
       <div class="mt-3 d-flex justify-content-start">
@@ -114,6 +155,8 @@ export default {
       isValid: true,
       cardName: '',
       cardNumber: '',
+      cardExpiration: '',
+      cardCVC: '',
       isAgree: false
     }
   },
