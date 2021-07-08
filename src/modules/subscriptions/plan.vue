@@ -8,18 +8,24 @@
     </div>
     <div class="col-md-12 mt-5 d-flex justify-content-center">
       <div class="pricing col-sm-3 p-0 pb-5">
-        <div v-for="(item, index1) in industry" :key="index1">
-          <div class="layer1" v-if="item.category == auth.user.data.merchant.addition_informations.industry">
-            <h6>{{item.category}}</h6>
-            <p> {{item.price}}} USD / Month</p>
-            <div class="layer2">
-              <span v-for="(list, index2) in industry[index1].benefit" :key="index2">
-                <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;{{list}}</p>
-                <hr/>            
-              </span>
+          <div v-for="(item, index) in industry" :key="index">
+            <!-- Replace Manufacturing with merchant.industry when api side is fixed -->
+            <div v-if="user.merchant.addition_informations.industry == item.category"> 
+              <div class="layer1">
+                <h6>{{item.category}}</h6>
+                <p> {{item.price}} USD / Month</p>
+              </div>
+              <div class="layer2">
+                <div v-for="(list, index2) in item.benefit" :key="index2"> 
+                  <span >
+                  <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;{{list}}</p>
+                  <hr/>            
+                </span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+          <!-- {{test(merchant.industry)}} -->
         <dialogueBtn 
           :onClick="() => { redirect('checkout')}"
           :icon="'fas fa-sign-in-alt'" 
@@ -39,20 +45,19 @@
 <script>
 import DataTable from 'src/modules/generic/table'
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
+import AUTH from 'src/services/auth'
+import global from 'src/helpers/global'
 export default {
   data() {
     return {
-      selected: 0,
-      industry: global.industry
+      user: AUTH.user
     }
   },
   mounted(){
   },
   computed: {
-    returnIndustry() {
-      return this.industry.map(el => {
-        return el.category
-      })
+    industry: function () {
+      return global.industry
     }
   },
   components: {
@@ -60,13 +65,11 @@ export default {
     dialogueBtn
   },
   methods: {
-    onTableAction(data) {
-      console.log('Table Action: ', data)
-    },
-    currentPlan(){
-    },
     redirect(parameter){
       this.$router.push(parameter)
+    },
+    test(parameter){
+      console.log(parameter)
     }
   }
 }
