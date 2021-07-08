@@ -82,7 +82,7 @@
         }">*</i>Expiration</p>
         <input 
           :class="!isValid && cardExpiration == '' ? 'form-control mb-0' : 'form-control'"
-          placeholder="MM / YY"
+          :placeholder="'MM / YY'"
           :type="'date'"
           :style="{
             ...!isValid && cardExpiration == '' ? {border: '1px solid red !important'} : '',
@@ -103,7 +103,7 @@
         }">*</i>CVC</p>
         <input 
           :class="!isValid && cardCVC == '' ? 'form-control mb-0' : 'form-control'"
-          placeholder="MM / YY"
+          :placeholder="'CVC'"
           :style="{
             ...!isValid && cardCVC == '' ? {border: '1px solid red !important'} : '',
             ...{
