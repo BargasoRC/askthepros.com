@@ -47,15 +47,10 @@
             </span>
         </div>
 
-        <div v-if="user.type == 'ADMIN'"> 
-          <button type="button" class="btn btn-warning header-button-type">ADMIN</button> 
-        </div>
-        <div v-else-if="user.type == 'USER' && user.merchant">
+        <div v-if="user.type == 'USER' && user.merchant">
           <!-- <button type="button" class="btn btn-warning header-button-type"><p>INDUSTRY NAME</p></button> -->
           <button type="button" class="btn btn-warning header-button-type text-white" style="float: right;">{{user.merchant.name.toUpperCase()}}</button>
         </div>
-        <div v-else>
-          <button type="button" class="btn btn-warning header-button-type"><p>CONTENT EXPERT</p></button></div>
         
       </span>
       
