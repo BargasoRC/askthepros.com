@@ -79,6 +79,7 @@ export default {
       this.user.information = null
       this.user.subAccount = null
       this.user.code = null
+      this.user.merchant = null
     }else{
       this.user.userID = user.id
       this.user.username = user.username
@@ -89,6 +90,11 @@ export default {
       this.user.information = user.information
       this.user.subAccount = null
       this.user.code = user.code
+      let merchant = {
+        ...user.merchant,
+        addition_informations: user.merchant.addition_informations ? JSON.parse(user.merchant.addition_informations) : null
+      }
+      this.user.merchant = merchant
       console.log('hi', user)
       localStorage.setItem('account_id', this.user.userID)
       setTimeout(() => {
@@ -133,7 +139,7 @@ export default {
       this.hash('hide', response.login_type)
       vue.APIRequest('authenticate/user', {}, async (userInfo) => {
         this.setUser(userInfo, null, null)
-        this.retrieveAccountProfileAndInformation(userInfo.id)
+        // this.retrieveAccountProfileAndInformation(userInfo.id)
         await callback(response)
       })
     }, (response, status) => {
@@ -171,7 +177,7 @@ export default {
       })
 
       if(!this.user.information) {
-        this.retrieveAccountProfileAndInformation(id)
+        // this.retrieveAccountProfileAndInformation(id)
       }
 
       return true

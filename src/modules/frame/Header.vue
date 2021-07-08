@@ -11,8 +11,11 @@
       <span class="navbar-menu-toggler-md" v-bind:class="{'active-menu': menuFlag === true}" data-toggle="collapse" data-target="#idfactory" aria-controls="idfactory" aria-expanded="false" aria-label="Toggle navigation" v-on:click="makeActive('menu')">
         <i class="fa fa-bars" aria-hidden="true"></i>
       </span>
-      <span class="left-menu-icons">
-        <label class="account-type  hide-on-mobile bg-warning" v-if="user !== null && user.merchant">{{user.merchant.name}}</label>
+      <span class="left-menu-icons" v-if="user.type !== 'USER'">
+        <label class="account-type  hide-on-mobile bg-warning" v-if="user !== null && user.type">{{user.type}}</label>
+      </span>
+      <span class="left-menu-icons" v-if="user.type === 'USER'">
+        <label class="account-type  hide-on-mobile bg-warning" v-if="user !== null && user.merchant">{{user.merchant.addition_informations.industry}}</label>
       </span>
       <span class="right-menu-icons">
         <div class="dropdown"> 
@@ -47,9 +50,9 @@
         <div v-if="user.type == 'ADMIN'"> 
           <button type="button" class="btn btn-warning header-button-type">ADMIN</button> 
         </div>
-        <div v-else-if="user.type == 'USER'">
+        <div v-else-if="user.type == 'USER' && user.merchant">
           <!-- <button type="button" class="btn btn-warning header-button-type"><p>INDUSTRY NAME</p></button> -->
-          <button type="button" class="btn btn-warning header-button-type" style="float: right;"><p>COMPANY NAME</p></button>
+          <button type="button" class="btn btn-warning header-button-type text-white" style="float: right;">{{user.merchant.name.toUpperCase()}}</button>
         </div>
         <div v-else>
           <button type="button" class="btn btn-warning header-button-type"><p>CONTENT EXPERT</p></button></div>

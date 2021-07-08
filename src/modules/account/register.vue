@@ -292,7 +292,7 @@ export default {
         this.APIRequest('account/create', parameter).then(response => {
           $('#loading').css({'display': 'none'})
           if(response.data !== null) {
-            this.createMerchantAndPayload(response.data)
+            // this.createMerchantAndPayload(response.data)
           }else if(response.error !== null){
             if(response.error.status === 100){
               let message = response.error.message

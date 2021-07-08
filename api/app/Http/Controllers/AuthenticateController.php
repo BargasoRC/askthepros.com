@@ -114,11 +114,15 @@ class AuthenticateController extends Controller
 
     // the token is valid and we have found the user via the sub claim
     if($user){
-      $user['scope_location'] = app('Increment\Imarket\Location\Http\LocationController')->getColumnValueByParams('account_id', $user['id'], 'code');
+      // add merchant
+      // profile = url {url => }
+      $user['profile'] = app('Increment\Account\Http\AccountProfileController')->getProfileUrlByAccountId($user['id']);
+      $user['merchant'] = app('Increment\Imarket\Merchant\Http\MerchantController')->getByParams('account_id', $user['id']);
     }
     $user['login_type'] = 'local';
     return response()->json($user);
   }
+  
   public function customValidate($text){
     $validation = array('email' => 'required|email'); 
     return $this->validateReply($text, $validation);
