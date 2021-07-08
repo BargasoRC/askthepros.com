@@ -2,78 +2,97 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\APIController;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Increment\Account\Models\Account;
 use Increment\Account\Models\AccountInformation;
 use Increment\Account\Models\BillingInformation;
-use App\Http\Controllers\EmailController;
-use App\Http\Controllers\APIController;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
+use Increment\Imarket\Merchant\Models\Merchant;
 
 class RegisterController extends APIController
 {
-  /**
-   * Created this controller so that the type INDUSTRY of the user will be created
-   */
-  public function __construct()
-  {
-    $this->model = new Account();
-    $this->validation = array(  
-      "email" => "unique:accounts",
-      "username"  => "unique:accounts"
-    );
-    $this->notRequired = array(
-      'token'
-    );
-  }
-
-  public function create(Request $request){
     /**
-     * Initially removed the email verification, to successfully register and create INDUSTRY
+     * Created this controller so that the type INDUSTRY of the user will be created
      */
-    $request = $request->all();
-    $referralCode = $request['referral_code'];
-    $invitationPassword = $request['password'];
-    $dataAccount = array(
-      'code'  => $this->generateCode(),
-      'password'        => Hash::make($request['password']),
-      'status'          => 'NOT_VERIFIED',
-      'email'           => $request['email'],
-      'username'        => $request['username'],
-      'account_type'    => $request['account_type'],
-      'created_at'      => Carbon::now()
-    );
-    $this->model = new Account();
-    $this->insertDB($dataAccount, true);
-    
-    return $this->response();
-  }
-
-  public function createDetails($accountId, $type){
-    $info = new AccountInformation();
-    $info->account_id = $accountId;
-    $info->created_at = Carbon::now();
-    $info->save();
-
-    $billing = new BillingInformation();
-    $billing->account_id = $accountId;
-    $billing->created_at = Carbon::now();
-    $billing->save();
-    if(env('NOTIFICATION_SETTING_FLAG') == true){
-      app('App\Http\Controllers\NotificationSettingController')->insert($accountId);
+    public function __construct()
+    {
+        $this->model = new Account();
+        $this->validation = array(
+            "email" => "unique:accounts",
+            "username" => "unique:accounts",
+        );
+        $this->notRequired = array(
+            'token',
+        );
     }
-  }
 
-  public function generateCode(){
-    $code = 'acc_'.substr(str_shuffle($this->codeSource), 0, 60);
-    $codeExist = Account::where('code', '=', $code)->get();
-    if(sizeof($codeExist) > 0){
-      $this->generateCode();
-    }else{
-      return $code;
+    public function create(Request $request)
+    {
+        /**
+         * Initially removed the email verification, to successfully register and create INDUSTRY
+         */
+        \DB::beginTransaction();
+        try {
+            $request = $request->all();
+            $referralCode = $request['referral_code'];
+            $invitationPassword = $request['password'];
+
+            $account = new Account();
+            $account->code = $this->generateCode($account);
+            $account->password = Hash::make($request['password']);
+            $account->status = 'NOT_VERIFIED';
+            $account->email = $request['email'];
+            $account->username = $request['username'];
+            $account->account_type = $request['account_type'];
+            $account->created_at = Carbon::now();
+            $account->save();
+
+            $merchant = new Merchant();
+            $merchant->account_id = $account->id;
+            $merchant->code = $this->generateCode($merchant);
+            $merchant->email = $account->email;
+            $merchant->addition_informations = $request['industry'];
+            $merchant->save();
+
+
+            \DB::commit();
+            $this->response['data'] = 'account_successfully_created';
+            $this->response['error'] = null;
+        } catch (\Exception $e) {
+            \DB::rollback();
+            $this->response['data'] = null;
+            $this->response['error'] = $e->getMessage();
+            $this->response['error_status'] = $e->getCode();
+        }
+        return $this->response();
     }
-  }
+
+    public function createDetails($accountId, $type)
+    {
+        $info = new AccountInformation();
+        $info->account_id = $accountId;
+        $info->created_at = Carbon::now();
+        $info->save();
+
+        $billing = new BillingInformation();
+        $billing->account_id = $accountId;
+        $billing->created_at = Carbon::now();
+        $billing->save();
+        if (env('NOTIFICATION_SETTING_FLAG') == true) {
+            app('App\Http\Controllers\NotificationSettingController')->insert($accountId);
+        }
+    }
+
+    public function generateCode($db){
+      $code = substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 32);
+      $codeExist = $db::where('code', '=', $code)->get();
+      if(sizeof($codeExist) > 0){
+        $this->generateCode();
+      }else{
+        return $code;
+      }
+    }
 }
