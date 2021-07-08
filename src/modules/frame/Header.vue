@@ -674,9 +674,6 @@ import Echo from 'laravel-echo'
 import Vue from 'vue'
 export default {
   mounted(){
-    if(COMMON.broadcastingFlag === true){
-      this.initPusher()
-    }
   },
   data(){
     return{

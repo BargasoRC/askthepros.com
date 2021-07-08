@@ -90,9 +90,12 @@ export default {
       this.user.information = user.information
       this.user.subAccount = null
       this.user.code = user.code
-      let merchant = {
-        ...user.merchant,
-        addition_informations: user.merchant.addition_informations ? JSON.parse(user.merchant.addition_informations) : null
+      let merchant = null
+      if(user.merchant){
+        merchant = {
+          ...user.merchant,
+          addition_informations: user.merchant.addition_informations ? JSON.parse(user.merchant.addition_informations) : null
+        }
       }
       this.user.merchant = merchant
       console.log('hi', user)
@@ -386,15 +389,5 @@ export default {
       currency: currency
     })
     return formatter.format(amount)
-  },
-  showRequestType(type){
-    switch(parseInt(type)){
-      case 1: return 'Send'
-      case 2: return 'Withdrawal'
-      case 3: return 'Deposit'
-      case 4: return 'Bills and Payments'
-      case 101: return 'Lending'
-      case 102: return 'Installment'
-    }
   }
 }
