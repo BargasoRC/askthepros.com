@@ -9,7 +9,6 @@
     <div class="col-md-12 mt-5 d-flex justify-content-center">
       <div class="pricing col-sm-3 p-0 pb-5">
           <div v-for="(item, index) in industry" :key="index">
-            <!-- Replace Manufacturing with merchant.industry when api side is fixed -->
             <div v-if="user.merchant.addition_informations.industry == item.category"> 
               <div class="layer1">
                 <h6>{{item.category}}</h6>
@@ -25,7 +24,6 @@
               </div>
             </div>
           </div>
-          <!-- {{test(merchant.industry)}} -->
         <dialogueBtn 
           :onClick="() => { redirect('checkout')}"
           :icon="'fas fa-sign-in-alt'" 
