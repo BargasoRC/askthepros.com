@@ -152,6 +152,14 @@ Route::post($route.'retrieve', $controller."retrieve");
 Route::post($route.'delete', $controller."delete");
 Route::get($route.'test', $controller."test");
 
+$route = env('PACKAGE_ROUTE', '').'/accounts_info/';
+$controller = 'AccountInformationsContoller@';
+Route::post($route.'create', $controller."create");
+Route::post($route.'retrieve', $controller."retrieveAccountInformation");
+Route::post($route.'update', $controller."update");
+Route::post($route.'delete', $controller."delete");
+Route::get($route.'test', $controller."test");
+
 $route = env('PACKAGE_ROUTE', '').'/social_auths/';
 $controller = 'SocialAuthController@';
 Route::post($route.'create', $controller."create");
