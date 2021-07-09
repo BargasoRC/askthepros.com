@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Jobs\Posting;
+use App\Jobs\Posting as PostingJob;
 class Posting extends Command
 {
     /**
@@ -38,7 +38,7 @@ class Posting extends Command
     public function handle()
     {
         echo '[Posting Command] Start running ...';
-        CampaignsJob::dispatch();
+        PostingJob::dispatch();
         echo "\n[Posting Command] Completed";
     }
 }
