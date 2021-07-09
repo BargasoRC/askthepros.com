@@ -1,3 +1,5 @@
+const https = require('https')
+const fs = require('fs')
 require('./check-versions')()
 
 var config = require('../config')
@@ -72,14 +74,7 @@ devMiddleware.waitUntilValid(function () {
   console.log('> Listening at ' + uri + '\n')
 })
 
-module.exports = app.listen(port, function (err) {
-  if (err) {
-    console.log(err)
-    return
-  }
-
-  // when env is testing, don't need open it
-  if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
-    opn(uri)
-  }
-})
+module.exports = server = https.createServer({
+  key: fs.readFileSync('./certs/server.key'),
+  cert: fs.readFileSync('./certs/server.cert')
+}, app).listen(port);

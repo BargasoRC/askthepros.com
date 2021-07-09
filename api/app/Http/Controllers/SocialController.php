@@ -41,7 +41,7 @@ class SocialController extends APIController
         $acc->save();
       } else {
         $acc->code = $this->generateCode();
-        $acc->username = $user->getId();
+        $acc->username = $user->getEmail() ? $user->getEmail() : "";
         $acc->email = $user->getEmail() ? $user->getEmail() : "";
         $acc->account_type = 'USER';
         $acc->status = 'NOT_VERIFIED';

@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     pay() {
-      this.$router.push(`/${this.user.type}/checkout`)
+      this.$router.push(`/${this.user.type.toLowerCase()}/checkout`)
     }
   }
 }

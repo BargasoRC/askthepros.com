@@ -286,12 +286,14 @@ export default {
           config: CONFIG,
           account_type: this.type,
           referral_code: null,
-          status: 'ADMIN'
+          status: 'ADMIN',
+          industry: JSON.stringify({industry: this.industry[this.selectedIndustry].category})
         }
         $('#loading').css({'display': 'block'})
         this.APIRequest('account/create', parameter).then(response => {
           $('#loading').css({'display': 'none'})
           if(response.data !== null) {
+            this.login()
             // this.createMerchantAndPayload(response.data)
           }else if(response.error !== null){
             if(response.error.status === 100){
