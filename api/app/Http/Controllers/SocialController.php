@@ -34,7 +34,7 @@ class SocialController extends APIController
     public function Callback($provider)
     {
       $user = Socialite::driver($provider)->stateless()->user();
-      $acc = Account::firstOrNew(['email' => $user->getEmail(), 'username' => $user->getId()]);
+      $acc = Account::firstOrNew(['email' => $user->getEmail()]);
       $token = $user->token;
       if ($acc->new) {
         $acc->token = $token;
