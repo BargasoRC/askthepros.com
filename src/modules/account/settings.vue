@@ -296,22 +296,35 @@ export default {
     }
   },
   mounted() {
-    this.username = this.user.username
-    this.firstname = this.user.information.first_name
-    this.lastname = this.user.information.last_name
-    this.contactnumber = this.user.information.cellular_number
-    let address = JSON.parse(this.user.information.address)
-    this.route = address ? address.route : ''
-    this.city = address ? address.city : ''
-    this.region = address ? address.region : ''
-    this.country = address ? address.country : ''
-    this.postalZipCode = address ? address.zipcode : ''
-    this.email = this.user.email
-    this.businessname = this.user.merchant ? this.user.merchant.name : ''
+    this.retrieveInformation()
   },
   methods: {
     connect(item){
       // ROUTER.push('/' + item.payload)
+    },
+    retrieveInformation() {
+      let parameter = {
+        account_id: this.user.userID
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('accounts_info/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        let data = response.data[0]
+        this.username = this.user.username
+        if(response.data.length > 0) {
+          this.firstname = data.first_name
+          this.lastname = data.last_name
+          this.contactnumber = data.cellular_number
+          let address = JSON.parse(data.address)
+          this.route = address ? address.route : ''
+          this.city = address ? address.city : ''
+          this.region = address ? address.region : ''
+          this.country = address ? address.country : ''
+          this.postalZipCode = address ? address.zipcode : ''
+          this.email = this.user.email
+          this.businessname = this.user.merchant ? this.user.merchant.name : ''
+        }
+      })
     },
     update_account(event){
       if(!this.validate()) {

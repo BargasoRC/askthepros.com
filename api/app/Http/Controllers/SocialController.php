@@ -37,14 +37,14 @@ class SocialController extends APIController
       $acc = Account::firstOrNew(['email' => $user->getEmail()]);
       $token = $user->token;
       if ($acc->new) {
-        $acc->token = $token;
-        $acc->save();
-      } else {
         $acc->code = $this->generateCode();
         $acc->username = $user->getEmail() ? $user->getEmail() : "";
         $acc->email = $user->getEmail() ? $user->getEmail() : "";
         $acc->account_type = 'USER';
-        $acc->status = 'NOT_VERIFIED';
+        $acc->status = 'NOT_VERIFIEDs';
+        $acc->token = $token;
+        $acc->save();
+      } else {
         $acc->token = $token;
         $acc->save();
       }
