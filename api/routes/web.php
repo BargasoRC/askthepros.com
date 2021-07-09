@@ -122,6 +122,7 @@ $route = env('PACKAGE_ROUTE', '').'/post';
 Route::post($route . '/create', 'PostController@create');
 Route::post($route . '/retrieve', 'PostController@retrieve');
 Route::post($route . '/retrieve_by_user', 'PostController@retrieveByUser');
+Route::post($route . '/retrieve_by_id', 'PostController@retrieveById');
 
 $route = env('PACKAGE_ROUTE', '').'/file';
 Route::post($route . '/upload', 'FileUploadController@upload');
