@@ -227,7 +227,6 @@ export default {
   },
   deaunthenticate(){
     this.tokenData.loading = true
-    localStorage.removeItem('usertoken')
     localStorage.removeItem('account_id')
     localStorage.removeItem('google_code')
     localStorage.removeItem('google_scope')
@@ -238,6 +237,7 @@ export default {
     let vue = new Vue()
     this.clearNotifTimer()
     vue.APIRequest('authenticate/invalidate').then((response) => {
+      localStorage.removeItem('usertoken')
       this.tokenData.token = null
       this.tokenData.loading = false
       ROUTER.push('/')
