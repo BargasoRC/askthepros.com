@@ -5,6 +5,7 @@
 
     <div style="margin-top: 3%">
         <roundedBtn
+            :onClick="()=>{}"
             :text="'For Review'"
             class="button"
             :styles="{
@@ -60,6 +61,7 @@ import DataTable from 'src/modules/generic/table'
 import COLORS from 'src/assets/style/colors.js'
 import Pager from 'src/components/increment/generic/pager/Pager.vue'
 import ROUTER from 'src/router'
+import AUTH from 'src/services/auth'
 export default {
   data() {
     return {
@@ -67,38 +69,19 @@ export default {
         {button: `<i class="fas fa-eye ml-2 mr-2" style="color: #01009A !important;"></i>`}
       ],
       tableHeaders: [
-        {title: 'Date', key: 'date', type: 'text'},
-        {title: 'Post Title', key: 'post_title', type: 'text'},
-        {title: 'Channel To Post', key: 'channels_to_post', type: 'text'},
-        {title: 'Status', key: 'status', type: 'text'},
+        {title: 'Date', key: 'created_at', type: 'text'},
+        {title: 'Post Title', key: 'title', type: 'text'},
+        {title: 'Channel To Post', key: 'channels', type: 'text'},
+        {title: 'Status', key: 'status', type: 'status'},
         {title: 'Review', type: 'action'}
       ],
-      tableData: [{
-        id: 1,
-        date: '05/18/2021',
-        post_title: 'My Post Title',
-        channels_to_post: 'Google My Business, Facebook, LinkedIn',
-        status: 'Pending'
-      },
-      {
-        id: 2,
-        date: '05/18/2021',
-        post_title: 'My Post Title',
-        channels_to_post: 'Google My Business, Facebook, LinkedIn',
-        status: 'Pending'
-      },
-      {
-        id: 3,
-        date: '05/18/2021',
-        post_title: 'My Post Title',
-        channels_to_post: 'Google My Business, Facebook, LinkedIn',
-        status: 'Pending'
-      }],
+      tableData: [],
       colors: COLORS,
       limit: 5,
       offset: 0,
       numPages: null,
-      activePage: 1
+      activePage: 1,
+      user: AUTH.user
     }
   },
   components: {
@@ -107,6 +90,9 @@ export default {
     'empty': require('components/increment/generic/empty/Empty.vue'),
     Pager
   },
+  created() {
+    this.retrievePosts()
+  },
   methods: {
     history(){
       ROUTER.push('post_management/history')
@@ -114,6 +100,25 @@ export default {
     onTableAction(data){
       let id = this.tableData[data.rowIndex].id
       ROUTER.push('post_management/view/' + id)
+    },
+    retrievePosts(){
+      let parameter = {
+        account_id: this.user.userID
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('post/retrieve_by_user', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        console.log('RESPONSE: ', response)
+        if(!response.error) {
+          this.tableData = response.data
+        }
+      })
+    },
+    returnTableData() {
+      return this.tableData.filter((el, ndx) => {
+        el.channels = JSON.parse(el.channels).join(', ').replaceAll('_', ' ')
+        return el
+      })
     }
   }
 }
