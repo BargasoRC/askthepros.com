@@ -5,29 +5,29 @@
     <h3 style="margin-top: 25px;">Customize Prior To Posting Channels</h3>
     <p style="color: gray">Review and edit your posts prior to us sending them to your social medial channels. Then, approve once done.</p>
 
-    <h5 class="title">Post Title</h5>
-    <textarea class="form-control" placeholder="Type post description" name="post_title" id="post_title" cols="90" rows="10">
-      Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
+    <input class="title text-uppercase" v-model="data.title">
+    <textarea class="form-control" placeholder="Type post description" name="post_title" id="post_title" cols="90" rows="10" v-model="data.description">
     </textarea>
     <br>
 
     <h5>Files:</h5>
-    <Images></Images>
+    <Images :imageList="imageList"></Images>
     <br>
     <br>
 
     <h5>Post To:</h5>
     <br>
-    <Toggle :text="'Google My Business'"></Toggle>
+    <Toggle :text="'Google My Business'" v-model="googleMyBusiness" @input="toggle('GOOGLE_MY_BUSINESS')" :isChecked="googleMyBusiness"></Toggle>
     <br>
-    <Toggle :text="'Facebook'"></Toggle>
+    <Toggle :text="'Facebook'" v-model="facebook" @input="toggle('FACEBOOK')" :isChecked="facebook"></Toggle>
     <br>
-    <Toggle :text="'LinkedIn'"></Toggle>
+    <Toggle :text="'LinkedIn'" v-model="linkedin" @input="toggle('LINKEDIN')" :isChecked="linkedin"></Toggle>
     <br>
     <br>
     <span style="float: right" class="preview" @click="preview()"><u><b>Preview</b></u></span>
     <roundedBtn
       :text="'Post'"
+      :onClick="post"
       class="button1"
       :styles="{
         backgroundColor: colors.primary,
@@ -38,8 +38,7 @@
     />
     <br>
     <review
-    ref="preview"
-    ></review>
+    ref="preview" :description="returnDescription" :files="returnImagesList"></review>
   </div>
 </template>
 
@@ -52,26 +51,30 @@ import CONFIG from 'src/config.js'
 import review from './UserPreview.vue'
 export default {
   mounted(){
+    this.retrieveReview(this.$route.params.parameter)
   },
   data() {
     return {
       colors: COLORS,
       config: CONFIG,
-      imagesList: [{
-        id: 1,
-        url: '/storage/image/asktheprooslogo.jpg'
-      },
-      {
-        id: 2,
-        url: '/storage/image/asktheprooslogo.jpg'
-      },
-      {
-        id: 3,
-        url: '/storage/image/asktheprooslogo.jpg'
-      }],
+      imageList: [],
       errorMessage: null,
       idImage: null,
-      file: null
+      file: null,
+      data: [],
+      industry: global.industry,
+      selectedIndustry: null,
+      global: global,
+      isValid: true,
+      title: '',
+      description: '',
+      facebook: false,
+      googleMyBusiness: false,
+      linkedin: false,
+      isClearing: false,
+      character: 0,
+      channel: [],
+      channels: []
     }
   },
   components: {
@@ -80,10 +83,78 @@ export default {
     roundedBtn,
     review
   },
+  computed: {
+    returnIndustry() {
+      return this.industry.map(el => {
+        return el.category
+      })
+    },
+    returnImagesList() {
+      return this.imagesList
+    },
+    returnDescription() {
+      return this.description
+    }
+  },
   methods: {
+    toggle(id){
+      this.channel.push(id)
+    },
+    post(){
+      console.log(this.data.title)
+      var count = {}
+      this.channel.forEach(function(i) {
+        count[i] = (count[i] || 0) + 1
+      })
+      if((count.FACEBOOK % 2 === 0) || count.FACEBOOK === undefined){
+      }else{
+        this.channels.push('FACEBOOK')
+      }
+      if((count.GOOGLE_MY_BUSINESS % 2 === 0) || count.GOOGLE_MY_BUSINESS === undefined){
+      }else{
+        this.channels.push('GOOGLE_MY_BUSINESS')
+      }
+      if((count.LINKEDIN % 2 === 0) || count.LINKEDIN === undefined){
+      }else{
+        this.channels.push('LINKEDIN')
+      }
+      console.log('[channels]', this.channels, this.data.title, this.data.description)
+    },
+    storeImages(data) {
+      this.imageList = data
+    },
     preview(){
       console.log('[here]')
       this.$refs.preview.show()
+    },
+    retrieveReview(id){
+      let parameter = {
+        id: id
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('post/retrieve_by_id', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        console.log('RESPONSE: ', response)
+        if(!response.error) {
+          this.data = response.data[0]
+          var channel = response.data[0].channels
+          if(channel.includes('FACEBOOK')){
+            this.facebook = true
+          }
+          if(channel.includes('LINKEDIN')){
+            this.linkedin = true
+          }
+          if(channel.includes('GOOGLE_MY_BUSINESS')){
+            this.googleMyBusiness = true
+          }
+          this.imageList = response.data[0]
+          this.description = response.data[0].description
+        }
+      })
+    },
+    form(data){
+      this.file = data
+      console.log('forms: ', data)
     }
   }
 }
@@ -98,7 +169,13 @@ export default {
   float: left;
 }
 .title{
- color: $primary
+  color: $primary;
+  font-size: 18px;
+  margin-bottom: 1%;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+  outline: none;
 }
 textarea{
   padding: 2%;

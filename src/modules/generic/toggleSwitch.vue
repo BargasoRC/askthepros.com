@@ -1,7 +1,7 @@
 <template>
   <div>
     <label class="switch" :style="styles">
-      <input type="checkbox" @input="onChange">
+      <input type="checkbox" @input="onChange" v-model="isChecked">
       <span class="slider round"></span>
     </label>
     <span style="margin-left: 20px">{{text}}</span>
@@ -9,7 +9,7 @@
 </template>
 <script>
 export default {
-  props: ['onClick', 'styles', 'text'],
+  props: ['onClick', 'styles', 'text', 'isChecked'],
   data() {
     return {
       isOnClickPresent: false

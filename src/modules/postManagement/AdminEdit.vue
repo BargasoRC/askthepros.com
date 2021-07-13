@@ -52,7 +52,7 @@
         
         <div class="form-group">
           <label for="category"><b>Category</b></label>
-          <roundedSelectBtn 
+          <roundedSelectBtn
             :placeholder="'Select Industry'"
             :items="returnIndustry"
             :styles="{
