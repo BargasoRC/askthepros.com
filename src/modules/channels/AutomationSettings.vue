@@ -102,17 +102,6 @@ export default {
     branding(){
       ROUTER.push('/user/channels/branding')
     },
-    create(){
-      let payload = {
-        account_id: this.user.userID,
-        payload: 'automation_settings',
-        payload_value: 'ON'
-      }
-      this.APIRequest('payloads/create', payload).then(response => {
-        console.log('PAYLOAD CREATED: ', response)
-        this.retrieve()
-      })
-    },
     update(){
       let parameter = {
         id: this.id,
@@ -132,6 +121,17 @@ export default {
       }else if(data === 'ON'){
         this.selected = 'autopost'
       }
+    },
+    create(){
+      let payload = {
+        account_id: this.user.userID,
+        payload: 'automation_settings',
+        payload_value: 'ON'
+      }
+      this.APIRequest('payloads/create', payload).then(response => {
+        console.log('PAYLOAD CREATED: ', response)
+        this.retrieve()
+      })
     },
     retrieve(){
       let parameter = {
