@@ -131,6 +131,7 @@ import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
 import global from 'src/helpers/global'
 import preview from 'src/modules/generic/preview.vue'
 import axios from 'axios'
+import ROUTER from 'src/router'
 export default {
   mounted(){
   },
@@ -213,6 +214,7 @@ export default {
           this.linkedin = false
           this.isClearing = false
         })
+        ROUTER.push(`/${this.user.type.toLowerCase()}/dashboard`)
       }
     },
     draft() {
