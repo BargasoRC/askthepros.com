@@ -128,7 +128,11 @@ $route = env('PACKAGE_ROUTE', '').'/file';
 Route::post($route . '/upload', 'FileUploadController@upload');
 
 Route::get('/login/{provider}/redirect', 'SocialController@redirect');
-Route::get('/social_media/test', 'SocialMediaController@post');
+
+$route = env('PACKAGE_ROUTE', '').'/posting';
+$controller = 'SocialMediaController@';
+Route::post($route.'/linkedin_post', $controller.'linkedinPost');
+Route::get($route.'/test',  $controller.'post');
 
 $route = env('PACKAGE_ROUTE', '').'/plans/';
 $controller = 'PlanController@';
