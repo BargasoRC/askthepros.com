@@ -135,13 +135,13 @@ export default {
     },
     retrieve(){
       let parameter = {
-        'condition': [{
-          'value': this.user.userID,
-          'clause': '=',
-          'column': 'account_id'
+        condition: [{
+          value: this.user.userID,
+          clause: '=',
+          column: 'account_id'
         }],
-        'offset': 0,
-        'limit': 1
+        offset: 0,
+        limit: 1
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('payloads/retrieve', parameter).then(response => {
