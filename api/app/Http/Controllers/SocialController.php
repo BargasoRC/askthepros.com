@@ -84,8 +84,9 @@ class SocialController extends APIController
       $user = Socialite::driver($provider)->stateless()->user();
       $social_auth = SocialAuths::firstOrNew(['account_id' => $data['id'], 'type' => $provider]);
       $token = $user->token;
-      if($social_auth->new){
+      if($social_auth->exists){
         $social_auth->token = $token;
+        $social_auth->details = json_encode($user);
         $social_auth->save();
       } else {
         $social_auth->account_id = $data['id'];

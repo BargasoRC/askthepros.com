@@ -132,6 +132,7 @@ Route::get('/login/{provider}/redirect', 'SocialController@redirect');
 $route = env('PACKAGE_ROUTE', '').'/posting';
 $controller = 'SocialMediaController@';
 Route::post($route.'/linkedin_post', $controller.'linkedinPost');
+Route::post($route.'/register_upload', $controller.'linkedinRegisterUpload');
 Route::get($route.'/test',  $controller.'post');
 
 $route = env('PACKAGE_ROUTE', '').'/plans/';

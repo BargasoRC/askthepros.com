@@ -35,4 +35,28 @@ class LinkedinService extends Controller
 
         return $result;
     }
+    public function shareMedia($token, $owner) {
+        $body = '{
+            "registerUploadRequest":{
+               "owner":"urn:li:person:'.$owner.'",
+               "recipes":[
+                  "urn:li:digitalmediaRecipe:feedshare-image"
+               ],
+               "serviceRelationships":[
+                  {
+                     "identifier":"urn:li:userGeneratedContent",
+                     "relationshipType":"OWNER"
+                  }
+               ],
+               "supportedUploadMechanism":[
+                  "SYNCHRONOUS_UPLOAD"
+               ]
+            }
+        }';
+        $curl = new CurlController($token);
+
+        $result = $curl->postRequest($this->url, $body);
+
+        return $result;
+    }
 }
