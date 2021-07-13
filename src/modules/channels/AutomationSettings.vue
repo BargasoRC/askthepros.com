@@ -122,17 +122,36 @@ export default {
         this.selected = 'autopost'
       }
     },
+    create(){
+      let payload = {
+        account_id: this.user.userID,
+        payload: 'automation_settings',
+        payload_value: 'ON'
+      }
+      this.APIRequest('payloads/create', payload).then(response => {
+        console.log('PAYLOAD CREATED: ', response)
+        this.retrieve()
+      })
+    },
     retrieve(){
+      let parameter = {
+        condition: [{
+          value: this.user.userID,
+          clause: '=',
+          column: 'account_id'
+        }],
+        offset: 0,
+        limit: 1
+      }
       $('#loading').css({'display': 'block'})
-      this.APIRequest('payloads/retrieve').then(response => {
+      this.APIRequest('payloads/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        for (let item = 0; item < response.data.length; item++) {
-          if(response.data[item].account_id === this.user.userID){
-            this.id = response.data[item].id
-            console.log('RESPONSE: ', response.data[item])
-            this.status = response.data[item].payload_value
-            break
-          }
+        if(response.data.length !== 0){
+          this.id = response.data[0].id
+          console.log('RESPONSE: ', response.data[0])
+          this.status = response.data[0].payload_value
+        }else {
+          this.create()
         }
         this.automate(this.status)
       })
