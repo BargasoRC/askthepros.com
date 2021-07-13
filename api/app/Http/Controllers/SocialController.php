@@ -124,6 +124,8 @@ class SocialController extends APIController
                 $response['deleted_at'] = $result[0]['deleted_at'];
                 $response['token'] = $result[0]['token'];
                 $response['login_type'] = 'social_lite';
+                $response['information'] = app('Increment\Account\Http\AccountProfileController')->getProfileUrlByAccountId($result[0]['id']);
+                $response['merchant'] = app('Increment\Imarket\Merchant\Http\MerchantController')->getByParams('account_id', $result[0]['id']);
             } else {
                 return response()->json(['user_not_found'], 404);
             }

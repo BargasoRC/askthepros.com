@@ -309,8 +309,10 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('accounts_info/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
+        console.log('ACCOUNT INFO: ', response.data)
         let data = response.data[0]
         this.username = this.user.username
+        AUTH.user.information = response.data[0]
         if(response.data.length > 0) {
           this.firstname = data.first_name
           this.lastname = data.last_name

@@ -11,7 +11,7 @@
         <div class="modal-body p-4 pl-5 pr-5">
           <preview
           ref="preview"
-          :description="'Test'"
+          :description="''"
           :files="[]"
           :footer="'Sample'"
           :previewBodyStyle="{
