@@ -137,6 +137,7 @@ import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
 import global from 'src/helpers/global'
 import preview from 'src/modules/generic/preview.vue'
 import axios from 'axios'
+import ROUTER from 'src/router'
 export default {
   mounted(){
   },
@@ -227,6 +228,7 @@ export default {
         }).catch(() => {
           $('#loading').css({'display': 'none'})
         })
+        ROUTER.push(`/${AUTH.user.type.toLowerCase()}/post_management`)
       }
     },
     draft() {
