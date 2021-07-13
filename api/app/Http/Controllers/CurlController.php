@@ -97,4 +97,8 @@ class CurlController extends Controller
 
     return $result;
   }
+
+  public function getInit() {
+    return $this->$ch;
+  }
 }

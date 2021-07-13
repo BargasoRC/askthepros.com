@@ -60,11 +60,33 @@ class SocialMediaController extends APIController
         $data = $request->all();
         $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
                 ->select('accounts.token', 'social_auths.details')
-                ->where('accounts.id', '=', $data['id'])
+                ->where([
+                    ['accounts.id', '=', $data['id']],
+                    ['social_auths.type', '=', 'linkedin']
+                ])
                 ->get();
         $details = json_decode($account[0]['details'], true);
         $service = new LinkedinService('https://api.linkedin.com/v2/ugcPosts');
         $result = $service->textOnly($details['token'], 'Hello World! Sample LINKEDIN Posting using UGC Post API, with text only!', $details['id']);
+        return response()->json($result);
+    }
+
+    public function linkedinRegisterUpload(Request $request) {
+        /**
+         * Register an upload to get upload URL for image
+         */
+        $data = $request->all();
+        $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
+                ->select('accounts.token', 'social_auths.details')
+                ->where([
+                    ['accounts.id', '=', $data['id']],
+                    ['social_auths.type', '=', 'linkedin'],
+                    ['social_auths.deleted_at', '=', null]
+                ])
+                ->get();
+        $details = json_decode($account[0]['details'], true);
+        $service = new LinkedinService('https://api.linkedin.com/v2/assets?action=registerUpload');
+        $result = $service->shareMedia($details['token'], $details['id']);
         return response()->json($result);
     }
 
