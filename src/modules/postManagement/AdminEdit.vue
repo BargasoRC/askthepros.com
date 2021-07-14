@@ -69,6 +69,7 @@
               overflow: 'hidden',
               width: 'calc(100% - 30px)'
             }"
+            :selectedIndex="selectedIndex"
             @onSelect="onSelect"
             v-if="!isClearing"
           />
@@ -81,9 +82,9 @@
         <div class="form-group" style="margin-top: 3%">
           <label for="post_setting"><b>Post Setting</b></label>
           <div class="Row row">
-            <div class="Column col-4" style="margin-left: -20%"><Toggle :text="'Facebook'" v-model="facebook" v-if="!isClearing"/></div>
-            <div class="Column col-5"><Toggle :text="'Google My Business'" v-model="googleMyBusiness" v-if="!isClearing"/></div>
-            <div class="Column col-3"><Toggle :text="'Linkedin'" v-model="linkedin" v-if="!isClearing"/></div>
+            <div class="Column col-4" style="margin-left: -20%"><Toggle :text="'Facebook'" v-model="facebook" :isChecked="facebook" v-if="!isClearing"/></div>
+            <div class="Column col-5"><Toggle :text="'Google My Business'" v-model="googleMyBusiness" :isChecked="googleMyBusiness" v-if="!isClearing"/></div>
+            <div class="Column col-3"><Toggle :text="'Linkedin'" v-model="linkedin" :isChecked="linkedin" v-if="!isClearing"/></div>
           </div>
         </div>
         <br>
@@ -140,6 +141,16 @@ import axios from 'axios'
 import ROUTER from 'src/router'
 export default {
   mounted(){
+    if(this.$route.params.parameter === undefined){
+      this.title = ''
+      this.description = ''
+      this.facebook = false
+      this.linkedin = false
+      this.googleMyBusiness = false
+      this.selectedIndex = null
+    }else{
+      this.retrieveEditPosts(this.$route.params.parameter)
+    }
   },
   data() {
     return {
@@ -160,7 +171,8 @@ export default {
       googleMyBusiness: false,
       linkedin: false,
       isClearing: false,
-      character: 0
+      character: 0,
+      selectedIndex: null
     }
   },
   components: {
@@ -184,6 +196,39 @@ export default {
     }
   },
   methods: {
+    // EDIT A POST
+    retrieveEditPosts() {
+      let parameter = {
+        edit: true,
+        id: this.$route.params.parameter
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('post/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        console.log('RESPONSE: ', response)
+        if(!response.error) {
+          this.title = response.data[0].title
+          this.description = response.data[0].description
+          var channel = response.data[0].channels
+          if(channel.includes('FACEBOOK')){
+            this.facebook = true
+          }
+          if(channel.includes('LINKEDIN')){
+            this.linkedin = true
+          }
+          if(channel.includes('GOOGLE_MY_BUSINESS')){
+            this.googleMyBusiness = true
+          }
+          this.industry.map((el, ndx) => {
+            if(el.category === response.data[0].category){
+              this.selectedIndex = ndx
+            }
+          })
+          this.storeImages(response.data[0].url)
+        }
+      })
+    },
+    // Adding a Post
     storeImages(data) {
       this.imagesList = data
     },

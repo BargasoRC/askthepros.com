@@ -205,7 +205,9 @@ export default {
       }
     },
     retrievePosts() {
-      let parameter = {}
+      let parameter = {
+        edit: false
+      }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})

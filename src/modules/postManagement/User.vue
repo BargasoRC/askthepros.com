@@ -38,7 +38,7 @@
       <DataTable 
         :tableActions="tableActions"
         :tableHeaders="tableHeaders"
-        :tableData="tableData"
+        :tableData="returnTableData"
         @onAction="onTableAction"
       />
     </div>
@@ -92,6 +92,14 @@ export default {
   },
   created() {
     this.retrievePosts()
+  },
+  computed: {
+    returnTableData() {
+      return this.tableData.filter((el, ndx) => {
+        el.channels = JSON.parse(el.channels).join(', ').replaceAll('_', ' ')
+        return el
+      })
+    }
   },
   methods: {
     history(){

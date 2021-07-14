@@ -9,8 +9,8 @@
       <div class="scrolling-wrapper custom_scroll d-flex" style="height: 130px">
         <div v-for="item in returnImageList" :key="item.id" :group="item" style="height:100px;width:100px"
           :class="'imageContainer p-10'">
-          <img :src="item.url" class="image" @click="selectImage(item.url)">
-          <!-- <img :src="config.BACKEND_URL + item.url" class="image" @click="selectImage(item.url)"> -->
+          <!-- <img :src="item.url" class="image" @click="selectImage(item.url)"> -->
+          <img :src="config.BACKEND_URL + item.url" class="image" @click="selectImage(item.url)">
           <label class="middle">
             <i class="fa fa-times-circle text"  @click="deleteImage(item.id)" v-if="item.status !== 'featured'"></i>
           </label>
@@ -39,9 +39,8 @@
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import COMMON from 'src/common.js'
-import axios from 'axios'
 export default {
-  props: ['productImages', 'formData'],
+  props: ['productImages', 'formData', 'returnImagesList'],
   data: () => ({
     user: AUTH.user,
     config: CONFIG,
@@ -57,6 +56,7 @@ export default {
     fileUrls: []
   }),
   mounted(){
+    console.log('[image]', this.imagesList)
     // this.retrieveImage()
     // if(this.imagesList.length > 0){
     //   this.imagesList.map(el => {
@@ -66,7 +66,7 @@ export default {
     //     }
     //   })
     // }
-    this.imagesList = []
+    // this.imagesList = []
     this.files = []
     this.fileUrls = []
   },
@@ -86,9 +86,6 @@ export default {
     },
     selectImage(url){
       this.selectedImage = url
-    },
-    apply(){
-      this.$parent.manageImageUrl(this.selectedImage, 'featured')
     },
     cancel(){
       this.retrieveImage()
@@ -304,7 +301,6 @@ export default {
 .imageContainer:hover .middle {
   opacity: 1;
 }
-
 .imageContainer:hover .ImageLabel {
   opacity: 1;
   position: absolute;
@@ -316,7 +312,6 @@ export default {
   font-size: 20px;
   padding: 16px 32px;
 }
-
 .imageContainer:hover .middle:hover .text{
   color: blue !important;
 }
@@ -326,7 +321,6 @@ export default {
   transform: translate(300%, -215%);
   -ms-transform: translate(-50%, -50%);
   text-align: center;
-
 }
 .product-image{
   width: 100%;
@@ -402,7 +396,6 @@ label{
 	background: rgb(217, 217, 235);
   width: 10em;
 }
-
 @media (max-width: 992px){
   .product-image{
     width: 100%;
