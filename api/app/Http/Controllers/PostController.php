@@ -52,10 +52,18 @@ class PostController extends APIController
 
     public function retrieve(Request $request) {
         $data = $request->all();
-        $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
-                ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
-                ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
-                ->get();
+        if($data['edit'] === true){
+          $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
+            ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
+            ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
+            ->where('posts.id', '=', $data['id'])
+            ->get();
+        }else{
+          $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
+            ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
+            ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
+            ->get();
+        }
         $this->response['data'] = $result;
         $this->response['error'] = null;
         return $this->response();
