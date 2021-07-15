@@ -37,85 +37,8 @@
       <img class="payment" :src="require('src/assets/img/pay_methods.png')" alt="Payment Methods">
     </div>
     <div class="col-sm-6 p-0 mt-5">
-      <div>
-        <p class="mb-2"><i :style="{
-          color: 'red'
-        }">*</i>Name on the card:</p>
-        <input 
-          :class="!isValid && cardName == '' ? 'form-control mb-0' : 'form-control'"
-          :style="{
-            ...!isValid && cardName == '' ? {border: '1px solid red !important'} : '',
-            ...{
-              height: '45px'
-            }
-          }"
-          v-model="cardName"
-        >
-        <p
-          class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
-          v-if="!isValid && cardName == ''"
-        >Required Field</p>
-      </div>
-      <div class="mt-3">
-        <p class="mb-2"><i :style="{
-          color: 'red'
-        }">*</i>Credit Number:</p>
-        <input 
-          :class="!isValid && cardNumber == '' ? 'form-control mb-0' : 'form-control'"
-          placeholder="Card number"
-          :style="{
-            ...!isValid && cardNumber == '' ? {border: '1px solid red !important'} : '',
-            ...{
-              height: '45px'
-            }
-          }"
-          v-model="cardNumber"
-        >
-        <p
-          class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
-          v-if="!isValid && cardNumber == ''"
-        >Required Field</p>
-      </div>
-      <div class="mt-3">
-        <p class="mb-2"><i :style="{
-          color: 'red'
-        }">*</i>Expiration</p>
-        <input 
-          :class="!isValid && cardExpiration == '' ? 'form-control mb-0' : 'form-control'"
-          :placeholder="'MM / YY'"
-          :type="'date'"
-          :style="{
-            ...!isValid && cardExpiration == '' ? {border: '1px solid red !important'} : '',
-            ...{
-              height: '45px'
-            }
-          }"
-          v-model="cardExpiration"
-        >
-        <p
-          class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
-          v-if="!isValid && cardNumber == ''"
-        >Required Field</p>
-      </div>
-      <div class="mt-3">
-        <p class="mb-2"><i :style="{
-          color: 'red'
-        }">*</i>CVC</p>
-        <input 
-          :class="!isValid && cardCVC == '' ? 'form-control mb-0' : 'form-control'"
-          :placeholder="'CVC'"
-          :style="{
-            ...!isValid && cardCVC == '' ? {border: '1px solid red !important'} : '',
-            ...{
-              height: '45px'
-            }
-          }"
-          v-model="cardCVC"
-        >
-        <p
-          class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
-          v-if="!isValid && cardNumber == ''"
-        >Required Field</p>
+      <div class="mt-3 d-flex justify-content-start">
+        <stripe-cc ref="stripe"></stripe-cc>
       </div>
       <div class="mt-3 d-flex justify-content-start">
         <div>
@@ -153,15 +76,12 @@ export default {
     return {
       payment: true,
       isValid: true,
-      cardName: '',
-      cardNumber: '',
-      cardExpiration: '',
-      cardCVC: '',
       isAgree: false
     }
   },
   components: {
-    roudedBtn
+    roudedBtn,
+    'stripe-cc': require('modules/payments/Stripe.vue')
   },
   methods: {
     choose() {
@@ -171,7 +91,7 @@ export default {
       this.isAgree = !this.isAgree
     },
     checkout() {
-      console.log('')
+      this.$refs.stripe.addNewPaymentMethod()
     }
   }
 }
