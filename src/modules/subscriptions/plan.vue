@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="mt-5">
-      <h2> Subscriptions </h2>
+      <h5> Subscriptions </h5>
     </div>
     <div class="mt-2">
       <p style="margin-top: 0px; font-size: 1rem; color: grey">You have no active subscriptions to display. Select your membership now to get better experience with automated media posting.</p>
@@ -19,7 +19,7 @@
         <dialogueBtn 
           :onClick="() => { redirect('checkout')}"
           :icon="'fas fa-sign-in-alt'" 
-          :text="'Current Plan'" 
+          :text="'Subscribe'" 
           :icon_position="'right'"  
           :styles="{
             backgroundColor: '#01004E',
@@ -40,7 +40,12 @@
       </div>
     </div>
 
-    <div class="col-md-12 mb-100">
+    <div class="col-md-12" style="margin-bottom: 50px;">
+      <PaymentMethods />
+    </div>
+
+
+    <div class="col-md-12" style="margin-bottom: 100px;">
       <UserPayment />
     </div>
 
@@ -51,6 +56,7 @@
 import DataTable from 'src/modules/generic/table'
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import UserPayment from 'src/modules/payments/user.vue'
+import PaymentMethods from 'src/modules/payments/PaymentMethods.vue'
 import AUTH from 'src/services/auth'
 import global from 'src/helpers/global'
 export default {
@@ -69,7 +75,8 @@ export default {
   components: {
     DataTable,
     dialogueBtn,
-    UserPayment
+    UserPayment,
+    PaymentMethods
   },
   methods: {
     redirect(parameter){

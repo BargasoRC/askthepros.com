@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2> Payment History </h2>
+    <h5> Payment History </h5>
     <div class="col-sm-12 p-0 mt-4">
       <table class="table table-striped table-bordered">
         <thead>
@@ -8,6 +8,7 @@
           <th>Amount</th>
           <th>Start date</th>
           <th>End date</th>
+          <th>Status</th>
           <th>Actions</th>
         </thead>
         <tbody>
@@ -16,9 +17,12 @@
             <td>{{item.amount}}</td>
             <td>{{item.start_date}}</td>
             <td>{{item.end_date}}</td>
+            <td>{{item.status}}</td>
             <td>
               <roudedBtn
-                :onClick="pay"
+                :onClick="e => {
+                  redirect('/user/checkout')
+                }"
                 :text="'Pay Now'"
                 :styles="{
                   backgroundColor: '#01004E',
@@ -37,6 +41,7 @@
 import roudedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
+import ROUTER from 'src/router'
 export default {
   data() {
     return {
@@ -46,7 +51,8 @@ export default {
         amount: 250,
         currency: 'USD',
         start_date: 'Test',
-        end_date: 'test'
+        end_date: 'test',
+        status: 'not paid'
       }]
     }
   },
@@ -56,6 +62,9 @@ export default {
   methods: {
     pay() {
       this.$router.push(`/${this.user.type.toLowerCase()}/checkout`)
+    },
+    redirect(route){
+      ROUTER.push(route)
     }
   }
 }
