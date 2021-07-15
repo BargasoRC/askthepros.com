@@ -160,26 +160,28 @@ export default {
       this.accountsItem[index].flag = !this.accountsItem[index].flag
     },
     addNewPaymentMethod(){
-      $('#loading').css({'display': 'block'})
       if(this.user.userID <= 0){
         return
       }
+      if(this.user.merchant && this.user.merchant.addition_informations === null){
+        return
+      }
+      $('#loading').css({'display': 'block'})
       this.errorMessage = null
       Stripe.createSource().then(data => {
         $('#loading').css({'display': 'none'})
-        console.log({
-          stripe: data
-        })
         if(data.error !== undefined){
           // console.log(data.error)
           this.errorMessage = data.error.message
         }else{
-          // let parameter = {
-          //   email: this.user.email,
-          //   source: data.source,
-          //   account_id: this.user.userID,
-          //   payment_keys: CONFIG.stripe
-          // }
+          let parameter = {
+            source: data.source,
+            account_id: this.user.userID,
+            plan: this.user.merchant.addition_informations.industry
+          }
+          console.log({
+            parameter
+          })
           // this.APIRequest('stripes/add_payment_method', parameter).then(response => {
           //   if(response.data === true){
           //     $('#loading').css({'display': 'none'})
