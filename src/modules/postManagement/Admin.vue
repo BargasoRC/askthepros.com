@@ -68,6 +68,7 @@ import DataTable from 'src/modules/generic/table'
 import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
 import ROUTER from 'src/router'
 import Search from 'src/components/increment/generic/filter/Basic'
+import preview from 'src/modules/generic/preview.vue'
 export default {
   data() {
     return {
@@ -179,6 +180,9 @@ export default {
   created() {
     this.retrievePosts()
   },
+  mounted(){
+    this.retrievePosts()
+  },
   computed: {
     returnTableData() {
       return this.tableData.filter((el, ndx) => {
@@ -221,7 +225,15 @@ export default {
       this.$refs.confirm.show(id)
     },
     remove(id){
-      console.log('[function delete]', id)
+      let parameter = {
+        id: id.id
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('post/delete', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        console.log('RESPONSE: ', response)
+        this.retrievePosts()
+      })
     }
   }
 }

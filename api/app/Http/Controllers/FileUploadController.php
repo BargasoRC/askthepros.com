@@ -33,7 +33,7 @@ class FileUploadController extends APIController
             ));
           }
 
-          $_response = array_map(function($val) {
+          $_response = (object)array_map(function($val) {
             return $val['url'];
           }, $values);
 
