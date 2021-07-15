@@ -130,7 +130,7 @@ export default {
       return this.description
     },
     returnFiles() {
-      return (this.filter ? this.files.filter((el, index) => {
+      return (this.files ? this.files.filter((el, index) => {
         return index <= 3
       }) : [])
     }
