@@ -1,36 +1,23 @@
 <template>
   <div class="col-sm-12 p-0 mt-3" style="position: relative;">
-    <!-- <label class="remove-image text-danger" id="featured-image-remove" @click="removeImage(imagesData.featured !== null ? imagesData.featured[0].id : null)" v-if="selectedImage === null && imagesData.featured !== null">
-      <i class="fa fa-times"></i>
-    </label> -->
     <div>
       <div class="other-image">
       </div>
       <div class="scrolling-wrapper custom_scroll d-flex" style="height: 130px">
-        <div v-for="item in returnImageList" :key="item.id" :group="item" style="height:100px;width:100px"
+        <div v-for="item in (edit === true ? imagesData : returnImageList)" :key="item.id" :group="item" style="height:100px;width:100px"
           :class="'imageContainer p-10'">
-          <!-- <img :src="item.url" class="image" @click="selectImage(item.url)"> -->
-          <img :src="config.BACKEND_URL + item.url" class="image" @click="selectImage(item.url)">
+          <img :src="item.url" class="image" @click="selectImage(item.url)">
           <label class="middle">
             <i class="fa fa-times-circle text"  @click="deleteImage(item.id)" v-if="item.status !== 'featured'"></i>
           </label>
-            <!-- <div v-if="imagesData.featured !== null">
-          <p style="position:relative;font-weight:bold" :class="{'ImageLabel': item.url !== imagesData.featured[0].url}"><i class="fa fa-check" style="color: #cae166"></i> Featured</p>
-        </div> -->
         </div>
       </div>
+
       <div class="d-flex justify-content-start mt-5">
-        <button id="imageCont" type="button" class="btn add_file" @click="addImage()">Add File</button>
+        <button id="imageCont" type="button" class="btn add_file" @click="addImage(edit)">Add File</button>
         <input type="file" id="Image" accept="file_extension|audio/*|video/*|image/*|media_type"
-          @change="setUpFileUpload($event)">
+          @change="setUpFileUpload($event, edit)">
       </div>
-      <!-- <div style="height:100px !important;width:100px !important; border:2px solid gray" id="imageCont"
-          @click="addImage()">
-          <i class="fa fa-plus plusIcon"
-              style="font-size:40px;padding:10px; vertical-align:middle;margin-top: 20px;margin-right:1%"></i>
-          <input type="file" id="Image" accept="file_extension|audio/*|video/*|image/*|media_type"
-              @change="setUpFileUpload($event)">
-      </div> -->
     </div>
   </div>
 </template>
@@ -40,7 +27,7 @@ import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import COMMON from 'src/common.js'
 export default {
-  props: ['productImages', 'formData', 'returnImagesList'],
+  props: ['imagesRetrieve', 'formData', 'edit'],
   data: () => ({
     user: AUTH.user,
     config: CONFIG,
@@ -56,17 +43,7 @@ export default {
     fileUrls: []
   }),
   mounted(){
-    console.log('[image]', this.imagesList)
-    // this.retrieveImage()
-    // if(this.imagesList.length > 0){
-    //   this.imagesList.map(el => {
-    //     console.log('true')
-    //     if(el.id === this.productImages.featured[0].id){
-    //       $(`.${el.id}image`).removeAttr('hidden')
-    //     }
-    //   })
-    // }
-    // this.imagesList = []
+    this.imagesList = []
     this.files = []
     this.fileUrls = []
   },
@@ -75,37 +52,23 @@ export default {
       return this.imagesList
     },
     imagesData(){
-      if(this.productImages !== null){
-        return this.productImages
-      }
+      return this.imagesRetrieve
     }
   },
   methods: {
-    addImage(){
+    addImage(edit){
       $('#Image')[0].click()
     },
     selectImage(url){
       this.selectedImage = url
     },
-    cancel(){
-      this.retrieveImage()
-      // this.$parent.retrieve()
-      this.selectedImage = null
-    },
-    setUpFileUpload(event){
+    setUpFileUpload(event, edit){
       let files = event.target.files || event.dataTransfer.files
       if(!files.length){
         return false
       }else{
         this.file = files[0]
-        // let filename = this.file.name.toLowerCase()
         this.createFile(this.file)
-        // if(filename.substring(filename.lastIndexOf('.')) === '.png' || filename.substring(filename.lastIndexOf('.')) === '.jpg' || filename.substring(filename.lastIndexOf('.')) === '.jpeg' || filename.substring(filename.lastIndexOf('.')) === '.gif' || filename.substring(filename.lastIndexOf('.')) === '.tif' || filename.substring(filename.lastIndexOf('.')) === '.bmp'){
-        //   this.createFile(files[0])
-        // }else{
-        //   this.errorMessage = 'Upload images only!'
-        //   this.file = null
-        // }
       }
     },
     createFile(file){
@@ -114,15 +77,6 @@ export default {
       this.upload()
     },
     upload(){
-      // if(parseInt(this.file.size / 1024) > 1024){
-      //   this.errorMessage = 'Allowed size is up to 1 MB only'
-      //   this.file = null
-      //   return
-      // }
-      // this.validateImage(this.file.name)
-      // if(this.hasError === true){
-      //   return
-      // }
       let formData = new FormData()
       this.files.push(this.file)
       this.fileUrls.push(this.file.name.replace(' ', '_'))
@@ -143,27 +97,6 @@ export default {
       }
       reader.readAsDataURL(this.file)
       this.$emit('filePreview', this.imagesList)
-      // $('#loading').css({'display': 'block'})
-      // axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
-      //   $('#loading').css({'display': 'none'})
-      //   this.hasError = false
-      //   this.retrieveImage()
-      //   this.$parent.retrieveFeaturedImages()
-      //   if(response.data.data !== null){
-      //     this.retrieveImage()
-      //     this.$parent.retrieveFeaturedImages()
-      //   }
-      // })
-    },
-    removeImage(id){
-      let parameter = {
-        id: id
-      }
-      this.APIRequest('product_images/delete', parameter).then(response => {
-        this.retrieveImage()
-        this.$parent.retrieveFeaturedImages()
-        this.selectedImage = null
-      })
     },
     deleteImage(id){
       this.imagesList = this.imagesList.filter((el, index) => {
@@ -182,40 +115,6 @@ export default {
       formData.append('file_url', this.fileUrls)
       formData.append('account_id', this.user.userID)
       this.$emit('formData', formData)
-      // let params = {
-      //   id: id
-      // }
-      // $('#loading').css({display: 'block'})
-      // axios.post(this.config.BACKEND_URL + '/images/delete?token=' + AUTH.tokenData.token, params).then(response => {
-      //   $('#loading').css({display: 'none'})
-      //   this.retrieveImage()
-      //   // this.$parent.retrieve()
-      // })
-    },
-    retrieveImage(){
-      this.productId = this.productImages.id
-      const parameter = {
-        condition: [{
-          value: this.user.userID,
-          column: 'account_id',
-          clause: '='
-        }],
-        sort: {
-          created_at: 'desc'
-        },
-        category: `product${this.productImages.id}`
-      }
-      $('#loading').css({display: 'block'})
-      this.APIRequest('images/retrieve_with_category', parameter).done(response => {
-        $('#loading').css({display: 'none'})
-        if(response.data.length > 0){
-          this.imagesList = response.data
-          this.filteredData = response.data
-        }else{
-          this.productImages = null
-          this.filteredData = null
-        }
-      })
     },
     validateImage(imageName){
       this.imagesList.map(el => {
