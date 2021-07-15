@@ -68,6 +68,13 @@ class PostController extends APIController
         return $this->response();
     }
 
+    public function delete(Request $request) {
+      $data = $request->all();
+      $result = Post::where('posts.id', '=', $data['id'])
+        ->update(array('deleted_at' => Carbon::now()));
+      return $result;
+    }
+
     public function retrieveByUser(Request $request) {
       $data = $request->all();
       $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
