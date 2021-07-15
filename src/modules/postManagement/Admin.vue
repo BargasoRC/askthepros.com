@@ -59,7 +59,7 @@
       @onConfirm="remove($event)"
     ></Confirmation>
 
-    <preview
+    <!-- <preview
       ref="preview"
       :description="''"
       :files="[]"
@@ -68,7 +68,7 @@
         minHeight: 'calc(100vh - 100px) !important'
       }"
       >
-    </preview>
+    </preview> -->
   </div>
 </template>
 
