@@ -6,24 +6,16 @@
     <div class="mt-2">
       <p style="margin-top: 0px; font-size: 1rem; color: grey">You have no active subscriptions to display. Select your membership now to get better experience with automated media posting.</p>
     </div>
-    <div class="col-md-12 mt-5 d-flex justify-content-center">
+    <div class="col-md-12 mt-5">
       <div class="pricing col-sm-3 p-0 pb-5">
-          <div v-for="(item, index) in industry" :key="index">
-            <div v-if="user.merchant.addition_informations.industry == item.category"> 
-              <div class="layer1">
-                <h6>{{item.category}}</h6>
-                <p> {{item.price}} USD / Month</p>
-              </div>
-              <div class="layer2">
-                <div v-for="(list, index2) in item.benefit" :key="index2"> 
-                  <span >
-                  <p><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;{{list}}</p>
-                  <hr/>            
-                </span>
-                </div>
-              </div>
+        <div v-for="(item, index) in industry" :key="index">
+          <div v-if="user.merchant.addition_informations.industry == item.category"> 
+            <div class="layer1">
+              <h6>{{item.category}}</h6>
+              <p> {{item.price}} USD / Month</p>
             </div>
           </div>
+        </div>
         <dialogueBtn 
           :onClick="() => { redirect('checkout')}"
           :icon="'fas fa-sign-in-alt'" 
@@ -35,14 +27,30 @@
             marginTop: '20px'
           }"
         />
+
+        <dialogueBtn 
+          :onClick="() => { redirect('checkout')}"
+          :icon="'fas fa-sign-in-alt'" 
+          :text="'Change Plan'" 
+          :icon_position="'right'"  
+          :styles="{
+            marginTop: '20px'
+          }"
+        />
       </div>
     </div>
+
+    <div class="col-md-12 mb-100">
+      <UserPayment />
+    </div>
+
   </div>
 </template>
 
 <script>
 import DataTable from 'src/modules/generic/table'
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
+import UserPayment from 'src/modules/payments/user.vue'
 import AUTH from 'src/services/auth'
 import global from 'src/helpers/global'
 export default {
@@ -60,7 +68,8 @@ export default {
   },
   components: {
     DataTable,
-    dialogueBtn
+    dialogueBtn,
+    UserPayment
   },
   methods: {
     redirect(parameter){
@@ -110,22 +119,15 @@ img {
 }
 
 .pricing{
-  text-align: center;
-  // min-height: 60vh;
-  border: 0.5px solid $text;
-  // margin-left: 35%;
-  border-top-left-radius: 22.5px;
-  border-top-right-radius: 22.5px;
-  // width: 30%;
   padding-bottom: 30px;
 }
 
 .pricing .layer1 {
   background-color: $primary;
-  border-top-left-radius: 22.5px;
-  border-top-right-radius: 22.5px;
-  height: 115px;
-  padding-top: 35px;
+  border-radius: 22.5px;
+  padding: 15px;
+  padding-top: 25px;
+  padding-bottom: 25px;
 }
 
 .pricing .layer1 h6{
