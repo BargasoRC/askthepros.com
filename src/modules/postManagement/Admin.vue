@@ -58,6 +58,17 @@
       :title="'Confirmation'"
       @onConfirm="remove($event)"
     ></Confirmation>
+
+    <preview
+      ref="preview"
+      :description="''"
+      :files="[]"
+      :footer="'Sample'"
+      :previewBodyStyle="{
+        minHeight: 'calc(100vh - 100px) !important'
+      }"
+      >
+    </preview>
   </div>
 </template>
 
@@ -175,7 +186,8 @@ export default {
     Confirmation,
     'empty': require('components/increment/generic/empty/Empty.vue'),
     Pager,
-    Search
+    Search,
+    preview
   },
   created() {
     this.retrievePosts()
