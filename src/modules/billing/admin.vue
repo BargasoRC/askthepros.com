@@ -24,18 +24,19 @@
         }"
       />
     </div>
-    <div class="table_container" v-if="data.length > 0">
+    <div v-if="data.length > 0">
       <table class="table table-striped table-bordered">
         <thead>
           <th v-for="(item, index) in tableHeaders" :key="index">{{item.title}}</th>
         </thead>
         <tbody>
           <tr v-for="(item, index) in data">
+            <td>{{item.invoice}}</td>
             <td>#{{item.created_at}}</td>
             <td>{{item.account.username}}</td>
             <td>{{item.account.email}}</td>
-            <td>{{item.total}}</td>
-            <td>{{item.invoice}}</td>
+            <td>{{renderPlan(item.plan)}}</td>
+            <td>{{item.currency + ' ' + item.amount}}</td>
             <td>{{item.method}}</td>
             <td>{{item.status.toUpperCase()}}</td>
           </tr>
@@ -58,14 +59,14 @@ export default {
     return {
       tableActions: [],
       tableHeaders: [
+        {title: 'Invoice'},
         {title: 'Date'},
         {title: 'Username'},
         {title: 'Email Address'},
         {title: 'Membership'},
         {title: 'Total'},
         {title: 'Method'},
-        {title: 'Status'},
-        {title: 'Invoice'}
+        {title: 'Status'}
       ],
       data: [],
       category: [{
@@ -150,6 +151,13 @@ export default {
     'empty': require('components/increment/generic/empty/Empty.vue')
   },
   methods: {
+    renderPlan(plan){
+      if(plan){
+        return plan.plan
+      }else{
+        return null
+      }
+    },
     onTableAction(data) {
       console.log('Table Action: ', data)
     },
@@ -177,10 +185,4 @@ export default {
 
 <style lang="scss" scoped>
 @import "~assets/style/colors.scss";
-.table_container {
-  border-left: 1px solid $hover;
-  border-right: 1px solid $hover;
-  border-bottom: 1px solid $hover;
-  margin-top: 70px;
-}
 </style>

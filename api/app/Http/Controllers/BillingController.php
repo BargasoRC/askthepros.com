@@ -24,10 +24,11 @@ class BillingController extends APIController
       $i = 0;
       foreach ($result as $key => $value) {
         $result[$i]['account'] = $this->retrieveAccountOnly($value['account_id']);
+        $result[$i]['plan'] =  app('App\Http\Controllers\PlanController')->getByParams('account_id', $value['account_id']);
         $i++;
       }
     }
-
+    $this->response['data'] = $result;
     return $this->response();
   }
 
