@@ -25,6 +25,8 @@ class BillingController extends APIController
       foreach ($result as $key => $value) {
         $result[$i]['account'] = $this->retrieveAccountOnly($value['account_id']);
         $result[$i]['plan'] =  app('App\Http\Controllers\PlanController')->getByParams('account_id', $value['account_id']);
+        $result[$i]['method'] = 'STRIPE';
+        $result[$i]['invoice'] = '00-11';
         $i++;
       }
     }
