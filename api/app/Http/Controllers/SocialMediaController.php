@@ -57,6 +57,10 @@ class SocialMediaController extends APIController
     }
 
     public function linkedinPost(Request $request) {
+        /**
+         * This method post to linkedin with only PURE TEXT
+         * It shoud accept ID and Text
+         */
         $data = $request->all();
         $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
                 ->select('accounts.token', 'social_auths.details')
@@ -67,13 +71,20 @@ class SocialMediaController extends APIController
                 ->get();
         $details = json_decode($account[0]['details'], true);
         $service = new LinkedinService('https://api.linkedin.com/v2/ugcPosts');
-        $result = $service->textOnly($details['token'], 'Hello World! Sample LINKEDIN Posting using UGC Post API, with text only!', $details['id']);
+        $result = $service->textOnly($details['token'], 'Hello World! Sample LINKEDIN Posting using UGC Post API, with text only!', $details['id']); // Text to post on linkedin is static for now.
         return response()->json($result);
+    }
+
+    public function linkedinPostWithMedia($token, $owner, $message, $media, $media_type) {
+        $service = new LinkedinService('https://api.linkedin.com/v2/ugcPosts');
+        $result = $service->postWithMedia($token, $owner, $message, $media, $media_type);
+        return $result;
     }
 
     public function linkedinRegisterUpload(Request $request) {
         /**
-         * Register an upload to get upload URL for image
+         * Register an upload to get upload URL for image,
+         * It should Accept ID and FILE as Parameters
          */
         $data = $request->all();
         $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
@@ -84,10 +95,40 @@ class SocialMediaController extends APIController
                     ['social_auths.deleted_at', '=', null]
                 ])
                 ->get();
+        $path = storage_path('/app/images/' . '1_2021-06-18_07_18_56_Group_1623.png'); // file here is statis for now
+        
+        if (!\File::exists($path)) {
+            abort(404);
+        }
+        
+        $file = \File::get($path);
+        $type = \File::mimeType($path);
+
         $details = json_decode($account[0]['details'], true);
         $service = new LinkedinService('https://api.linkedin.com/v2/assets?action=registerUpload');
         $result = $service->shareMedia($details['token'], $details['id']);
-        return response()->json($result);
+        $registration = [];
+        $registration['registration'] = $result;
+
+        $registerResult = (array)json_decode(json_encode($result))->value->uploadMechanism;
+
+        $upload = new LinkedinService(((object)$registerResult['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'])->uploadUrl);
+        $uploaded = $upload->uploadImage($details['token'], $path);
+        $_upload = [];
+        $_upload['upload'] = $uploaded;
+
+        $media_uri = ((object)(((object)$result)->value))->asset;
+        $asset = explode(':', $media_uri);
+
+        $status_service = new LinkedinService("https://api.linkedin.com/v2/assets/" . $asset[sizeof($asset) - 1]);
+        $status = $status_service->checkUploadStatus($details['token']);
+        $_status = [];
+        $_status['status'] = $status;
+
+        $post = $this->linkedinPostWithMedia($details['token'], $details['id'], 'Hello World! Sample LINKEDIN Posting using UGC Post API, with TEXT and IMAGE!', ((object) $status)->id, 'IMAGE');
+         // Text to post on linkedin is static for now.
+
+        return response()->json((object) array_merge($registration, $_upload, $_status, $post));
     }
 
 }
