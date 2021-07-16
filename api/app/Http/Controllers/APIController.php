@@ -614,6 +614,11 @@ class APIController extends Controller
   }
 
 
+  public function retrieveAccountOnly($accountId){
+    return app('Increment\Account\Http\AccountController')->retrieveById($accountId);
+  }
+
+
 
   public function retrieveAppDetails($result, $accountId){
     return $result;

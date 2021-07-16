@@ -145,7 +145,7 @@ Route::post($route.'delete', $controller."delete");
 Route::get($route.'test', $controller."test");
 
 
-$route = env('PACKAGE_ROUTE', '').'/billins/';
+$route = env('PACKAGE_ROUTE', '').'/billings/';
 $controller = 'BillingController@';
 Route::post($route.'retrieve', $controller."retrieve");
 Route::get($route.'test', $controller."test");

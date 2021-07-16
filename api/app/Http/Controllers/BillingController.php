@@ -13,45 +13,22 @@ class BillingController extends APIController
     $this->model = new Billing();
   }
 
-  public function getByParams($column, $value){
-    $billing = Billing::where($column, '=', $value['id'])->where('deleted_at', '=', null)->get(['amount', 'start_date', 'end_date', 'details', 'status as billing_status']);
-    $account_information = app('Increment\Account\Http\AccountInformationController')->getByParamsWithColumns($value['account_id'], ['first_name', 'last_name', 'cellular_number']);
-    $result = array();
-    if(sizeof($billing) > 0){
-      $i=0;
-      foreach ($billing as $key) {
-        $sms = SMS::where($column, '=', $value['id'])->where('price', '!=', null)->whereDate('created_at', '>=', $billing[$i]['end_date'])->groupBy('merchant_id')->select(DB::raw('SUM(price) as total_price'), 'currency', 'merchant_id', 'created_at')->orderBy('created_at', 'asc')->get();
-        if(sizeof($sms) > 0){
-          $j = 0;
-          foreach ($sms as $key) {
-           array_push($result, array(
-             'total_price' => $sms[$j]['total_price'],
-             'currency' => $sms[$j]['currency'],
-             'start_date' => Carbon::createFromFormat('Y-m-d H:i:s',  $sms[$j]['created_at'])->format('Y-m-d'),
-             'end_date' => Carbon::createFromFormat('Y-m-d H:i:s',  $sms[$j]['created_at'])->format('Y-m-d'),
-             'merchant_id' => $sms[$j]['merchant_id']
-           ));
-           $j++;
-          }
-        }
+  public function retrieve(Request $request){
+    $data = $request->all();
+    $this->model = new Billing();
+    $this->retrieveDB($data);
+
+    $result = $this->response['data'];
+
+    if(sizeof($result) > 0){
+      $i = 0;
+      foreach ($result as $key => $value) {
+        $result[$i]['account'] = $this->retrieveAccountOnly($value['account_id']);
         $i++;
       }
-    }else{
-      $sms = SMS::where($column, '=', $value['id'])->where('price', '!=', null)->groupBy('merchant_id')->select(DB::raw('SUM(price) as total_price'), 'currency', 'merchant_id', 'created_at')->orderBy('created_at', 'asc')->get();
-      if(sizeof($sms) > 0){
-        $j = 0;
-        foreach ($sms as $key) {
-         array_push($result, array(
-           'total_price' => $sms[$j]['total_price'],
-           'currency' => $sms[$j]['currency'],
-           'start_date' => Carbon::createFromFormat('Y-m-d H:i:s',  $sms[$j]['created_at'])->format('Y-m-d'),
-           'merchant_id' => $sms[$j]['merchant_id']
-         ));
-         $j++;
-        }
-      }
     }
-    return $result;
+
+    return $this->response();
   }
 
   public function getRecentBilling($column, $value){

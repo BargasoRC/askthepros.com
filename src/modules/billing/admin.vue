@@ -24,14 +24,26 @@
         }"
       />
     </div>
-    <div class="table_container">
-      <DataTable 
-        :tableActions="tableActions"
-        :tableHeaders="tableHeaders"
-        :tableData="tableData"
-        @onAction="onTableAction"
-      />
+    <div class="table_container" v-if="data.length > 0">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <th v-for="(item, index) in tableHeaders" :key="index">{{item.title}}</th>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in data">
+            <td>#{{item.created_at}}</td>
+            <td>{{item.account.username}}</td>
+            <td>{{item.account.email}}</td>
+            <td>{{item.total}}</td>
+            <td>{{item.invoice}}</td>
+            <td>{{item.method}}</td>
+            <td>{{item.status.toUpperCase()}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+
+    <empty v-if="data.length <= 0" :title="'No billings available!'" :action="'Keep growing.'"></empty>
   </div>
 </template>
 
@@ -39,51 +51,23 @@
 import DataTable from 'src/modules/generic/table'
 import Search from 'src/components/increment/generic/filter/Basic'
 export default {
+  mounted(){
+    this.retrieve()
+  },
   data() {
     return {
       tableActions: [],
       tableHeaders: [
-        {title: 'Date', key: 'created_at', type: 'text'},
-        {title: 'Username', key: 'username', type: 'text'},
-        {title: 'Email Address', key: 'email', type: 'text'},
-        {title: 'Membership', key: 'membership', type: 'text'},
-        {title: 'Total', key: 'total', type: 'text'},
-        {title: 'Method', key: 'method', type: 'text'},
-        {title: 'Status', key: 'status', type: 'text'},
-        {title: 'Invoice', key: 'invoice', type: 'text'}
+        {title: 'Date'},
+        {title: 'Username'},
+        {title: 'Email Address'},
+        {title: 'Membership'},
+        {title: 'Total'},
+        {title: 'Method'},
+        {title: 'Status'},
+        {title: 'Invoice'}
       ],
-      tableData: [
-        {
-          created_at: new Date().toLocaleDateString(),
-          username: 'Juggernaut',
-          email: 'jugger@email.com',
-          membership: 'Basic',
-          total: '$299.00',
-          method: 'Credit Cards',
-          status: 'Pending',
-          invoice: 'ch_lksdj1l1238XX'
-        },
-        {
-          created_at: new Date().toLocaleDateString(),
-          username: 'Juggernaut',
-          email: 'jugger@email.com',
-          membership: 'Basic',
-          total: '$299.00',
-          method: 'Credit Cards',
-          status: 'Pending',
-          invoice: 'ch_lksdj1l1238XX'
-        },
-        {
-          created_at: new Date().toLocaleDateString(),
-          username: 'Juggernaut',
-          email: 'jugger@email.com',
-          membership: 'Basic',
-          total: '$299.00',
-          method: 'Credit Cards',
-          status: 'Pending',
-          invoice: 'ch_lksdj1l1238XX'
-        }
-      ],
+      data: [],
       category: [{
         title: 'Sort By',
         sorting: [{
@@ -162,11 +146,30 @@ export default {
   },
   components: {
     DataTable,
-    Search
+    Search,
+    'empty': require('components/increment/generic/empty/Empty.vue')
   },
   methods: {
     onTableAction(data) {
       console.log('Table Action: ', data)
+    },
+    retrieve(){
+      let parameter = {
+        sort: {
+          start_date: 'desc'
+        },
+        offset: 0,
+        limit: 50
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('billings/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data && response.data.length > 0) {
+          this.data = response.data
+        }else{
+          this.data = []
+        }
+      })
     }
   }
 }
