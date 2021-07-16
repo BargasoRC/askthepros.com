@@ -83,8 +83,9 @@
       v-if="deleteId"
     ></Confirmation>
 
-    <review
-      ref="preview" :description="returnDescription" :files="returnImagesList"
+    <preview
+      ref="preview"
+      :selected="selectedItem"
     />
   </div>
 </template>
@@ -96,7 +97,7 @@ import DataTable from 'src/modules/generic/table'
 import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
 import ROUTER from 'src/router'
 import Search from 'src/components/increment/generic/filter/Basic'
-import preview from 'src/modules/generic/preview.vue'
+import preview from './UserPreview.vue'
 export default {
   data() {
     return {
@@ -266,16 +267,14 @@ export default {
       })
     },
     showPreview(item){
-      if(item.url){
-        console.log({
-          parse: JSON.parse(item.url)
-        })
-      }
       if(this.selectedItem && this.selectedItem.id === item.id){
         this.selectedItem = null
       }else{
         this.selectedItem = item
       }
+      setTimeout(() => {
+        this.$refs.preview.show()
+      }, 100)
     }
   }
 }
