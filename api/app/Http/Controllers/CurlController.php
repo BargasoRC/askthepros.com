@@ -11,8 +11,8 @@ class CurlController extends Controller
   protected $ch = null;
   protected $headers = array();
 
-  public function __construct($token) {
-    $this->headers[] = 'Content-Type: application/json';
+  public function __construct($token, $contentType) {
+    $this->headers[] = $contentType;
     $this->headers[] = 'X-Restli-Protocol-Version: 2.0.0';
     $this->headers[] = 'Authorization: Bearer ' . $token;
     $this->ch = curl_init();
@@ -57,7 +57,7 @@ class CurlController extends Controller
     return json_decode($result, true);
   }
 
-  public function getRequest($url, $shop) {
+  public function getRequest($url) {
     curl_setopt($this->ch, CURLOPT_URL, $url);
 
     $result = curl_exec($this->ch);
@@ -84,6 +84,21 @@ class CurlController extends Controller
     $result = curl_exec($this->ch);
     curl_close($this->ch);
 
+    return  json_decode($result, true);
+  }
+
+  public function imageUpload($url, $file) {
+    $fh_res = fopen($file, 'r');
+    curl_setopt($this->ch, CURLOPT_INFILE, $fh_res);
+    curl_setopt($this->ch, CURLOPT_URL, $url);
+    curl_setopt($this->ch, CURLOPT_PUT, 1);
+    curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "PUT");
+    curl_setopt($this->ch, CURLOPT_INFILE, $fh_res);
+    curl_setopt($this->ch, CURLOPT_INFILESIZE, filesize($file));
+    curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
+
+    $result = curl_exec($this->ch);
+    curl_close($this->ch);
     return  json_decode($result, true);
   }
 
