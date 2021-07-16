@@ -83,15 +83,9 @@
       v-if="deleteId"
     ></Confirmation>
 
-    <preview
-      ref="preview"
-      :selected="selectedItem"
-      :previewBodyStyle="{
-        minHeight: 'calc(100vh - 100px) !important'
-      }"
-      v-if="selectedItem"
-      >
-    </preview>
+    <review
+      ref="preview" :description="returnDescription" :files="returnImagesList"
+    />
   </div>
 </template>
 
