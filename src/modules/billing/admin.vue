@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="mt-5">
-      <h2> Billing Management </h2>
+      <h5> Billing Management </h5>
     </div>
     <div class="col-sm-12 col-md-12 col-lg-12 mt-5 mb-5 p-0">
       <Search 
