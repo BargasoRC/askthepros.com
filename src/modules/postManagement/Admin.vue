@@ -272,6 +272,11 @@ export default {
       })
     },
     showPreview(item){
+      if(item.url){
+        console.log({
+          parse: JSON.parse(item.url)
+        })
+      }
       if(this.selectedItem && this.selectedItem.id === item.id){
         this.selectedItem = null
       }else{
