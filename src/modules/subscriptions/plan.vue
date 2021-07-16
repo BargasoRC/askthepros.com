@@ -16,23 +16,19 @@
             </div>
           </div>
         </div>
-        <dialogueBtn 
-          :onClick="() => { redirect('checkout')}"
-          :icon="'fas fa-sign-in-alt'" 
-          :text="'Subscribe'" 
-          :icon_position="'right'"  
-          :styles="{
-            backgroundColor: '#01004E',
-            color: 'white', 
-            marginTop: '20px'
-          }"
-        />
+        <roundedBtn
+            :onClick="() => { redirect('checkout')}"
+            :text="'Subscribe'"
+            :styles="{
+              backgroundColor: '#01004E',
+              color: 'white', 
+              marginTop: '20px'
+            }"
+          />
 
-        <dialogueBtn 
+        <roundedBtn 
           :onClick="() => { redirect('checkout')}"
-          :icon="'fas fa-sign-in-alt'" 
           :text="'Change Plan'" 
-          :icon_position="'right'"  
           :styles="{
             marginTop: '20px'
           }"
@@ -59,6 +55,7 @@ import UserPayment from 'src/modules/payments/user.vue'
 import PaymentMethods from 'src/modules/payments/PaymentMethods.vue'
 import AUTH from 'src/services/auth'
 import global from 'src/helpers/global'
+import roundedBtn from 'src/modules/generic/roundedBtn'
 export default {
   data() {
     return {
@@ -76,7 +73,8 @@ export default {
     DataTable,
     dialogueBtn,
     UserPayment,
-    PaymentMethods
+    PaymentMethods,
+    roundedBtn
   },
   methods: {
     redirect(parameter){

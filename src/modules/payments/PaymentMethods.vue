@@ -2,7 +2,7 @@
   <div>
     <h5> Current payment methods </h5>
     <div class="col-sm-12 p-0 mt-4">
-      <roudedBtn
+      <roundedBtn
         :onClick="addNewPaymentMethod"
         :text="'Add new payment method'"
         :styles="{
@@ -14,7 +14,7 @@
       <div class="payment-method" v-if="newPaymentFlag === true">
         <div class="card-holder">
           <stripe-cc ref="stripe" />
-          <roudedBtn
+          <roundedBtn
             :onClick="authorize"
             :text="'Authorize'"
             :styles="{
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import roudedBtn from 'src/modules/generic/roundedBtn'
+import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
 export default {
@@ -41,7 +41,7 @@ export default {
     }
   },
   components: {
-    roudedBtn,
+    roundedBtn,
     'stripe-cc': require('modules/payments/Stripe.vue')
   },
   methods: {

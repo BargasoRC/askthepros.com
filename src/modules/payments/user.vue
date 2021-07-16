@@ -19,7 +19,7 @@
             <td>{{item.end_date}}</td>
             <td>{{item.status}}</td>
             <td>
-              <roudedBtn
+              <roundedBtn
                 :onClick="e => {
                   redirect('/user/checkout')
                 }"
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import roudedBtn from 'src/modules/generic/roundedBtn'
+import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
 import ROUTER from 'src/router'
@@ -57,7 +57,7 @@ export default {
     }
   },
   components: {
-    roudedBtn
+    roundedBtn
   },
   methods: {
     pay() {
