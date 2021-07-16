@@ -38,7 +38,7 @@ class PostController extends APIController
 
             \DB::commit();
 
-            $this->response['data'] = 'posted_successfully';
+            $this->response['data'] = $post->id;
             $this->response['error'] = null;
         }catch(\Exception $e){
             \DB::rollback();
