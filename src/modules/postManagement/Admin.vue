@@ -86,6 +86,7 @@
     <preview
       ref="preview"
       :selected="selectedItem"
+      v-if="selectedItem"
     />
   </div>
 </template>
