@@ -84,7 +84,7 @@
     ></Confirmation>
 
     <preview
-      ref="preview"
+      ref="previewSelected"
       :selected="selectedItem"
       v-if="selectedItem"
     />
@@ -274,7 +274,7 @@ export default {
         this.selectedItem = item
       }
       setTimeout(() => {
-        this.$refs.preview.show()
+        this.$refs.previewSelected.show()
       }, 100)
     }
   }
