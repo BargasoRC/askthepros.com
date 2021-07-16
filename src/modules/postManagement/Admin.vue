@@ -49,13 +49,13 @@
             <td>{{item.author}}</td>
             <td>{{item.status.toUpperCase()}}</td>
             <td v-if="item.status.toLowerCase() === 'draft'">
-              <i class="fa fa-eye text-primary"></i>
+              <i class="fa fa-eye text-primary" @click="showPreview(item)"></i>
               <i class="fa fa-pencil text-primary" @click="edit(item.code)"></i>
               <i class="fas fa-copy text-primary"></i>
               <i class="fa fa-trash text-danger" @click="showDeleteConfirmation(item.id)"></i>
             </td>
             <td v-if="item.status.toLowerCase() === 'publish'">
-              <i class="fa fa-eye text-primary"></i>
+              <i class="fa fa-eye text-primary" @click="selectedItem = item"></i>
               <i class="fas fa-copy text-primary"></i>
             </td>
           </tr>
@@ -77,19 +77,21 @@
       ref="confirm"
       :message="'Are you sure do you want to delete this post?'"
       :title="'Confirmation'"
-      @onConfirm="remove($event)"
+      @onConfirm="e => {
+        remove(e)
+      }"
+      v-if="deleteId"
     ></Confirmation>
 
-    <!-- <preview
+    <preview
       ref="preview"
-      :description="''"
-      :files="[]"
-      :footer="'Sample'"
+      :selected="selectedItem"
       :previewBodyStyle="{
         minHeight: 'calc(100vh - 100px) !important'
       }"
+      v-if="selectedItem"
       >
-    </preview> -->
+    </preview>
   </div>
 </template>
 
@@ -104,12 +106,6 @@ import preview from 'src/modules/generic/preview.vue'
 export default {
   data() {
     return {
-      tableActions: [
-        {button: `<i class="fas fa-eye ml-2 mr-2" style="color: #01009A !important;"></i>`},
-        {button: `<i class="fas fa-pencil-alt ml-2 mr-2" style="color: #01004E;"></i>`},
-        {button: `<i class="fas fa-trash-alt ml-2 mr-2" style="color: #FF0000;"></i>`}
-      ],
-      // table header: should specify;  title, key(will be used as key in table data) and type
       tableHeaders: [
         {title: 'Post No.'},
         {title: 'Date'},
@@ -198,12 +194,13 @@ export default {
       limit: 5,
       offset: 0,
       numPages: null,
-      activePage: 1
+      activePage: 1,
+      selectedItem: null,
+      deleteId: null
     }
   },
   components: {
     roundedBtn,
-    DataTable,
     Confirmation,
     'empty': require('components/increment/generic/empty/Empty.vue'),
     Pager,
@@ -255,7 +252,13 @@ export default {
       })
     },
     showDeleteConfirmation(id){
-      this.$refs.confirm.show(id)
+      console.log({
+        test: 'again'
+      })
+      this.deleteId = id
+      setTimeout(() => {
+        this.$refs.confirm.show(id)
+      }, 100)
     },
     remove(e){
       let parameter = {
@@ -267,11 +270,16 @@ export default {
         console.log('RESPONSE: ', response)
         this.retrievePosts()
       })
+    },
+    showPreview(item){
+      if(this.selectedItem && this.selectedItem.id === item.id){
+        this.selectedItem = null
+      }else{
+        this.selectedItem = item
+      }
     }
   }
 }
 </script>
-
 <style>
-
 </style>
