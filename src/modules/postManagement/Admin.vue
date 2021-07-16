@@ -55,7 +55,7 @@
               <i class="fa fa-trash text-danger" @click="showDeleteConfirmation(item.id)"></i>
             </td>
             <td v-if="item.status.toLowerCase() === 'publish'">
-              <i class="fa fa-eye text-primary" @click="selectedItem = item"></i>
+              <i class="fa fa-eye text-primary"  @click="showPreview(item)"></i>
               <i class="fas fa-copy text-primary"></i>
             </td>
           </tr>
@@ -86,7 +86,6 @@
     <preview
       ref="previewSelected"
       :selected="selectedItem"
-      v-if="selectedItem"
     />
   </div>
 </template>
