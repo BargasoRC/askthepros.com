@@ -2,7 +2,7 @@ import config from 'src/config.js'
 let APP_EMAIL = 'support@payhiram.ph'
 export default {
   sidebarMenu: [
-    {accountType: 'USER', showOnAdmin: false, accountStatus: 'ALL', description: 'Dashboard', icon: 'fa fa-tachometer', path: 'dashboard', flag: false, subMenu: null},
+    {accountType: 'USER', showOnAdmin: true, accountStatus: 'ALL', description: 'Dashboard', icon: 'fa fa-tachometer', path: 'dashboard', flag: false, subMenu: null},
     {accountType: 'EXPERT', showOnAdmin: false, accountStatus: 'ALL', description: 'Post Management', icon: 'fa fa-tachometer', path: 'dashboard', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ALL', description: 'Post Management', icon: 'fas fa-play', path: 'post_management', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ALL', description: 'Accounts Management', icon: 'fa fa-tachometer', path: 'accounts', flag: false, subMenu: null},
@@ -12,8 +12,7 @@ export default {
     {accountType: 'USER', showOnAdmin: false, accountStatus: 'ALL', description: 'Post Management', icon: 'fa fa-credit-card', path: 'post_management', flag: false, subMenu: null},
     {accountType: 'USER', showOnAdmin: false, accountStatus: 'ALL', description: 'Social Media Channels', icon: 'fa fa-credit-card', path: 'channels', flag: false, subMenu: null},
     {accountType: 'USER', showOnAdmin: false, accountStatus: 'ALL', description: 'Account Settings', icon: 'fa fa-cogs', path: 'settings', flag: false, subMenu: null},
-    {accountType: 'USER', showOnAdmin: false, accountStatus: 'ALL', description: 'Subscription', icon: 'fa fa-credit-card', path: 'subscriptions', flag: false, subMenu: null},
-    {accountType: 'USER', showOnAdmin: false, accountStatus: 'ALL', description: 'Payments', icon: 'fa fa-credit-card', path: 'payments', flag: false, subMenu: null}
+    {accountType: 'USER', showOnAdmin: false, accountStatus: 'ALL', description: 'Subscription', icon: 'fa fa-credit-card', path: 'subscriptions', flag: false, subMenu: null}
   ],
   menuOff: [
       {id: 1, users: 'ALL', parent_id: 0, description: 'Dashboard', icon: 'fa fa-tachometer', path: 'dashboard', flag: false, subMenu: null}

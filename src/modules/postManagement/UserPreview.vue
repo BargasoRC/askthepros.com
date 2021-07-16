@@ -62,7 +62,7 @@ import CONFIG from 'src/config.js'
 import preview from 'src/modules/generic/preview.vue'
 export default {
   mounted(){
-    this.$refs.address.focus()
+    // this.$refs.address.focus()
   },
   data(){
     return {

@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-end p-0 mb-5 mt-5">
       <roundedBtn 
-        :onClick="newPost"
+        :onClick="createNewPost"
         :icon="'fas fa-plus'"
         :text="'New Post'"
         :icon_position="'right'"
@@ -33,31 +33,60 @@
         }"
       />
     </div>
+    
     <div class="col-sm-12 col-md-12 col-lg-12 mt-5 p-0 pt-5">
-      <DataTable 
-        :tableActions="tableActions"
-        :tableHeaders="tableHeaders"
-        :tableData="returnTableData"
-        @onAction="onTableAction"
-      />
+      <table class="table table-striped table-bordered">
+        <thead>
+          <th v-for="(item, index) in tableHeaders" :key="index">{{item.title}}</th>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in data">
+            <td>#{{item.id}}</td>
+            <td>{{item.created_at}}</td>
+            <td>{{item.title}}</td>
+            <td>{{item.category}}</td>
+            <td>{{displayArray(item.channels)}}</td>
+            <td>{{item.author}}</td>
+            <td>{{item.status.toUpperCase()}}</td>
+            <td v-if="item.status.toLowerCase() === 'draft'">
+              <i class="fa fa-eye text-primary" @click="showPreview(item)"></i>
+              <i class="fa fa-pencil text-primary" @click="edit(item.code)"></i>
+              <i class="fas fa-copy text-primary"></i>
+              <i class="fa fa-trash text-danger" @click="showDeleteConfirmation(item.id)"></i>
+            </td>
+            <td v-if="item.status.toLowerCase() === 'publish'">
+              <i class="fa fa-eye text-primary"  @click="showPreview(item)"></i>
+              <i class="fas fa-copy text-primary"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <Pager
       :pages="numPages"
       :active="activePage"
       :limit="limit"
-      v-if="tableData.length > 0"
+      v-if="data.length > 0"
     />
 
 
-    <empty v-if="tableData.length <= 0" :title="'No accounts available!'" :action="'Keep growing.'"></empty>
+    <empty v-if="data.length <= 0" :title="'No accounts available!'" :action="'Keep growing.'"></empty>
     
     <Confirmation
       ref="confirm"
       :message="'Are you sure do you want to delete this post?'"
       :title="'Confirmation'"
-      @onConfirm="remove($event)"
+      @onConfirm="e => {
+        remove(e)
+      }"
+      v-if="deleteId"
     ></Confirmation>
+
+    <preview
+      ref="previewSelected"
+      :selected="selectedItem"
+    />
   </div>
 </template>
 
@@ -68,26 +97,21 @@ import DataTable from 'src/modules/generic/table'
 import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
 import ROUTER from 'src/router'
 import Search from 'src/components/increment/generic/filter/Basic'
+import preview from './UserPreview.vue'
 export default {
   data() {
     return {
-      tableActions: [
-        {button: `<i class="fas fa-eye ml-2 mr-2" style="color: #01009A !important;"></i>`},
-        {button: `<i class="fas fa-pencil-alt ml-2 mr-2" style="color: #01004E;"></i>`},
-        {button: `<i class="fas fa-trash-alt ml-2 mr-2" style="color: #FF0000;"></i>`}
-      ],
-      // table header: should specify;  title, key(will be used as key in table data) and type
       tableHeaders: [
-        {title: 'Post No.', key: 'id', type: 'text'},
-        {title: 'Date', key: 'created_at', type: 'text'},
-        {title: 'Post Title', key: 'title', type: 'text'},
-        {title: 'Category', key: 'category', type: 'text'},
-        {title: 'Channel Actions', key: 'channels', type: 'text'},
-        {title: 'Author', key: 'author', type: 'text'},
-        {title: 'status', key: 'status', type: 'text'},
-        {title: 'Review', type: 'action'}
+        {title: 'Post No.'},
+        {title: 'Date'},
+        {title: 'Post Title'},
+        {title: 'Category'},
+        {title: 'Channel Actions'},
+        {title: 'Author'},
+        {title: 'Status'},
+        {title: 'Actions'}
       ],
-      tableData: [],
+      data: [],
       category: [{
         title: 'Sort By',
         sorting: [{
@@ -165,44 +189,48 @@ export default {
       limit: 5,
       offset: 0,
       numPages: null,
-      activePage: 1
+      activePage: 1,
+      selectedItem: null,
+      deleteId: null
     }
   },
   components: {
     roundedBtn,
-    DataTable,
     Confirmation,
     'empty': require('components/increment/generic/empty/Empty.vue'),
     Pager,
-    Search
+    Search,
+    preview
   },
   created() {
     this.retrievePosts()
   },
-  computed: {
-    returnTableData() {
-      return this.tableData.filter((el, ndx) => {
-        el.channels = JSON.parse(el.channels).join(', ').replaceAll('_', ' ')
-        return el
-      })
-    }
+  mounted(){
+    this.retrievePosts()
   },
   methods: {
-    newPost() {
+    displayArray(channels){
+      if(channels){
+        let parsedChannels = JSON.parse(channels)
+        let response = ''
+        for (var i = 0; i < parsedChannels.length; i++) {
+          let item = parsedChannels[i]
+          if(i > 0){
+            response += ', ' + item
+          }else{
+            response = item
+          }
+        }
+        return response
+      }else{
+        return null
+      }
+    },
+    createNewPost(){
       ROUTER.push('/admin/post_management/edit')
     },
-    onTableAction(data){
-      console.log('here ', data)
-      if(data.buttonIndex === 0){
-        this.tableData[data.rowIndex]
-        console.log('[preview Here]', this.tableData[data.rowIndex].id)
-      }else if(data.buttonIndex === 1){
-        let id = this.tableData[data.rowIndex].id
-        ROUTER.push('post_management/edit/' + id)
-      }else{
-        let id = this.tableData[data.rowIndex].id
-        this.del(id)
-      }
+    edit(code) {
+      ROUTER.push('/admin/post_management/edit/' + code)
     },
     retrievePosts() {
       let parameter = {
@@ -211,22 +239,45 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('RESPONSE: ', response)
         if(!response.error) {
-          this.tableData = response.data
+          this.data = response.data
+        }else{
+          this.data = []
         }
       })
     },
-    del(id){
-      this.$refs.confirm.show(id)
+    showDeleteConfirmation(id){
+      console.log({
+        test: 'again'
+      })
+      this.deleteId = id
+      setTimeout(() => {
+        this.$refs.confirm.show(id)
+      }, 100)
     },
-    remove(id){
-      console.log('[function delete]', id)
+    remove(e){
+      let parameter = {
+        id: e.id
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('post/delete', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        console.log('RESPONSE: ', response)
+        this.retrievePosts()
+      })
+    },
+    showPreview(item){
+      if(this.selectedItem && this.selectedItem.id === item.id){
+        this.selectedItem = null
+      }else{
+        this.selectedItem = item
+      }
+      setTimeout(() => {
+        this.$refs.previewSelected.show()
+      }, 100)
     }
   }
 }
 </script>
-
 <style>
-
 </style>

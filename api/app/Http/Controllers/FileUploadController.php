@@ -33,11 +33,18 @@ class FileUploadController extends APIController
             ));
           }
 
+
           $_response = array_map(function($val) {
             return $val['url'];
           }, $values);
+          // $response = []
+          // foreach ($values as $key => $value) {
+          //   $response[] = $value['url'];
+          // }
 
-          Image::insert($values);
+
+
+          // Image::insert($values);
           $this->response['data'] = $_response;
           return $this->response();
         }

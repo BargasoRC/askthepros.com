@@ -4,22 +4,9 @@
   <div class="container-fluid d-flex justify-content-center" style="background: #F1B814; padding-top: 50px;padding-bottom: 30px;">
     <!-- Grid row -->
     <div class="row w-75 " style="padding-bottom:1%;">
-      <!-- Grid column -->
-      <div class="col-md-4 ft-col-left ">
-        <!-- Links -->
+<!--       <div class="col-md-4 ft-col-left ">
         <h5 class="font-weight-bold mt-3 mb-4 ft-title">About</h5>
-        <ul class="list-unstyled">
-          <li>
-            <a class="ft-link" href="#">Our Mission</a>
-          </li>
-          <li>
-            <a class="ft-link" href="#">Our Story</a>
-          </li>
-          <li>
-            <a class="ft-link" href="#">Team Members</a>
-          </li>
-        </ul>
-      </div>
+      </div> -->
       <!-- Grid column -->
       <hr class="clearfix w-100 d-md-none">
       <!-- Grid column -->
@@ -28,10 +15,10 @@
         <h5 class="font-weight-bold mt-3 mb-4 ft-title">Information</h5>
         <ul class="list-unstyled">
           <li>
-            <a class="ft-link" href="#">Terms and Conditions</a>
+            <a class="ft-link" href="https://askthepros.com/terms-of-service/" target="_blank">Terms and Conditions</a>
           </li>
           <li>
-            <a class="ft-link" href="#">Privacy Policy</a>
+            <a class="ft-link" href="https://askthepros.com/privacy-policy/" target="_blank">Privacy Policy</a>
           </li>
         </ul>
       </div>

@@ -123,6 +123,7 @@ Route::post($route . '/create', 'PostController@create');
 Route::post($route . '/retrieve', 'PostController@retrieve');
 Route::post($route . '/retrieve_by_user', 'PostController@retrieveByUser');
 Route::post($route . '/retrieve_by_id', 'PostController@retrieveById');
+Route::post($route. '/delete', 'PostController@delete');
 
 $route = env('PACKAGE_ROUTE', '').'/file';
 Route::post($route . '/upload', 'FileUploadController@upload');
@@ -144,7 +145,7 @@ Route::post($route.'delete', $controller."delete");
 Route::get($route.'test', $controller."test");
 
 
-$route = env('PACKAGE_ROUTE', '').'/billins/';
+$route = env('PACKAGE_ROUTE', '').'/billings/';
 $controller = 'BillingController@';
 Route::post($route.'retrieve', $controller."retrieve");
 Route::get($route.'test', $controller."test");

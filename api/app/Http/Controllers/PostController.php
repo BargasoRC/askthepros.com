@@ -13,7 +13,6 @@ use Increment\Common\Image\Models\Image;
 class PostController extends APIController
 {
     //
-
     public function create(Request $request) {
         $data = $request->all();
         \DB::beginTransaction();
@@ -39,7 +38,7 @@ class PostController extends APIController
 
             \DB::commit();
 
-            $this->response['data'] = 'posted_successfully';
+            $this->response['data'] = $post->id;
             $this->response['error'] = null;
         }catch(\Exception $e){
             \DB::rollback();
@@ -67,6 +66,13 @@ class PostController extends APIController
         $this->response['data'] = $result;
         $this->response['error'] = null;
         return $this->response();
+    }
+
+    public function delete(Request $request) {
+      $data = $request->all();
+      $result = Post::where('posts.id', '=', $data['id'])
+        ->update(array('deleted_at' => Carbon::now()));
+      return $result;
     }
 
     public function retrieveByUser(Request $request) {

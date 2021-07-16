@@ -90,7 +90,7 @@
         <br>
         
         <b>File(s)</b>
-        <Images @formData="form" v-if="!isClearing" @filePreview="storeImages"></Images>
+        <Images @formData="form" v-if="!isClearing" @filePreview="storeImages" :edit="$route.params.parameter != undefined ? true : false" :imagesRetrieve="imagesList"></Images>
         <br>
         <br>
       </div>
@@ -205,7 +205,6 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('RESPONSE: ', response)
         if(!response.error) {
           this.title = response.data[0].title
           this.description = response.data[0].description
@@ -224,7 +223,15 @@ export default {
               this.selectedIndex = ndx
             }
           })
-          this.storeImages(response.data[0].url)
+          this.imagesList = Object.values(JSON.parse(response.data[0].url)).map(el => {
+            let temp = {}
+            if(this.$route.params.parameter === undefined){
+              return el
+            }else{
+              temp['url'] = this.config.BACKEND_URL + el
+              return temp
+            }
+          })
         }
       })
     },
@@ -240,8 +247,8 @@ export default {
         $('#loading').css({'display': 'block'})
         axios.post(this.config.BACKEND_URL + '/file/upload?token=' + AUTH.tokenData.token, this.file).then(response => {
           $('#loading').css({'display': 'none'})
-          console.log('IMAGE HERE: ', response)
           $('#loading').css({'display': 'block'})
+          console.log('IMAGE HERE: ', response)
           let channels = []
           this.facebook ? channels.push('FACEBOOK') : null
           this.googleMyBusiness ? channels.push('GOOGLE_MY_BUSINESS') : ''
@@ -279,13 +286,13 @@ export default {
     draft() {
     },
     validate() {
-      if(this.title === '' && this.description === '') {
+      if(this.selectedIndustry === '' && this.selectedIndustry === null && this.selectedIndustry === undefined) {
         this.isValid = false
         return false
-      }if(this.title === '') {
+      }if(this.title === '' && this.title === null && this.title === undefined) {
         this.isValid = false
         return false
-      }if(this.description === '') {
+      }if(this.description === '' && this.description === null && this.description === undefined) {
         this.isValid = false
         return false
       }

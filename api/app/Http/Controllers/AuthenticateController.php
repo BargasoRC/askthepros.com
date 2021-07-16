@@ -118,6 +118,7 @@ class AuthenticateController extends Controller
       // profile = url {url => }
       $user['profile'] = app('Increment\Account\Http\AccountProfileController')->getProfileUrlByAccountId($user['id']);
       $user['merchant'] = app('Increment\Imarket\Merchant\Http\MerchantController')->getByParams('account_id', $user['id']);
+      $user['plan'] = app('App\Http\Controllers\PlanController')->getByParams('account_id', $user['id']);
     }
     $user['login_type'] = 'local';
     return response()->json($user);
