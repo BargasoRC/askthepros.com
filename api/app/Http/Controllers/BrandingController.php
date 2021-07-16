@@ -31,6 +31,12 @@ class BrandingController extends APIController
     return sizeof($result) > 0 ? true : false;
   }
 
+  public function retrieveByAccountId($accountId){
+    $result = Branding::where('account_id', '=', $accountId)
+    ->get(['details']);
+    return sizeof($result) > 0 ? $result[0] : [];
+  }
+
   public function generateCode(){
     $code = 'brn_'.substr(str_shuffle($this->codeSource), 0, 60);
     $codeExist = Branding::where('code', '=', $code)->get();

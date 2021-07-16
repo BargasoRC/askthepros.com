@@ -121,12 +121,6 @@ export default {
           this.tableData = response.data
         }
       })
-    },
-    returnTableData() {
-      return this.tableData.filter((el, ndx) => {
-        el.channels = JSON.parse(el.channels).join(', ').replaceAll('_', ' ')
-        return el
-      })
     }
   }
 }
