@@ -95,7 +95,7 @@ class SocialMediaController extends APIController
                     ['social_auths.deleted_at', '=', null]
                 ])
                 ->get();
-        $path = storage_path('/app/images/' . '1_2021-06-18_07_18_56_Group_1623.png'); // file here is statis for now
+        $path = storage_path('/app/images/' . '1_2021-06-23_01_58_13_robot.png'); // file here is static for now
         
         if (!\File::exists($path)) {
             abort(404);
@@ -109,6 +109,10 @@ class SocialMediaController extends APIController
         $result = $service->shareMedia($details['token'], $details['id']);
         $registration = [];
         $registration['registration'] = $result;
+
+        if(!isset($result)){
+            return response('Cannot register Image', 500);
+        }
 
         $registerResult = (array)json_decode(json_encode($result))->value->uploadMechanism;
 
@@ -125,7 +129,7 @@ class SocialMediaController extends APIController
         $_status = [];
         $_status['status'] = $status;
 
-        $post = $this->linkedinPostWithMedia($details['token'], $details['id'], 'Hello World! Sample LINKEDIN Posting using UGC Post API, with TEXT and IMAGE!', ((object) $status)->id, 'IMAGE');
+        $post = $this->linkedinPostWithMedia($details['token'], $details['id'], 'Sample LINKEDIN Posting using UGC Post API, with Text and Image!\n#VueJs\n#PHP-Laravel\n#UGC_POSTS_API', $media_uri, 'IMAGE');
          // Text to post on linkedin is static for now.
 
         return response()->json((object) array_merge($registration, $_upload, $_status, $post));

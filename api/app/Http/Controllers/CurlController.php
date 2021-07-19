@@ -88,15 +88,13 @@ class CurlController extends Controller
   }
 
   public function imageUpload($url, $file) {
-    $fh_res = fopen($file, 'r');
-    curl_setopt($this->ch, CURLOPT_INFILE, $fh_res);
     curl_setopt($this->ch, CURLOPT_URL, $url);
     curl_setopt($this->ch, CURLOPT_PUT, 1);
     curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "PUT");
+    $fh_res = fopen($file, 'r');
     curl_setopt($this->ch, CURLOPT_INFILE, $fh_res);
     curl_setopt($this->ch, CURLOPT_INFILESIZE, filesize($file));
     curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
-
     $result = curl_exec($this->ch);
     curl_close($this->ch);
     return  json_decode($result, true);
