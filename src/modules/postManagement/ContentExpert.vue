@@ -52,8 +52,8 @@
 
         <div class="form-group">
           <label for="category"><b>Category</b></label>
-          <roundedSelectBtn 
-            :placeholder="'Select Industry'"
+          <searchField
+          :placeholder="'Select Industry'"
             :items="returnIndustry"
             :styles="{
               background: 'none',
@@ -132,6 +132,8 @@ import global from 'src/helpers/global'
 import preview from 'src/modules/generic/preview.vue'
 import axios from 'axios'
 import ROUTER from 'src/router'
+import $ from 'jquery'
+import searchField from 'src/modules/generic/searchField.vue'
 export default {
   mounted(){
   },
@@ -152,14 +154,16 @@ export default {
       googleMyBusiness: false,
       linkedin: false,
       isClearing: false,
-      character: 0
+      character: 0,
+      category: ''
     }
   },
   components: {
     Toggle,
     roundedSelectBtn,
     roundedBtn,
-    preview
+    preview,
+    searchField
   },
   computed: {
     returnIndustry() {

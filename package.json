@@ -38,11 +38,7 @@
     "readline": "^1.3.0",
     "sass-loader": "^7.3.1",
     "save": "^2.4.0",
-<<<<<<< HEAD
-    "select-pure": "^2.1.1-alpha.1",
-=======
     "stripe": "^8.162.0",
->>>>>>> b03c14defdf7963b04c7182fa20c1d2e354739de
     "style-loader": "^0.23.1",
     "style-resources-loader": "^1.4.1",
     "tether": "^1.4.4",
@@ -52,6 +48,7 @@
     "vue-directive-tooltip": "^1.4.5",
     "vue-echo": "^1.0.2",
     "vue-google-autocomplete": "^1.1.0",
+    "vue-multiselect": "^2.1.6",
     "vue-observe-visibility": "^0.4.6",
     "vue-paypal-checkout": "^3.2.0",
     "vue-pusher": "^1.1.0",
