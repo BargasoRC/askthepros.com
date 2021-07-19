@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="mt-5">
-      <h2> Subscription Management </h2>
+      <h5>Subscription Management</h5>
     </div>
     <div class="col-sm-12 col-md-12 col-lg-12 mt-5 mb-5 p-0">
       <Search 
@@ -24,14 +24,26 @@
         }"
       />
     </div>
-    <div class="table_container">
-      <DataTable 
-        :tableActions="tableActions"
-        :tableHeaders="tableHeaders"
-        :tableData="tableData"
-        @onAction="onTableAction"
-      />
+    <div v-if="data.length > 0">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <th v-for="(item, index) in tableHeaders" :key="index">{{item.title}}</th>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in data">
+            <td>{{item.account.username}}</td>
+            <td>{{item.account.email}}</td>
+            <td>{{renderPlan(item.plan)}}</td>
+            <td>{{item.start_date}}</td>
+            <td>{{item.end_date}}</td>
+            <td>{{item.payment_method_expiry}}</td>
+            <td>{{item.status.toUpperCase()}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+
+    <empty v-if="data.length <= 0" :title="'No billings available!'" :action="'Keep growing.'"></empty>
   </div>
 </template>
 
@@ -39,52 +51,22 @@
 import DataTable from 'src/modules/generic/table'
 import Search from 'src/components/increment/generic/filter/Basic'
 export default {
+  mounted(){
+    this.retrieve()
+  },
   data() {
     return {
       tableActions: [],
-      // username, email address, membership & terms, subscription, status, active, started, end date, card expiration
       tableHeaders: [
-        {title: 'Username', key: 'username', type: 'text'},
-        {title: 'Email Address', key: 'email', type: 'text'},
-        {title: 'Membership & Terms', key: 'membership', type: 'text'},
-        {title: 'Status', key: 'status', type: 'text'},
-        {title: 'Active', key: 'active', type: 'text'},
-        {title: 'Started', key: 'started', type: 'text'},
-        {title: 'End Date', key: 'end_date', type: 'text'},
-        {title: 'Card Expiration', key: 'card_expiration', type: 'text'}
+        {title: 'Username'},
+        {title: 'Email Address'},
+        {title: 'Plan'},
+        {title: 'Start Date'},
+        {title: 'End Date'},
+        {title: 'Payment Method Status'},
+        {title: 'Status'}
       ],
-      tableData: [
-        {
-          username: 'Juggernaut',
-          email: 'jugger@email.com',
-          membership: 'Basic \n 1 month for $299 then $99 / Month',
-          status: 'Enabled',
-          active: 'Yes',
-          started: new Date().toLocaleDateString(),
-          end_date: new Date().toLocaleDateString(),
-          card_expiration: new Date().toLocaleDateString()
-        },
-        {
-          username: 'Juggernaut',
-          email: 'jugger@email.com',
-          membership: 'Basic \n 1 month for $299 then $99 / Month',
-          status: 'Enabled',
-          active: 'Yes',
-          started: new Date().toLocaleDateString(),
-          end_date: new Date().toLocaleDateString(),
-          card_expiration: new Date().toLocaleDateString()
-        },
-        {
-          username: 'Juggernaut',
-          email: 'jugger@email.com',
-          membership: 'Basic \n 1 month for $299 then $99 / Month',
-          status: 'Enabled',
-          active: 'Yes',
-          started: new Date().toLocaleDateString(),
-          end_date: new Date().toLocaleDateString(),
-          card_expiration: new Date().toLocaleDateString()
-        }
-      ],
+      data: [],
       category: [{
         title: 'Sort By',
         sorting: [{
@@ -163,11 +145,37 @@ export default {
   },
   components: {
     DataTable,
-    Search
+    Search,
+    'empty': require('components/increment/generic/empty/Empty.vue')
   },
   methods: {
+    renderPlan(plan){
+      if(plan){
+        return plan.plan
+      }else{
+        return null
+      }
+    },
     onTableAction(data) {
       console.log('Table Action: ', data)
+    },
+    retrieve(){
+      let parameter = {
+        sort: {
+          start_date: 'desc'
+        },
+        offset: 0,
+        limit: 50
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('billings/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data && response.data.length > 0) {
+          this.data = response.data
+        }else{
+          this.data = []
+        }
+      })
     }
   }
 }
@@ -175,10 +183,4 @@ export default {
 
 <style lang="scss" scoped>
 @import "~assets/style/colors.scss";
-.table_container {
-  border-left: 1px solid $hover;
-  border-right: 1px solid $hover;
-  border-bottom: 1px solid $hover;
-  margin-top: 70px;
-}
 </style>

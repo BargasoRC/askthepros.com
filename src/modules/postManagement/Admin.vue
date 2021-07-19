@@ -47,16 +47,17 @@
             <td>{{item.category}}</td>
             <td>{{displayArray(item.channels)}}</td>
             <td>{{item.author}}</td>
-            <td>{{item.status.toUpperCase()}}</td>
+            <td class="text-warning" v-if="item.status.toLowerCase() === 'draft'">{{item.status.toUpperCase()}}</td>
+            <td class="text-primary" v-else>{{item.status.toUpperCase()}}</td>
             <td v-if="item.status.toLowerCase() === 'draft'">
               <i class="fa fa-eye text-primary" @click="showPreview(item)"></i>
               <i class="fa fa-pencil text-primary" @click="edit(item.code)"></i>
-              <i class="fas fa-copy text-primary"></i>
               <i class="fa fa-trash text-danger" @click="showDeleteConfirmation(item.id)"></i>
             </td>
             <td v-if="item.status.toLowerCase() === 'publish'">
               <i class="fa fa-eye text-primary"  @click="showPreview(item)"></i>
               <i class="fas fa-copy text-primary"></i>
+              <i class="fa fa-trash text-danger" @click="showDeleteConfirmation(item.id)"></i>
             </td>
           </tr>
         </tbody>
@@ -93,7 +94,6 @@
 <script>
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import Pager from 'src/components/increment/generic/pager/Pager.vue'
-import DataTable from 'src/modules/generic/table'
 import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
 import ROUTER from 'src/router'
 import Search from 'src/components/increment/generic/filter/Basic'

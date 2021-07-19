@@ -9,9 +9,9 @@
     <textarea class="form-control" placeholder="Type post description" name="post_title" id="post_title" cols="90" rows="10" v-model="data.description">
     </textarea>
     <br>
-
+    <br>
     <h5>Files:</h5>
-    <Images :imageList="imageList"></Images>
+    <Imagess @formData="form" @filePreview="storeImages" :edit="$route.params.parameter != undefined ? true : false" :imagesRetrieve="imagesList"></Imagess>
     <br>
     <br>
 
@@ -23,8 +23,7 @@
     <br>
     <Toggle :text="'LinkedIn'" v-model="linkedin" @input="toggle('LINKEDIN')" :isChecked="linkedin"></Toggle>
     <br>
-    <br>
-    <span style="float: right" class="preview" @click="preview()"><u><b>Preview</b></u></span>
+    <span style="float: right" class="preview" @click="preview(data)"><u><b>Preview</b></u></span>
     <roundedBtn
       :text="'Post'"
       :onClick="post"
@@ -38,29 +37,32 @@
     />
     <br>
     <review
-    ref="preview" :description="returnDescription" :files="returnImagesList"></review>
+      ref="previewSelected"
+      :selected="selectedItem"
+    />
   </div>
 </template>
 
 <script>
 import roundedBtn from 'src/modules/generic/roundedBtn'
-import Images from 'src/modules/generic/previewImage.vue'
+import Imagess from 'src/modules/generic/previewImage.vue'
 import Toggle from 'src/modules/generic/toggleSwitch.vue'
 import COLORS from 'src/assets/style/colors.js'
 import CONFIG from 'src/config.js'
 import review from './UserPreview.vue'
+import AUTH from 'src/services/auth'
 export default {
   mounted(){
     this.retrieveReview(this.$route.params.parameter)
   },
   data() {
     return {
+      user: AUTH.user,
       colors: COLORS,
       config: CONFIG,
-      imageList: [],
+      imagesList: [],
       errorMessage: null,
       idImage: null,
-      file: null,
       data: [],
       industry: global.industry,
       selectedIndustry: null,
@@ -74,11 +76,13 @@ export default {
       isClearing: false,
       character: 0,
       channel: [],
-      channels: []
+      channels: [],
+      file: null,
+      selectedItem: null
     }
   },
   components: {
-    Images,
+    Imagess,
     Toggle,
     roundedBtn,
     review
@@ -97,6 +101,10 @@ export default {
     }
   },
   methods: {
+    form(data){
+      this.file = data
+      console.log('forms: ', data)
+    },
     toggle(id){
       this.channel.push(id)
     },
@@ -121,20 +129,20 @@ export default {
       console.log('[channels]', this.channels, this.data.title, this.data.description)
     },
     storeImages(data) {
-      this.imageList = data
+      this.imagesList = data
     },
-    preview(){
-      console.log('[here]')
-      this.$refs.preview.show()
+    preview(data){
+      this.$refs.preview.show(data)
     },
     retrieveReview(id){
       let parameter = {
+        account_id: this.user.userID,
         id: id
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve_by_id', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('RESPONSE: ', response)
+        console.log('RESPONSE: ', response.data[0])
         if(!response.error) {
           this.data = response.data[0]
           var channel = response.data[0].channels
@@ -147,14 +155,18 @@ export default {
           if(channel.includes('GOOGLE_MY_BUSINESS')){
             this.googleMyBusiness = true
           }
-          this.imageList = response.data[0]
           this.description = response.data[0].description
+          this.imagesList = Object.values(JSON.parse(response.data[0].url)).map(el => {
+            let temp = {}
+            if(this.$route.params.parameter === undefined){
+              return el
+            }else{
+              temp['url'] = this.config.BACKEND_URL + el
+              return temp
+            }
+          })
         }
       })
-    },
-    form(data){
-      this.file = data
-      console.log('forms: ', data)
     }
   }
 }

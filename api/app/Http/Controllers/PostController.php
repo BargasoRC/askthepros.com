@@ -13,6 +13,8 @@ use Increment\Common\Image\Models\Image;
 class PostController extends APIController
 {
     //
+    public $brandingClass = 'App\Http\Controllers\BrandingController'; 
+
     public function create(Request $request) {
         $data = $request->all();
         \DB::beginTransaction();
@@ -94,8 +96,12 @@ class PostController extends APIController
               ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
               ->where('posts.id', '=', $data['id'])
               ->get();
+      $i = 0;
+      foreach ($result as $key) {
+        $result[$i]['branding'] = app($this->brandingClass)->retrieveByAccountId($data['account_id']);
+        $i++;
+      }
       $this->response['data'] = $result;
-      $this->response['error'] = null;
       return $this->response();
     }
 
