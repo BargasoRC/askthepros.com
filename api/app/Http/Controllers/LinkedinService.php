@@ -68,11 +68,11 @@ class LinkedinService extends Controller
                 "com.linkedin.ugc.ShareContent": {
                     "media": [
                         {
-                            "media": "urn:li:digitalmediaAsset:'.$media.'",
+                            "media": "'.$media.'",
                             "status": "READY",
                             "title": {
                                 "attributes": [],
-                                "text": "'.$message.'"
+                                "text": "Sample Video Create"
                             }
                         }
                     ],
@@ -95,7 +95,7 @@ class LinkedinService extends Controller
     }
 
     public function uploadImage($token, $image) {
-        $curl = new CurlController($token, 'Content-Type: multipart/form-data');
+        $curl = new CurlController($token, 'Connection: Keep-Alive');
         $result = $curl->imageUpload($this->url, $image);
         return $result;
     }

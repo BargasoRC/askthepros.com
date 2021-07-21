@@ -5,14 +5,22 @@
     :placeholder="placeholder"
     :class="'form-control roudedInput ' + classes"
     @input="onChange"
+    v-on:keyup.enter="onEnter !== undefined ? enter(onEnter($event)).then((res) => {
+      return res
+    }): () => {}"
   />
 </template>
 <script>
 export default {
-  props: ['type', 'styles', 'placeholder', 'classes'],
+  props: ['type', 'styles', 'placeholder', 'classes', 'onEnter'],
   methods: {
     onChange(event) {
       this.$emit('input', event.target.value)
+    },
+    enter(event) {
+      return new Promise((resolve, reject) => {
+        resolve(event)
+      })
     }
   }
 }

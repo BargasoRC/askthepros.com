@@ -44,6 +44,7 @@
                   border: !this.isValid && password == '' ? '1px solid red !important' : 'none'
                 }"
                 v-model="password"
+                :onEnter="login"
               />
               <p
                 class="mb-0 pb-0 invalidEmail"
@@ -175,7 +176,6 @@ export default {
         $('#loading').css({'display': 'block'})
         AUTH.authenticate(this.username, this.password, (response) => {
           $('#loading').css({'display': 'none'})
-          console.log('LOGIN response:', response)
           ROUTER.push(`/${this.user.type.toLowerCase()}/dashboard`)
         }, (response, status) => {
           $('#loading').css({'display': 'none'})

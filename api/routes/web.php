@@ -164,6 +164,8 @@ $controller = 'AccountInformationsContoller@';
 Route::post($route.'create', $controller."create");
 Route::post($route.'retrieve', $controller."retrieveAccountInformation");
 Route::post($route.'update', $controller."update");
+Route::post($route.'update_account', $controller.'updateAccountAndInformations');
+Route::post($route.'check_password', $controller.'checkPassword');
 Route::post($route.'delete', $controller."delete");
 Route::get($route.'test', $controller."test");
 
