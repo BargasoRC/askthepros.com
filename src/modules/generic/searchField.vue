@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Multiselect style="width:100%" v-model="value" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name" track-by="code" :options="options" :multiple="true" :taggable="true" @tag="addTag"></Multiselect>
+    <Multiselect style="width:100%" v-model="value" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="industry" track-by="code" :options="options" :multiple="true" @click="returnCategory"></Multiselect>
   </div>
 </template>
 
@@ -14,44 +14,27 @@ export default {
       selectedItem: null,
       value: [],
       options: [
-        { name: 'Manufacturing', code: 'Man' },
-        { name: 'Construction', code: 'Cons' },
-        { name: 'Finance', code: 'Fin' },
-        { name: 'Transport', code: 'Tra' },
-        { name: 'Agriculture', code: 'Agr' },
-        { name: 'Retail', code: 'Ret' },
-        { name: 'Technology', code: 'Tech' },
-        { name: 'Education', code: 'Edu' },
-        { name: 'Publishing', code: 'Pub' },
-        { name: 'Medicine', code: 'Med' }
+        { industry: 'Manufacturing', code: 'Man' },
+        { industry: 'Construction', code: 'Cons' },
+        { industry: 'Finance', code: 'Fin' },
+        { industry: 'Transport', code: 'Tra' },
+        { industry: 'Agriculture', code: 'Agr' },
+        { industry: 'Retail', code: 'Ret' },
+        { industry: 'Technology', code: 'Tech' },
+        { industry: 'Education', code: 'Edu' },
+        { industry: 'Publishing', code: 'Pub' },
+        { industry: 'Medicine', code: 'Med' }
       ]
     }
-  },
-  computed: {
   },
   components: {
     Multiselect
   },
+  updated() {
+  },
   methods: {
-    selectItem(ndx, item) {
-      this.selectedItem = item
-      let temp = {
-        name: item,
-        code: ndx
-      }
-      this.$emit('onSelect', temp)
-    },
-    addTag(newTag){
-      const tag = {
-        name: newTag,
-        code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
-      }
-      this.options.push(tag)
-      this.value.push(tag)
-    },
     returnCategory(){
-      console.log('Return Value: ' + JSON.stringify(this.value))
-      this.$emit('onSelect', JSON.stringify(this.value))
+      this.$emit('onSelect', this.value)
     }
   }
 }
