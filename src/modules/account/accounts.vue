@@ -28,7 +28,10 @@
         <tr>
           <th scope="col">Date</th>
           <th scope="col">Username</th>
-          <th scope="col">Email</th>
+          <th scope="col">Email Address</th>
+          <th scope="col">Name</th>
+          <th scope="col">Business Name</th>
+          <th scope="col">Contact Number</th>
           <th scope="col">Type</th>
           <th scope="col">Status</th>
         </tr>
@@ -40,6 +43,9 @@
             <label class="action-link text-primary">{{item.username}}</label>
           </td>
           <td>{{item.email}}</td>
+          <td></td>
+          <td></td>
+          <td></td>
           <td>
             <label v-if="editTypeIndex !== index">{{item.account_type}}</label>
             <i class="fa fa-pencil text-primary" style="margin-left: 10px;" @click="setEditTypeIndex(index, item)" v-if="editTypeIndex !== index"></i>
@@ -147,6 +153,8 @@ export default{
     return {
       user: AUTH.user,
       data: [],
+      data1: [],
+      data2: [],
       auth: AUTH,
       selecteditem: null,
       config: CONFIG,
@@ -156,6 +164,14 @@ export default{
       category: [{
         title: 'Sort by',
         sorting: [{
+          title: 'Created ascending',
+          payload: 'created',
+          payload_value: 'asc'
+        }, {
+          title: 'Created descending',
+          payload: 'created',
+          payload_value: 'desc'
+        }, {
           title: 'Username ascending',
           payload: 'username',
           payload_value: 'asc'
@@ -172,12 +188,28 @@ export default{
           payload: 'email',
           payload_value: 'desc'
         }, {
+          title: 'Name ascending',
+          payload: 'name',
+          payload_value: 'asc'
+        }, {
+          title: 'Name descending',
+          payload: 'name',
+          payload_value: 'desc'
+        }, {
+          title: 'Business Name ascending',
+          payload: 'business_name',
+          payload_value: 'asc'
+        }, {
+          title: 'Business Name descending',
+          payload: 'business_name',
+          payload_value: 'desc'
+        }, {
           title: 'Type ascending',
-          payload: 'account_type',
+          payload: 'type',
           payload_value: 'asc'
         }, {
           title: 'Type descending',
-          payload: 'account_type',
+          payload: 'type',
           payload_value: 'desc'
         }, {
           title: 'Status ascending',
@@ -186,14 +218,6 @@ export default{
         }, {
           title: 'Status descending',
           payload: 'status',
-          payload_value: 'desc'
-        }, {
-          title: 'Created ascending',
-          payload: 'created_at',
-          payload_value: 'asc'
-        }, {
-          title: 'Created descending',
-          payload: 'created_at',
           payload_value: 'desc'
         }]
       }],
@@ -292,6 +316,19 @@ export default{
         if(response.data.length > 0){
           this.data = response.data
           this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
+          // let parameter1 = {
+          //   condition: [{
+          //     value: filter.value + '%',
+          //     column: filter.column,
+          //     clause: 'like'
+          //   }],
+          //   sort: sort,
+          //   limit: this.limit,
+          //   offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
+          // }
+          // this.APIRequest('account_informations/retrieve', parameter1).then(response => {
+          //   this.data1 = response.data
+          // })
         }else{
           this.data = []
           this.numPages = null
