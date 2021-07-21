@@ -52,8 +52,8 @@
 
         <div class="form-group">
           <label for="category"><b>Category</b></label>
-          <roundedSelectBtn 
-            :placeholder="'Select Industry'"
+          <searchField
+          :placeholder="'Select Industry'"
             :items="returnIndustry"
             :styles="{
               background: 'none',
@@ -71,6 +71,7 @@
             }"
             @onSelect="onSelect"
             v-if="!isClearing"
+            ref="searchField"
           />
           <p
             class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
@@ -132,6 +133,8 @@ import global from 'src/helpers/global'
 import preview from 'src/modules/generic/preview.vue'
 import axios from 'axios'
 import ROUTER from 'src/router'
+import $ from 'jquery'
+import searchField from 'src/modules/generic/searchField.vue'
 export default {
   mounted(){
   },
@@ -141,7 +144,7 @@ export default {
       colors: COLORS,
       config: CONFIG,
       industry: global.industry,
-      selectedIndustry: null,
+      selectedIndustry: [],
       global: global,
       errorMessage: null,
       idImage: null,
@@ -152,14 +155,16 @@ export default {
       googleMyBusiness: false,
       linkedin: false,
       isClearing: false,
-      character: 0
+      character: 0,
+      category: ''
     }
   },
   components: {
     Toggle,
     roundedSelectBtn,
     roundedBtn,
-    preview
+    preview,
+    searchField
   },
   computed: {
     returnIndustry() {
@@ -172,8 +177,9 @@ export default {
     }
   },
   methods: {
-    onSelect(data) {
-      this.selectedIndustry = data.index
+    onSelect: function (data) {
+      this.selectedIndustry.push(data)
+      console.log('Pushed')
     },
     save(status) {
       if(this.validate()) {
@@ -182,6 +188,7 @@ export default {
         this.facebook ? channels.push('FACEBOOK') : null
         this.googleMyBusiness ? channels.push('GOOGLE_MY_BUSINESS') : ''
         this.linkedin ? channels.push('LINKEDIN') : ''
+        this.$refs.searchField.returnCategory() // Need a redo here, couples components
         let parameter = {
           title: this.title,
           description: this.description,
@@ -190,7 +197,7 @@ export default {
           status: status,
           channels: JSON.stringify(channels),
           parent: null,
-          category: this.industry[this.selectedIndustry].category
+          category: JSON.stringify(this.selectedIndustry)
         }
         this.isClearing = true
         this.APIRequest('post/create', parameter).then(response => {
