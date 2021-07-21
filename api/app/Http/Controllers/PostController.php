@@ -55,15 +55,20 @@ class PostController extends APIController
         $data = $request->all();
         if($data['edit'] === true){
           $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
-            ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
-            ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
-            ->where('posts.id', '=', $data['id'])
-            ->get();
+          ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
+          ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
+          ->where('posts.code', '=', $data['code'])
+          ->get();
         }else{
           $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
             ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
             ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
             ->get();
+        }
+        $i = 0;
+        foreach ($result as $key) {
+          $result[$i]['branding'] = app($this->brandingClass)->retrieveByAccountId($data['account_id']);
+          $i++;
         }
         $this->response['data'] = $result;
         $this->response['error'] = null;
@@ -94,7 +99,7 @@ class PostController extends APIController
       $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
               ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
               ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
-              ->where('posts.id', '=', $data['id'])
+              ->where('posts.code', '=', $data['code'])
               ->get();
       $i = 0;
       foreach ($result as $key) {

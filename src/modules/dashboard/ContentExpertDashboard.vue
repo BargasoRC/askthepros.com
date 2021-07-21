@@ -24,11 +24,29 @@
       />
     </div>
     <div class="col-sm-12 col-md-12 col-lg-12 mt-5 p-0 pt-5">
-      <DataTable 
-        :tableActions="tableActions"
-        :tableHeaders="tableHeaders"
-        :tableData="returnTableData"
-      />
+        <table class="table table-striped table-bordered">
+        <thead>
+          <th v-for="(item, index) in tableHeaders" :key="index">{{item.title}}</th>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in tableData" :key="index">
+            <td>{{item.created_at}}</td>
+            <td>{{item.title}}</td>
+            <td>{{displayArray(item.channels)}}</td>
+            <td class="text-warning" v-if="item.status.toLowerCase() === 'draft'">{{item.status.toUpperCase()}}</td>
+            <td class="text-primary" v-else>{{item.status.toUpperCase()}}</td>
+            <td v-if="item.status.toLowerCase() === 'draft'">
+              <i class="fa fa-eye text-primary" @click="showPreview(item)"></i>
+              <i class="fa fa-pencil text-primary" @click="edit(item.code)"></i>
+              <i class="fa fa-trash text-danger" @click="showDeleteConfirmation(item.id)"></i>
+            </td>
+            <td v-if="item.status.toLowerCase() === 'publish'">
+              <i class="fa fa-eye text-primary"  @click="showPreview(item)"></i>
+              <i class="fas fa-copy text-primary" @click="edit(item.code)"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div >
     <div class="row d-flex flex-row">
       <div class="col d-flex justify-content-end">
@@ -37,7 +55,24 @@
         <i class="fas fa-arrow-left" style="color: #01004E"></i><i class="fas fa-arrow-right" style="color: #01004E
 "></i>  
       </div>
-    </div>    
+    </div>
+    
+    <empty v-if="tableData.length <= 0" :title="'No posts available!'" :action="'Keep growing.'"></empty>
+    <preview
+      ref="previewSelected"
+      :selected="selectedItem"
+      :files="file"
+      :first="'false'"
+    /> 
+    <Confirmation
+      ref="confirm"
+      :message="'Are you sure do you want to delete this post?'"
+      :title="'Confirmation'"
+      @onConfirm="e => {
+        remove(e)
+      }"
+      v-if="deleteId"
+    ></Confirmation>
   </div>
 </template>
 <style scoped lang="scss" scoped>
@@ -85,6 +120,9 @@ import DataTable from 'src/modules/generic/table'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
+import ROUTER from 'src/router'
+import preview from 'src/modules/postManagement/UserPreview.vue'
+import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
 export default {
   data() {
     return {
@@ -92,18 +130,15 @@ export default {
       colors: COLORS,
       pageNo: 1,
       pageTotal: 1,
-      tableActions: [
-        {button: `<i class="fas fa-eye ml-2 mr-2" style="color: #01009A;"></i>`},
-        {button: `<i class="fas fa-pencil-alt ml-2 mr-2" style="color: #01004E;"></i>`},
-        {button: `<i class="fas fa-clone ml-2 mr-2" style="color: #01004E;"></i>`},
-        {button: `<i class="fas fa-trash-alt ml-2 mr-2" style="color: #FF0000;"></i>`}
-      ],
+      selectedItem: null,
+      deleteId: null,
+      file: null,
       tableHeaders: [
-        {title: 'Date', key: 'created_at', type: 'text'},
-        {title: 'Post Title', key: 'title', type: 'text'},
-        {title: 'Channel Actions', key: 'channels', type: 'text'},
-        {title: 'Status', key: 'status', type: 'text'},
-        {title: 'Actions', type: 'action'}
+        {title: 'Date'},
+        {title: 'Post Title'},
+        {title: 'Channel Actions'},
+        {title: 'Status'},
+        {title: 'Actions'}
       ],
       tableData: [],
       category: [{
@@ -124,7 +159,10 @@ export default {
   components: {
     roundedBtn,
     Search,
-    DataTable
+    DataTable,
+    Confirmation,
+    'empty': require('components/increment/generic/empty/Empty.vue'),
+    preview
   },
   created() {
     this.retrievePosts()
@@ -138,6 +176,23 @@ export default {
     }
   },
   methods: {
+    displayArray(channels){
+      if(channels){
+        let parsedChannels = JSON.parse(channels)
+        let response = ''
+        for (var i = 0; i < parsedChannels.length; i++) {
+          let item = parsedChannels[i]
+          if(i > 0){
+            response += ', ' + item
+          }else{
+            response = item
+          }
+        }
+        return response
+      }else{
+        return null
+      }
+    },
     newPost() {
       this.$router.push(`/${this.user.type.toLowerCase()}/post_management`)
     },
@@ -149,9 +204,43 @@ export default {
       this.APIRequest('post/retrieve_by_user', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         console.log('RESPONSE: ', response)
-        if(!response.error) {
+        if(response.data.length > 0) {
           this.tableData = response.data
         }
+      })
+    },
+    showPreview(item){
+      if(this.selectedItem && this.selectedItem.id === item.id){
+        this.selectedItem = null
+      }else{
+        this.selectedItem = item
+        this.file = item.url
+      }
+      setTimeout(() => {
+        this.$refs.previewSelected.show()
+      }, 100)
+    },
+    edit(code) {
+      ROUTER.push('/admin/post_management/edit/' + code)
+    },
+    showDeleteConfirmation(id){
+      console.log({
+        test: 'again'
+      })
+      this.deleteId = id
+      setTimeout(() => {
+        this.$refs.confirm.show(id)
+      }, 100)
+    },
+    remove(e){
+      let parameter = {
+        id: e.id
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('post/delete', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        console.log('RESPONSE: ', response)
+        this.retrievePosts()
       })
     }
   }

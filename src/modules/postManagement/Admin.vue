@@ -56,7 +56,7 @@
             </td>
             <td v-if="item.status.toLowerCase() === 'publish'">
               <i class="fa fa-eye text-primary"  @click="showPreview(item)"></i>
-              <i class="fas fa-copy text-primary"></i>
+              <i class="fas fa-copy text-primary" @click="edit(item.code)"></i>
               <i class="fa fa-trash text-danger" @click="showDeleteConfirmation(item.id)"></i>
             </td>
           </tr>
@@ -71,8 +71,7 @@
       v-if="data.length > 0"
     />
 
-
-    <empty v-if="data.length <= 0" :title="'No accounts available!'" :action="'Keep growing.'"></empty>
+    <empty v-if="data.length <= 0" :title="'No posts available!'" :action="'Keep growing.'"></empty>
     
     <Confirmation
       ref="confirm"
@@ -87,11 +86,14 @@
     <preview
       ref="previewSelected"
       :selected="selectedItem"
+      :files="file"
+      :first="'false'"
     />
   </div>
 </template>
 
 <script>
+import AUTH from 'src/services/auth'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import Pager from 'src/components/increment/generic/pager/Pager.vue'
 import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
@@ -101,6 +103,7 @@ import preview from './UserPreview.vue'
 export default {
   data() {
     return {
+      user: AUTH.user,
       tableHeaders: [
         {title: 'Post No.'},
         {title: 'Date'},
@@ -191,6 +194,7 @@ export default {
       numPages: null,
       activePage: 1,
       selectedItem: null,
+      file: null,
       deleteId: null
     }
   },
@@ -234,7 +238,8 @@ export default {
     },
     retrievePosts() {
       let parameter = {
-        edit: false
+        edit: false,
+        account_id: this.user.userID
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve', parameter).then(response => {
@@ -271,6 +276,7 @@ export default {
         this.selectedItem = null
       }else{
         this.selectedItem = item
+        this.file = item.url
       }
       setTimeout(() => {
         this.$refs.previewSelected.show()

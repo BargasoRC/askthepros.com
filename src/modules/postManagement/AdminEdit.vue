@@ -98,7 +98,7 @@
         <div class="col-sm-12 d-flex justify-content-end mt-4 pt-2">
           <roundedBtn
             class="ml-1 mr-1"
-            :onClick="() => save('DRAFT')"
+            :onClick="() => (status != 'PUBLISH' && status != undefined) ? update('DRAFT') : save('DRAFT')"
             :text="'Save as Draft'"
             :styles="{
               backgroundColor: colors.warning,
@@ -109,7 +109,7 @@
           />
           <roundedBtn
             class="ml-1 mr-1"
-            :onClick="() => save('PUBLISH')"
+            :onClick="() => (status != 'PUBLISH' && status != undefined) ? update('PUBLSIH') : save('PUBLISH')"
             :text="'Publish'"
             :styles="{
                 backgroundColor: colors.darkPrimary,
@@ -120,7 +120,13 @@
           />
         </div>
         <div class="col-sm-12 mt-5">
-          <preview :description="returnDescription" :files="returnImagesList"></preview>
+          <preview
+          v-if="render"
+          :selected="returnSelected"
+          :files="returnImagesList"
+          :first="status === null ? 'false' : 'true'"
+          />
+          <!-- :selected="selectedItem" -->
         </div>
       </div>
     </div>
@@ -148,6 +154,8 @@ export default {
       this.linkedin = false
       this.googleMyBusiness = false
       this.selectedIndex = null
+      this.status = null
+      this.retrieveBranding()
     }else{
       this.retrieveEditPosts(this.$route.params.parameter)
     }
@@ -157,6 +165,7 @@ export default {
       user: AUTH.user,
       colors: COLORS,
       config: CONFIG,
+      status: null,
       industry: global.industry,
       selectedIndustry: null,
       global: global,
@@ -172,7 +181,9 @@ export default {
       linkedin: false,
       isClearing: false,
       character: 0,
-      selectedIndex: null
+      selectedIndex: null,
+      selectedItem: null,
+      render: false
     }
   },
   components: {
@@ -193,6 +204,15 @@ export default {
     },
     returnDescription() {
       return this.description
+    },
+    returnSelected() {
+      this.render = false
+      this.selectedItem = {
+        description: this.description,
+        branding: this.selectedItem.branding
+      }
+      this.render = true
+      return this.selectedItem
     }
   },
   methods: {
@@ -200,40 +220,64 @@ export default {
     retrieveEditPosts() {
       let parameter = {
         edit: true,
-        id: this.$route.params.parameter
+        account_id: this.user.userID,
+        code: this.$route.params.parameter
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         if(!response.error) {
-          this.title = response.data[0].title
-          this.description = response.data[0].description
-          var channel = response.data[0].channels
-          if(channel.includes('FACEBOOK')){
-            this.facebook = true
-          }
-          if(channel.includes('LINKEDIN')){
-            this.linkedin = true
-          }
-          if(channel.includes('GOOGLE_MY_BUSINESS')){
-            this.googleMyBusiness = true
-          }
-          this.industry.map((el, ndx) => {
-            if(el.category === response.data[0].category){
-              this.selectedIndex = ndx
-            }
-          })
-          this.imagesList = Object.values(JSON.parse(response.data[0].url)).map(el => {
-            let temp = {}
-            if(this.$route.params.parameter === undefined){
-              return el
-            }else{
-              temp['url'] = this.config.BACKEND_URL + el
-              return temp
+          response.data.filter(el => {
+            if(el.code === this.$route.params.parameter){
+              this.selectedItem = el
+              this.status = el.status
+              this.render = true
+              this.title = el.title
+              this.description = el.description
+              var channel = el.channels
+              if(channel.includes('FACEBOOK')){
+                this.facebook = true
+              }
+              if(channel.includes('LINKEDIN')){
+                this.linkedin = true
+              }
+              if(channel.includes('GOOGLE_MY_BUSINESS')){
+                this.googleMyBusiness = true
+              }
+              this.industry.map((el, ndx) => {
+                if(el.category === el.category){
+                  this.selectedIndex = ndx
+                }
+              })
+              this.imagesList = Object.values(JSON.parse(el.url)).map(el => {
+                let temp = {}
+                if(this.$route.params.parameter === undefined){
+                  return el
+                }else{
+                  temp['url'] = this.config.BACKEND_URL + el
+                  return temp
+                }
+              })
             }
           })
         }
       })
+    },
+    retrieveBranding() {
+      this.render = false
+      let parameter = {
+        account_id: this.user.userID
+      }
+      this.APIRequest('brandings/retrieve_by_accountId', parameter).then(response => {
+        this.selectedItem = {}
+        this.selectedItem['branding'] = {
+          details: response.details
+        }
+        this.render = true
+      })
+    },
+    update(status){
+      console.log('[status]', status)
     },
     // Adding a Post
     storeImages(data) {

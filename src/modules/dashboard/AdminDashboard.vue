@@ -89,7 +89,8 @@ export default {
     },
     retrievePosts() {
       let parameter = {
-        edit: false
+        edit: false,
+        account_id: this.user.userID
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve', parameter).then(response => {

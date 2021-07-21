@@ -156,6 +156,7 @@ $controller = 'BrandingController@';
 Route::post($route.'create', $controller."create");
 Route::post($route.'update', $controller."update");
 Route::post($route.'retrieve', $controller."retrieve");
+Route::post($route.'retrieve_by_accountId', $controller."retrieveByAccountIdRequest");
 Route::post($route.'delete', $controller."delete");
 Route::get($route.'test', $controller."test");
 

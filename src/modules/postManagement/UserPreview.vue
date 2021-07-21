@@ -11,9 +11,8 @@
         <div class="modal-body p-4 pl-5 pr-5">
           <preview
           ref="preview"
-          :description="''"
-          :files="[]"
-          :footer="'Sample'"
+          :selected="selected"
+          :files="returnFiles"
           :previewBodyStyle="{
             minHeight: 'calc(100vh - 100px) !important'
           }"
@@ -61,6 +60,7 @@ import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import preview from 'src/modules/generic/preview.vue'
 export default {
+  props: ['selected', 'files'],
   mounted(){
   },
   data(){
@@ -69,6 +69,11 @@ export default {
       config: CONFIG,
       errorMessage: null,
       parameter: null
+    }
+  },
+  computed: {
+    returnFiles() {
+      return this.files
     }
   },
   components: {
