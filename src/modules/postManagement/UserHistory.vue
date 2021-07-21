@@ -33,11 +33,23 @@
     </div>
 
     <div class="col-sm-12 col-md-12 col-lg-12 mt-5 p-0 pt-5">
-      <DataTable
-        :tableHeaders="tableHeaders"
-        :tableData="tableData"
-        :tableActions="[]"
-      />
+      <table class="table table-striped table-bordered">
+        <thead>
+          <th v-for="(item, index) in tableHeaders" :key="index">{{item.title}}</th>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in tableData" :key="index">
+            <td>{{item.date}}</td>
+            <td>{{item.time}}</td>
+            <td>{{item.post_title}}</td>
+            <td>{{item.channels_posted_to}}</td>
+            <!-- <td>{{displayArray(item.channels_posted_to)}}</td> -->
+            <td>{{item.link}}</td>
+            <td class="text-primary" v-if="item.status === 'Posted Automatically'">{{item.status}}</td>
+            <td class="text-warning" v-else>{{item.status}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <Pager
@@ -62,12 +74,12 @@ export default {
   data() {
     return {
       tableHeaders: [
-        {title: 'Date Posted', key: 'date', type: 'date'},
-        {title: 'Time Posted', key: 'time', type: 'text'},
-        {title: 'Post Title', key: 'post_title', type: 'text'},
-        {title: 'Channel Posted To', key: 'channels_posted_to', type: 'text'},
-        {title: 'Link', key: 'link', type: 'text'},
-        {title: 'Status', key: 'status', type: 'text'}
+        {title: 'Date Posted'},
+        {title: 'Time Posted'},
+        {title: 'Post Title'},
+        {title: 'Channel Posted To'},
+        {title: 'Link'},
+        {title: 'Status'}
       ],
       tableData: [{
         id: 1,
@@ -110,6 +122,23 @@ export default {
     Pager
   },
   methods: {
+    displayArray(channels){
+      if(channels){
+        let parsedChannels = JSON.parse(channels)
+        let response = ''
+        for (var i = 0; i < parsedChannels.length; i++) {
+          let item = parsedChannels[i]
+          if(i > 0){
+            response += ', ' + item
+          }else{
+            response = item
+          }
+        }
+        return response
+      }else{
+        return null
+      }
+    },
     forReview(){
       ROUTER.push('/user/post_management')
     }

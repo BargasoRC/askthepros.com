@@ -23,16 +23,17 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-12 p-0 mt-5 mb-4" v-if="(returnDescription !== '' && returnDescription) || (files && (files ? files.length : 0)) > 0">
+        <div class="col-sm-12 p-0 mt-5 mb-4" v-if="(returnDescription !== '' && returnDescription) || ((files) && (files) ? files.length : 0) > 0">
           <p class="mb-0 p-0">
             {{returnDescription}}
           </p>
         </div>
-        <div class="col-sm-12" v-for="(el, ndx) in footer" :key="'footer' + ndx" v-if="(returnDescription !== '' || !returnDescription) && (files ? files.length : 0) > 0">
-          <p class="mb-0 p-0">
+        <div class="col-sm-12" v-for="(el, ndx) in footer" :key="'footer' + ndx" v-if="(returnDescription !== '' && returnDescription) || files && (files ? files.length : 0) > 0">
+          <p class="mb-0 p-0" style="margin-left: -2%">
             {{el}}
           </p>
         </div>
+        <br>
         <div class="col-sm-12 p-0 d-flex justify-content-between file_container" v-if="(returnDescription !== '' && returnDescription) || files && (files ? files.length : 0) > 0">
           <div v-for="(el, ndx) in returnFiles" :key="ndx + String(el.id)"
             :class="'file_width ' + (([1, 3, 4].includes((files ? files.length : 0)) || (files ? files.length : 0) >= 5) && ndx === 0 ? 'whole_page ' : '') + ( (files ? files.length : 0) >= 4 && ndx !== 0 ? 'compressed ' : '')" :style="{
@@ -42,7 +43,7 @@
               backgroundPosition: 'center',
               opacity: files.length > 4 && ndx === 3 ? 0.7 : 1
             }"
-          >
+            >
             <b 
               v-if="files.length > 4 && ndx === 3"
               :style="{
@@ -106,8 +107,9 @@ import COLORS from 'src/assets/style/colors.js'
 import CONFIG from 'src/config.js'
 import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
 export default {
-  props: ['description', 'files', 'footer', 'previewBodyStyle'],
+  props: ['selected', 'previewBodyStyle', 'files', 'first'],
   mounted(){
+    this.verdict = this.first
   },
   data() {
     return {
@@ -116,7 +118,8 @@ export default {
       config: CONFIG,
       previewTypes: ['Facebook', 'Linkedin', 'Google My Business'],
       previewIndex: 0,
-      blank: [1, 2, 3]
+      blank: [1, 2, 3],
+      verdict: false
     }
   },
   components: {
@@ -126,13 +129,29 @@ export default {
     roundedBtn
   },
   computed: {
+    footer() {
+      return this.selected ? (this.selected.branding ? Object.values(JSON.parse(this.selected.branding.details)) : null) : null
+    },
     returnDescription() {
-      return this.description
+      return this.selected ? this.selected.description : null
     },
     returnFiles() {
-      return (this.files ? this.files.filter((el, index) => {
-        return index <= 3
-      }) : [])
+      if(this.verdict === true || this.verdict === undefined){
+        console.log('here')
+        this.files = Object.values(JSON.parse(this.files)).map(el => {
+          let temp = {}
+          temp['url'] = this.config.BACKEND_URL + el
+          return temp
+        })
+        return (this.files ? this.files.filter((el, index) => {
+          return index <= 3
+        }) : [])
+      }else{
+        console.log('that')
+        return (this.files ? this.files.filter((el, index) => {
+          return index <= 3
+        }) : [])
+      }
     }
   },
   methods: {

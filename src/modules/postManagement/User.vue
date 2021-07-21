@@ -35,12 +35,23 @@
     <p style="margin-top: 5px; color: gray"><i style="color: red">**</i><i>This section only displays list of post if Automation Settings is set to "Review" not autopost. Post will not be posted on social media channels, unless approved.</i></p>
 
     <div class="col-sm-12 col-md-12 col-lg-12 mt-5 p-0 pt-5">
-      <DataTable 
-        :tableActions="tableActions"
-        :tableHeaders="tableHeaders"
-        :tableData="returnTableData"
-        @onAction="onTableAction"
-      />
+      <table class="table table-striped table-bordered">
+        <thead>
+          <th v-for="(item, index) in tableHeaders" :key="index">{{item.title}}</th>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in tableData" :key="index">
+            <td>{{item.created_at}}</td>
+            <td>{{item.title}}</td>
+            <td>{{displayArray(item.channels)}}</td>
+            <td class="text-warning" v-if="item.status.toLowerCase() === 'draft'">{{item.status.toUpperCase()}}</td>
+            <td class="text-primary" v-else>{{item.status.toUpperCase()}}</td>
+            <td>
+              <i class="fa fa-eye text-primary" @click="showPreview(item.code)"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <Pager
@@ -51,7 +62,7 @@
     />
 
 
-    <empty v-if="tableData.length <= 0" :title="'No accounts available!'" :action="'Keep growing.'"></empty>
+    <empty v-if="tableData.length <= 0" :title="'No posts available!'" :action="'Keep growing.'"></empty>
   </div>
 </template>
 
@@ -65,15 +76,12 @@ import AUTH from 'src/services/auth'
 export default {
   data() {
     return {
-      tableActions: [
-        {button: `<i class="fas fa-eye ml-2 mr-2" style="color: #01009A !important;"></i>`}
-      ],
       tableHeaders: [
-        {title: 'Date', key: 'created_at', type: 'text'},
-        {title: 'Post Title', key: 'title', type: 'text'},
-        {title: 'Channel To Post', key: 'channels', type: 'text'},
-        {title: 'Status', key: 'status', type: 'status'},
-        {title: 'Review', type: 'action'}
+        {title: 'Date'},
+        {title: 'Post Title'},
+        {title: 'Channel To Post'},
+        {title: 'Status'},
+        {title: 'Review'}
       ],
       tableData: [],
       colors: COLORS,
@@ -102,12 +110,28 @@ export default {
     }
   },
   methods: {
+    displayArray(channels){
+      if(channels){
+        let parsedChannels = JSON.parse(channels)
+        let response = ''
+        for (var i = 0; i < parsedChannels.length; i++) {
+          let item = parsedChannels[i]
+          if(i > 0){
+            response += ', ' + item
+          }else{
+            response = item
+          }
+        }
+        return response
+      }else{
+        return null
+      }
+    },
     history(){
       ROUTER.push('post_management/history')
     },
-    onTableAction(data){
-      let id = this.tableData[data.rowIndex].id
-      ROUTER.push('post_management/view/' + id)
+    showPreview(code){
+      ROUTER.push('post_management/view/' + code)
     },
     retrievePosts(){
       let parameter = {

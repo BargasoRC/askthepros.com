@@ -4,10 +4,14 @@
   }">
     <h3 style="margin-top: 25px;">Customize Prior To Posting Channels</h3>
     <p style="color: gray">Review and edit your posts prior to us sending them to your social medial channels. Then, approve once done.</p>
-
-    <input class="title text-uppercase" v-model="data.title">
-    <textarea class="form-control" placeholder="Type post description" name="post_title" id="post_title" cols="90" rows="10" v-model="data.description">
+    <input class="title text-uppercase" v-model="title">
+    <textarea class="form-control" placeholder="Type post description" name="post_title" id="post_title" cols="90" rows="15" v-model="description">
     </textarea>
+    <div style="margin-top: -8%; border-color: white">
+      <textarea style="border-color: white; color: gray; margin-left: 1%" name="branding" id="branding" cols="90" v-model="branding" disabled="disabled">
+      </textarea>
+    </div>
+    <br>
     <br>
     <br>
     <h5>Files:</h5>
@@ -39,6 +43,8 @@
     <review
       ref="previewSelected"
       :selected="selectedItem"
+      :files="file"
+      :first="'false'"
     />
   </div>
 </template>
@@ -68,8 +74,8 @@ export default {
       selectedIndustry: null,
       global: global,
       isValid: true,
-      title: '',
-      description: '',
+      title: null,
+      description: null,
       facebook: false,
       googleMyBusiness: false,
       linkedin: false,
@@ -131,20 +137,22 @@ export default {
     storeImages(data) {
       this.imagesList = data
     },
-    preview(data){
-      this.$refs.preview.show(data)
+    preview(){
+      this.$refs.previewSelected.show()
     },
-    retrieveReview(id){
+    retrieveReview(code){
       let parameter = {
         account_id: this.user.userID,
-        id: id
+        code: code
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve_by_id', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('RESPONSE: ', response.data[0])
-        if(!response.error) {
-          this.data = response.data[0]
+        if(response.data.length > 0) {
+          this.selectedItem = response.data[0]
+          this.title = response.data[0].title
+          this.description = response.data[0].description
+          this.branding = Object.values(JSON.parse(response.data[0].branding.details))
           var channel = response.data[0].channels
           if(channel.includes('FACEBOOK')){
             this.facebook = true
@@ -156,6 +164,7 @@ export default {
             this.googleMyBusiness = true
           }
           this.description = response.data[0].description
+          this.file = response.data[0].url
           this.imagesList = Object.values(JSON.parse(response.data[0].url)).map(el => {
             let temp = {}
             if(this.$route.params.parameter === undefined){
@@ -174,6 +183,10 @@ export default {
 
 <style scoped lang="scss" scoped>
 @import "~assets/style/colors.scss";
+#branding{
+  border-color: white;
+  background-color: white;
+}
 .holder{
   width: 96%;
   margin-left: 2%;
