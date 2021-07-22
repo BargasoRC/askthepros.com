@@ -141,22 +141,60 @@
     
     <div class="row">
       <div class="col-sm-12">
+         <div class="row">
+      <div class="col-sm-12">
         <div class="row">
-          <div class="col-md-6 mb-5">
+          <div class="col-md-6">
+            <p>Old Password</p>
+            <roundedInput 
+              :type="isShowingOPassword ? 'text' : 'password'" 
+              :placeholder="'(Leave blank if unchanged)'"
+              :class="!this.isValidPassword && username == '' ? 'mb-0 ' : ' SettingsField' " 
+              :styles="{
+                        border: !this.isValidPassword ? '1px solid red !important' : 'none',
+                      }" 
+              v-model="oPassword" 
+              class="input-style" 
+              id="toggle-field" 
+            />
+            <div :style="{
+              marginTop: '-35px !important'
+            }">
+              <span class="fa fa-fw fa-eye field-icon" @click="() => isShowingOPassword = !isShowingOPassword" v-if="isShowingOPassword"></span>
+              <span class="far fa-eye-slash field-icon" @click="() => isShowingOPassword = !isShowingOPassword" v-if="!isShowingOPassword"></span>
+              
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-6">
             <p>New Password</p>
             <roundedInput :type="isShowingPassword ? 'text' : 'password'" :placeholder="'(Leave blank if unchanged)'"
-              :class="!this.isValidPassword && username == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                            border: !this.isValidPassword && username == '' ? '1px solid red !important' : 'none',
-                          }" v-model="password" class="input-style" id="password-field" :isDisabled="'disabled'"/>
+              :class="!this.isValidPassword && username == '' ? 'mb-0 ' : ' SettingsField' " :styles="{
+                        border: !this.isValidPassword && username == '' ? '1px solid red !important' : 'none',
+                      }" v-model="password" class="input-style" id="toggle-field" />
             <div :style="{
               marginTop: '-35px !important'
             }">
               <span class="fa fa-fw fa-eye field-icon" @click="() => isShowingPassword = !isShowingPassword" v-if="isShowingPassword"></span>
               <span class="far fa-eye-slash field-icon" @click="() => isShowingPassword = !isShowingPassword" v-if="!isShowingPassword"></span>
+              <p
+              class="mb-0 pb-0 requiredFieldError"
+              v-if="password == '' || password != cpassword || passwordRequirements != ''"
+            >{{
+              password != cPassword ?
+                'does not match'
+              :
+                passwordRequirements != '' ?
+                  passwordRequirements
+                :
+                  ''
+              }}</p>
             </div>
-            
           </div>
         </div>
+        <br>
         <div class="row">
           <div class="col-md-6">
             <p>Confirm New Password</p>
@@ -169,9 +207,23 @@
             }">
               <span class="fa fa-fw fa-eye field-icon" @click="() => isShowingCPassword = !isShowingCPassword" v-if="isShowingCPassword"></span>
               <span class="far fa-eye-slash field-icon" @click="() => isShowingCPassword = !isShowingCPassword" v-if="!isShowingCPassword"></span>
+              <p
+              class="mb-0 pb-0 requiredFieldError"
+              v-if="cPassword == '' || password != cpassword || passwordRequirements != ''"
+            >{{
+              cPassword != password ?
+                'does not match'
+              :
+                passwordRequirements != '' ?
+                  passwordRequirements
+                :
+                  ''
+              }}</p>
             </div>
           </div>
         </div>
+      </div>
+    </div>
       </div>
     </div>
 
@@ -219,6 +271,7 @@ import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import axios from 'axios'
 import $ from 'jquery'
+import global from 'src/helpers/global'
 import ROUTER from 'src/router'
 export default {
   data() {
@@ -232,6 +285,7 @@ export default {
       contactnumber: '',
       user: AUTH.user,
       config: CONFIG,
+      global: global,
       errorMessage: null,
       data: null,
       file: null,
@@ -243,12 +297,16 @@ export default {
       postalZipCode: '',
       username: '',
       email: '',
+      oPassword: '',
       cPassword: '',
       password: '',
+      passwordRequirements: '',
+      isValid: true,
       isValidProfile: true,
       isValidAddress: true,
       isValidAccount: true,
       isValidPassword: true,
+      isShowingOPassword: false,
       isShowingPassword: false,
       isShowingCPassword: false
     }
@@ -409,6 +467,22 @@ export default {
           offset: 0,
           limit: 1
         }
+        if(this.isValidPassword){
+          let acc = {
+            id: this.user.userID,
+            code: this.user.code,
+            password: this.password
+          }
+          $('#loading').css({'display': 'block'})
+          this.APIRequest('accounts/update_password', acc).then(response => {
+            $('#loading').css({'display': 'none'})
+            console.log('RESPONSE: ', response)
+            if(!response.error) {
+              console.log('UPDATE RESPONSE: ', response)
+            }
+          })
+
+        }
         $('#loading').css({'display': 'block'})
         this.APIRequest('merchants/retrieve', condition).then(response => {
           $('#loading').css({'display': 'none'})
@@ -528,7 +602,12 @@ export default {
         if(!this.password || !this.cPassword) {
           this.isValidPassword = false
         }else {
-          this.isValidPassword = true
+          if(!global.validatePassword(this.password)){
+            this.isValidPassword = false
+            this.passwordRequirements = 'Password should be minimum of 8 and maximum of 16 and should contain at least one digit, lower case, upper case and special character.'
+          }else{
+            this.isValidPassword = true
+          }
         }
       }
 
@@ -625,6 +704,13 @@ h3{
   margin-right: 24%;
   position: relative;
   z-index: 2;
+}
+
+.requiredFieldError {
+  color: $danger;
+  font-size: 10px;
+  margin-left: 20px;
+  margin-bottom: 25px !important;
 }
 /*
 @media (max-width: 768px){
