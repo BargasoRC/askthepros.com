@@ -1,6 +1,7 @@
 <template>
   <div class="ledger-summary-container">
     <div class="incre-row">
+      <h2> Account Management </h2>
     </div>
     <basic-filter 
       v-bind:category="category" 
@@ -23,7 +24,7 @@
       }"
     />
     
-    <table class="table table-bordered table-responsive" v-if="data.length > 0">
+    <table class="table table-borderless table-responsive" v-if="data.length > 0">
       <thead>
         <tr>
           <th scope="col">Date</th>
@@ -43,9 +44,9 @@
             <label class="action-link text-primary">{{item.username}}</label>
           </td>
           <td>{{item.email}}</td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>{{item.first_name + ' ' + item.last_name}}</td>
+          <td>{{item.business_name ? item.business_name : 'NOT_SET'}}</td>
+          <td>{{item.cellular_number}}</td>
           <td>
             <label v-if="editTypeIndex !== index">{{item.account_type}}</label>
             <i class="fa fa-pencil text-primary" style="margin-left: 10px;" @click="setEditTypeIndex(index, item)" v-if="editTypeIndex !== index"></i>
@@ -87,40 +88,13 @@
   margin-top: 25px;
 }
 
-.ledger-summary-container-header{
-  width: 100%;
-  float: left;
-  height: 70px;
-  border: solid 1px #ddd;
-}
-.summary-container-item{
-  width: 100%;
-  float: left;
-  border-radius: 5px;
-  min-height: 50px;
-  overflow-y: hidden;
-  border: solid 1px #ddd;
-  margin-top: 10px;
-  padding-left: 10px;
-}
-.summary-container-item .header{
-  width: 100%;
-  float: left;
-  height: 50px;
-  line-height: 50px;
-  color: #555;
-}
-.summary-container-item .body{
-  width: 100%;
-  float: left;
-  min-height: 50px;
-  overflow-y: hidden;
-  padding-right: 10px;
-}
-
 td i {
   padding-right: 0px !important;
   padding-left: 0px !important;
+}
+
+td {
+border-bottom: 0.5px solid #e0e0e0;
 }
 
 @media (max-width: 992px){
@@ -311,24 +285,11 @@ export default{
         parameter['accountType'] = this.activeItem
       }
       $('#loading').css({display: 'block'})
-      this.APIRequest('accounts/retrieve', parameter).then(response => {
+      this.APIRequest('users/retrieve', parameter).then(response => {
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data
           this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
-          // let parameter1 = {
-          //   condition: [{
-          //     value: filter.value + '%',
-          //     column: filter.column,
-          //     clause: 'like'
-          //   }],
-          //   sort: sort,
-          //   limit: this.limit,
-          //   offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
-          // }
-          // this.APIRequest('account_informations/retrieve', parameter1).then(response => {
-          //   this.data1 = response.data
-          // })
         }else{
           this.data = []
           this.numPages = null
