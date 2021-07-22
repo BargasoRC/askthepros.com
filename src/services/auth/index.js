@@ -231,16 +231,23 @@ export default {
     localStorage.removeItem('google_scope')
     localStorage.removeItem('xyzABCdefPayhiram')
     localStorage.removeItem('connect_with')
-    localStorage.clear()
     this.setUser(null)
     let vue = new Vue()
     this.clearNotifTimer()
-    vue.APIRequest('authenticate/invalidate').then((response) => {
+    if(this.hash('show', null) === 'local') {
+      vue.APIRequest('authenticate/invalidate').then((response) => {
+        localStorage.removeItem('usertoken')
+        this.tokenData.token = null
+        this.tokenData.loading = false
+        ROUTER.push('/')
+      })
+    }else if(this.hash('show', null) === 'social_lite'){
       localStorage.removeItem('usertoken')
       this.tokenData.token = null
       this.tokenData.loading = false
       ROUTER.push('/')
-    })
+    }
+    localStorage.clear()
     // setTimeout(() => {
     //   this.tokenData.loading = false
     // }, 1000)
