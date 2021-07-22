@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Multiselect style="width:100%" v-model="value" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="industry" track-by="code" :options="options" :multiple="true" @click="returnCategory"></Multiselect>
+    <Multiselect style="width:100%" v-model="value" tag-placeholder="Search Tag" :placeholder="placeholder" label="industry" track-by="code" :options="options" :multiple="true" @click="returnCategory"></Multiselect>
   </div>
 </template>
 

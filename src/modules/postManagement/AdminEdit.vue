@@ -52,7 +52,7 @@
         
         <div class="form-group">
           <label for="category"><b>Category</b></label>
-          <roundedSelectBtn
+          <searchField
             :placeholder="'Select Industry'"
             :items="returnIndustry"
             :styles="{
@@ -72,6 +72,7 @@
             :selectedIndex="selectedIndex"
             @onSelect="onSelect"
             v-if="!isClearing"
+            ref="searchField"
           />
           <p
             class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
@@ -109,7 +110,7 @@
           />
           <roundedBtn
             class="ml-1 mr-1"
-            :onClick="() => (status != 'PUBLISH' && status != undefined) ? update('PUBLSIH') : save('PUBLISH')"
+            :onClick="() => (status != 'PUBLISH' && status != undefined) ? update('PUBLISH') : save('PUBLISH')"
             :text="'Publish'"
             :styles="{
                 backgroundColor: colors.darkPrimary,
@@ -145,6 +146,7 @@ import global from 'src/helpers/global'
 import preview from 'src/modules/generic/preview.vue'
 import axios from 'axios'
 import ROUTER from 'src/router'
+import searchField from 'src/modules/generic/searchField.vue'
 export default {
   mounted(){
     if(this.$route.params.parameter === undefined){
@@ -167,7 +169,7 @@ export default {
       config: CONFIG,
       status: null,
       industry: global.industry,
-      selectedIndustry: null,
+      selectedIndustry: [],
       global: global,
       imagesList: [],
       errorMessage: null,
@@ -191,7 +193,8 @@ export default {
     Toggle,
     roundedSelectBtn,
     roundedBtn,
-    preview
+    preview,
+    searchField
   },
   computed: {
     returnIndustry() {
@@ -283,8 +286,9 @@ export default {
     storeImages(data) {
       this.imagesList = data
     },
-    onSelect(data) {
-      this.selectedIndustry = data.index
+    onSelect: function (data) {
+      this.selectedIndustry = data
+      alert('Pushed')
     },
     save(status) {
       if(this.validate()) {
@@ -297,6 +301,7 @@ export default {
           this.facebook ? channels.push('FACEBOOK') : null
           this.googleMyBusiness ? channels.push('GOOGLE_MY_BUSINESS') : ''
           this.linkedin ? channels.push('LINKEDIN') : ''
+          this.$refs.searchField.returnCategory() // Need a redo here, couples components
           let parameter = {
             title: this.title,
             description: this.description,
@@ -305,7 +310,7 @@ export default {
             status: status,
             channels: JSON.stringify(channels),
             parent: null,
-            category: this.industry[this.selectedIndustry].category
+            category: JSON.stringify(this.selectedIndustry)
           }
           this.isClearing = true
           this.APIRequest('post/create', parameter).then(response => {
@@ -320,6 +325,7 @@ export default {
               this.isClearing = false
               this.imagesList = []
             }
+            alert('Error here')
           })
         }).catch(() => {
           $('#loading').css({'display': 'none'})
