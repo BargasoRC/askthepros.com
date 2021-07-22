@@ -82,9 +82,9 @@
         <div class="form-group" style="margin-top: 3%">
           <label for="post_setting"><b>Post Setting</b></label>
           <div class="Row row">
-            <div class="Column col-4" style="margin-left: -20%"><Toggle :text="'Facebook'" v-model="facebook" v-if="!isClearing"/></div>
-            <div class="Column col-5"><Toggle :text="'Google My Business'" v-model="googleMyBusiness" v-if="!isClearing"/></div>
-            <div class="Column col-3"><Toggle :text="'Linkedin'" v-model="linkedin" v-if="!isClearing"/></div>
+            <div class="Column col-4" style="margin-left: -20%"><Toggle :text="'Facebook'" v-model="facebook" :isChecked="facebook" v-if="!isClearing"/></div>
+            <div class="Column col-5"><Toggle :text="'Google My Business'" v-model="googleMyBusiness" :isChecked="googleMyBusiness" v-if="!isClearing"/></div>
+            <div class="Column col-3"><Toggle :text="'Linkedin'" v-model="linkedin" :isChecked="linkedin" v-if="!isClearing"/></div>
           </div>
         </div>
         <br>
