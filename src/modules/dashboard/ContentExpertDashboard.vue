@@ -24,7 +24,7 @@
       />
     </div>
     <div class="col-sm-12 col-md-12 col-lg-12 mt-5 p-0 pt-5">
-        <table class="table table-striped table-bordered">
+        <table class="table table-borderless">
         <thead>
           <th v-for="(item, index) in tableHeaders" :key="index">{{item.title}}</th>
         </thead>
@@ -91,6 +91,10 @@ h3 {
     margin-top: 25px;
     font-weight: bold;
     font-size: 21px;
+}
+
+td {
+border-bottom: 0.5px solid #e0e0e0;
 }
 
 p {
