@@ -87,6 +87,11 @@ Route::post($route.'/invalidate', 'AuthenticateController@deauthenticate');
 Route::post($route.'/auth', function () {
     return true;
 });
+$route = env('PACKAGE_ROUTE', '').'/users';
+$controller = 'AccountsController@';
+Route::post($route. '/retrieve ', $controller.'retrieve');
+
+
 
 // Google Place
 $route = env('PACKAGE_ROUTE', '').'/google_places/';
