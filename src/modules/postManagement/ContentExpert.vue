@@ -178,7 +178,7 @@ export default {
   },
   methods: {
     onSelect: function (data) {
-      this.selectedIndustry.push(data)
+      this.selectedIndustry = (data)
       console.log('Pushed')
     },
     save(status) {
