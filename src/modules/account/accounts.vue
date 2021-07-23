@@ -46,7 +46,7 @@
           <td>{{item.email}}</td>
           <td>{{item.first_name + ' ' + item.last_name}}</td>
           <td>{{item.business_name ? item.business_name : 'NOT_SET'}}</td>
-          <td>{{item.cellular_number}}</td>
+          <td>{{item.cellular_number ? item.cellular_number : 'NOT_SET'}}</td>
           <td>
             <label v-if="editTypeIndex !== index">{{item.account_type}}</label>
             <i class="fa fa-pencil text-primary" style="margin-left: 10px;" @click="setEditTypeIndex(index, item)" v-if="editTypeIndex !== index"></i>
