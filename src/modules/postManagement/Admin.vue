@@ -44,7 +44,7 @@
             <td>#{{item.id}}</td>
             <td>{{item.created_at}}</td>
             <td>{{item.title}}</td>
-            <td>{{item.category}}</td>
+            <td>{{display(item.category)}}</td>
             <td>{{displayArray(item.channels)}}</td>
             <td>{{item.author}}</td>
             <td class="text-warning" v-if="item.status.toLowerCase() === 'draft'">{{item.status.toUpperCase()}}</td>
@@ -213,6 +213,12 @@ export default {
     this.retrievePosts()
   },
   methods: {
+    display(category){
+      return JSON.parse(category).map(el => {
+        console.log('[category]', el.category)
+        return el.category
+      })
+    },
     displayArray(channels){
       if(channels){
         let parsedChannels = JSON.parse(channels)

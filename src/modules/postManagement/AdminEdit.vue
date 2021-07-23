@@ -47,14 +47,13 @@
             v-if="!this.isValid && description == ''"
           >Required Field</p>
           <p style="text-align: right; font-size: 12px; color: gray;">Character count: {{character}}</p>
-          <!-- <textarea class="form-control" placeholder="Add more details here" v-model="request.reason" rows="10"> -->
         </div>
         
         <div class="form-group">
           <label for="category"><b>Category</b></label>
-          <roundedSelectBtn
+          <searchField
             :placeholder="'Select Industry'"
-            :items="returnIndustry"
+            :items="industry"
             :styles="{
               background: 'none',
               color: '#84868B !important',
@@ -72,6 +71,7 @@
             :selectedIndex="selectedIndex"
             @onSelect="onSelect"
             v-if="!isClearing"
+            ref="searchField"
           />
           <p
             class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
@@ -109,7 +109,7 @@
           />
           <roundedBtn
             class="ml-1 mr-1"
-            :onClick="() => (status != 'PUBLISH' && status != undefined) ? update('PUBLSIH') : save('PUBLISH')"
+            :onClick="() => (status != 'PUBLISH' && status != undefined) ? update('PUBLISH') : save('PUBLISH')"
             :text="'Publish'"
             :styles="{
                 backgroundColor: colors.darkPrimary,
@@ -145,6 +145,7 @@ import global from 'src/helpers/global'
 import preview from 'src/modules/generic/preview.vue'
 import axios from 'axios'
 import ROUTER from 'src/router'
+import searchField from 'src/modules/generic/searchField.vue'
 export default {
   mounted(){
     if(this.$route.params.parameter === undefined){
@@ -167,7 +168,7 @@ export default {
       config: CONFIG,
       status: null,
       industry: global.industry,
-      selectedIndustry: null,
+      selectedIndustry: [],
       global: global,
       imagesList: [],
       errorMessage: null,
@@ -191,7 +192,8 @@ export default {
     Toggle,
     roundedSelectBtn,
     roundedBtn,
-    preview
+    preview,
+    searchField
   },
   computed: {
     returnIndustry() {
@@ -244,10 +246,8 @@ export default {
               if(channel.includes('GOOGLE_MY_BUSINESS')){
                 this.googleMyBusiness = true
               }
-              this.industry.map((el, ndx) => {
-                if(el.category === el.category){
-                  this.selectedIndex = ndx
-                }
+              JSON.parse(el.category).forEach(el => {
+                this.$refs.searchField.value.push(el)
               })
               this.imagesList = Object.values(JSON.parse(el.url)).map(el => {
                 let temp = {}
@@ -284,15 +284,19 @@ export default {
       this.imagesList = data
     },
     onSelect(data) {
-      this.selectedIndustry = data.index
+      this.selectedIndustry = data
     },
     save(status) {
+      this.$refs.searchField.returnCategory()
+      let selectIndustry = []
+      this.selectedIndustry.forEach(element => {
+        selectIndustry.push({category: element.category, id: element.id})
+      })
       if(this.validate()) {
         $('#loading').css({'display': 'block'})
         axios.post(this.config.BACKEND_URL + '/file/upload?token=' + AUTH.tokenData.token, this.file).then(response => {
           $('#loading').css({'display': 'none'})
           $('#loading').css({'display': 'block'})
-          console.log('IMAGE HERE: ', response)
           let channels = []
           this.facebook ? channels.push('FACEBOOK') : null
           this.googleMyBusiness ? channels.push('GOOGLE_MY_BUSINESS') : ''
@@ -305,11 +309,13 @@ export default {
             status: status,
             channels: JSON.stringify(channels),
             parent: null,
-            category: this.industry[this.selectedIndustry].category
+            category: JSON.stringify(selectIndustry)
           }
+          console.log('[parameters]', parameter)
           this.isClearing = true
           this.APIRequest('post/create', parameter).then(response => {
             $('#loading').css({'display': 'none'})
+            console.log('[response]', response)
             if(response.error === null){
               this.title = ''
               this.description = ''
@@ -330,7 +336,7 @@ export default {
     draft() {
     },
     validate() {
-      if(this.selectedIndustry === '' && this.selectedIndustry === null && this.selectedIndustry === undefined) {
+      if(this.selectedIndustry.length <= 0) {
         this.isValid = false
         return false
       }if(this.title === '' && this.title === null && this.title === undefined) {
@@ -365,25 +371,21 @@ export default {
 .imports{
   margin-top: 10%;
 }
-
 // .form-control{
 //   margin-bottom: 3%;
 // }
-
 .Row {
   display: table;
 }
 .Column {
   display: table-cell;
 }
-
 .card {
   outline-color: white;
   border-color: white;
   margin-top: 3%;
   margin-bottom: 3%;
 }
-
 .container {
   padding: 20px 16px;
   border: 1px solid $warning;
@@ -393,7 +395,6 @@ export default {
   word-break: break-word;
   color: white;
 }
-
 .holder{
   width: 96%;
   margin-left: 2%;
@@ -447,7 +448,6 @@ textarea{
 .imageContainer:hover .middle {
   opacity: 1;
 }
-
 .imageContainer:hover .ImageLabel {
   opacity: 1;
   position: absolute;
