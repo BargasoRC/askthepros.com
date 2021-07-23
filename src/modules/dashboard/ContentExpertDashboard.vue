@@ -225,7 +225,7 @@ export default {
       }, 100)
     },
     edit(code) {
-      ROUTER.push('/admin/post_management/edit/' + code)
+      ROUTER.push('/admin/post_management/content_edit/' + code)
     },
     showDeleteConfirmation(id){
       console.log({

@@ -3,51 +3,61 @@ export default{
   hasShownModal: false,
   industry: [
     {
+      id: 1,
       category: 'Manufacturing',
       price: 190,
       benefit: ['Connect to GMB', 'Automate Your GMB Posting', 'Connect to Facebook', 'Automate Your Facebook Posting', 'Connect to GMB, Facebook & Linkedin', 'Connect to Linkedin', 'Automate Your Linkedin Posting']
     },
     {
+      id: 2,
       category: 'Construction',
       price: 290,
       benefit: ['Connect to GMB', 'Automate Your GMB Posting', 'Connect to Facebook', 'Automate Your Facebook Posting']
     },
     {
+      id: 3,
       category: 'Finance',
       price: 199,
       benefit: ['Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin']
     },
     {
+      id: 4,
       category: 'Transport',
       price: 192,
       benefit: ['Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin']
     },
     {
+      id: 5,
       category: 'Agriculture',
       price: 100,
       benefit: ['Connect to GMB', 'Automate Your GMB Posting', 'Connect to Facebook', 'Automate Your Facebook Posting', 'Connect to GMB, Facebook & Linkedin', 'Connect to Linkedin', 'Automate Your Linkedin Posting']
     },
     {
+      id: 6,
       category: 'Retail',
       price: 190,
       benefit: ['Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin']
     },
     {
+      id: 7,
       category: 'Technology',
       price: 195,
       benefit: ['Connect to GMB', 'Automate Your GMB Posting', 'Connect to Facebook', 'Automate Your Facebook Posting', 'Connect to GMB, Facebook & Linkedin', 'Connect to Linkedin', 'Automate Your Linkedin Posting']
     },
     {
+      id: 8,
       category: 'Education',
       price: 142,
       benefit: ['Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin']
     },
     {
+      id: 9,
       category: 'Publishing',
       price: 132,
       benefit: ['Connect to GMB', 'Automate Your GMB Posting', 'Connect to Facebook', 'Automate Your Facebook Posting', 'Connect to GMB, Facebook & Linkedin', 'Connect to Linkedin', 'Automate Your Linkedin Posting']
     },
     {
+      id: 10,
       category: 'Medicine',
       price: 122,
       benefit: ['Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin', 'Connect to GMB, Facebook & Linkedin']

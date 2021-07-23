@@ -1,30 +1,17 @@
 <template>
   <div>
-    <Multiselect style="width:100%" v-model="value" tag-placeholder="Search Tag" :placeholder="placeholder" label="industry" track-by="code" :options="options" :multiple="true" @click="returnCategory"></Multiselect>
+    <Multiselect style="width:100%" v-model="value" tag-placeholder="Search Tag" :placeholder="placeholder" :searchable="false" :close-on-select="false" :clear-on-select="false" label="category" track-by="id" :options="items" :multiple="true" @click="returnCategory"></Multiselect>
   </div>
 </template>
 
 <script>
-import $ from 'jquery'
 import Multiselect from 'vue-multiselect'
 export default {
   props: ['items', 'placeholder', 'styles', 'selectedIndex', 'dropdownItemStyles'],
   data() {
     return {
       selectedItem: null,
-      value: [],
-      options: [
-        { industry: 'Manufacturing', code: 'Man' },
-        { industry: 'Construction', code: 'Cons' },
-        { industry: 'Finance', code: 'Fin' },
-        { industry: 'Transport', code: 'Tra' },
-        { industry: 'Agriculture', code: 'Agr' },
-        { industry: 'Retail', code: 'Ret' },
-        { industry: 'Technology', code: 'Tech' },
-        { industry: 'Education', code: 'Edu' },
-        { industry: 'Publishing', code: 'Pub' },
-        { industry: 'Medicine', code: 'Med' }
-      ]
+      value: []
     }
   },
   components: {
@@ -39,7 +26,22 @@ export default {
   }
 }
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+<style src="vue-multiselect/dist/vue-multiselect.min.css">
+span .multiselect__tag {
+    position: relative;
+    display: inline-block;
+    padding: 4px 26px 4px 10px;
+    border-radius: 5px;
+    margin-right: 10px;
+    color: #fff;
+    line-height: 1;
+    background: blue;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 100%;
+    text-overflow: ellipsis;
+}</style>
 <style lang="scss" scoped>
 @import "~assets/style/colors.scss";
 .multiselect__tag{

@@ -130,9 +130,10 @@ export default {
   },
   computed: {
     footer() {
-      return this.selected ? (this.selected.branding ? Object.values(JSON.parse(this.selected.branding.details)) : null) : null
+      return this.selected ? ((this.selected.branding && this.selected.branding.details !== undefined) ? Object.values(JSON.parse(this.selected.branding.details)) : null) : null
     },
     returnDescription() {
+      console.log('[seleceted]', this.selected)
       return this.selected ? this.selected.description : null
     },
     returnFiles() {
@@ -176,6 +177,9 @@ export default {
 
 <style scoped lang="scss" scoped>
 @import "~assets/style/colors.scss";
+.container-fluid{
+  margin-bottom: 10%
+}
 .view_more {
   color: $primary
 }
@@ -185,7 +189,6 @@ export default {
 .job_title {
   font-size: 11px;
 }
-
 .compressed {
   width: calc((100% / 3) - 1px) !important;
 }
@@ -216,7 +219,6 @@ export default {
   display: block;
   padding-bottom: 95%;
 }
-
 .dot {
   font-size: 8px;
   margin-top: -3px;
