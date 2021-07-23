@@ -72,7 +72,8 @@
         </div>
       </div>
       <div class="col-sm-5 mt-5">
-        <Preview :footer="returnBranding" />
+        <Preview v-if="render"
+          :selected="returnSelected" />
       </div>
     </div>
   </div>
@@ -94,7 +95,9 @@ export default {
       brand1: '',
       brand2: '',
       brand3: '',
-      user: AUTH.user
+      user: AUTH.user,
+      render: false,
+      selectedItem: null
     }
   },
   components: {
@@ -102,6 +105,15 @@ export default {
     Preview
   },
   computed: {
+    returnSelected() {
+      this.render = false
+      this.selectedItem = {
+        description: null,
+        branding: this.selectedItem.branding
+      }
+      this.render = true
+      return this.selectedItem
+    },
     returnBranding() {
       return [this.brand1, this.brand2, this.brand3]
     }
@@ -180,6 +192,11 @@ export default {
           this.brand1 = brandings.brand1
           this.brand2 = brandings.brand2
           this.brand3 = brandings.brand3
+          this.selectedItem = {}
+          this.selectedItem['branding'] = {
+            details: response.data[0].details
+          }
+          this.render = true
         }
       }).catch(error => {
         $('#loading').css({'display': 'none'})
