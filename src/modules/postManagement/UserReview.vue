@@ -21,11 +21,11 @@
 
     <h5>Post To:</h5>
     <br>
-    <Toggle :text="'Google My Business'" v-model="googleMyBusiness" @input="toggle('GOOGLE_MY_BUSINESS')" :isChecked="googleMyBusiness"></Toggle>
+    <Toggle :text="'Google My Business'" v-model="googleMyBusiness" :isChecked="googleMyBusiness"></Toggle>
     <br>
-    <Toggle :text="'Facebook'" v-model="facebook" @input="toggle('FACEBOOK')" :isChecked="facebook"></Toggle>
+    <Toggle :text="'Facebook'" v-model="facebook" :isChecked="facebook"></Toggle>
     <br>
-    <Toggle :text="'LinkedIn'" v-model="linkedin" @input="toggle('LINKEDIN')" :isChecked="linkedin"></Toggle>
+    <Toggle :text="'LinkedIn'" v-model="linkedin" :isChecked="linkedin"></Toggle>
     <br>
     <span style="float: right" class="preview" @click="preview(data)"><u><b>Preview</b></u></span>
     <roundedBtn
@@ -247,7 +247,6 @@ textarea{
 .imageContainer:hover .middle {
   opacity: 1;
 }
-
 .imageContainer:hover .ImageLabel {
   opacity: 1;
   position: absolute;
