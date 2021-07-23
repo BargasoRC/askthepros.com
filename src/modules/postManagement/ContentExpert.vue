@@ -124,6 +124,11 @@
         </div>
       </div>
     </div>
+    <errorModal
+    ref="errorModal"
+    :title="'Error Message'"
+    :message="'Please fill in all of the fields.'"
+    />
   </div>
 </template>
 
@@ -139,6 +144,7 @@ import global from 'src/helpers/global'
 import preview from 'src/modules/generic/preview.vue'
 import ROUTER from 'src/router'
 import searchField from 'src/modules/generic/searchField.vue'
+import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 export default {
   mounted(){
     if(this.$route.params.parameter === undefined){
@@ -186,7 +192,8 @@ export default {
     roundedSelectBtn,
     roundedBtn,
     preview,
-    searchField
+    searchField,
+    errorModal
   },
   computed: {
     returnIndustry() {
@@ -319,17 +326,27 @@ export default {
         ROUTER.push(`/${AUTH.user.type.toLowerCase()}/dashboard`)
       }
     },
-    draft() {
-    },
     validate() {
+      if(this.selectedIndustry.length <= 0 && this.title === '' && this.title === null && this.title === undefined && this.description === '' && this.description === null && this.description === undefined){
+        this.$refs.errorModal.show()
+        return false
+      }
+      if(this.facebook === false && this.linkedin === false && this.googleMyBusiness === false){
+        this.isValid = false
+        this.$refs.errorModal.show()
+        return false
+      }
       if(this.selectedIndustry.length <= 0) {
         this.isValid = false
+        this.$refs.errorModal.show()
         return false
       }if(this.title === '' && this.title === null && this.title === undefined) {
         this.isValid = false
+        this.$refs.errorModal.show()
         return false
       }if(this.description === '' && this.description === null && this.description === undefined) {
         this.isValid = false
+        this.$refs.errorModal.show()
         return false
       }
       return true
