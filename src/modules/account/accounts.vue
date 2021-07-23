@@ -44,7 +44,10 @@
             <label class="action-link text-primary">{{item.username}}</label>
           </td>
           <td>{{item.email}}</td>
-          <td>{{item.first_name + ' ' + item.last_name}}</td>
+          <td v-if="!item.first_name && !item.last_name">NOT_SET</td>
+          <td v-if="item.first_name && !item.last_name">{{item.first_name}}</td>
+          <td v-if="!item.first_name && item.last_name">{{item.last_name}}</td>
+          <td v-if="item.first_name && item.last_name">{{item.first_name + ' ' + item.last_name}}</td>
           <td>{{item.business_name ? item.business_name : 'NOT_SET'}}</td>
           <td>{{item.cellular_number ? item.cellular_number : 'NOT_SET'}}</td>
           <td>
