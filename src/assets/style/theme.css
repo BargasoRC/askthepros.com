@@ -41,6 +41,12 @@
   color: #fff !important;
 }
 
+.multiselect__tag, .multiselect__option--highlight, .multiselect__option--highlight::before{
+  background-color: #01009A !important;
+}
+.multiselect__option--highlight::after{
+  background-color: #ffcc00 !important;
+}
 @media (max-width: 991px) {
   .main-sidebar {
     min-height: unset;
