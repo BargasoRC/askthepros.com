@@ -8,6 +8,7 @@ import Pusher from 'pusher-js'
 import Config from 'src/config.js'
 export default {
   user: {
+    login_type: 'local',
     userID: 0,
     username: '',
     email: null,
@@ -162,6 +163,7 @@ export default {
       this.setToken(token)
       let vue = new Vue()
       console.log('TYPE::: ', type)
+      this.user.login_type = type
       let verifyUrl = type === 'local' ? 'authenticate/user' : 'social_lite/verify_token'
       let parameters = type === 'local' ? {} : {id: id, token: token, provider: localStorage.getItem('login_with')}
       vue.APIRequest(verifyUrl, parameters, (userInfo) => {

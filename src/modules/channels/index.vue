@@ -57,8 +57,28 @@
           <p>{{item.description}}</p>
           <p v-if="!item.stat">Setup and link your account now!</p>
           <p v-if="item.stat">Your account has successfully <span style="color: #51DB78">CONNECTED</span>.</p>
-          <roundedBtn v-if="!item.stat" :onClick="(event) => connect(item)" :text="'Connect'" :styles="{backgroundColor: '#01004E', color: 'white', height: '45px', width: '150px'}"/>
-          <roundedBtn v-if="item.stat" :onClick="(e) => disconnect(item)" :text="'Remove'" :styles="{backgroundColor: 'white', border: '1px solid #01004E', color: '#01004E', height: '45px', width: '150px'}"/>
+          <roundedBtn
+            v-if="!item.stat"
+            :onClick="(event) => connect(item)"
+            :text="'Connect'"
+            :styles="{
+              backgroundColor: '#01004E',
+              color: 'white',
+              height: '45px',
+              width: '150px'
+            }"/>
+
+          <roundedBtn
+              v-if="item.stat"
+              :onClick="(e) => viewAndAddPages(item)"
+              :text="'View / Add Pages'"
+              :styles="{
+                backgroundColor: 'white',
+                border: '1px solid #01004E',
+                color: '#01004E',
+                height: '45px',
+                width: '150px'
+              }"/>
         </div>
       </div>
     </div>
@@ -148,6 +168,9 @@ export default {
       }else if(item.payload === 'linkedin') {
         this.connectToLinkedIn(item.payload)
       }
+    },
+    viewAndAddPages(provider){
+      //
     },
     disconnect(item) {
       let index = this.socialAuths.findIndex(le => le.type.toLowerCase() === item.payload.toLowerCase())
