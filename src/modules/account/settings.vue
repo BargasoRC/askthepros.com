@@ -277,7 +277,7 @@
       </div>
       <div class="col-sm-4 text-center mb-5 col-sm-push-8">
         <h3>Profile picture</h3>
-        <div class="col-sm-12 mt-3">
+        <div class="col-sm-12 mt-3" v-if="user.login_type === 'local'">
           <i class="fas fa-user-circle" aria-hidden="true" :style="{
             fontSize: '150px',
             color: '#01009A'
@@ -288,7 +288,21 @@
             borderRadius: '50%'
           }" />
         </div>
-        <div>
+        <div v-else>
+          <img
+            v-bind:src="user.profile.url"
+            v-if="user.profile"
+            :style="{
+            width: '170px',
+            height: '170px',
+            borderRadius: '50%'
+          }">
+          <i class="fas fa-user-circle" aria-hidden="true" :style="{
+            fontSize: '150px',
+            color: '#01009A'
+          }" v-else></i>
+        </div>
+        <div v-if="user.login_type === 'local'">
           <div class="mt-4">
             <roundedBtn :icon="'fas fa-sign-in-alt'" :text="'Change Profile Picture'" :styles="{
               backgroundColor: '#01004E',
