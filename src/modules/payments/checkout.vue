@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid mb-5">
-		<h2 class="mt-5">Checkout Summary</h2>
+		<h2 style="margin-top: 25px;">Checkout Summary</h2>
 		<hr />
 		<div>
 			<p><b>Terms:</b> Month 1 - $299 (includes one-time set up fee $199) then $99/mo. auto-billed. Cancel anytime. </p>
@@ -72,11 +72,14 @@
 <script>
 import roudedBtn from 'src/modules/generic/roundedBtn'
 export default {
+  mounted(){
+  },
   data() {
     return {
       payment: true,
       isValid: true,
-      isAgree: false
+      isAgree: false,
+      subscriptions: null
     }
   },
   components: {
