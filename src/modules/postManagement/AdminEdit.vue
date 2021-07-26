@@ -288,9 +288,10 @@ export default {
     },
     onSelect: function (data) {
       this.selectedIndustry = data
-      alert('Pushed')
+      console.log('Pushed')
     },
     save(status) {
+      this.$refs.searchField.returnCategory() // Need a redo here, couples components
       if(this.validate()) {
         $('#loading').css({'display': 'block'})
         axios.post(this.config.BACKEND_URL + '/file/upload?token=' + AUTH.tokenData.token, this.file).then(response => {
@@ -301,7 +302,6 @@ export default {
           this.facebook ? channels.push('FACEBOOK') : null
           this.googleMyBusiness ? channels.push('GOOGLE_MY_BUSINESS') : ''
           this.linkedin ? channels.push('LINKEDIN') : ''
-          this.$refs.searchField.returnCategory() // Need a redo here, couples components
           let parameter = {
             title: this.title,
             description: this.description,
@@ -325,9 +325,10 @@ export default {
               this.isClearing = false
               this.imagesList = []
             }
-            alert('Error here')
+            alert('Posted')
           })
         }).catch(() => {
+          alert('Error')
           $('#loading').css({'display': 'none'})
         })
         ROUTER.push(`/${AUTH.user.type.toLowerCase()}/post_management`)

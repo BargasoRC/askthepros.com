@@ -222,6 +222,9 @@ export default {
           this.isClearing = false
         })
         ROUTER.push(`/${this.user.type.toLowerCase()}/dashboard`)
+        setTimeout(()=>{
+
+        }, 100)
       }
     },
     draft() {
