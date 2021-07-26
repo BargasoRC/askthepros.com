@@ -3,7 +3,7 @@
     <div style="margin-top: 25px;">
       <h5> Subscriptions </h5>
     </div>
-    <div class="mt-2">
+    <div class="mt-4">
       <p style="margin-top: 0px; font-size: 1rem; color: grey" v-if="plan === null">You have no active subscriptions to display. Select your membership now to get better experience with automated media posting.</p>
       <p style="margin-top: 0px; font-size: 1rem; color: grey" v-else>Your account is active.</p>
     </div>
@@ -36,7 +36,7 @@
             <p> {{item.payload_value}} USD / Month</p>
 
             <roundedBtn
-              :onClick="() => { redirect('checkout')}"
+              :onClick="() => { redirect('/checkout/' + item.category.toLowerCase().replace(' ', '_'))}"
               :text="'Subscribe'"
               :styles="{
                 backgroundColor: '#01004E',
