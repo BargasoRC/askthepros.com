@@ -9,7 +9,7 @@
     <div class="col-md-12 mt-5">
       <div class="pricing col-sm-3 p-0 pb-5">
         <div v-for="(item, index) in industry" :key="index">
-          <div v-if="user.merchant.addition_informations.industry == item.category"> 
+          <div v-if="user && user.merchant && user.merchant.addition_informations.industry == item.category"> 
             <div class="layer1">
               <h6>{{item.category}}</h6>
               <p> {{item.price}} USD / Month</p>

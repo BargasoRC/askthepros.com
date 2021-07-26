@@ -108,7 +108,7 @@ export default {
         {title: 'Post No.'},
         {title: 'Date'},
         {title: 'Post Title'},
-        {title: 'Category'},
+        {title: 'Categories'},
         {title: 'Channel Actions'},
         {title: 'Author'},
         {title: 'Status'},
@@ -214,10 +214,21 @@ export default {
   },
   methods: {
     display(category){
-      return JSON.parse(category).map(el => {
-        console.log('[category]', el.category)
-        return el.category
-      })
+      if(category){
+        let parsedCategory = JSON.parse(category)
+        let response = ''
+        for (var i = 0; i < parsedCategory.length; i++) {
+          let item = parsedCategory[i]
+          if(i > 0){
+            response += ', ' + item.category
+          }else{
+            response = item.category
+          }
+        }
+        return response
+      }else{
+        return null
+      }
     },
     displayArray(channels){
       if(channels){
