@@ -140,7 +140,7 @@ export default {
       }
     },
     forReview(){
-      ROUTER.push('/user/post_management')
+      ROUTER.push('/post_management')
     }
   }
 }
