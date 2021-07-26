@@ -57,63 +57,63 @@ export default{
       tokenRequired: false
     }
   }, {
-    path: '/:user/dashboard',
+    path: '/dashboard',
     name: 'home',
     component: resolve => require(['src/modules/dashboard/index.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/:user/payments',
+    path: '/payments',
     name: 'home',
     component: resolve => require(['src/modules/payments/index.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/:user/subscriptions',
+    path: '/subscriptions',
     name: 'home',
     component: resolve => require(['src/modules/subscriptions/index.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/:user/channels',
+    path: '/channels',
     name: 'channel',
     component: resolve => require(['src/modules/channels/index.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/:user/channels/branding',
+    path: '/channels/branding',
     name: 'channel',
     component: resolve => require(['src/modules/channels/Branding.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/:user/channels/automation',
+    path: '/channels/automation',
     name: 'channel',
     component: resolve => require(['src/modules/channels/AutomationSettings.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/:user/accounts',
+    path: '/accounts',
     name: 'home',
     component: resolve => require(['src/modules/account/accounts.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/:user/settings',
+    path: '/settings',
     name: 'home',
     component: resolve => require(['src/modules/account/settings.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/:user/post_management',
+    path: '/post_management',
     name: 'home',
     component: resolve => require(['src/modules/postManagement/index.vue'], resolve),
     meta: {
@@ -127,42 +127,42 @@ export default{
       tokenRequired: false
     }
   }, {
-    path: '/:user/post_management/view/:parameter',
+    path: '/post_management/view/:parameter',
     name: 'post_management',
     component: resolve => require(['src/modules/postManagement/UserReview.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/:user/post_management/history',
+    path: '/post_management/history',
     name: 'post_management',
     component: resolve => require(['src/modules/postManagement/UserHistory.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/:user/post_management/edit/:parameter?',
+    path: '/post_management/edit/:parameter?',
     name: 'post_management',
     component: resolve => require(['src/modules/postManagement/AdminEdit.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/:user/post_management/content_edit/:parameter?',
+    path: '/post_management/content_edit/:parameter?',
     name: 'post_management',
     component: resolve => require(['src/modules/postManagement/ContentExpert.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/:user/checkout',
+    path: '/checkout',
     name: 'payment_checkout',
     component: resolve => require(['src/modules/payments/checkout.vue'], resolve),
     meta: {
       tokenRequired: true
     }
   }, {
-    path: '/:user/subscriptions_management',
+    path: '/subscriptions_management',
     name: 'subscriptions_management',
     component: resolve => require(['src/modules/subscriptions/index.vue'], resolve),
     meta: {
@@ -170,7 +170,7 @@ export default{
     }
   },
   {
-    path: '/:user/billing_management',
+    path: '/billing_management',
     name: 'billing_management',
     component: resolve => require(['src/modules/billing/index.vue'], resolve),
     meta: {
@@ -178,7 +178,7 @@ export default{
     }
   },
   // {
-  //   path: '/:user/no_subscriptions',
+  //   path: '/no_subscriptions',
   //   name: 'no_subscriptions',
   //   component: resolve => require(['src/modules/subscriptions/index.vue'], resolve),
   //   meta: {

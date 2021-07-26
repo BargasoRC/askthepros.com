@@ -323,7 +323,7 @@ export default {
             this.isClearing = false
           }
         })
-        ROUTER.push(`/${AUTH.user.type.toLowerCase()}/dashboard`)
+        ROUTER.push(`/dashboard`)
       }
     },
     validate() {

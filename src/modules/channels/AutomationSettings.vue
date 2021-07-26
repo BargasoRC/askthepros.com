@@ -97,10 +97,10 @@ export default {
   },
   methods: {
     connectMedia(){
-      ROUTER.push('/user/channels')
+      ROUTER.push('/channels')
     },
     branding(){
-      ROUTER.push('/user/channels/branding')
+      ROUTER.push('/channels/branding')
     },
     update(){
       let parameter = {

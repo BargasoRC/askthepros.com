@@ -176,7 +176,7 @@ export default {
         $('#loading').css({'display': 'block'})
         AUTH.authenticate(this.username, this.password, (response) => {
           $('#loading').css({'display': 'none'})
-          ROUTER.push(`/${this.user.type.toLowerCase()}/dashboard`)
+          ROUTER.push(`/dashboard`)
         }, (response, status) => {
           $('#loading').css({'display': 'none'})
           if(status === 401){
