@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h5> Current payment methods </h5>
+    <h5>Payment Method</h5>
     <div class="col-sm-12 p-0 mt-4">
       <roundedBtn
         :onClick="addNewPaymentMethod"

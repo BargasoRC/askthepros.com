@@ -1,17 +1,6 @@
 <template>
   <div class="container-fluid">
-    <div class="mt-5" v-if="!isEmpty">
-      <h2> Subscriptions </h2>
-    </div>
-    <div class="table_container" v-if="!isEmpty">
-      <DataTable 
-        :tableActions="tableActions"
-        :tableHeaders="tableHeaders"
-        :tableData="tableData"
-        @onAction="onTableAction"
-      />
-    </div>
-    <Plan v-if="isEmpty"/>
+    <Plan :plan="plan"/>
   </div>
 </template>
 
@@ -22,44 +11,8 @@ import AUTH from 'src/services/auth'
 export default {
   data() {
     return {
-      tableActions: [
-        {button: `<i class="fas fa-pencil-alt ml-2 mr-2" style="color: #01009A;"></i>`},
-        {button: `<i class="fas fa-pause ml-2 mr-2" style="color: #01004E !important;"></i>`},
-        {button: `<i class="fas fa-trash-alt ml-2 mr-2" style="color: #FF0000;"></i>`}
-      ],
-      tableHeaders: [
-        {title: 'Membership', key: 'membership', type: 'text'},
-        {title: 'Subscription', key: 'subscription', type: 'text'},
-        {title: 'Active', key: 'active', type: 'text'},
-        {title: 'Created', key: 'created_at', type: 'text'},
-        {title: 'Card Expiration', key: 'expiration', type: 'text'},
-        {title: 'Actions', type: 'action'}
-      ],
-      tableData: [
-        {
-          membership: 'Managed Social Media Posting',
-          active: 'Yes',
-          subscription: 'Enabled \n Month 1 - $299 (includes one-time set up fee $199) then $99/mo. auto-billed. Cancel anytime. Expires: June 16, 2021',
-          created_at: new Date().toLocaleDateString(),
-          expiration: new Date().toLocaleDateString()
-        },
-        {
-          membership: 'Managed Social Media Posting',
-          active: 'Yes',
-          subscription: 'Enabled \n Month 1 - $299 (includes one-time set up fee $199) then $99/mo. auto-billed. Cancel anytime. Expires: June 16, 2021',
-          created_at: new Date().toLocaleDateString(),
-          expiration: new Date().toLocaleDateString()
-        },
-        {
-          membership: 'Managed Social Media Posting',
-          active: 'Yes',
-          subscription: 'Enabled \n Month 1 - $299 (includes one-time set up fee $199) then $99/mo. auto-billed. Cancel anytime. Expires: June 16, 2021',
-          created_at: new Date().toLocaleDateString(),
-          expiration: new Date().toLocaleDateString()
-        }
-      ],
-      isEmpty: true,
-      user: AUTH.user
+      user: AUTH.user,
+      plan: null
     }
   },
   components: {
@@ -89,9 +42,9 @@ export default {
       this.APIRequest('plans/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data.length === 0) {
-          this.isEmpty = true
+          this.plan = null
         }else if(response.data.lenght > 0) {
-          this.isEmpty = false
+          this.plan = response.data[0]
         }
       }).catch(error => {
         $('#loading').css({'display': 'none'})

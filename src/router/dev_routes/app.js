@@ -155,7 +155,7 @@ export default{
       tokenRequired: true
     }
   }, {
-    path: '/checkout',
+    path: '/checkout/:plan',
     name: 'payment_checkout',
     component: resolve => require(['src/modules/payments/checkout.vue'], resolve),
     meta: {
