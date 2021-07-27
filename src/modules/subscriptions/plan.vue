@@ -35,7 +35,9 @@
         />
 
         <roundedBtn 
-          :onClick="() => { redirect('checkout')}"
+          :onClick="() => {
+            // change plan
+          }"
           :text="'Change Plan'" 
           v-if="data.plan.end_date === null"
           :styles="{
