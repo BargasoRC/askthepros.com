@@ -8,6 +8,9 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
+
+use Increment\Imarket\Merchant\Models\Merchant;
+
 class Posting implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -17,6 +20,8 @@ class Posting implements ShouldQueue
      *
      * @return void
      */
+
+
     public function __construct()
     {
         //
@@ -29,9 +34,12 @@ class Posting implements ShouldQueue
      */
     public function handle()
     {
+        // check if date is wednesday
         // Get current merchant
         // Get for posting post
         // Get channels credentials
         // Send to curl of the channel
+
+        $currentDate = Carbon::now();
     }
 }
