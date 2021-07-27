@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Billing;
-use App\SMS;
 use Carbon\Carbon;
 class BillingController extends APIController
 {
@@ -41,8 +40,19 @@ class BillingController extends APIController
 
   public function addToBilling($data){
     $this->model = new Billing();
+    $data['code'] = $this->generateCode();
     $res = $this->insertDB($data);
     return $res;
+  }
+
+  public function generateCode(){
+    $code = 'bil_'.substr(str_shuffle($this->codeSource), 0, 60);
+    $codeExist = Billing::where('code', '=', $code)->get();
+    if(sizeof($codeExist) > 0){
+      $this->generateCode();
+    }else{
+      return $code;
+    }
   }
 
   public function updateStatus($status, $id){

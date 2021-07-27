@@ -41,6 +41,19 @@ class PlanController extends APIController
     }
   }
 
+  public function createByParams($data){
+    $data['code'] = $this->generateCode();
+    if($this->checkIfExist($data) == false){
+      $this->model = new Plan();
+      $data['start_date'] = Carbon::now();
+      $data['end_date'] = null;
+      $this->insertDB($data);
+      return $this->response['data'];     
+    }else{
+      return null;
+    }
+  }
+
   public function update(Request $request){
     $data = $request->all();
     $result = Plan::where('merchant_id', '=', $data['merchant_id'])
@@ -79,7 +92,7 @@ class PlanController extends APIController
   }
 
   public function checkIfExist($data){
-  	$result = Plan::where('merchant_id', '=', $data['merchant_id'])->get();
+  	$result = Plan::where('account_id', '=', $data['account_id'])->get();
   	return sizeof($result) > 0 ? true : false;
   }
 
