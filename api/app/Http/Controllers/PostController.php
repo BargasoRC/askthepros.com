@@ -82,6 +82,27 @@ class PostController extends APIController
       return $result;
     }
 
+    public function update(Request $request){
+      $data = $request->all();
+      $id = Post::where('code', '=', $data['code'])->get('id');
+      Post::where('code', '=', $data['code'])->update(array(
+        'title' => $data['title'],
+        'parent' => null,
+        'description' => $data['description'],
+        'channels' => $data['channels'],
+        'url' => $data['url'],
+        'account_id' => $data['account_id'],
+        'status' => $data['status'],
+        'updated_at' => Carbon::now()
+      ));
+      PostTarget::where('post_id', '=', $id[0]['id'])->update(array(
+        'payload_value' => $data['category'],
+        'updated_at' => Carbon::now()
+      ));
+      $this->response['data'] = true;
+      return $this->response();
+    }
+
     public function retrieveByUser(Request $request) {
       $data = $request->all();
       $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
@@ -111,12 +132,33 @@ class PostController extends APIController
     }
 
     public function generateCode($db){
-        $code = substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 32);
-        $codeExist = $db::where('code', '=', $code)->get();
-        if(sizeof($codeExist) > 0){
-          $this->generateCode();
-        }else{
-          return $code;
-        }
+      $code = substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 32);
+      $codeExist = $db::where('code', '=', $code)->get();
+      if(sizeof($codeExist) > 0){
+        $this->generateCode();
+      }else{
+        return $code;
       }
+    }
+
+    public function retrieveByCode($code) {
+      $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
+              ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
+              ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
+              ->where('posts.code', '=', $code)
+              ->get();
+      return $result;
+    }
+
+    public function retrieveHistoryPosts(Request $request){
+      $data = $request->all();
+      $result = PostHistory::where('account_id', '=', $data['account_id'])->get();
+      $i = 0;
+      foreach ($result as $key) {
+        $result[$i]['post'] = $this->retrieveByCode($result[$i]['code']);
+        $i++;
+      }
+      $this->response['data'] = $result;
+      return $this->response();
+    }
 }

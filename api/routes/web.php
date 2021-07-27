@@ -125,10 +125,12 @@ Route::post($route . '/verify_token','SocialController@checkToken');
 // Post Management
 $route = env('PACKAGE_ROUTE', '').'/post';
 Route::post($route . '/create', 'PostController@create');
+Route::post($route . '/update', 'PostController@update');
 Route::post($route . '/retrieve', 'PostController@retrieve');
 Route::post($route . '/retrieve_by_user', 'PostController@retrieveByUser');
 Route::post($route . '/retrieve_by_id', 'PostController@retrieveById');
 Route::post($route. '/delete', 'PostController@delete');
+Route::post($route. '/retrieve_history', 'PostController@retrieveHistoryPosts');
 
 $route = env('PACKAGE_ROUTE', '').'/file';
 Route::post($route . '/upload', 'FileUploadController@upload');

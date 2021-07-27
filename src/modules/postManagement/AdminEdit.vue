@@ -60,8 +60,8 @@
               width: '100% !important',
               borderRadius: '5px !important',
               border: 'none',
-              border: !this.isValid && selectedIndustry == null ? '1px solid red !important' : 'none',
-              marginBottom: !this.isValid && selectedIndustry == null ? '0px' : '35px'
+              border: !this.isValid && selectedIndustry.length === 0 ? '1px solid red !important' : 'none',
+              marginBottom: !this.isValid && selectedIndustry.length === 0 ? '0px' : '35px'
             }"
             :dropdownItemStyles="{
               borderRadius: '5px',
@@ -75,7 +75,7 @@
           />
           <p
             class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
-            v-if="!this.isValid && selectedIndustry == null"
+            v-if="!this.isValid && selectedIndustry.length === 0"
           >Required Field</p>
         </div>
 
@@ -284,7 +284,45 @@ export default {
       })
     },
     update(status){
-      console.log('[status]', status)
+      this.$refs.searchField.returnCategory()
+      let selectIndustry = []
+      this.selectedIndustry.forEach(element => {
+        selectIndustry.push({category: element.category, id: element.id})
+      })
+      if(this.validate()){
+        let channels = []
+        this.facebook ? channels.push('FACEBOOK') : null
+        this.googleMyBusiness ? channels.push('GOOGLE_MY_BUSINESS') : ''
+        this.linkedin ? channels.push('LINKEDIN') : ''
+        let parameter = {
+          code: this.$route.params.parameter,
+          title: this.title,
+          description: this.description,
+          // url: null,
+          // url: JSON.stringify(response.data.data),
+          account_id: this.user.userID,
+          status: status,
+          channels: JSON.stringify(channels),
+          // parent: null,
+          category: JSON.stringify(selectIndustry)
+        }
+        console.log('[parameters]', parameter)
+        this.isClearing = true
+        this.APIRequest('post/update', parameter).then(response => {
+          $('#loading').css({'display': 'none'})
+          console.log('[response]', response)
+          if(response.error === null){
+            this.title = ''
+            this.description = ''
+            this.selectedIndustry = null
+            this.facebook = false
+            this.googleMyBusiness = false
+            this.linkedin = false
+            this.isClearing = false
+            this.imagesList = []
+          }
+        })
+      }
     },
     // Adding a Post
     storeImages(data) {
