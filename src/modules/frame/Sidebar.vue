@@ -70,6 +70,7 @@
   overflow-y: hidden;
   z-index: 10000;
   height: calc(100vh - 60px);
+  position: fixed;
 }
 
 .sidebar-menu{
@@ -219,6 +220,7 @@
     width: 81%;
     margin: 60px 0px 0px 0px;
     float: left;
+    margin-left: 19%;
   }
   /*  Change with Menu Toggled */
   .main-sidebar.hidden{
@@ -241,6 +243,7 @@
     width: 72%;
     margin: 60px 0px 0px 0px;
     float: left;
+    margin-left: 23%;
   }
   .main-sidebar.active{
     padding-left:15%;
@@ -443,7 +446,7 @@ export default {
         this.prevMenu = index
       }
       if(this.menu[index].subMenu === null){
-        ROUTER.push(`/${this.user.type.toLowerCase()}/` + this.menu[this.prevMenu].path)
+        ROUTER.push(`/` + this.menu[this.prevMenu].path)
         $('.navbar-collapse').collapse('hide')
       }
     },
@@ -454,7 +457,7 @@ export default {
         this.prevMenu = index
       }
       if(this.menuOff[index].subMenu === null){
-        ROUTER.push(`/${this.user.type.toLowerCase()}/` + this.menuOff[this.prevMenu].path)
+        ROUTER.push(`/` + this.menuOff[this.prevMenu].path)
         $('.navbar-collapse').collapse('hide')
       }
     },
@@ -479,7 +482,7 @@ export default {
           this.subPrevMenu = subIndex
         }
       }
-      ROUTER.push(`/${this.user.type.toLowerCase()}/` + this.menu[this.prevMenu].subMenu[this.subPrevMenu].path)
+      ROUTER.push(`/` + this.menu[this.prevMenu].subMenu[this.subPrevMenu].path)
       $('.navbar-collapse').collapse('hide')
     },
     changeToggleSidebarIcon(){

@@ -191,7 +191,6 @@ export default {
       this.setUser(null)
       return false
     }
-
   },
   async retrieveAccountProfileAndInformation(id) {
     let condition = {

@@ -146,7 +146,7 @@ export default {
       }
     }
   },
-  props: ['creditCard', 'paypal', 'paymentMethod'],
+  props: ['creditCard', 'paypal', 'paymentMethod', 'data'],
   components: {
     CardNumber,
     CardCvc,
@@ -160,33 +160,70 @@ export default {
       this.accountsItem[index].flag = !this.accountsItem[index].flag
     },
     addNewPaymentMethod(){
-      if(this.user.userID <= 0){
+      if(this.user.userID <= 0 && this.data === null){
         return
       }
       if(this.user.merchant && this.user.merchant.addition_informations === null){
         return
       }
+      console.log({
+        data: this.data
+      })
       $('#loading').css({'display': 'block'})
       this.errorMessage = null
       Stripe.createSource().then(data => {
-        $('#loading').css({'display': 'none'})
         if(data.error !== undefined){
           // console.log(data.error)
+          $('#loading').css({'display': 'none'})
           this.errorMessage = data.error.message
         }else{
           let parameter = {
             source: data.source,
             account_id: this.user.userID,
-            plan: this.user.merchant.addition_informations.industry
+            plan: this.data,
+            email: this.user.email,
+            name: this.user.information.first_name + ' ' + this.user.information.last_name
           }
-          console.log({
-            parameter
+          this.APIRequest('stripe_webhooks/charge_customer', parameter).then(response => {
+            $('#loading').css({'display': 'none'})
+            if(response.data){
+              AUTH.checkAuthentication()
+              this.redirect('/subscriptions')
+            }
           })
-          // this.APIRequest('stripes/add_payment_method', parameter).then(response => {
-          //   if(response.data === true){
-          //     $('#loading').css({'display': 'none'})
-          //   }
-          // })
+        }
+      })
+    },
+    createCustomer(){
+      if(this.user.userID <= 0 && this.data === null){
+        return
+      }
+      if(this.user.merchant && this.user.merchant.addition_informations === null){
+        return
+      }
+      console.log({
+        data: this.data
+      })
+      $('#loading').css({'display': 'block'})
+      this.errorMessage = null
+      Stripe.createSource().then(data => {
+        if(data.error !== undefined){
+          // console.log(data.error)
+          $('#loading').css({'display': 'none'})
+          this.errorMessage = data.error.message
+        }else{
+          let parameter = {
+            source: data.source,
+            account_id: this.user.userID,
+            email: this.user.email,
+            name: this.user.information.first_name + ' ' + this.user.information.last_name
+          }
+          this.APIRequest('stripe_webhooks/create_customer', parameter).then(response => {
+            $('#loading').css({'display': 'none'})
+            if(response.data){
+              this.$parent.retrieve()
+            }
+          })
         }
       })
     }

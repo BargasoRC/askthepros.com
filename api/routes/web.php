@@ -145,7 +145,9 @@ $route = env('PACKAGE_ROUTE', '').'/plans/';
 $controller = 'PlanController@';
 Route::post($route.'create', $controller."create");
 Route::post($route.'update', $controller."update");
+Route::post($route.'cancel_plan', $controller."cancelPlan");
 Route::post($route.'retrieve', $controller."retrieve");
+Route::post($route.'retrieve_with_payments_and_history', $controller."retrieveWithPaymentsAndHistory");
 Route::post($route.'delete', $controller."delete");
 Route::get($route.'test', $controller."test");
 
@@ -153,6 +155,7 @@ Route::get($route.'test', $controller."test");
 $route = env('PACKAGE_ROUTE', '').'/billings/';
 $controller = 'BillingController@';
 Route::post($route.'retrieve', $controller."retrieve");
+Route::post($route.'retrieve_on_history', $controller."retrieveOnHistory");
 Route::get($route.'test', $controller."test");
 
 
@@ -190,4 +193,11 @@ Route::post($route.'create', $controller."create");
 Route::post($route.'update', $controller."update");
 Route::post($route.'retrieve', $controller."retrieve");
 Route::post($route.'delete', $controller."delete");
+Route::get($route.'test', $controller."test");
+
+
+$route = env('PACKAGE_ROUTE', '').'/stripe_webhooks/';
+$controller = 'StripeController@';
+Route::post($route.'charge_customer', $controller."chargeCustomer");
+Route::post($route.'create_customer', $controller."createCustomer");
 Route::get($route.'test', $controller."test");

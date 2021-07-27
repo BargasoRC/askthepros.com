@@ -112,7 +112,7 @@
           <div class="row">
             <div class="col-sm-12">
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6"> 
                   <p>Username</p>
                   <roundedInput :type="'text'" :placeholder="'Username'"
                     :class="!isValidAccount && username == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
@@ -228,7 +228,7 @@
                 border: !isValidPassword && oPassword == '' ? '1px solid red !important' : 'none',
               }" v-model="oPassword" /> -->
                     <input 
-                      :type="isShowingCPassword ? 'text' : 'password'" 
+                      :type="isShowingOPassword ? 'text' : 'password'" 
                       :placeholder="'(Leave blank if unchanged)'"
                       :class="'form-control roudedInput input-style ' + (!isValidPassword && oPassword == '' ? 'mb-0 ' : ' SettingsField')"
                       :style="{
@@ -253,15 +253,15 @@
                     </div>
                   </div>
                   <div class="col-sm-12" :style="{
-              display: 'flex',
-              alignItems: 'center',
-              marginTop: '0px'
-            }">
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginTop: '0px'
+                  }">
                     <roundedBtn :onClick="checkPassword" :icon="'fas fa-sign-in-alt'" :text="'Verify Password'" :styles="{
-                backgroundColor: 'rgb(241, 184, 20)',
-                color: 'white',
-                height: '35px'
-              }" />
+                      backgroundColor: 'rgb(241, 184, 20)',
+                      color: 'white',
+                      height: '35px'
+                    }" />
                   </div>
                 </div>
               </div>
@@ -288,12 +288,19 @@
             borderRadius: '50%'
           }" />
         </div>
-        <div v-else class="col-sm-12 mt-3">
-          <img v-bind:src="user.profile.url" :style="{
+        <div v-else>
+          <img
+            v-bind:src="user.profile.url"
+            v-if="user.profile"
+            :style="{
             width: '170px',
             height: '170px',
             borderRadius: '50%'
-          }" >
+          }">
+          <i class="fas fa-user-circle" aria-hidden="true" :style="{
+            fontSize: '150px',
+            color: '#01009A'
+          }" v-else></i>
         </div>
         <div v-if="user.login_type === 'local'">
           <div class="mt-4">
@@ -407,6 +414,9 @@ export default {
     }
   },
   mounted() {
+    if(AUTH.hash('show', localStorage.getItem('login_with')) === 'social_lite') {
+      this.passwordVerified = true
+    }
     this.retrieveInformation()
   },
   methods: {

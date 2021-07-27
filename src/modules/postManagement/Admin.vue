@@ -248,10 +248,10 @@ export default {
       }
     },
     createNewPost(){
-      ROUTER.push('/admin/post_management/edit')
+      ROUTER.push('/post_management/edit')
     },
     edit(code) {
-      ROUTER.push('/admin/post_management/edit/' + code)
+      ROUTER.push('/post_management/edit/' + code)
     },
     retrievePosts() {
       let parameter = {

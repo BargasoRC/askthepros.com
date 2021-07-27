@@ -340,7 +340,7 @@ export default {
           this.$refs.errorModal.show()
           return false
         })
-        ROUTER.push(`/${AUTH.user.type.toLowerCase()}/post_management`)
+        ROUTER.push(`/post_management`)
       }
     },
     draft() {
