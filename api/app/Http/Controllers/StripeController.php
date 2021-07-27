@@ -24,6 +24,35 @@ class StripeController extends APIController
     $this->stripe = new Stripe($this->pk, $this->sk);
   }
 
+  public function createCustomer(Request $request){
+    $data = $request->all();
+
+    if($this->stripe == null){
+      $this->response['data'] = null;
+      $this->response['error'] = 'Invalid Stripe Credentials';
+      return $this->response();
+    }
+
+    $this->customer = $this->stripe->createCustomer($data['email'], $data['source']['id'], $data['name']);
+
+    if($this->customer){
+      $paymentMethod = app($this->paymentMethodController)->createByParams(
+        array(
+          'account_id'  => $data['account_id'],
+          'method'      => 'stripe',
+          'details'     => json_encode(array(
+            'customer' => $this->customer,
+            'source'   => $data['source']
+          )),
+          'status'      => 'active'
+        )
+      );
+      $this->response['data'] = $paymentMethod;
+    }
+    return $this->response();
+  }
+
+
   public function chargeCustomer(Request $request){
     $data = $request->all();
 

@@ -164,6 +164,9 @@ export default {
         })
       }
     },
+    retrieveRoot(){
+      this.$parent.retrieve()
+    },
     retrieve(){
       if(this.data && this.data.plan !== null){
         return

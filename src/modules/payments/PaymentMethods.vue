@@ -11,7 +11,9 @@
            (****{{paymentMethod.details.source.card.last4}})
         </label>
         <p>Expire on {{paymentMethod.details.source.card.exp_month + '/' + paymentMethod.details.source.card.exp_year}}</p>
-
+        <p>
+          Added on {{paymentMethod.created_at}}
+        </p>
         <roundedBtn
           :onClick="addNewPaymentMethod"
           :text="'Change payment method'"
@@ -49,7 +51,9 @@
             }"
           />
           <roundedBtn
-            :onClick="authorize"
+            :onClick="() => {
+              authorize()
+            }"
             :text="'Authorize'"
             :styles="{
               backgroundColor: '#01004E',
@@ -92,8 +96,12 @@ export default {
     addNewPaymentMethod(){
       this.newPaymentFlag = true
     },
+    retrieve(){
+      this.newPaymentFlag = false
+      this.$parent.retrieveRoot()
+    },
     authorize(){
-      this.$refs.stripe.addNewPaymentMethod()
+      this.$refs.stripe.createCustomer()
     }
   }
 }
