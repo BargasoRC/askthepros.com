@@ -104,12 +104,18 @@ class StripeController extends APIController
           'status'     => 'paid'
         ));
 
-        Merchant::insert(array(
-          'account_id' => $data['account_id'],
-          'addition_informations' => json_encode(array(
-            'industry' => $data['plan']['category']
-          ))
-        ));
+        $merchant = Merchant::where('account_id', '=', $data['account_id'])->get();
+
+        if($merchant && sizeof($merchant) > 0){
+          //
+        }else{
+          Merchant::insert(array(
+            'account_id' => $data['account_id'],
+            'addition_informations' => json_encode(array(
+              'industry' => $data['plan']['category']
+            ))
+          ));
+        }
       }
 
 
