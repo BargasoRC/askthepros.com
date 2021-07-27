@@ -69,4 +69,8 @@ export default {
   border-bottom: 1px solid $hover;
   margin-top: 40px;
 }
+
+.container-fluid{
+  min-height: 70vh;
+}
 </style>
