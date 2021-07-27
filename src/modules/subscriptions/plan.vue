@@ -23,7 +23,7 @@
         </div>
         <roundedBtn 
           :onClick="() => {
-            cancelPlan()
+            cancelPlanConfirmation()
           }"
           v-if="data.plan.end_date === null"
           :text="'Cancel Plan'" 
@@ -87,10 +87,18 @@
       <PaymentMethods :data="data.payment_method"/>
     </div>
 
-
     <div class="col-md-12" style="margin-bottom: 100px;">
       <UserPayment/>
     </div>
+
+    <Confirmation
+      ref="confirm"
+      :message="'Are you sure do you want to cancel your plan?'"
+      :title="'Confirmation'"
+      @onConfirm="e => {
+        cancelPlan(e)
+      }"
+    ></Confirmation>
 
   </div>
 </template>
@@ -104,6 +112,7 @@ import AUTH from 'src/services/auth'
 import global from 'src/helpers/global'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import Colors from 'src/assets/style/colors.js'
+import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
 export default {
   mounted(){
     this.retrieve()
@@ -112,7 +121,8 @@ export default {
     return {
       user: AUTH.user,
       industry: [],
-      colors: Colors
+      colors: Colors,
+      selectedId: null
     }
   },
   components: {
@@ -120,7 +130,8 @@ export default {
     dialogueBtn,
     UserPayment,
     PaymentMethods,
-    roundedBtn
+    roundedBtn,
+    Confirmation
   },
   props: ['data', 'billings'],
   methods: {
@@ -129,6 +140,14 @@ export default {
     },
     test(parameter){
       console.log(parameter)
+    },
+    cancelPlanConfirmation(){
+      if(this.data && this.data.plan){
+        this.selectedId = this.data.plan.id
+        setTimeout(() => {
+          this.$refs.confirm.show(this.data.plan.id)
+        }, 100)
+      }
     },
     cancelPlan(){
       if(this.data && this.data.plan){
