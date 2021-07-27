@@ -2,6 +2,29 @@
   <div>
     <h5>Payment Method</h5>
     <div class="col-sm-12 p-0 mt-4">
+      <div class="payment-method" v-if="paymentMethod !== null">
+        <label>
+          <i class="fab fa-cc-visa" v-if="paymentMethod.details.source.card.brand === 'Visa'"></i>
+          <i class="fab fa-cc-discover" v-if="paymentMethod.details.source.card.brand === 'Discover'"></i>
+          <i class="fab fa-cc-mastercard" v-if="paymentMethod.details.source.card.brand === 'Mastercard'"></i>
+          {{paymentMethod.details.source.card.brand}}
+           (****{{paymentMethod.details.source.card.last4}})
+        </label>
+        <p>Expire on {{paymentMethod.details.source.card.exp_month + '/' + paymentMethod.details.source.card.exp_year}}</p>
+        <p>
+          Added on {{paymentMethod.created_at}}
+        </p>
+        <roundedBtn
+          :onClick="addNewPaymentMethod"
+          :text="'Change payment method'"
+          :styles="{
+            backgroundColor: '#01004E',
+            color: 'white'
+          }"
+          v-if="newPaymentFlag === false"
+        />
+      </div>
+
       <roundedBtn
         :onClick="addNewPaymentMethod"
         :text="'Add new payment method'"
@@ -9,13 +32,28 @@
           backgroundColor: '#01004E',
           color: 'white'
         }"
-        v-if="newPaymentFlag === false"
+        v-if="newPaymentFlag === false && data === null"
       />
-      <div class="payment-method" v-if="newPaymentFlag === true">
+      <div class="new-payment-method-holder" v-if="newPaymentFlag === true">
         <div class="card-holder">
+          <div style="margin-bottom: 10px; margin-left: -5px;">
+            <img class="payment" :src="require('src/assets/img/pay_methods.png')" alt="Payment Methods">
+          </div>
           <stripe-cc ref="stripe" />
+          <roundedBtn 
+            :onClick="() => {
+              this.newPaymentFlag = false
+            }"
+            :text="'Cancel'" 
+            :styles="{
+              marginBottom: '25px',
+              marginRight: '10px'
+            }"
+          />
           <roundedBtn
-            :onClick="authorize"
+            :onClick="() => {
+              authorize()
+            }"
             :text="'Authorize'"
             :styles="{
               backgroundColor: '#01004E',
@@ -34,12 +72,22 @@ import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
 export default {
+  mounted(){
+    if(this.data){
+      this.paymentMethod = {
+        ...this.data,
+        details: JSON.parse(this.data.details)
+      }
+    }
+  },
   data() {
     return {
       user: AUTH.user,
-      newPaymentFlag: false
+      newPaymentFlag: false,
+      paymentMethod: null
     }
   },
+  props: ['data'],
   components: {
     roundedBtn,
     'stripe-cc': require('modules/payments/Stripe.vue')
@@ -48,8 +96,12 @@ export default {
     addNewPaymentMethod(){
       this.newPaymentFlag = true
     },
+    retrieve(){
+      this.newPaymentFlag = false
+      this.$parent.retrieveRoot()
+    },
     authorize(){
-      this.$refs.stripe.addNewPaymentMethod()
+      this.$refs.stripe.createCustomer()
     }
   }
 }
@@ -57,7 +109,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "~assets/style/colors.scss";
-.payment-method{
+.new-payment-method-holder{
   width: 100%;
   float: left;
 }
@@ -65,5 +117,18 @@ export default {
 .card-holder{
   width: 50%;
   float: left;
+}
+.fab{
+  font-size: 14px !important;
+}
+
+.payment-method{
+  padding: 15px;
+  border: solid 1px #eee;
+  border-radius: 5px;
+  width: 24%;
+  margin-right: 76%;
+  float: left;
+  margin-bottom: 25px;
 }
 </style>

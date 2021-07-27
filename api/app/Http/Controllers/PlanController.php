@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Plan;
+use App\PaymentMethod;
+use App\Billing;
 use Carbon\Carbon;
 class PlanController extends APIController
 {
@@ -22,6 +24,43 @@ class PlanController extends APIController
     })
     ->get();
     $this->response['data'] = $result;
+    return $this->response();
+  }
+
+  public function cancelPlan(Request $request){
+    $data = $request->all();
+    $billing = Billing::where('details', 'like', '%"plan_id":'.$data['id'].'}%')->orderBy('created_at', 'desc')->limit(1)->get();
+    if(sizeof($billing) > 0){
+      $endDate = $billing[0]['end_date'];
+
+      Plan::where('id', '=', $data['id'])->update(array(
+        'updated_at' => Carbon::now(),
+        'end_date'   => $endDate
+      ));
+
+      $this->response['data'] = $data['id'];
+    }
+    return $this->response();
+  }
+
+
+
+  public function retrieveWithPaymentsAndHistory(Request $request) {
+    $data = $request->all();
+    $this->model = new Plan();
+    $this->retrieveDB($data);
+    $plan = $this->response['data'] ? $this->response['data'][0] : null;
+
+
+    $this->model = new PaymentMethod();
+    $this->retrieveDB($data);
+    $paymentMethod = $this->response['data'] ? $this->response['data'][0] : null;
+
+    $this->response['data'] = array(
+      'plan' => $plan,
+      'payment_method' => $paymentMethod
+    );
+
     return $this->response();
   }
 

@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <Plan :plan="plan"/>
+    <Plan :data="data"/>
   </div>
 </template>
 
@@ -9,10 +9,13 @@ import Plan from './plan'
 import DataTable from 'src/modules/generic/table'
 import AUTH from 'src/services/auth'
 export default {
+  mounted(){
+  },
   data() {
     return {
       user: AUTH.user,
-      plan: null
+      data: null,
+      billings: []
     }
   },
   components: {
@@ -20,13 +23,13 @@ export default {
     Plan
   },
   created() {
-    this.retrieveSubscriptions()
+    this.retrieve()
   },
   methods: {
     onTableAction(data) {
       console.log('Table Action: ', data)
     },
-    retrieveSubscriptions(){
+    retrieve(){
       let parameter = {
         condition: [
           {
@@ -35,16 +38,19 @@ export default {
             column: 'account_id'
           }
         ],
+        sort: {
+          created_at: 'desc'
+        },
         offset: 0,
         limit: 1
       }
       $('#loading').css({'display': 'block'})
-      this.APIRequest('plans/retrieve', parameter).then(response => {
+      this.APIRequest('plans/retrieve_with_payments_and_history', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        if(response.data.length === 0) {
-          this.plan = null
-        }else if(response.data.lenght > 0) {
-          this.plan = response.data[0]
+        if(response.data) {
+          this.data = response.data
+        }else{
+          this.data = null
         }
       }).catch(error => {
         $('#loading').css({'display': 'none'})
@@ -62,5 +68,9 @@ export default {
   border-right: 1px solid $hover;
   border-bottom: 1px solid $hover;
   margin-top: 40px;
+}
+
+.container-fluid{
+  min-height: 70vh;
 }
 </style>

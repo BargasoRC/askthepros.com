@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\StripeWebhooks as Stripe;
+use Increment\Imarket\Merchant\Models\Merchant;
 use Carbon\Carbon;
 class StripeController extends APIController
 {
@@ -22,6 +23,35 @@ class StripeController extends APIController
 
     $this->stripe = new Stripe($this->pk, $this->sk);
   }
+
+  public function createCustomer(Request $request){
+    $data = $request->all();
+
+    if($this->stripe == null){
+      $this->response['data'] = null;
+      $this->response['error'] = 'Invalid Stripe Credentials';
+      return $this->response();
+    }
+
+    $this->customer = $this->stripe->createCustomer($data['email'], $data['source']['id'], $data['name']);
+
+    if($this->customer){
+      $paymentMethod = app($this->paymentMethodController)->createByParams(
+        array(
+          'account_id'  => $data['account_id'],
+          'method'      => 'stripe',
+          'details'     => json_encode(array(
+            'customer' => $this->customer,
+            'source'   => $data['source']
+          )),
+          'status'      => 'active'
+        )
+      );
+      $this->response['data'] = $paymentMethod;
+    }
+    return $this->response();
+  }
+
 
   public function chargeCustomer(Request $request){
     $data = $request->all();
@@ -50,7 +80,10 @@ class StripeController extends APIController
         array(
           'account_id'  => $data['account_id'],
           'method'      => 'stripe',
-          'details'     => json_encode($this->customer),
+          'details'     => json_encode(array(
+            'customer' => $this->customer,
+            'source'   => $data['source']
+          )),
           'status'      => 'active'
         )
       );
@@ -70,6 +103,19 @@ class StripeController extends APIController
           'end_date'   => Carbon::now()->addMonths($data['plan']['months']),
           'status'     => 'paid'
         ));
+
+        $merchant = Merchant::where('account_id', '=', $data['account_id'])->get();
+
+        if($merchant && sizeof($merchant) > 0){
+          //
+        }else{
+          Merchant::insert(array(
+            'account_id' => $data['account_id'],
+            'addition_informations' => json_encode(array(
+              'industry' => $data['plan']['category']
+            ))
+          ));
+        }
       }
 
 
