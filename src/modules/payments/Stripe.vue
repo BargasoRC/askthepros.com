@@ -172,9 +172,9 @@ export default {
       $('#loading').css({'display': 'block'})
       this.errorMessage = null
       Stripe.createSource().then(data => {
-        $('#loading').css({'display': 'none'})
         if(data.error !== undefined){
           // console.log(data.error)
+          $('#loading').css({'display': 'none'})
           this.errorMessage = data.error.message
         }else{
           let parameter = {
@@ -188,9 +188,10 @@ export default {
             parameter
           })
           this.APIRequest('stripe_webhooks/charge_customer', parameter).then(response => {
-            console.log({
-              response
-            })
+            $('#loading').css({'display': 'none'})
+            if(response.data){
+              this.redirect('/subscriptions')
+            }
           })
         }
       })

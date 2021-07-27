@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Plan;
+use App\PaymentMethod;
+use App\Billing;
 use Carbon\Carbon;
 class PlanController extends APIController
 {
@@ -22,6 +24,27 @@ class PlanController extends APIController
     })
     ->get();
     $this->response['data'] = $result;
+    return $this->response();
+  }
+
+
+
+  public function retrieveWithPaymentsAndHistory(Request $request) {
+    $data = $request->all();
+    $this->model = new Plan();
+    $this->retrieveDB($data);
+    $plan = $this->response['data'] ? $this->response['data'][0] : null;
+
+
+    $this->model = new PaymentMethod();
+    $this->retrieveDB($data);
+    $paymentMethod = $this->response['data'] ? $this->response['data'][0] : null;
+
+    $this->response['data'] = array(
+      'plan' => $plan,
+      'payment_method' => $paymentMethod
+    );
+
     return $this->response();
   }
 

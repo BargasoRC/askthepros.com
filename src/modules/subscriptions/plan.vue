@@ -4,16 +4,16 @@
       <h5> Subscriptions </h5>
     </div>
     <div class="mt-4">
-      <p style="margin-top: 0px; font-size: 1rem; color: grey" v-if="plan === null">You have no active subscriptions to display. Select your membership now to get better experience with automated media posting.</p>
+      <p style="margin-top: 0px; font-size: 1rem; color: grey" v-if="data && data.plan === null">You have no active subscriptions to display. Select your membership now to get better experience with automated media posting.</p>
       <p style="margin-top: 0px; font-size: 1rem; color: grey" v-else>Your account is active.</p>
     </div>
-    <div class="col-md-12 mt-5" v-if="plan !== null">
+    <div class="col-md-12 mt-5" v-if="data && data.plan !== null">
       <div class="pricing col-sm-3 p-0 pb-5">
-        <div v-for="(item, index) in industry" :key="index">
-          <div v-if="user && user.merchant && user.merchant.addition_informations.industry == item.category"> 
+        <div>
+          <div> 
             <div class="layer1">
-              <h6>{{item.category}}</h6>
-              <p> {{item.price}} USD / Month</p>
+              <h6>{{data.plan.plan}}</h6>
+              <p> {{data.plan.amount}} {{data.plan.currency}} / Month</p>
             </div>
           </div>
         </div>
@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <div class="subscription-holder" v-if="plan === null">
+    <div class="subscription-holder" v-if="data && data.plan === null">
       <div v-for="(item, index) in industry" :key="index" class="subscription-item">
         <div>
           <div class="layer1">
@@ -49,13 +49,13 @@
       
     </div>
 
-    <div class="col-md-12" style="margin-bottom: 50px;" v-if="plan !== null">
-      <PaymentMethods />
+    <div class="col-md-12" style="margin-bottom: 50px;" v-if="data && data.payment_method !== null">
+      <PaymentMethods :data="data.payment_method"/>
     </div>
 
 
-    <div class="col-md-12" style="margin-bottom: 100px;" v-if="plan !== null">
-      <UserPayment />
+    <div class="col-md-12" style="margin-bottom: 100px;">
+      <UserPayment/>
     </div>
 
   </div>
@@ -86,7 +86,7 @@ export default {
     PaymentMethods,
     roundedBtn
   },
-  props: ['plan'],
+  props: ['data', 'billings'],
   methods: {
     redirect(parameter){
       this.$router.push(parameter)
@@ -95,7 +95,7 @@ export default {
       console.log(parameter)
     },
     retrieve(){
-      if(this.plan !== null){
+      if(this.data && this.data.plan !== null){
         return
       }
       let parameter = {

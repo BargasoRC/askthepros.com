@@ -50,7 +50,10 @@ class StripeController extends APIController
         array(
           'account_id'  => $data['account_id'],
           'method'      => 'stripe',
-          'details'     => json_encode($this->customer),
+          'details'     => json_encode(array(
+            'customer' => $this->customer,
+            'source'   => $data['source']
+          )),
           'status'      => 'active'
         )
       );
