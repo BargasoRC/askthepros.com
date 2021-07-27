@@ -49,7 +49,9 @@ class BillingController extends APIController
       $method = sizeof($paymentMethodTemp) > 0 ? $paymentMethodTemp[0] : null;
       $method['details'] = json_decode($method['details'], true);
       $billing[$i]['payment_method'] = $method;
+      $billing[$i]['account'] = $this->retrieveAccountOnly($value['account_id']);
       $billing[$i]['plan'] = sizeof($plan) > 0 ? $plan[0] : null;
+      $result[$i]['invoice'] = '00-11';
       $i++;
     }
 

@@ -36,7 +36,7 @@
             <td>{{renderPlan(item.plan)}}</td>
             <td>{{item.start_date}}</td>
             <td>{{item.end_date}}</td>
-            <td>{{item.payment_method_expiry}}</td>
+            <td>{{item.payment_method.status.toUpperCase()}}</td>
             <td>{{item.status.toUpperCase()}}</td>
           </tr>
         </tbody>
@@ -168,7 +168,7 @@ export default {
         limit: 50
       }
       $('#loading').css({'display': 'block'})
-      this.APIRequest('billings/retrieve', parameter).then(response => {
+      this.APIRequest('billings/retrieve_on_history', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.length > 0) {
           this.data = response.data
