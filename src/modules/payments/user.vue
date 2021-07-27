@@ -1,8 +1,8 @@
 <template>
-  <div class="payment-history-holder">
-    <h5> Payment History </h5>
+  <div class="payment-history-holder" style="margin-top: 25px;">
+    <h5 v-if="data.length > 0"> Payment History </h5>
     <div class="col-sm-12 p-0 mt-4">
-      <table class="table table-striped table-bordered" style="margin-bottom: 100px;">
+      <table class="table table-striped table-bordered" style="margin-bottom: 100px;" v-if="data.length > 0">
         <thead>
           <th>Description</th>
           <th>Amount</th>
