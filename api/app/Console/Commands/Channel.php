@@ -3,15 +3,15 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Jobs\Posting as PostingJob;
-class Posting extends Command
+use App\Jobs\Channel as ChannelJob;
+class Channel extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'posting:run';
+    protected $signature = 'channel:run';
 
     /**
      * The console command description.
@@ -37,8 +37,8 @@ class Posting extends Command
      */
     public function handle()
     {
-        echo '[Posting] Start running ...';
-        PostingJob::dispatch();
-        echo "\n[Posting] Completed";
+        echo '[Channel Command] Start running ...';
+        ChannelJob::dispatch();
+        echo "\n[Channel Command] Completed";
     }
 }
