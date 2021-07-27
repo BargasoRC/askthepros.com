@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid mb-5">
 		<h2 style="margin-top: 25px;">Checkout Summary</h2>
-    <p v-if="errorMessage">
+    <p v-if="errorMessage" class="text-danger">
       <b>Opps!</b> {{errorMessage}}
     </p>
 		<div class="col-sm-7 p-0 mt-3" v-if="selected">
@@ -115,7 +115,7 @@ export default {
       if(this.isAgree){
         this.$refs.stripe.addNewPaymentMethod()
       }else{
-        this.errorMessage = 'Please accept the terms.'
+        this.errorMessage = 'Please accept the I agree my card will be automatically billed monthly until cancellation.'
       }
     },
     retrieve(){

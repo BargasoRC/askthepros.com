@@ -27,6 +27,22 @@ class PlanController extends APIController
     return $this->response();
   }
 
+  public function cancelPlan(Request $request){
+    $data = $request->all();
+    $billing = Billing::where('details', 'like', '%"plan_id":'.$data['id'].'}%')->orderBy('created_at', 'desc')->limit(1)->get();
+    if(sizeof($billing) > 0){
+      $endDate = $billing[0]['end_date'];
+
+      Plan::where('id', '=', $data['id'])->update(array(
+        'updated_at' => Carbon::now(),
+        'end_date'   => $endDate
+      ));
+
+      $this->response['data'] = $data['id'];
+    }
+    return $this->response();
+  }
+
 
 
   public function retrieveWithPaymentsAndHistory(Request $request) {

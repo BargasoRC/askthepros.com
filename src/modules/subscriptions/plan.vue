@@ -14,15 +14,47 @@
             <div class="layer1">
               <h6>{{data.plan.plan}}</h6>
               <p> {{data.plan.amount}} {{data.plan.currency}} / Month</p>
+
+              <p v-if="data.plan.end_date !== null">
+                Expire on {{data.plan.end_date}}
+              </p>
             </div>
           </div>
         </div>
+        <roundedBtn 
+          :onClick="() => {
+            cancelPlan()
+          }"
+          v-if="data.plan.end_date === null"
+          :text="'Cancel Plan'" 
+          :styles="{
+            marginTop: '20px',
+            backgroundColor: colors.danger,
+            color: 'white'
+          }"
+        />
 
         <roundedBtn 
           :onClick="() => { redirect('checkout')}"
           :text="'Change Plan'" 
+          v-if="data.plan.end_date === null"
           :styles="{
-            marginTop: '20px'
+            marginTop: '20px',
+            backgroundColor: colors.darkPrimary,
+            color: 'white'
+          }"
+        />
+
+        <roundedBtn 
+          :onClick="() => {
+            // add plan here
+          }"
+          :text="'Add Plan'"
+          v-if="data.plan.end_date !== null"
+          :styles="{
+            marginTop: '20px',
+            backgroundColor: colors.darkPrimary,
+            color: 'white'
           }"
         />
       </div>
@@ -39,7 +71,7 @@
               :onClick="() => { redirect('/checkout/' + item.category.toLowerCase().replace(' ', '_'))}"
               :text="'Subscribe'"
               :styles="{
-                backgroundColor: '#01004E',
+                backgroundColor: colors.darkPrimary,
                 color: 'white'
               }"
             />
@@ -69,6 +101,7 @@ import PaymentMethods from 'src/modules/payments/PaymentMethods.vue'
 import AUTH from 'src/services/auth'
 import global from 'src/helpers/global'
 import roundedBtn from 'src/modules/generic/roundedBtn'
+import Colors from 'src/assets/style/colors.js'
 export default {
   mounted(){
     this.retrieve()
@@ -76,7 +109,8 @@ export default {
   data() {
     return {
       user: AUTH.user,
-      industry: []
+      industry: [],
+      colors: Colors
     }
   },
   components: {
@@ -93,6 +127,21 @@ export default {
     },
     test(parameter){
       console.log(parameter)
+    },
+    cancelPlan(){
+      if(this.data && this.data.plan){
+        let parameter = {
+          id: this.data.plan.id
+        }
+        $('#loading').css({'display': 'block'})
+        this.APIRequest('plans/cancel_plan', parameter).then(response => {
+          $('#loading').css({'display': 'none'})
+          this.$parent.retrieve()
+        }).catch(error => {
+          $('#loading').css({'display': 'none'})
+          error
+        })
+      }
     },
     retrieve(){
       if(this.data && this.data.plan !== null){

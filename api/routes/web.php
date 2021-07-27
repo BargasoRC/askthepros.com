@@ -145,6 +145,7 @@ $route = env('PACKAGE_ROUTE', '').'/plans/';
 $controller = 'PlanController@';
 Route::post($route.'create', $controller."create");
 Route::post($route.'update', $controller."update");
+Route::post($route.'cancel_plan', $controller."cancelPlan");
 Route::post($route.'retrieve', $controller."retrieve");
 Route::post($route.'retrieve_with_payments_and_history', $controller."retrieveWithPaymentsAndHistory");
 Route::post($route.'delete', $controller."delete");

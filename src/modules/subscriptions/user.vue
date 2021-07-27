@@ -23,13 +23,13 @@ export default {
     Plan
   },
   created() {
-    this.retrieveSubscriptions()
+    this.retrieve()
   },
   methods: {
     onTableAction(data) {
       console.log('Table Action: ', data)
     },
-    retrieveSubscriptions(){
+    retrieve(){
       let parameter = {
         condition: [
           {
