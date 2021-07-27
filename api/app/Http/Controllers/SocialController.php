@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Increment\Account\Models\Account;
+use Increment\Account\Models\AccountProfile;
+use Increment\Account\Models\AccountInformation;
 use App\SocialAuths;
 use Socialite;
+use Carbon\Carbon;
 class SocialController extends APIController
 {
     public function redirect($provider)
@@ -35,18 +38,83 @@ class SocialController extends APIController
     {
       $user = Socialite::driver($provider)->stateless()->user();
       $acc = Account::firstOrNew(['email' => $user->getEmail()]);
+      $account = Account::where('email', '=', $user->getEmail())->get();
       $token = $user->token;
       if ($acc->new) {
         $acc->code = $this->generateCode();
         $acc->username = $user->getEmail() ? $user->getEmail() : "";
         $acc->email = $user->getEmail() ? $user->getEmail() : "";
         $acc->account_type = 'USER';
-        $acc->status = 'NOT_VERIFIEDs';
+        $acc->status = 'NOT_VERIFIED';
         $acc->token = $token;
         $acc->save();
+
       } else {
+        $acc->code = $this->generateCode();
+        $acc->username = $user->getEmail() ? $user->getEmail() : "";
+        $acc->email = $user->getEmail() ? $user->getEmail() : "";
+        $acc->account_type = 'USER';
+        $acc->status = 'NOT_VERIFIED';
         $acc->token = $token;
         $acc->save();
+      }
+
+      if($account && sizeof($account) > 0){
+        // update profile
+        if($acc && $acc->id && $user->getAvatar()){
+          AccountProfile::where('account_id', '=', $acc->id)->update(array(
+            'url'        => $user->getAvatar(),
+            'updated_at' => Carbon::now()
+          ));
+        }
+      }else{
+        // create new profile
+        if($acc && $acc->id && $user->getAvatar()){
+          AccountProfile::insert(array(
+            'account_id' => $acc->id,
+            'url'        => $user->getAvatar(),
+            'created_at' => Carbon::now()
+          ));
+        }
+
+
+        // add names on the profile
+        if($acc && $acc->id && $user->getName()){
+          $name = $user->getName();
+          $nameExploded = explode(" ", $name);
+          $firstName = "";
+          $i = 0;
+          foreach ($nameExploded as $key => $value) {
+            if($i < (sizeof($nameExploded) - 1) && $i > 0){
+              $firstName = " ".$value;
+            }else if($i == 0){
+              $firstName = $value;
+            }
+            $i++;
+          }
+          $lastName = $nameExploded && sizeof($nameExploded) > 0 ? $nameExploded[sizeof($nameExploded) - 1] : null;
+          AccountInformation::insert(array(
+            'account_id' => $acc->id,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'created_at' => Carbon::now()
+          ));
+        }
+      }
+
+      $social_auth = SocialAuths::firstOrNew(['account_id' => $acc->id, 'type' => $provider]);
+      $token = $user->token;
+      if($social_auth->exists){
+        $social_auth->token = $token;
+        $social_auth->details = json_encode($user);
+        $social_auth->save();
+      } else {
+        $social_auth->account_id = $acc->id;
+        $social_auth->type = $provider;
+        $social_auth->token = $token;
+        $social_auth->email =$user->getEmail() ? $user->getEmail() : "";
+        $social_auth->details = json_encode($user);
+        $social_auth->save();
       }
 
       $user_account = Account::where('id', $acc->id)->get();
@@ -56,6 +124,7 @@ class SocialController extends APIController
         'user' => $user_account,
         'expires' => $user->expiresIn,
         'avatar' => $user->getAvatar(),
+        'name' => $user->getName(),
         'login_type' => 'social_lite',
       ]);
     }
@@ -127,6 +196,7 @@ class SocialController extends APIController
                 $response['login_type'] = 'social_lite';
                 $response['information'] = app('Increment\Account\Http\AccountProfileController')->getProfileUrlByAccountId($result[0]['id']);
                 $response['merchant'] = app('Increment\Imarket\Merchant\Http\MerchantController')->getByParams('account_id', $result[0]['id']);
+                $response['profile'] = app('Increment\Account\Http\AccountProfileController')->getProfileUrlByAccountId($result[0]['id']);
             } else {
                 return response()->json(['user_not_found'], 404);
             }

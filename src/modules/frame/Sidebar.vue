@@ -6,7 +6,8 @@
             <li class="header">
                 <span v-if="menuFlag === true" class="profile-photo"  style="margin-bottom: 25px !important;">
                   <span class="profile-image-holder"  v-if="user.profile">
-                    <img v-bind:src="config.BACKEND_URL + user.profile.url">
+                    <img v-bind:src="config.BACKEND_URL + user.profile.url" v-if="user.login_type === 'local'">
+                    <img v-bind:src="user.profile.url" v-else>
                   </span>
                   <i class="fa fa-user-circle profile-icon" v-else></i>
                   <i class="fas fa-check text-primary profile-status" v-if="user.status === 'VERIFIED'"></i>

@@ -40,6 +40,7 @@
    padding-top:15%;
    padding-right:0%;
    padding-left:0%;
+   width: 100%;
 }
 .banner-container-row {
   padding-left: 30%;

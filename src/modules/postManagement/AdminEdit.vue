@@ -47,14 +47,13 @@
             v-if="!this.isValid && description == ''"
           >Required Field</p>
           <p style="text-align: right; font-size: 12px; color: gray;">Character count: {{character}}</p>
-          <!-- <textarea class="form-control" placeholder="Add more details here" v-model="request.reason" rows="10"> -->
         </div>
         
         <div class="form-group">
           <label for="category"><b>Category</b></label>
           <searchField
             :placeholder="'Select Industry'"
-            :items="returnIndustry"
+            :items="industry"
             :styles="{
               background: 'none',
               color: '#84868B !important',
@@ -131,6 +130,11 @@
         </div>
       </div>
     </div>
+    <errorModal
+    ref="errorModal"
+    :title="'Error Message'"
+    :message="'Please fill in all of the fields.'"
+    />
   </div>
 </template>
 
@@ -147,6 +151,7 @@ import preview from 'src/modules/generic/preview.vue'
 import axios from 'axios'
 import ROUTER from 'src/router'
 import searchField from 'src/modules/generic/searchField.vue'
+import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 export default {
   mounted(){
     if(this.$route.params.parameter === undefined){
@@ -194,7 +199,8 @@ export default {
     roundedSelectBtn,
     roundedBtn,
     preview,
-    searchField
+    searchField,
+    errorModal
   },
   computed: {
     returnIndustry() {
@@ -247,10 +253,8 @@ export default {
               if(channel.includes('GOOGLE_MY_BUSINESS')){
                 this.googleMyBusiness = true
               }
-              this.industry.map((el, ndx) => {
-                if(el.category === el.category){
-                  this.selectedIndex = ndx
-                }
+              JSON.parse(el.category).forEach(el => {
+                this.$refs.searchField.value.push(el)
               })
               this.imagesList = Object.values(JSON.parse(el.url)).map(el => {
                 let temp = {}
@@ -286,18 +290,20 @@ export default {
     storeImages(data) {
       this.imagesList = data
     },
-    onSelect: function (data) {
+    onSelect(data) {
       this.selectedIndustry = data
-      console.log('Pushed')
     },
     save(status) {
-      this.$refs.searchField.returnCategory() // Need a redo here, couples components
+      this.$refs.searchField.returnCategory()
+      let selectIndustry = []
+      this.selectedIndustry.forEach(element => {
+        selectIndustry.push({category: element.category, id: element.id})
+      })
       if(this.validate()) {
         $('#loading').css({'display': 'block'})
         axios.post(this.config.BACKEND_URL + '/file/upload?token=' + AUTH.tokenData.token, this.file).then(response => {
           $('#loading').css({'display': 'none'})
           $('#loading').css({'display': 'block'})
-          console.log('IMAGE HERE: ', response)
           let channels = []
           this.facebook ? channels.push('FACEBOOK') : null
           this.googleMyBusiness ? channels.push('GOOGLE_MY_BUSINESS') : ''
@@ -310,11 +316,13 @@ export default {
             status: status,
             channels: JSON.stringify(channels),
             parent: null,
-            category: JSON.stringify(this.selectedIndustry)
+            category: JSON.stringify(selectIndustry)
           }
+          console.log('[parameters]', parameter)
           this.isClearing = true
           this.APIRequest('post/create', parameter).then(response => {
             $('#loading').css({'display': 'none'})
+            console.log('[response]', response)
             if(response.error === null){
               this.title = ''
               this.description = ''
@@ -325,11 +333,12 @@ export default {
               this.isClearing = false
               this.imagesList = []
             }
-            alert('Posted')
           })
         }).catch(() => {
           alert('Error')
           $('#loading').css({'display': 'none'})
+          this.$refs.errorModal.show()
+          return false
         })
         ROUTER.push(`/${AUTH.user.type.toLowerCase()}/post_management`)
       }
@@ -337,14 +346,26 @@ export default {
     draft() {
     },
     validate() {
-      if(this.selectedIndustry === '' && this.selectedIndustry === null && this.selectedIndustry === undefined) {
+      if(this.selectedIndustry.length <= 0 && this.title === '' && this.title === null && this.title === undefined && this.description === '' && this.description === null && this.description === undefined){
+        this.$refs.errorModal.show()
+        return false
+      }
+      if(this.facebook === false && this.linkedin === false && this.googleMyBusiness === false){
         this.isValid = false
+        this.$refs.errorModal.show()
+        return false
+      }
+      if(this.selectedIndustry.length <= 0) {
+        this.isValid = false
+        this.$refs.errorModal.show()
         return false
       }if(this.title === '' && this.title === null && this.title === undefined) {
         this.isValid = false
+        this.$refs.errorModal.show()
         return false
       }if(this.description === '' && this.description === null && this.description === undefined) {
         this.isValid = false
+        this.$refs.errorModal.show()
         return false
       }
       return true
@@ -372,25 +393,21 @@ export default {
 .imports{
   margin-top: 10%;
 }
-
 // .form-control{
 //   margin-bottom: 3%;
 // }
-
 .Row {
   display: table;
 }
 .Column {
   display: table-cell;
 }
-
 .card {
   outline-color: white;
   border-color: white;
   margin-top: 3%;
   margin-bottom: 3%;
 }
-
 .container {
   padding: 20px 16px;
   border: 1px solid $warning;
@@ -400,7 +417,6 @@ export default {
   word-break: break-word;
   color: white;
 }
-
 .holder{
   width: 96%;
   margin-left: 2%;
@@ -454,7 +470,6 @@ textarea{
 .imageContainer:hover .middle {
   opacity: 1;
 }
-
 .imageContainer:hover .ImageLabel {
   opacity: 1;
   position: absolute;

@@ -148,6 +148,13 @@ export default{
       tokenRequired: true
     }
   }, {
+    path: '/:user/post_management/content_edit/:parameter?',
+    name: 'post_management',
+    component: resolve => require(['src/modules/postManagement/ContentExpert.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
     path: '/:user/checkout',
     name: 'payment_checkout',
     component: resolve => require(['src/modules/payments/checkout.vue'], resolve),

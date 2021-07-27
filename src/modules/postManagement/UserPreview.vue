@@ -39,21 +39,17 @@
   -o-transition: opacity 0.3s linear, right 0.3s ease-out;
   transition: opacity 0.3s linear, right 0.3s ease-out;
 }
-
 .bg-primary{
   background: white !important;
 }
-
 .modal-body{
   background: white !important;
   margin-top: -1%;
 }
-
 .modal.content{
   overflow-y: hidden;
   height: 100vh !important;
 }
-
 </style>
 <script>
 import AUTH from 'src/services/auth'
