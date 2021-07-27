@@ -90,15 +90,39 @@ class PostController extends APIController
         'parent' => null,
         'description' => $data['description'],
         'channels' => $data['channels'],
-        'url' => $data['url'],
+        // 'url' => $data['url'],
         'account_id' => $data['account_id'],
         'status' => $data['status'],
         'updated_at' => Carbon::now()
       ));
-      PostTarget::where('post_id', '=', $id[0]['id'])->update(array(
-        'payload_value' => $data['category'],
+      if($data['category'] != null){
+        PostTarget::where('post_id', '=', $id[0]['id'])->update(array(
+          'payload_value' => $data['category'],
+          'updated_at' => Carbon::now()
+        ));
+      }
+      $this->response['data'] = true;
+      return $this->response();
+    }
+
+    public function updateExpert(Request $request){
+      $data = $request->all();
+      $id = Post::where('code', '=', $data['code'])->get('id');
+      Post::where('code', '=', $data['code'])->update(array(
+        'title' => $data['title'],
+        'parent' => null,
+        'description' => $data['description'],
+        'channels' => $data['channels'],
+        'account_id' => $data['account_id'],
+        'status' => $data['status'],
         'updated_at' => Carbon::now()
       ));
+      if($data['category'] != null){
+        PostTarget::where('post_id', '=', $id[0]['id'])->update(array(
+          'payload_value' => $data['category'],
+          'updated_at' => Carbon::now()
+        ));
+      }
       $this->response['data'] = true;
       return $this->response();
     }

@@ -63,6 +63,7 @@ import COLORS from 'src/assets/style/colors.js'
 import CONFIG from 'src/config.js'
 import review from './UserPreview.vue'
 import AUTH from 'src/services/auth'
+import ROUTER from 'src/router'
 import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 export default {
   mounted(){
@@ -133,9 +134,8 @@ export default {
           title: this.title,
           description: this.description,
           // url: null,
-          // url: JSON.stringify(response.data.data),
           account_id: this.user.userID,
-          status: status,
+          status: this.selectedItem.status,
           channels: JSON.stringify(channels),
           category: null
         }
@@ -144,19 +144,11 @@ export default {
         this.APIRequest('post/update', parameter).then(response => {
           $('#loading').css({'display': 'none'})
           console.log('[response]', response)
-          if(response.error === null){
-            this.title = ''
-            this.description = ''
-            this.selectedIndustry = null
-            this.facebook = false
-            this.googleMyBusiness = false
-            this.linkedin = false
-            this.isClearing = false
-            this.imagesList = []
+          if(response.data === true){
+            ROUTER.push('/post_management')
           }
         })
       }
-      console.log('[channels]', this.channels, this.data.title, this.data.description)
     },
     validate() {
       if(this.title === '' && this.title === null && this.title === undefined && this.description === '' && this.description === null && this.description === undefined){

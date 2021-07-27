@@ -299,11 +299,9 @@ export default {
           title: this.title,
           description: this.description,
           // url: null,
-          // url: JSON.stringify(response.data.data),
           account_id: this.user.userID,
           status: status,
           channels: JSON.stringify(channels),
-          // parent: null,
           category: JSON.stringify(selectIndustry)
         }
         console.log('[parameters]', parameter)
@@ -311,15 +309,8 @@ export default {
         this.APIRequest('post/update', parameter).then(response => {
           $('#loading').css({'display': 'none'})
           console.log('[response]', response)
-          if(response.error === null){
-            this.title = ''
-            this.description = ''
-            this.selectedIndustry = null
-            this.facebook = false
-            this.googleMyBusiness = false
-            this.linkedin = false
-            this.isClearing = false
-            this.imagesList = []
+          if(response.data === true){
+            ROUTER.push('/post_management')
           }
         })
       }
@@ -371,13 +362,13 @@ export default {
               this.isClearing = false
               this.imagesList = []
             }
+            ROUTER.push('/post_management')
           })
         }).catch(() => {
           $('#loading').css({'display': 'none'})
           this.$refs.errorModal.show()
           return false
         })
-        ROUTER.push(`/post_management`)
       }
     },
     draft() {

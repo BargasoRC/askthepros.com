@@ -126,6 +126,7 @@ Route::post($route . '/verify_token','SocialController@checkToken');
 $route = env('PACKAGE_ROUTE', '').'/post';
 Route::post($route . '/create', 'PostController@create');
 Route::post($route . '/update', 'PostController@update');
+Route::post($route . '/update_expert', 'PostController@updateExpert');
 Route::post($route . '/retrieve', 'PostController@retrieve');
 Route::post($route . '/retrieve_by_user', 'PostController@retrieveByUser');
 Route::post($route . '/retrieve_by_id', 'PostController@retrieveById');
