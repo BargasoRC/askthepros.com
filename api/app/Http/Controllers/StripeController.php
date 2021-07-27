@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\StripeWebhooks as Stripe;
+use Increment\Imarket\Merchant\Models\Merchant;
 use Carbon\Carbon;
 class StripeController extends APIController
 {
@@ -72,6 +73,13 @@ class StripeController extends APIController
           'start_date' => Carbon::now(),
           'end_date'   => Carbon::now()->addMonths($data['plan']['months']),
           'status'     => 'paid'
+        ));
+
+        Merchant::insert(array(
+          'account_id' => $data['account_id'],
+          'addition_informations' => json_encode(array(
+            'industry' => $data['plan']['category']
+          ))
         ));
       }
 

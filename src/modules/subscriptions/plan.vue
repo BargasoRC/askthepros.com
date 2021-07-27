@@ -34,7 +34,7 @@
           }"
         />
 
-        <roundedBtn 
+        <!-- <roundedBtn 
           :onClick="() => {
             // change plan
           }"
@@ -45,7 +45,7 @@
             backgroundColor: colors.darkPrimary,
             color: 'white'
           }"
-        />
+        /> -->
 
         <roundedBtn 
           :onClick="() => {

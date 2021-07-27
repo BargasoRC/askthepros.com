@@ -190,6 +190,7 @@ export default {
           this.APIRequest('stripe_webhooks/charge_customer', parameter).then(response => {
             $('#loading').css({'display': 'none'})
             if(response.data){
+              AUTH.checkAuthentication()
               this.redirect('/subscriptions')
             }
           })
