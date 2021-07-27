@@ -443,7 +443,7 @@ export default {
         this.prevMenu = index
       }
       if(this.menu[index].subMenu === null){
-        ROUTER.push(`/${this.user.type.toLowerCase()}/` + this.menu[this.prevMenu].path)
+        ROUTER.push(`/` + this.menu[this.prevMenu].path)
         $('.navbar-collapse').collapse('hide')
       }
     },
@@ -454,7 +454,7 @@ export default {
         this.prevMenu = index
       }
       if(this.menuOff[index].subMenu === null){
-        ROUTER.push(`/${this.user.type.toLowerCase()}/` + this.menuOff[this.prevMenu].path)
+        ROUTER.push(`/` + this.menuOff[this.prevMenu].path)
         $('.navbar-collapse').collapse('hide')
       }
     },
@@ -479,7 +479,7 @@ export default {
           this.subPrevMenu = subIndex
         }
       }
-      ROUTER.push(`/${this.user.type.toLowerCase()}/` + this.menu[this.prevMenu].subMenu[this.subPrevMenu].path)
+      ROUTER.push(`/` + this.menu[this.prevMenu].subMenu[this.subPrevMenu].path)
       $('.navbar-collapse').collapse('hide')
     },
     changeToggleSidebarIcon(){

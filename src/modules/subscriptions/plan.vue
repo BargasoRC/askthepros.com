@@ -1,12 +1,13 @@
 <template>
   <div class="container-fluid">
-    <div class="mt-5">
+    <div style="margin-top: 25px;">
       <h5> Subscriptions </h5>
     </div>
-    <div class="mt-2">
-      <p style="margin-top: 0px; font-size: 1rem; color: grey">You have no active subscriptions to display. Select your membership now to get better experience with automated media posting.</p>
+    <div class="mt-4">
+      <p style="margin-top: 0px; font-size: 1rem; color: grey" v-if="plan === null">You have no active subscriptions to display. Select your membership now to get better experience with automated media posting.</p>
+      <p style="margin-top: 0px; font-size: 1rem; color: grey" v-else>Your account is active.</p>
     </div>
-    <div class="col-md-12 mt-5">
+    <div class="col-md-12 mt-5" v-if="plan !== null">
       <div class="pricing col-sm-3 p-0 pb-5">
         <div v-for="(item, index) in industry" :key="index">
           <div v-if="user && user.merchant && user.merchant.addition_informations.industry == item.category"> 
@@ -16,15 +17,6 @@
             </div>
           </div>
         </div>
-        <roundedBtn
-            :onClick="() => { redirect('checkout')}"
-            :text="'Subscribe'"
-            :styles="{
-              backgroundColor: '#01004E',
-              color: 'white', 
-              marginTop: '20px'
-            }"
-          />
 
         <roundedBtn 
           :onClick="() => { redirect('checkout')}"
@@ -36,12 +28,33 @@
       </div>
     </div>
 
-    <div class="col-md-12" style="margin-bottom: 50px;">
+    <div class="subscription-holder" v-if="plan === null">
+      <div v-for="(item, index) in industry" :key="index" class="subscription-item">
+        <div>
+          <div class="layer1">
+            <h6 class="text-primary">{{item.category}}</h6>
+            <p> {{item.payload_value}} USD / Month</p>
+
+            <roundedBtn
+              :onClick="() => { redirect('/checkout/' + item.category.toLowerCase().replace(' ', '_'))}"
+              :text="'Subscribe'"
+              :styles="{
+                backgroundColor: '#01004E',
+                color: 'white'
+              }"
+            />
+          </div>
+        </div>
+      </div>
+      
+    </div>
+
+    <div class="col-md-12" style="margin-bottom: 50px;" v-if="plan !== null">
       <PaymentMethods />
     </div>
 
 
-    <div class="col-md-12" style="margin-bottom: 100px;">
+    <div class="col-md-12" style="margin-bottom: 100px;" v-if="plan !== null">
       <UserPayment />
     </div>
 
@@ -57,16 +70,13 @@ import AUTH from 'src/services/auth'
 import global from 'src/helpers/global'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 export default {
+  mounted(){
+    this.retrieve()
+  },
   data() {
     return {
-      user: AUTH.user
-    }
-  },
-  mounted(){
-  },
-  computed: {
-    industry: function () {
-      return global.industry
+      user: AUTH.user,
+      industry: []
     }
   },
   components: {
@@ -76,12 +86,38 @@ export default {
     PaymentMethods,
     roundedBtn
   },
+  props: ['plan'],
   methods: {
     redirect(parameter){
       this.$router.push(parameter)
     },
     test(parameter){
       console.log(parameter)
+    },
+    retrieve(){
+      if(this.plan !== null){
+        return
+      }
+      let parameter = {
+        condition: [{
+          value: 'subscriptions',
+          clause: '=',
+          column: 'payload'
+        }
+        ]
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('payloads/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data.length > 0) {
+          this.industry = response.data
+        }else{
+          this.industry = []
+        }
+      }).catch(error => {
+        $('#loading').css({'display': 'none'})
+        error
+      })
     }
   }
 }
@@ -167,6 +203,25 @@ img {
 
 hr {
   background-color: $text;
+}
+
+.text-primary{
+  color: $primary !important;
+}
+
+.subscription-holder{
+  width: 100%;
+  float: left;
+  margin-top:25px;
+}
+
+.subscription-item{
+  width: 24%;
+  margin-right: 1%;
+  float: left;
+  padding: 15px;
+  border-radius: 5px;
+  border: solid 1px #ddd;
 }
 
 </style>

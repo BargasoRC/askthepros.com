@@ -123,10 +123,10 @@ export default {
   },
   methods: {
     connectMedia(){
-      this.$router.push('/user/channels')
+      this.$router.push('/channels')
     },
     automationSettings(){
-      this.$router.push('/user/channels/automation')
+      this.$router.push('/channels/automation')
     },
     charCount(){
       this.count = this.brand.length
