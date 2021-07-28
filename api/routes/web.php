@@ -198,6 +198,14 @@ Route::post($route.'retrieve', $controller."retrieve");
 Route::post($route.'delete', $controller."delete");
 Route::get($route.'test', $controller."test");
 
+$route = env('PACKAGE_ROUTE', '').'/industry/';
+$controller = 'IndustryController@';
+Route::post($route.'create', $controller."create");
+Route::post($route.'update', $controller."update");
+Route::post($route.'retrieve', $controller."retrieve");
+Route::post($route.'delete', $controller."delete");
+Route::get($route.'test', $controller."test");
+
 
 $route = env('PACKAGE_ROUTE', '').'/stripe_webhooks/';
 $controller = 'StripeController@';

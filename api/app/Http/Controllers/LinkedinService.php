@@ -8,6 +8,7 @@ class LinkedinService extends Controller
 {
     //
     protected $url = '';
+    protected $headers = [];
 
     function __construct($url) {
         $this->url = $url;
@@ -29,7 +30,10 @@ class LinkedinService extends Controller
                 "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
             }
         }';
-        $curl = new CurlController($token, 'Content-Type: application/json');
+        $this->headers[] = 'X-Restli-Protocol-Version: 2.0.0';
+        $this->headers[] = 'Authorization: Bearer ' . $token;
+        $this->headers[] = 'Content-Type: application/json';
+        $curl = new CurlController($this->headers);
 
         $result = $curl->postRequest($this->url, $body);
 
@@ -53,7 +57,10 @@ class LinkedinService extends Controller
                ]
             }
         }';
-        $curl = new CurlController($token, 'Content-Type: application/json');
+        $this->headers[] = 'X-Restli-Protocol-Version: 2.0.0';
+        $this->headers[] = 'Authorization: Bearer ' . $token;
+        $this->headers[] = 'Content-Type: application/json';
+        $curl = new CurlController($this->headers);
 
         $result = $curl->postRequest($this->url, $body);
 
@@ -87,7 +94,10 @@ class LinkedinService extends Controller
                 "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
             }
         }';
-        $curl = new CurlController($token, 'Content-Type: application/json');
+        $this->headers[] = 'X-Restli-Protocol-Version: 2.0.0';
+        $this->headers[] = 'Authorization: Bearer ' . $token;
+        $this->headers[] = 'Content-Type: application/json';
+        $curl = new CurlController($this->headers);
 
         $result = $curl->postRequest($this->url, $body);
 
@@ -95,13 +105,19 @@ class LinkedinService extends Controller
     }
 
     public function uploadImage($token, $image) {
-        $curl = new CurlController($token, 'Connection: Keep-Alive');
+        $this->headers[] = 'X-Restli-Protocol-Version: 2.0.0';
+        $this->headers[] = 'Authorization: Bearer ' . $token;
+        $this->headers[] = 'Content-Type: application/json';
+        $this->headers[]= 'Connection: Keep-Alive';
+        $curl = new CurlController($this->headers);
         $result = $curl->imageUpload($this->url, $image);
         return $result;
     }
 
     public function checkUploadStatus($token) {
-        $curl = new CurlController($token, 'Content-Type: application/json');
+        $this->headers[] = 'X-Restli-Protocol-Version: 2.0.0';
+        $this->headers[] = 'Authorization: Bearer ' . $token;
+        $this->headers[] = 'Content-Type: application/json';
         $result = $curl->getRequest($this->url);
         return $result;
     }
