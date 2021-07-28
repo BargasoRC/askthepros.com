@@ -1,50 +1,69 @@
 <template>
-  <div class="container-fluid " >
-    <div class="row flex-column-reverse flex-md-row mb-3">
-      <div class="col-sm-8 col-sm-pull-4">
-        <Profile/>
-        <Address/>
-        <Account/>
-        <CPass/>
-      </div>
-      <div class="col-sm-4 text-center mb-5 col-sm-push-8">
-        <h3>Profile picture</h3>
-        <div class="col-sm-12 mt-3" v-if="user.login_type === 'local'">
-          <i class="fas fa-user-circle" aria-hidden="true" :style="{
-            fontSize: '150px',
-            color: '#01009A'
-          }" v-if="!returnProfile"></i>
-          <img :src="config.BACKEND_URL + returnProfile.url" v-else :style="{
-            width: '170px',
-            height: '170px',
-            borderRadius: '50%'
-          }" />
+  <div class="container-fluid">
+    <div class="row flex-column-reverse">
+      <div class="col-sm-pull-4">
+        <div class="my-title mb-5">
+          <h3>Address</h3>
         </div>
-        <div v-else>
-          <img
-            v-bind:src="user.profile.url"
-            v-if="user.profile"
-            :style="{
-            width: '170px',
-            height: '170px',
-            borderRadius: '50%'
-          }">
-          <i class="fas fa-user-circle" aria-hidden="true" :style="{
-            fontSize: '150px',
-            color: '#01009A'
-          }" v-else></i>
-        </div>
-        <div v-if="user.login_type === 'local'">
-          <div class="mt-4">
-            <roundedBtn :icon="'fas fa-sign-in-alt'" :text="'Change Profile Picture'" :styles="{
-              backgroundColor: '#01004E',
-              color: 'white',
-            }" :onClick="addImage" />
 
-            <input type="file" id="Image" accept="images/*" @change="setUpFileUpload($event)">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-md-6">
+                <p>Route</p>
+                <roundedInput :type="'text'" :placeholder="'Enter your route here'"
+                  :class="!isValidProfile && !route ? 'mb-0 ' : ' SettingsField'" :styles="{
+                            border: !isValidProfile && !route ? '1px solid red !important' : 'none',
+                          }" v-model="route" class="input-style" />
+
+              </div>
+
+              <div class="col-md-6">
+                <p>City</p>
+                <roundedInput :type="'text'" :placeholder="'Enter your city here'"
+                  :class="!isValidProfile && !city ? 'mb-0 ' : ' SettingsField'" :styles="{
+                          border: !isValidProfile && !city ? '1px solid red !important' : 'none',
+                        }" v-model="city" class="input-style" />
+
+              </div>
+            </div>
+            <div class="row">
+              <div class=" col-md-6">
+                <p>Region</p>
+                <roundedInput :type="'text'" :placeholder="'Enter your region here'"
+                  :class="!isValidProfile && !region ? 'mb-0 ' : ' SettingsField'" :styles="{
+                            border: !isValidProfile && !region ? '1px solid red !important' : 'none',
+                          }" v-model="region" class="input-style" />
+
+              </div>
+              <div class="col-md-6">
+                <p>Country</p>
+                <roundedInput :type="'text'" :placeholder="'Enter your country here'"
+                  :class="!isValidProfile && !country ? 'mb-0 ' : ' SettingsField'" :styles="{
+                          border: !isValidProfile && !country ? '1px solid red !important' : 'none',
+                        }" v-model="country" class="input-style" />
+
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <p>Postal/Zip Code</p>
+                <roundedInput :type="'text'" :placeholder="'Enter your postal/zip code here'"
+                  :class="!isValidProfile && !postalZipCode ? 'mb-0 ' : ' SettingsField'" :styles="{
+                            border: !isValidProfile && !postalZipCode ? '1px solid red !important' : 'none',
+                          }" v-model="postalZipCode" class="input-style" />
+
+              </div>
+            </div>
           </div>
-
         </div>
+
+        <roundedBtn :onClick="update_account" :icon="'fas fa-sign-in-alt'" :text="'Update'" :styles="{
+          backgroundColor: '#01004E',
+          color: 'white'
+        }" style="margin-bottom: 5%;" />
+
       </div>
     </div>
   </div>
@@ -60,10 +79,6 @@ import axios from 'axios'
 import $ from 'jquery'
 import global from 'src/helpers/global'
 import ROUTER from 'src/router'
-import Profile from 'src/modules/account/components/profile.vue'
-import Address from 'src/modules/account/components/address.vue'
-import Account from 'src/modules/account/components/account.vue'
-import CPass from 'src/modules/account/components/cpass.vue'
 export default {
   data() {
     return {
@@ -110,11 +125,7 @@ export default {
   components: {
     dialogueBtn,
     roundedInput,
-    roundedBtn,
-    Profile,
-    Address,
-    Account,
-    CPass
+    roundedBtn
   },
   computed: {
     returnProfile() {
