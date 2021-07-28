@@ -198,7 +198,7 @@ export default {
       }
     },
     newPost() {
-      this.$router.push(`/${this.user.type.toLowerCase()}/post_management`)
+      this.$router.push('/post_management/content_edit')
     },
     retrievePosts() {
       let parameter = {
@@ -225,7 +225,7 @@ export default {
       }, 100)
     },
     edit(code) {
-      ROUTER.push('/admin/post_management/content_edit/' + code)
+      ROUTER.push('/post_management/content_edit/' + code)
     },
     showDeleteConfirmation(id){
       console.log({

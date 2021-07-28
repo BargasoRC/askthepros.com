@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Plan;
+use App\PaymentMethod;
+use App\Billing;
 use Carbon\Carbon;
 class PlanController extends APIController
 {
@@ -25,6 +27,43 @@ class PlanController extends APIController
     return $this->response();
   }
 
+  public function cancelPlan(Request $request){
+    $data = $request->all();
+    $billing = Billing::where('details', 'like', '%"plan_id":'.$data['id'].'}%')->orderBy('created_at', 'desc')->limit(1)->get();
+    if(sizeof($billing) > 0){
+      $endDate = $billing[0]['end_date'];
+
+      Plan::where('id', '=', $data['id'])->update(array(
+        'updated_at' => Carbon::now(),
+        'end_date'   => $endDate
+      ));
+
+      $this->response['data'] = $data['id'];
+    }
+    return $this->response();
+  }
+
+
+
+  public function retrieveWithPaymentsAndHistory(Request $request) {
+    $data = $request->all();
+    $this->model = new Plan();
+    $this->retrieveDB($data);
+    $plan = $this->response['data'] ? $this->response['data'][0] : null;
+
+
+    $this->model = new PaymentMethod();
+    $this->retrieveDB($data);
+    $paymentMethod = $this->response['data'] ? $this->response['data'][0] : null;
+
+    $this->response['data'] = array(
+      'plan' => $plan,
+      'payment_method' => $paymentMethod
+    );
+
+    return $this->response();
+  }
+
   public function create(Request $request){
     $data = $request->all();
     $data['code'] = $this->generateCode();
@@ -38,6 +77,19 @@ class PlanController extends APIController
     	$this->response['data'] = null;
     	$this->response['error'] = 'Plan already existed';
     	return $this->response();
+    }
+  }
+
+  public function createByParams($data){
+    $data['code'] = $this->generateCode();
+    if($this->checkIfExist($data) == false){
+      $this->model = new Plan();
+      $data['start_date'] = Carbon::now();
+      $data['end_date'] = null;
+      $this->insertDB($data);
+      return $this->response['data'];     
+    }else{
+      return null;
     }
   }
 
@@ -79,7 +131,7 @@ class PlanController extends APIController
   }
 
   public function checkIfExist($data){
-  	$result = Plan::where('merchant_id', '=', $data['merchant_id'])->get();
+  	$result = Plan::where('account_id', '=', $data['account_id'])->get();
   	return sizeof($result) > 0 ? true : false;
   }
 

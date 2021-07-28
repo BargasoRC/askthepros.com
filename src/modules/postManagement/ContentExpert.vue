@@ -277,7 +277,35 @@ export default {
       })
     },
     update(status){
-      console.log('[status]', status)
+      this.$refs.searchField.returnCategory()
+      let selectIndustry = []
+      this.selectedIndustry.forEach(element => {
+        selectIndustry.push({category: element.category, id: element.id})
+      })
+      if(this.validate()){
+        let channels = []
+        this.facebook ? channels.push('FACEBOOK') : null
+        this.googleMyBusiness ? channels.push('GOOGLE_MY_BUSINESS') : ''
+        this.linkedin ? channels.push('LINKEDIN') : ''
+        let parameter = {
+          code: this.$route.params.parameter,
+          title: this.title,
+          description: this.description,
+          account_id: this.user.userID,
+          status: status,
+          channels: JSON.stringify(channels),
+          category: JSON.stringify(selectIndustry)
+        }
+        console.log('[parameters]', parameter)
+        this.isClearing = true
+        this.APIRequest('post/update_expert', parameter).then(response => {
+          $('#loading').css({'display': 'none'})
+          console.log('[response]', response)
+          if(response.data === true){
+            ROUTER.push('/dashboard')
+          }
+        })
+      }
     },
     // Adding a Post
     storeImages(data) {
