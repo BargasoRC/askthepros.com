@@ -160,37 +160,6 @@ export default {
     this.retrieveInformation()
   },
   methods: {
-    checkPassword(evet){
-      if(this.oPassword === '') {
-        this.isValidPassword = false
-        this.passwordRequirements = 'Required Field!'
-        return
-      }
-      let parameter = {
-        id: this.user.userID,
-        password: this.oPassword
-      }
-      $('#loading').css({'display': 'block'})
-      this.APIRequest('accounts_info/check_password', parameter, response => {
-        $('#loading').css({'display': 'none'})
-        if(response.data === true) {
-          this.passwordVerified = true
-          this.passwordRequirements = ''
-          this.oPassword = ''
-          this.password = ''
-          this.confirmPassword = ''
-          this.isValidPassword = true
-        }else {
-          this.passwordVerified = false
-          this.oPassword = ''
-          this.passwordRequirements = 'Invalid Password!'
-          this.isValidPassword = false
-        }
-      }, error => {
-        $('#loading').css({'display': 'none'})
-        console.log('password erro:', error)
-      })
-    },
     retrieveInformation() {
       let parameter = {
         account_id: this.user.userID
@@ -439,8 +408,8 @@ export default {
       })
     },
     validate() {
-      if(this.firstname !== '' || this.lastname !== '' || this.businessname !== '' || this.contactnumber !== '' || this.route !== '' || this.region !== '' || this.city !== '' || this.postalZipCode !== '' || this.city !== '' || this.country !== '') {
-        if(!this.firstname || !this.lastname || !this.businessname || !this.contactnumber || !this.route || !this.region || !this.city || !this.postalZipCode || !this.city || !this.country) {
+      if(this.firstname !== '' || this.lastname !== '' || this.businessname !== '' || this.contactnumber !== '') {
+        if(!global.validateInput(this.firstname) || !global.validateInput(this.lastname) || !global.validateInput(this.businessname) || !global.validateNumber(this.contactnumber)) {
           this.isValidProfile = false
           this.canUpdateProfile = false
         }else{
@@ -451,35 +420,7 @@ export default {
         this.canUpdateProfile = false
       }
       console.log('update profile ', this.isValidProfile)
-      if(this.username !== '' || this.email !== '') {
-        if(!this.username || !this.email || this.email === this.user.email) {
-          this.isValidAccount = false
-          this.canUpdateAccount = false
-        }else {
-          this.isValidAccount = true
-          this.canUpdateAccount = true
-        }
-      }else {
-        this.canUpdateAccount = false
-      }
-      if(this.password !== '' || this.confirmPassword !== '') {
-        if(!this.password || !this.confirmPassword) {
-          this.isValidPassword = false
-          this.canUpdatePassword = false
-        }else {
-          if(!global.validatePassword(this.password)){
-            this.isValidPassword = false
-            this.canUpdatePassword = false
-            this.passwordRequirements = 'Password should be minimum of 8 and maximum of 16 and should contain at least one digit, lower case, upper case and special character.'
-          }else{
-            this.canUpdatePassword = true
-            this.isValidPassword = true
-          }
-        }
-      }else {
-        this.canUpdatePassword = false
-      }
-      if(!this.isValidProfile && !this.isValidAccount && !this.isValidPassword) {
+      if(!this.isValidProfile) {
         return false
       }else {
         return true

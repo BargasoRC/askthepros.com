@@ -71,5 +71,9 @@ export default{
   validatePassword(password) {
     const re = /^(?=.*[0-9])(?=.*[- ?!@#$%^&*\/\\])(?=.*[A-Z])(?=.*[a-z])[a-zA-Z0-9- ?!@#$%^&*\/\\]{8,16}$/
     return re.test(password)
+  },
+  validateField(input){
+    const re = /^[A-Za-z.]{1,30}\s\d/
+    return re.test(input)
   }
 }
