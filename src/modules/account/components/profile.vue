@@ -1,50 +1,58 @@
 <template>
-  <div class="container-fluid " >
-    <div class="row flex-column-reverse flex-md-row mb-3">
-      <div class="col-sm-8 col-sm-pull-4">
-        <Profile/>
-        <Address/>
-        <Account/>
-        <CPass/>
-      </div>
-      <div class="col-sm-4 text-center mb-5 col-sm-push-8">
-        <h3>Profile picture</h3>
-        <div class="col-sm-12 mt-3" v-if="user.login_type === 'local'">
-          <i class="fas fa-user-circle" aria-hidden="true" :style="{
-            fontSize: '150px',
-            color: '#01009A'
-          }" v-if="!returnProfile"></i>
-          <img :src="config.BACKEND_URL + returnProfile.url" v-else :style="{
-            width: '170px',
-            height: '170px',
-            borderRadius: '50%'
-          }" />
+  <div class="container-fluid">
+    <div class="row flex-column-reverse ">
+      <div class=" col-sm-pull-4">
+        <div class="my-title">
+          <h3 style="">Profile</h3>
         </div>
-        <div v-else>
-          <img
-            v-bind:src="user.profile.url"
-            v-if="user.profile"
-            :style="{
-            width: '170px',
-            height: '170px',
-            borderRadius: '50%'
-          }">
-          <i class="fas fa-user-circle" aria-hidden="true" :style="{
-            fontSize: '150px',
-            color: '#01009A'
-          }" v-else></i>
-        </div>
-        <div v-if="user.login_type === 'local'">
-          <div class="mt-4">
-            <roundedBtn :icon="'fas fa-sign-in-alt'" :text="'Change Profile Picture'" :styles="{
-              backgroundColor: '#01004E',
-              color: 'white',
-            }" :onClick="addImage" />
+        <div class="my-form row my-row">
+          <div class=" col-sm-12 input-form">
+            <div class="row">
+              <div class="col-md-6">
+                <p>First Name</p>
+                <roundedInput :type="'text'" :placeholder="'Enter your first name here'"
+                  :class="!isValidProfile && !firstname ? 'mb-0 ' : ' SettingsField'" :styles="{
+                        border: !isValidProfile && !firstname ? '1px solid red !important' : 'none',
+                      }" v-model="firstname" class="input-style" />
 
-            <input type="file" id="Image" accept="images/*" @change="setUpFileUpload($event)">
+              </div>
+              <div class="col-md-6">
+                <p>Last Name</p>
+                <roundedInput :type="'text'" :placeholder="'Enter your last name here'"
+                  :class="!isValidProfile && !lastname ? 'mb-0 ' : ' SettingsField'" :styles="{
+                      border: !isValidProfile && !lastname ? '1px solid red !important' : 'none',
+                    }" v-model="lastname" class="input-style" />
+
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <p>Business Name</p>
+                <roundedInput :type="'text'" :placeholder="'Enter your business name here'"
+                  :class="!isValidProfile && !businessname ? 'mb-0 ' : ' SettingsField'" :styles="{
+                    border: !isValidProfile && !businessname ? '1px solid red !important' : 'none',
+                  }" v-model="businessname" class="input-style" />
+
+              </div>
+              <div class="col-md-6">
+                <p>Contact Number</p>
+                <roundedInput :type="'text'" :placeholder="'Enter your contact number here'"
+                  :class="!isValidProfile && !contactnumber ? 'mb-0 ' : ' SettingsField'" :styles="{
+                    border: !isValidProfile && !contactnumber ? '1px solid red !important' : 'none',
+                  }" v-model="contactnumber" class="input-style" />
+
+              </div>
+            </div>
+
           </div>
-
         </div>
+
+        <roundedBtn :onClick="update_account" :icon="'fas fa-sign-in-alt'" :text="'Update'" :styles="{
+          backgroundColor: '#01004E',
+          color: 'white'
+        }" style="margin-bottom: 5%;" />
+
       </div>
     </div>
   </div>
@@ -60,10 +68,6 @@ import axios from 'axios'
 import $ from 'jquery'
 import global from 'src/helpers/global'
 import ROUTER from 'src/router'
-import Profile from 'src/modules/account/components/profile.vue'
-import Address from 'src/modules/account/components/address.vue'
-import Account from 'src/modules/account/components/account.vue'
-import CPass from 'src/modules/account/components/cpass.vue'
 export default {
   data() {
     return {
@@ -110,11 +114,7 @@ export default {
   components: {
     dialogueBtn,
     roundedInput,
-    roundedBtn,
-    Profile,
-    Address,
-    Account,
-    CPass
+    roundedBtn
   },
   computed: {
     returnProfile() {
@@ -532,9 +532,7 @@ h3{
   padding-bottom: 1%;
 }
 .my-form{
-  padding-left: 3%;
   padding-top: 3%;
-  margin-left: -3%;
 }
 .input-form{
   background-color: none;
