@@ -69,12 +69,25 @@ class StripeController extends APIController
       $charge = $this->stripe->chargeCustomer($data['email'], $data['source']['id'], $this->customer->id, $data['plan']['total'] * 100, $title);
 
       // save to plan with start and end date
-      $plan = app($this->planController)->createByParams(array(
-        'account_id' => $data['account_id'],
-        'plan'       => $data['plan']['category'],
-        'amount'     => intval($data['plan']['payload_value']),
-        'currency'   => 'USD'
-      ));
+      $plan = app($this->planController)->getByParams('account_id', $data['account_id']);
+      $lastDate = null;
+      if($plan == null){
+        $plan = app($this->planController)->createByParams(array(
+          'account_id' => $data['account_id'],
+          'plan'       => $data['plan']['category'],
+          'amount'     => intval($data['plan']['payload_value']),
+          'currency'   => 'USD'
+        ));        
+      }else{
+        $lastDate = $plan['end_date'] ? Carbon::createFromFormat('Y-m-d H:i:s', $plan['end_date']) : null;
+        app($this->planController)->updateByParams($plan['id'],
+          array(
+            'end_date' => null,
+            'updated_at' => Carbon::now()
+          )
+        );
+      }
+
 
       $paymentMethod = app($this->paymentMethodController)->createByParams(
         array(
@@ -91,6 +104,8 @@ class StripeController extends APIController
       if($plan && $charge && $paymentMethod){
         // create billing
 
+        $startDate = $lastDate ? $lastDate->copy() : Carbon::now();
+        $billingEndDate = $lastDate ? $lastDate->addMonths($data['plan']['months']) : Carbon::now()->addMonths($data['plan']['months']);
         $billing = app($this->billingController)->addToBilling(array(
           'account_id' => $data['account_id'],
           'currency'   => 'USD',
@@ -99,8 +114,8 @@ class StripeController extends APIController
             'plan_id'           => $plan
           )),
           'amount'     => intval($data['plan']['total']),
-          'start_date' => Carbon::now(),
-          'end_date'   => Carbon::now()->addMonths($data['plan']['months']),
+          'start_date' => $startDate,
+          'end_date'   => $billingEndDate,
           'status'     => 'paid'
         ));
 

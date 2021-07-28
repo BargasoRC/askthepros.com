@@ -4,6 +4,17 @@
     <p v-if="errorMessage" class="text-danger">
       <b>Opps!</b> {{errorMessage}}
     </p>
+    <roudedBtn
+      :onClick="() => {
+        this.redirect('/Subscription')
+      }"
+      v-if="selected === null && isLoading === false"
+      :text="'Go back'"
+      :styles="{
+        backgroundColor: '#01004E',
+        color: 'white'
+      }"
+    />
 		<div class="col-sm-7 p-0 mt-3" v-if="selected">
 			<table class="table table-striped table-bordered">
 				<thead>
@@ -43,7 +54,7 @@
     <div class="mt-3">
       <img class="payment" :src="require('src/assets/img/pay_methods.png')" alt="Payment Methods">
     </div>
-    <div class="col-sm-6 p-0 mt-3">
+    <div class="col-sm-6 p-0 mt-3" v-if="selected !== null">
       <div class="mt-3 d-flex justify-content-start">
         <stripe-cc ref="stripe" :data="{
           ...selected,
@@ -84,6 +95,7 @@
 
 <script>
 import roudedBtn from 'src/modules/generic/roundedBtn'
+import ROUTER from 'src/router'
 export default {
   mounted(){
     this.retrieve()
@@ -96,7 +108,8 @@ export default {
       subscriptions: null,
       selected: null,
       months: 1,
-      errorMessage: null
+      errorMessage: null,
+      isLoading: false
     }
   },
   components: {
@@ -104,6 +117,9 @@ export default {
     'stripe-cc': require('modules/payments/Stripe.vue')
   },
   methods: {
+    redirect(route){
+      ROUTER.push(route)
+    },
     choose() {
       this.payment = !this.payment
     },
@@ -119,6 +135,7 @@ export default {
       }
     },
     retrieve(){
+      console.log('test')
       let plan = this.$route.params.plan
       plan = plan.replace('_', ' ')
       let parameter = {
@@ -134,6 +151,7 @@ export default {
         ]
       }
       $('#loading').css({'display': 'block'})
+      this.isLoading = true
       this.APIRequest('payloads/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data.length > 0) {
@@ -141,8 +159,10 @@ export default {
         }else{
           this.selected = null
         }
+        this.isLoading = false
       }).catch(error => {
         $('#loading').css({'display': 'none'})
+        this.isLoading = false
         error
       })
     }

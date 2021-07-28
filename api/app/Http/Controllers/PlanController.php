@@ -29,7 +29,7 @@ class PlanController extends APIController
 
   public function cancelPlan(Request $request){
     $data = $request->all();
-    $billing = Billing::where('details', 'like', '%"plan_id":'.$data['id'].'}%')->orderBy('created_at', 'desc')->limit(1)->get();
+    $billing = Billing::where('account_id', '=', $data['account_id'])->orderBy('end_date', 'desc')->limit(1)->get();
     if(sizeof($billing) > 0){
       $endDate = $billing[0]['end_date'];
 
@@ -128,6 +128,10 @@ class PlanController extends APIController
       }
     }
     return $this->response();
+  }
+
+  public function updateByParams($id, $data){
+    return Plan::where('id', '=', $id)->update($data);
   }
 
   public function checkIfExist($data){
