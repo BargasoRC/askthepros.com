@@ -23,14 +23,15 @@
         :grid="['list']"
       />
     </div>
-    <div class="col-sm-12 col-md-12 col-lg-12 mt-5 p-0 pt-5">
-        <table class="table table-borderless">
+    <div class="col-sm-12 col-md-12 col-lg-12 mt-5 p-0 pt-5" v-if="tableData.length > 0">
+        <table class="table table-striped table-bordered">
+        <!-- <table class="table table-borderless"> -->
         <thead>
           <th v-for="(item, index) in tableHeaders" :key="index">{{item.title}}</th>
         </thead>
         <tbody>
           <tr v-for="(item, index) in tableData" :key="index">
-            <td>{{item.created_at}}</td>
+            <td>{{item.created_at_human}} at {{item.time}}</td>
             <td>{{item.title}}</td>
             <td>{{displayArray(item.channels)}}</td>
             <td class="text-warning" v-if="item.status.toLowerCase() === 'draft'">{{item.status.toUpperCase()}}</td>
@@ -48,14 +49,12 @@
         </tbody>
       </table>
     </div >
-    <div class="row d-flex flex-row">
-      <div class="col d-flex justify-content-end">
-        <p style="font-weight:bold; color:black">Page {{pageNo}} of {{pageTotal}}
-         </p>
-        <i class="fas fa-arrow-left" style="color: #01004E"></i><i class="fas fa-arrow-right" style="color: #01004E
-"></i>  
-      </div>
-    </div>
+    <Pager
+      :pages="numPages"
+      :active="activePage"
+      :limit="limit"
+      v-if="tableData.length > 0"
+    />
     
     <empty v-if="tableData.length <= 0" :title="'No posts available!'" :action="'Keep growing.'"></empty>
     <preview
@@ -126,14 +125,19 @@ import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
 import ROUTER from 'src/router'
 import preview from 'src/modules/postManagement/UserPreview.vue'
+import Pager from 'src/components/increment/generic/pager/Pager.vue'
 import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
 export default {
   data() {
     return {
       user: AUTH.user,
       colors: COLORS,
-      pageNo: 1,
-      pageTotal: 1,
+      limit: 5,
+      offset: 0,
+      numPages: null,
+      activePage: 1,
+      filter: null,
+      sort: null,
       selectedItem: null,
       deleteId: null,
       file: null,
@@ -166,10 +170,14 @@ export default {
     DataTable,
     Confirmation,
     'empty': require('components/increment/generic/empty/Empty.vue'),
-    preview
+    preview,
+    Pager
   },
   created() {
-    this.retrievePosts()
+    this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+  },
+  mounted() {
+    this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
   },
   computed: {
     returnTableData() {
@@ -200,9 +208,29 @@ export default {
     newPost() {
       this.$router.push('/post_management/content_edit')
     },
-    retrievePosts() {
+    retrieve(sort, filter) {
+      if(sort !== null){
+        this.sort = sort
+      }
+      if(filter !== null){
+        this.filter = filter
+      }
+      if(sort === null && this.sort !== null){
+        sort = this.sort
+      }
+      if(filter === null && this.filter !== null){
+        filter = this.filter
+      }
       let parameter = {
-        account_id: this.user.userID
+        condition: [{
+          column: filter.column,
+          value: filter.value + '%',
+          clause: 'like'
+        }],
+        sort: sort,
+        limit: this.limit,
+        account_id: this.user.userID,
+        offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve_by_user', parameter).then(response => {
@@ -210,6 +238,7 @@ export default {
         console.log('RESPONSE: ', response)
         if(response.data.length > 0) {
           this.tableData = response.data
+          this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
         }
       })
     },
@@ -244,7 +273,7 @@ export default {
       this.APIRequest('post/delete', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         console.log('RESPONSE: ', response)
-        this.retrievePosts()
+        this.retrieve()
       })
     }
   }
