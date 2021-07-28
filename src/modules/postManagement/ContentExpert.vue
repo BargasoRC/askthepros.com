@@ -47,14 +47,13 @@
             v-if="!this.isValid && description == ''"
           >Required Field</p>
           <p style="text-align: right; font-size: 12px; color: gray;">Character count: {{character}}</p>
-          <!-- <textarea class="form-control" placeholder="Add more details here" v-model="request.reason" rows="10"> -->
         </div>
-
+        
         <div class="form-group">
           <label for="category"><b>Category</b></label>
           <searchField
-          :placeholder="'Select Industry'"
-            :items="returnIndustry"
+            :placeholder="'Select Industry'"
+            :items="industry"
             :styles="{
               background: 'none',
               color: '#84868B !important',
@@ -69,6 +68,7 @@
               overflow: 'hidden',
               width: 'calc(100% - 30px)'
             }"
+            :selectedIndex="selectedIndex"
             @onSelect="onSelect"
             v-if="!isClearing"
             ref="searchField"
@@ -93,7 +93,7 @@
         <div class="col-sm-12 d-flex justify-content-end mt-4 pt-2">
           <roundedBtn
             class="ml-1 mr-1"
-            :onClick="() => save('DRAFT')"
+            :onClick="() => (status != 'PUBLISH' && status != undefined) ? update('DRAFT') : save('DRAFT')"
             :text="'Save as Draft'"
             :styles="{
               backgroundColor: colors.warning,
@@ -104,50 +104,75 @@
           />
           <roundedBtn
             class="ml-1 mr-1"
-            :onClick="() => save('PUBLISH')"
+            :onClick="() => (status != 'PUBLISH' && status != undefined) ? update('PUBLISH') : save('PUBLISH')"
             :text="'Publish'"
             :styles="{
                 backgroundColor: colors.darkPrimary,
-                outlineColor: colors.darkPrimary,
+                outlineColor: colors.primary,
                 color: 'white',
                 width: '15'
             }"
           />
         </div>
         <div class="col-sm-12 mt-5">
-          <preview :description="returnDescription"></preview>
+          <preview
+          v-if="render"
+          :selected="returnSelected"
+          :files="returnImagesList"
+          :first="status === null ? 'false' : 'true'"
+          />
         </div>
       </div>
     </div>
+    <errorModal
+    ref="errorModal"
+    :title="'Error Message'"
+    :message="'Please fill in all of the fields.'"
+    />
   </div>
 </template>
 
 <script>
 import AUTH from 'src/services/auth'
 import roundedBtn from 'src/modules/generic/roundedBtn'
+import Images from 'src/modules/generic/previewImage.vue'
 import Toggle from 'src/modules/generic/toggleSwitch.vue'
 import COLORS from 'src/assets/style/colors.js'
 import CONFIG from 'src/config.js'
 import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
 import global from 'src/helpers/global'
 import preview from 'src/modules/generic/preview.vue'
-import axios from 'axios'
 import ROUTER from 'src/router'
-import $ from 'jquery'
 import searchField from 'src/modules/generic/searchField.vue'
+import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 export default {
   mounted(){
+    if(this.$route.params.parameter === undefined){
+      this.title = ''
+      this.description = ''
+      this.facebook = false
+      this.linkedin = false
+      this.googleMyBusiness = false
+      this.selectedIndex = null
+      this.status = null
+      this.retrieveBranding()
+    }else{
+      this.retrieveEditPosts(this.$route.params.parameter)
+    }
   },
   data() {
     return {
       user: AUTH.user,
       colors: COLORS,
       config: CONFIG,
+      status: null,
       industry: global.industry,
       selectedIndustry: [],
       global: global,
+      imagesList: [],
       errorMessage: null,
       idImage: null,
+      file: null,
       isValid: true,
       title: '',
       description: '',
@@ -156,15 +181,19 @@ export default {
       linkedin: false,
       isClearing: false,
       character: 0,
-      category: ''
+      selectedIndex: null,
+      selectedItem: null,
+      render: false
     }
   },
   components: {
+    Images,
     Toggle,
     roundedSelectBtn,
     roundedBtn,
     preview,
-    searchField
+    searchField,
+    errorModal
   },
   computed: {
     returnIndustry() {
@@ -172,36 +201,146 @@ export default {
         return el.category
       })
     },
+    returnImagesList() {
+      return this.imagesList
+    },
     returnDescription() {
       return this.description
+    },
+    returnSelected() {
+      this.render = false
+      this.selectedItem = {
+        description: this.description,
+        branding: this.selectedItem.branding
+      }
+      this.render = true
+      return this.selectedItem
     }
   },
   methods: {
-    onSelect: function (data) {
-      this.selectedIndustry.push(data)
-      console.log('Pushed')
+    // EDIT A POST
+    retrieveEditPosts() {
+      let parameter = {
+        edit: true,
+        account_id: this.user.userID,
+        code: this.$route.params.parameter
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('post/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(!response.error) {
+          response.data.filter(el => {
+            if(el.code === this.$route.params.parameter){
+              this.selectedItem = el
+              this.status = el.status
+              this.render = true
+              this.title = el.title
+              this.description = el.description
+              var channel = el.channels
+              if(channel.includes('FACEBOOK')){
+                this.facebook = true
+              }
+              if(channel.includes('LINKEDIN')){
+                this.linkedin = true
+              }
+              if(channel.includes('GOOGLE_MY_BUSINESS')){
+                this.googleMyBusiness = true
+              }
+              JSON.parse(el.category).forEach(el => {
+                this.$refs.searchField.value.push(el)
+              })
+              this.imagesList = Object.values(JSON.parse(el.url)).map(el => {
+                let temp = {}
+                if(this.$route.params.parameter === undefined){
+                  return el
+                }else{
+                  temp['url'] = this.config.BACKEND_URL + el
+                  return temp
+                }
+              })
+            }
+          })
+        }
+      })
+    },
+    retrieveBranding() {
+      this.render = false
+      let parameter = {
+        account_id: this.user.userID
+      }
+      this.APIRequest('brandings/retrieve_by_accountId', parameter).then(response => {
+        this.selectedItem = {}
+        this.selectedItem['branding'] = {
+          details: response.details
+        }
+        this.render = true
+      })
+    },
+    update(status){
+      this.$refs.searchField.returnCategory()
+      let selectIndustry = []
+      this.selectedIndustry.forEach(element => {
+        selectIndustry.push({category: element.category, id: element.id})
+      })
+      if(this.validate()){
+        let channels = []
+        this.facebook ? channels.push('FACEBOOK') : null
+        this.googleMyBusiness ? channels.push('GOOGLE_MY_BUSINESS') : ''
+        this.linkedin ? channels.push('LINKEDIN') : ''
+        let parameter = {
+          code: this.$route.params.parameter,
+          title: this.title,
+          description: this.description,
+          account_id: this.user.userID,
+          status: status,
+          channels: JSON.stringify(channels),
+          category: JSON.stringify(selectIndustry)
+        }
+        console.log('[parameters]', parameter)
+        this.isClearing = true
+        this.APIRequest('post/update_expert', parameter).then(response => {
+          $('#loading').css({'display': 'none'})
+          console.log('[response]', response)
+          if(response.data === true){
+            ROUTER.push('/dashboard')
+          }
+        })
+      }
+    },
+    // Adding a Post
+    storeImages(data) {
+      this.imagesList = data
+    },
+    onSelect(data) {
+      this.selectedIndustry = data
     },
     save(status) {
+      this.$refs.searchField.returnCategory()
+      let selectIndustry = []
+      this.selectedIndustry.forEach(element => {
+        selectIndustry.push({category: element.category, id: element.id})
+      })
       if(this.validate()) {
         $('#loading').css({'display': 'block'})
         let channels = []
         this.facebook ? channels.push('FACEBOOK') : null
         this.googleMyBusiness ? channels.push('GOOGLE_MY_BUSINESS') : ''
         this.linkedin ? channels.push('LINKEDIN') : ''
-        this.$refs.searchField.returnCategory() // Need a redo here, couples components
         let parameter = {
           title: this.title,
           description: this.description,
-          url: ' ',
           account_id: this.user.userID,
           status: status,
           channels: JSON.stringify(channels),
           parent: null,
-          category: JSON.stringify(this.selectedIndustry)
+          url: null,
+          category: JSON.stringify(selectIndustry)
         }
+        console.log('[parameters]', parameter)
         this.isClearing = true
         this.APIRequest('post/create', parameter).then(response => {
           $('#loading').css({'display': 'none'})
+          console.log('[response]', response)
           if(response.error === null){
             this.title = ''
             this.description = ''
@@ -211,30 +350,31 @@ export default {
             this.linkedin = false
             this.isClearing = false
           }
-        }).catch(error => {
-          error
-          this.title = ''
-          this.description = ''
-          this.selectedIndustry = null
-          this.facebook = false
-          this.googleMyBusiness = false
-          this.linkedin = false
-          this.isClearing = false
         })
-        ROUTER.push(`/${this.user.type.toLowerCase()}/dashboard`)
+        ROUTER.push(`/dashboard`)
       }
     },
-    draft() {
-    },
     validate() {
-      if(this.title === '' && this.description === '') {
-        this.isValid = false
+      if(this.selectedIndustry.length <= 0 && this.title === '' && this.title === null && this.title === undefined && this.description === '' && this.description === null && this.description === undefined){
+        this.$refs.errorModal.show()
         return false
-      }if(this.title === '') {
+      }
+      if(this.facebook === false && this.linkedin === false && this.googleMyBusiness === false){
         this.isValid = false
+        this.$refs.errorModal.show()
         return false
-      }if(this.description === '') {
+      }
+      if(this.selectedIndustry.length <= 0) {
         this.isValid = false
+        this.$refs.errorModal.show()
+        return false
+      }if(this.title === '' && this.title === null && this.title === undefined) {
+        this.isValid = false
+        this.$refs.errorModal.show()
+        return false
+      }if(this.description === '' && this.description === null && this.description === undefined) {
+        this.isValid = false
+        this.$refs.errorModal.show()
         return false
       }
       return true
@@ -258,25 +398,21 @@ export default {
 .imports{
   margin-top: 10%;
 }
-
 // .form-control{
 //   margin-bottom: 3%;
 // }
-
 .Row {
   display: table;
 }
 .Column {
   display: table-cell;
 }
-
 .card {
   outline-color: white;
   border-color: white;
   margin-top: 3%;
   margin-bottom: 3%;
 }
-
 .container {
   padding: 20px 16px;
   border: 1px solid $warning;
@@ -286,7 +422,6 @@ export default {
   word-break: break-word;
   color: white;
 }
-
 .holder{
   width: 96%;
   margin-left: 2%;
@@ -340,7 +475,6 @@ textarea{
 .imageContainer:hover .middle {
   opacity: 1;
 }
-
 .imageContainer:hover .ImageLabel {
   opacity: 1;
   position: absolute;

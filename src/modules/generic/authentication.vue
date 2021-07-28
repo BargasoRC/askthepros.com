@@ -36,23 +36,17 @@ export default {
         let url = window.location.href
         let query = url.substring(url.indexOf('?') + 1)
         // $('#loading').css({'display': 'block'})
+        console.log('logging in...')
         this.APIRequest(`social_lite/authenticate/${localStorage.getItem('login_with')}/callback?` + query, {}, response => {
           // $('#loading').css({'display': 'none'})
+          console.log('logged in: ', response)
           localStorage.removeItem('login_with')
           localStorage.setItem('usertoken', response.token)
           AUTH.hash('hide', response.login_type)
           console.log('USER @ Index: ', response.user[0])
           AUTH.setUser(response.user[0])
           AUTH.checkAuthentication()
-          setTimeout(() => {
-            localStorage.removeItem('usertoken')
-            localStorage.removeItem('account_id')
-            localStorage.removeItem('google_code')
-            localStorage.removeItem('google_scope')
-            localStorage.removeItem('xyzABCdefPayhiram')
-            localStorage.clear()
-          }, response.expires)
-          ROUTER.push(`/${response.user[0].account_type.toLowerCase()}/dashboard`)
+          ROUTER.push(`/dashboard`)
         }, error => {
           // $('#loading').css({'display': 'none'})
           localStorage.removeItem('login_with')
@@ -70,9 +64,9 @@ export default {
         }, response => {
           console.log('connect response: ', response)
           localStorage.removeItem('connect_with')
-          ROUTER.push(`/${this.user.type.toLowerCase()}/channels`)
+          ROUTER.push(`/channels`)
         }, error => {
-          ROUTER.push(`/${this.user.type.toLowerCase()}/channels`)
+          ROUTER.push(`/channels`)
           localStorage.removeItem('connect_with')
           console.log('Verifying authentication error! ', error)
         })

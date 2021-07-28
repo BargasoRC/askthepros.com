@@ -3,101 +3,107 @@
     <h3 style="margin-top: 25px;font-weight: bold;color: #272727;font-size: 21px;">Welcome to Dashboard!</h3>
     <p class="subwelcome">Here are the latest update of activities as of today.</p>
 
-    <div class="row" style="justify-content: space-between; display: flex;">
-      <div class="card col-lg-3" v-for="(item, index) in socialMediaBtns" :key="index">
-        <div class="card-body">
-          <h5 class="card-title">{{item.title}}</h5>
-          <p class="card-text" v-html="item.description"></p>
-          <dialogueBtn 
-            :onClick="(event) => connect(item)"
-            :icon="'fas fa-cogs'"
-            :icon_position="'right'"
-            :text="'Connect'"
-            :styles="{
-              backgroundColor: colors.darkPrimary,
-              color: 'white'
-            }"
-          />
+    <div class="row">
+      <div class="col-md-4 mt-2" v-for="(item, index) in socialMediaBtns" :key="index">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{item.title}}</h5>
+            <p class="card-text" v-html="item.description"></p>
+            <dialogueBtn 
+              :onClick="(event) => connect(item)"
+              :icon="'fas fa-cogs'"
+              :icon_position="'right'"
+              :text="'Connect'"
+              :styles="{
+                backgroundColor: colors.darkPrimary,
+                color: 'white'
+              }"
+            />
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="row justify-content-between latestPost" style="margin-top: 25px;">
-      <div class="card col-lg-8" style="border-color: light-grey; width: 25%; padding-bottom: 1%; margin-top: 25px;">
-        <h3 id="Tlabel">Latest Posts</h3>
-        <table class="table col-lg-11">
-          <thead>
-            <tr>
-              <th scope="col">Title</th>
-              <th scope="col">Channels</th>
-              <th scope="col">Links</th>
-              <th scope="col">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">Test</th>
-              <td>Test</td>
-              <td>Test</td>
-              <td>Test</td>
-            </tr>
-            <tr>
-              <th scope="row">Test</th>
-              <td>Test</td>
-              <td>Test</td>
-              <td>Test</td>
-            </tr>
-            <tr>
-              <th scope="row">Test</th>
-              <td>Test</td>
-              <td>Test</td>
-              <td>Test</td>
-            </tr>
-            <tr>
-              <th scope="row">Test</th>
-              <td>Test</td>
-              <td>Test</td>
-              <td>Test</td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="row">
-          <div class="col-8 col-sm-6">
-            <div class="justify-content-start" style="margin-top: 25px">
-              <roundedBtn 
-                :onClick="viewMore"
-                :text="'View more'"
-                :styles="{
-                  backgroundColor: colors.darkPrimary,
-                  color: 'white'
-                }"
-              />
+    <div class="row" style="margin-top: 25px;">
+      <div class="col-md-12 col-lg-8 col-sm-12">
+        <div class="card" style="border-color: light-grey; padding-bottom: 1%; margin-top: 25px;">
+          <h3 id="Tlabel">Latest Posts</h3>
+          <table class="table col-lg-11">
+            <thead>
+              <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Channels</th>
+                <th scope="col">Links</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Test</th>
+                <td>Test</td>
+                <td>Test</td>
+                <td>Test</td>
+              </tr>
+              <tr>
+                <th scope="row">Test</th>
+                <td>Test</td>
+                <td>Test</td>
+                <td>Test</td>
+              </tr>
+              <tr>
+                <th scope="row">Test</th>
+                <td>Test</td>
+                <td>Test</td>
+                <td>Test</td>
+              </tr>
+              <tr>
+                <th scope="row">Test</th>
+                <td>Test</td>
+                <td>Test</td>
+                <td>Test</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="row justify-content-between">
+            <div class="col-md-6 col-sm-6 col-xs-6">
+              <div class="col-sm-12">
+                <roundedBtn 
+                  :onClick="viewMore"
+                  :text="'View more'"
+                  :styles="{
+                    backgroundColor: colors.darkPrimary,
+                    color: 'white'
+                  }"
+                />
+              </div>
             </div>
-          </div>
-          <div class="col-8 col-sm-6">
-            <p id="pager" class="justify-content-end" style="margin-right: 65px; margin-bottom: 35px">Page To Review: {{forReviewTotal}} <i class="fas fa-arrow-right" id="arrowNext" v-on:click="preview()"></i></p>
+            <div class="col-md-6 col-sm-6 col-xs-6 d-flex justify-content-end">
+              <p id="pager" class="mb-3 pl-3 mt-3 pr-3">Page To Review: {{forReviewTotal}} <i class="fas fa-arrow-right" id="arrowNext" v-on:click="preview()"></i></p>
+            </div>
           </div>
         </div>
       </div>
-      <div class="card col-lg-3"  style="margin-top: 25px; height: 200px;">
-        <div class="card-body">
-          <h5 class="card-title">Setup Your Brand</h5>
-          <p class="card-text">
-            Build your brand by adding branding footers at the end of your social media post.
-            <br>
-            <br>
-            Setup your branding now!
-          </p>
-          <dialogueBtn 
-            :onClick="setup"
-            :icon="'fas fa-cogs'"
-            :text="'Setup'"
-            :icon_position="'right'"
-            :styles="{
-              backgroundColor: colors.darkPrimary,
-              color: 'white'
-            }"
-          />
+      <div class="col-md-4 col-sm-12 mb-5">
+        <div class="card"  style="margin-top: 25px; height: 200px;">
+          <div class="card-body pb-3">
+            <h5 class="card-title">Setup Your Brand</h5>
+            <p class="card-text">
+              Build your brand by adding branding footers at the end of your social media post.
+              <br>
+              <br>
+              Setup your branding now!
+            </p>
+            <dialogueBtn 
+              :onClick="setup"
+              :icon="'fas fa-cogs'"
+              :text="'Setup'"
+              :icon_position="'right'"
+              :styles="{
+                backgroundColor: colors.darkPrimary,
+                color: 'white'
+              }"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -191,10 +197,10 @@ export default {
       ROUTER.push('channels/branding')
     },
     viewMore() {
-      this.$router.push(`/${this.user.type.toLowerCase()}/post_management`)
+      this.$router.push(`/post_management/history`)
     },
     preview() {
-      this.$router.push(`/${this.user.type.toLowerCase()}/post_management`)
+      this.$router.push(`/post_management`)
     },
     connect(item){
       let parameter = {
@@ -221,7 +227,7 @@ export default {
       })
     },
     subscribe() {
-      this.$router.push(`/${this.user.type.toLowerCase()}/subscriptions`)
+      this.$router.push(`/subscriptions`)
     }
   }
 }
@@ -255,13 +261,14 @@ export default {
   margin-top: 15px;
   font-weight: 800;
   font-size: 20px;
+  margin-left: 15px;
 }
-#pager {
-  font-weight: bold;
-  float: right;
-  color: $title;
-  margin-top: 5vh;
-}
+// #pager {
+//   font-weight: bold;
+//   float: right;
+//   color: $title;
+//   margin-top: 5vh;
+// }
 #arrowNext{
   color: $darkPrimary;
   padding: 7px

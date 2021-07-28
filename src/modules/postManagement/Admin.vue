@@ -44,7 +44,7 @@
             <td>#{{item.id}}</td>
             <td>{{item.created_at}}</td>
             <td>{{item.title}}</td>
-            <td>{{item.category}}</td>
+            <td>{{display(item.category)}}</td>
             <td>{{displayArray(item.channels)}}</td>
             <td>{{item.author}}</td>
             <td class="text-warning" v-if="item.status.toLowerCase() === 'draft'">{{item.status.toUpperCase()}}</td>
@@ -108,7 +108,7 @@ export default {
         {title: 'Post No.'},
         {title: 'Date'},
         {title: 'Post Title'},
-        {title: 'Category'},
+        {title: 'Categories'},
         {title: 'Channel Actions'},
         {title: 'Author'},
         {title: 'Status'},
@@ -213,6 +213,23 @@ export default {
     this.retrievePosts()
   },
   methods: {
+    display(category){
+      if(category){
+        let parsedCategory = JSON.parse(category)
+        let response = ''
+        for (var i = 0; i < parsedCategory.length; i++) {
+          let item = parsedCategory[i]
+          if(i > 0){
+            response += ', ' + item.category
+          }else{
+            response = item.category
+          }
+        }
+        return response
+      }else{
+        return null
+      }
+    },
     displayArray(channels){
       if(channels){
         let parsedChannels = JSON.parse(channels)
@@ -231,10 +248,10 @@ export default {
       }
     },
     createNewPost(){
-      ROUTER.push('/admin/post_management/edit')
+      ROUTER.push('/post_management/edit')
     },
     edit(code) {
-      ROUTER.push('/admin/post_management/edit/' + code)
+      ROUTER.push('/post_management/edit/' + code)
     },
     retrievePosts() {
       let parameter = {

@@ -18,6 +18,7 @@
             }"
         />
         <roundedBtn
+            :onClick="''"
             :text="'History'"
             class="button1"
             :styles="{
@@ -32,21 +33,20 @@
         />
     </div>
 
-    <div class="col-sm-12 col-md-12 col-lg-12 mt-5 p-0 pt-5">
+    <div class="col-sm-12 col-md-12 col-lg-12 mt-5 p-0 pt-5" v-if="tableData.length > 0">
       <table class="table table-striped table-bordered">
         <thead>
           <th v-for="(item, index) in tableHeaders" :key="index">{{item.title}}</th>
         </thead>
         <tbody>
           <tr v-for="(item, index) in tableData" :key="index">
-            <td>{{item.date}}</td>
-            <td>{{item.time}}</td>
-            <td>{{item.post_title}}</td>
-            <td>{{item.channels_posted_to}}</td>
-            <!-- <td>{{displayArray(item.channels_posted_to)}}</td> -->
-            <td>{{item.link}}</td>
-            <td class="text-primary" v-if="item.status === 'Posted Automatically'">{{item.status}}</td>
-            <td class="text-warning" v-else>{{item.status}}</td>
+            <td>{{item.created_at}}</td>
+            <td>{{item.created_at}}</td>
+            <td>{{item.post[0].title}}</td>
+            <td>{{displayArray(item.post[0].channels)}}</td>
+            <td style="color: gray"><u>{{item.link}}</u></td>
+            <td class="text-primary" v-if="item.status === 'posted'">Posted Automatically</td>
+            <td class="text-warning" v-else>Posted - Reviewed by You</td>
           </tr>
         </tbody>
       </table>
@@ -60,7 +60,7 @@
     />
 
 
-    <empty v-if="tableData.length <= 0" :title="'No accounts available!'" :action="'Keep growing.'"></empty>
+    <empty v-if="tableData.length === 0" :title="'No accounts available!'" :action="'Keep growing.'"></empty>
   </div>
 </template>
 
@@ -69,10 +69,12 @@ import roundedBtn from 'src/modules/generic/roundedBtn'
 import DataTable from 'src/modules/generic/table'
 import COLORS from 'src/assets/style/colors.js'
 import Pager from 'src/components/increment/generic/pager/Pager.vue'
+import AUTH from 'src/services/auth'
 import ROUTER from 'src/router'
 export default {
   data() {
     return {
+      user: AUTH.user,
       tableHeaders: [
         {title: 'Date Posted'},
         {title: 'Time Posted'},
@@ -81,33 +83,7 @@ export default {
         {title: 'Link'},
         {title: 'Status'}
       ],
-      tableData: [{
-        id: 1,
-        date: '05/18/2021',
-        time: '18:00',
-        post_title: 'My Post Title',
-        channels_posted_to: 'Facebook',
-        link: 'https://cdn2.stylecraze.com/wp-content/uploads/2013/07/47-shutterstock_130738760.jpg',
-        status: 'Posted Automatically'
-      },
-      {
-        id: 2,
-        date: '05/18/2021',
-        time: '18:00',
-        post_title: 'My Post Title',
-        channels_posted_to: 'Google My Business',
-        link: 'https://cdn2.stylecraze.com/wp-content/uploads/2013/07/47-shutterstock_130738760.jpg',
-        status: 'Posted-Reviewed by You'
-      },
-      {
-        id: 3,
-        date: '05/18/2021',
-        time: '18:00',
-        post_title: 'My Post Title',
-        channels_posted_to: 'LinkedIn',
-        link: 'https://cdn2.stylecraze.com/wp-content/uploads/2013/07/47-shutterstock_130738760.jpg',
-        status: 'Posted Automatically'
-      }],
+      tableData: [],
       colors: COLORS,
       limit: 5,
       offset: 0,
@@ -120,6 +96,9 @@ export default {
     DataTable,
     'empty': require('components/increment/generic/empty/Empty.vue'),
     Pager
+  },
+  created() {
+    this.retrieveHistoryPosts()
   },
   methods: {
     displayArray(channels){
@@ -140,7 +119,23 @@ export default {
       }
     },
     forReview(){
-      ROUTER.push('/user/post_management')
+      console.log('[here]')
+      ROUTER.push('/post_management')
+    },
+    retrieveHistoryPosts(){
+      let parameter = {
+        account_id: this.user.userID
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('post/retrieve_history', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        console.log('RESPONSE: ', response)
+        if(response.data.length > 0){
+          this.tableData = response.data
+        }else{
+          this.tableData = []
+        }
+      })
     }
   }
 }

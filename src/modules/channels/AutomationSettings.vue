@@ -97,10 +97,10 @@ export default {
   },
   methods: {
     connectMedia(){
-      ROUTER.push('/user/channels')
+      ROUTER.push('/channels')
     },
     branding(){
-      ROUTER.push('/user/channels/branding')
+      ROUTER.push('/channels/branding')
     },
     update(){
       let parameter = {
@@ -139,6 +139,10 @@ export default {
           value: this.user.userID,
           clause: '=',
           column: 'account_id'
+        }, {
+          value: 'automation_settings',
+          column: 'payload',
+          clause: '='
         }],
         offset: 0,
         limit: 1

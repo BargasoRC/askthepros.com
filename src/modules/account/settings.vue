@@ -2,232 +2,274 @@
   <div class="container-fluid">
     <div class="row flex-column-reverse flex-md-row">
       <div class="col-sm-8 col-sm-pull-4">
-    <div class="my-title">
-      <h3 style="">Profile</h3>
-    </div>
-    <div class="my-form row my-row">
-      <div class=" col-sm-12 input-form">
-        <div class="row">
-          <div class="col-md-6">
-            <p>First Name</p>
-            <roundedInput :type="'text'" :placeholder="'Enter your first name here'"
-              :class="!this.isValidProfile && !firstname ? 'mb-0 ' : ' SettingsField'" :styles="{
-                        border: !this.isValidProfile && !firstname ? '1px solid red !important' : 'none',
+        <div class="my-title">
+          <h3 style="">Profile</h3>
+        </div>
+        <div class="my-form row my-row">
+          <div class=" col-sm-12 input-form">
+            <div class="row">
+              <div class="col-md-6">
+                <p>First Name</p>
+                <roundedInput :type="'text'" :placeholder="'Enter your first name here'"
+                  :class="!isValidProfile && !firstname ? 'mb-0 ' : ' SettingsField'" :styles="{
+                        border: !isValidProfile && !firstname ? '1px solid red !important' : 'none',
                       }" v-model="firstname" class="input-style" />
-            
-          </div>
-          <div class="col-md-6">
-            <p>Last Name</p>
-            <roundedInput :type="'text'" :placeholder="'Enter your last name here'"
-              :class="!this.isValidProfile && !lastname ? 'mb-0 ' : ' SettingsField'" :styles="{
-                      border: !this.isValidProfile && !lastname ? '1px solid red !important' : 'none',
+
+              </div>
+              <div class="col-md-6">
+                <p>Last Name</p>
+                <roundedInput :type="'text'" :placeholder="'Enter your last name here'"
+                  :class="!isValidProfile && !lastname ? 'mb-0 ' : ' SettingsField'" :styles="{
+                      border: !isValidProfile && !lastname ? '1px solid red !important' : 'none',
                     }" v-model="lastname" class="input-style" />
-            
-          </div>
 
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <p>Business Name</p>
-            <roundedInput :type="'text'" :placeholder="'Enter your business name here'"
-              :class="!this.isValidProfile && !businessname ? 'mb-0 ' : ' SettingsField'" :styles="{
-                    border: !this.isValidProfile && !businessname ? '1px solid red !important' : 'none',
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <p>Business Name</p>
+                <roundedInput :type="'text'" :placeholder="'Enter your business name here'"
+                  :class="!isValidProfile && !businessname ? 'mb-0 ' : ' SettingsField'" :styles="{
+                    border: !isValidProfile && !businessname ? '1px solid red !important' : 'none',
                   }" v-model="businessname" class="input-style" />
-            
-          </div>
-          <div class="col-md-6">
-            <p>Contact Number</p>
-            <roundedInput :type="'text'" :placeholder="'Enter your contact number here'"
-              :class="!this.isValidProfile && !contactnumber ? 'mb-0 ' : ' SettingsField'" :styles="{
-                    border: !this.isValidProfile && !contactnumber ? '1px solid red !important' : 'none',
+
+              </div>
+              <div class="col-md-6">
+                <p>Contact Number</p>
+                <roundedInput :type="'text'" :placeholder="'Enter your contact number here'"
+                  :class="!isValidProfile && !contactnumber ? 'mb-0 ' : ' SettingsField'" :styles="{
+                    border: !isValidProfile && !contactnumber ? '1px solid red !important' : 'none',
                   }" v-model="contactnumber" class="input-style" />
-            
+
+              </div>
+            </div>
+
           </div>
         </div>
+        <div class="my-title mb-5">
+          <h3>Address</h3>
+        </div>
 
-      </div>
-    </div>
-    <div class="my-title mb-5">
-      <h3>Address</h3>
-    </div>
-    
-    <div class="row">
-      <div class="col-sm-12">
         <div class="row">
-          <div class="col-md-6">
-            <p>Route</p>
-            <roundedInput :type="'text'" :placeholder="'Enter your route here'"
-              :class="!this.isValidAddress && username == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                            border: !this.isValidAddress && username == '' ? '1px solid red !important' : 'none',
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-md-6">
+                <p>Route</p>
+                <roundedInput :type="'text'" :placeholder="'Enter your route here'"
+                  :class="!isValidProfile && !route ? 'mb-0 ' : ' SettingsField'" :styles="{
+                            border: !isValidProfile && !route ? '1px solid red !important' : 'none',
                           }" v-model="route" class="input-style" />
-            
-          </div>
-          
-          <div class="col-md-6">
-            <p>City</p>
-            <roundedInput :type="'text'" :placeholder="'Enter your city here'"
-              :class="!this.isValidAddress && username == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                          border: !this.isValidAddress && username == '' ? '1px solid red !important' : 'none',
+
+              </div>
+
+              <div class="col-md-6">
+                <p>City</p>
+                <roundedInput :type="'text'" :placeholder="'Enter your city here'"
+                  :class="!isValidProfile && !city ? 'mb-0 ' : ' SettingsField'" :styles="{
+                          border: !isValidProfile && !city ? '1px solid red !important' : 'none',
                         }" v-model="city" class="input-style" />
-            
-          </div>
-        </div>
-        <div class="row">
-          <div class=" col-md-6">
-            <p>Region</p>
-            <roundedInput :type="'text'" :placeholder="'Enter your region here'"
-              :class="!this.isValidAddress && username == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                            border: !this.isValidAddress && username == '' ? '1px solid red !important' : 'none',
+
+              </div>
+            </div>
+            <div class="row">
+              <div class=" col-md-6">
+                <p>Region</p>
+                <roundedInput :type="'text'" :placeholder="'Enter your region here'"
+                  :class="!isValidProfile && !region ? 'mb-0 ' : ' SettingsField'" :styles="{
+                            border: !isValidProfile && !region ? '1px solid red !important' : 'none',
                           }" v-model="region" class="input-style" />
-            
-          </div>
-          <div class="col-md-6">
-            <p>Country</p>
-            <roundedInput :type="'text'" :placeholder="'Enter your country here'"
-              :class="!this.isValidAddress && username == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                          border: !this.isValidAddress && username == '' ? '1px solid red !important' : 'none',
+
+              </div>
+              <div class="col-md-6">
+                <p>Country</p>
+                <roundedInput :type="'text'" :placeholder="'Enter your country here'"
+                  :class="!isValidProfile && !country ? 'mb-0 ' : ' SettingsField'" :styles="{
+                          border: !isValidProfile && !country ? '1px solid red !important' : 'none',
                         }" v-model="country" class="input-style" />
-            
-          </div>
 
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <p>Postal/Zip Code</p>
-            <roundedInput :type="'text'" :placeholder="'Enter your postal/zip code here'"
-              :class="!this.isValidAddress && username == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                            border: !this.isValidAddress && username == '' ? '1px solid red !important' : 'none',
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <p>Postal/Zip Code</p>
+                <roundedInput :type="'text'" :placeholder="'Enter your postal/zip code here'"
+                  :class="!isValidProfile && !postalZipCode ? 'mb-0 ' : ' SettingsField'" :styles="{
+                            border: !isValidProfile && !postalZipCode ? '1px solid red !important' : 'none',
                           }" v-model="postalZipCode" class="input-style" />
-            
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <div class="my-title mb-5">
-      <h3>Account</h3>
-    </div>
-    
-    <div class="">
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="row">
-            <div class="col-md-6">
-              <p>Username</p>
-              <roundedInput :type="'text'" :placeholder="'Username'"
-                :class="!this.isValidAccount && username == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                            border: !this.isValidAccount && username == '' ? '1px solid red !important' : 'none',
-                          }" v-model="username" class="input-style" style="background-color: lightgrey;" disabled="1"/>
-              
+              </div>
             </div>
           </div>
+        </div>
+
+        <div class="my-title mb-5">
+          <h3>Account</h3>
+        </div>
+
+        <div class="">
           <div class="row">
-            <div class="col-md-6">
-              <p>Email Address</p>
-              <roundedInput :type="'text'" :placeholder="'example@email.domain'"
-                :class="!this.isValidAccount && username == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                              border: !this.isValidAccount && username == '' ? '1px solid red !important' : 'none',
+            <div class="col-sm-12">
+              <div class="row">
+                <div class="col-md-6"> 
+                  <p>Username</p>
+                  <roundedInput :type="'text'" :placeholder="'Username'"
+                    :class="!isValidAccount && username == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
+                            border: !isValidAccount && username == '' ? '1px solid red !important' : 'none',
+                          }" v-model="username" class="input-style" style="background-color: lightgrey;"
+                    disabled="1" />
+
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <p>Email Address</p>
+                  <roundedInput :type="'text'" :placeholder="'example@email.domain'"
+                    :class="!isValidAccount && email == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
+                              border: !isValidAccount && email == '' ? '1px solid red !important' : 'none',
                             }" v-model="email" class="input-style" style="background-color: lightgrey;" />
-              
+                  <p
+                    class="mb-0 pb-0 invalidEmail"
+                    v-if="!this.isValidAccount && email == ''"
+                  >{{emailValidation}}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div class="my-title mb-5">
-      <h3>Change Your Password</h3>
-    </div>
-    
-    <div class="row">
-      <div class="col-sm-12">
-         <div class="row">
-      <div class="col-sm-12">
+        <div class="my-title mb-5">
+          <h3>Change Your Password</h3>
+        </div>
+
         <div class="row">
-          <div class="col-md-6">
-            <p>Old Password</p>
-            <roundedInput 
-              :type="isShowingOPassword ? 'text' : 'password'" 
-              :placeholder="'(Leave blank if unchanged)'"
-              :class="!this.isValidPassword && username == '' ? 'mb-0 ' : ' SettingsField' " 
-              :styles="{
-                        border: !this.isValidPassword ? '1px solid red !important' : 'none',
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="row" v-if="passwordVerified">
+                  <div class="col-md-6">
+                    <p>New Password</p>
+                    <roundedInput :type="isShowingPassword ? 'text' : 'password'"
+                      :placeholder="'(Leave blank if unchanged)'"
+                      :class="'input-style ' + (!isValidPassword && password == '' ? 'mb-0 ' : ' SettingsField')"
+                      :styles="{
+                        border: ((!isValidPassword && password == '' ) || (password != confirmPassword)) ? '1px solid red !important' : 'none',
+                        marginBottom: '0px'
                       }" 
-              v-model="oPassword" 
-              class="input-style" 
-              id="toggle-field" 
-            />
-            <div :style="{
-              marginTop: '-35px !important'
-            }">
-              <span class="fa fa-fw fa-eye field-icon" @click="() => isShowingOPassword = !isShowingOPassword" v-if="isShowingOPassword"></span>
-              <span class="far fa-eye-slash field-icon" @click="() => isShowingOPassword = !isShowingOPassword" v-if="!isShowingOPassword"></span>
-              
+                      v-model="password" 
+                    />
+                    <span
+                      :class="'fa fa-fw fa-eye ' + (!isValidPassword && password == '' ? 'error-field-icon' : 'field-icon')"
+                      @click="() => isShowingPassword = !isShowingPassword" :style="{
+                marginTop: '-28px !important'
+              }" v-if="isShowingPassword"></span>
+                    <span
+                      :class="'far fa-eye-slash ' + (!isValidPassword && password == '' ? 'error-field-icon' : 'field-icon')"
+                      @click="() => isShowingPassword = !isShowingPassword" :style="{
+                marginTop: '-28px !important'
+              }" v-if="!isShowingPassword"></span>
+                    <div>
+                      <p class="mb-0 pb-0 requiredFieldError"
+                        v-if="password == '' || password != confirmPassword || passwordRequirements != ''">
+                        {{
+                        password != confirmPassword ?
+                        'does not match'
+                        :
+                        passwordRequirements != '' ?
+                        passwordRequirements
+                        :
+                        ''
+                        }}</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" v-if="passwordVerified">
+                  <div class="col-md-6">
+                    <p>Confirm Password</p>
+                    <input :type="isShowingCPassword ? 'text' : 'password'" :placeholder="'(Leave blank if unchanged)'"
+                      :class="'form-control roudedInput input-style ' + (!isValidPassword && confirmPassword == '' ? 'mb-0 ' : ' SettingsField')"
+                      :style="{
+                border: ((!isValidPassword && confirmPassword == '') || (password != confirmPassword)) ? '1px solid red !important' : 'none',
+                marginBottom: '0px'
+              }" v-model="confirmPassword" />
+                    <span
+                      :class="'fa fa-fw fa-eye ' + (!isValidPassword && password == '' ? 'error-field-icon' : 'field-icon')"
+                      @click="() => isShowingCPassword = !isShowingCPassword" v-if="isShowingCPassword" :style="{
+                marginTop: '-28px !important'
+              }"></span>
+                    <span
+                      :class="'far fa-eye-slash ' + (!isValidPassword && password == '' ? 'error-field-icon' : 'field-icon')"
+                      @click="() => isShowingCPassword = !isShowingCPassword" v-if="!isShowingCPassword" :style="{
+                marginTop: '-28px !important'
+              }"></span>
+                    <div>
+                      <p class="mb-0 pb-0 requiredFieldError"
+                        v-if="password == '' || password != confirmPassword || passwordRequirements != ''">
+                        {{
+                        password != confirmPassword ?
+                        'does not match'
+                        :
+                        passwordRequirements != '' ?
+                        passwordRequirements
+                        :
+                        ''
+                        }}</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" v-if="!passwordVerified">
+                  <div class="col-md-6 pt-0">
+                    <p>Old Password</p>
+                    <!-- <roundedInput :type="isShowingOPassword ? 'text' : 'password'"
+                      :placeholder="'(Leave blank if unchanged)'"
+                      :class="'input-style ' + (!isValidPassword && oPassword == '' ? 'mb-0 ' : ' SettingsField')"
+                      :styles="{
+                border: !isValidPassword && oPassword == '' ? '1px solid red !important' : 'none',
+              }" v-model="oPassword" /> -->
+                    <input 
+                      :type="isShowingOPassword ? 'text' : 'password'" 
+                      :placeholder="'(Leave blank if unchanged)'"
+                      :class="'form-control roudedInput input-style ' + (!isValidPassword && oPassword == '' ? 'mb-0 ' : ' SettingsField')"
+                      :style="{
+                        border: !isValidPassword && oPassword == '' ? '1px solid red !important' : 'none',
+                        marginBottom: !isValidPassword && oPassword == '' ? '0px' : '30px',
+                      }"
+                      v-model="oPassword" 
+                    />
+                    <span
+                      :class="'fa fa-fw fa-eye ' + (!isValidPassword && oPassword == '' ? 'error-field-icon' : 'field-icon')"
+                      @click="() => isShowingOPassword = !isShowingOPassword" v-if="isShowingOPassword"></span>
+                    <span
+                      :class="'far fa-eye-slash ' + (!isValidPassword && oPassword == '' ? 'error-field-icon' : 'field-icon')"
+                      @click="() => isShowingOPassword = !isShowingOPassword" v-if="!isShowingOPassword"></span>
+                    <div>
+                      <p class="mb-0 pb-0 requiredFieldError" v-if="oPassword === '' && !isValidPassword">{{
+                        passwordRequirements != '' ?
+                        passwordRequirements
+                        :
+                        ''
+                        }}</p>
+                    </div>
+                  </div>
+                  <div class="col-sm-12" :style="{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginTop: '0px'
+                  }">
+                    <roundedBtn :onClick="checkPassword" :icon="'fas fa-sign-in-alt'" :text="'Verify Password'" :styles="{
+                      backgroundColor: 'rgb(241, 184, 20)',
+                      color: 'white',
+                      height: '35px'
+                    }" />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <br>
-        <div class="row">
-          <div class="col-md-6">
-            <p>New Password</p>
-            <roundedInput :type="isShowingPassword ? 'text' : 'password'" :placeholder="'(Leave blank if unchanged)'"
-              :class="!this.isValidPassword && username == '' ? 'mb-0 ' : ' SettingsField' " :styles="{
-                        border: !this.isValidPassword && username == '' ? '1px solid red !important' : 'none',
-                      }" v-model="password" class="input-style" id="toggle-field" />
-            <div :style="{
-              marginTop: '-35px !important'
-            }">
-              <span class="fa fa-fw fa-eye field-icon" @click="() => isShowingPassword = !isShowingPassword" v-if="isShowingPassword"></span>
-              <span class="far fa-eye-slash field-icon" @click="() => isShowingPassword = !isShowingPassword" v-if="!isShowingPassword"></span>
-              <p
-              class="mb-0 pb-0 requiredFieldError"
-              v-if="password == '' || password != cpassword || passwordRequirements != ''"
-            >{{
-              password != cPassword ?
-                'does not match'
-              :
-                passwordRequirements != '' ?
-                  passwordRequirements
-                :
-                  ''
-              }}</p>
-            </div>
-          </div>
-        </div>
-        <br>
-        <div class="row">
-          <div class="col-md-6">
-            <p>Confirm New Password</p>
-            <roundedInput :type="isShowingCPassword ? 'text' : 'password'" :placeholder="'(Leave blank if unchanged)'"
-              :class="!this.isValidPassword && username == '' ? 'mb-0 ' : ' SettingsField' " :styles="{
-                        border: !this.isValidPassword && username == '' ? '1px solid red !important' : 'none',
-                      }" v-model="cPassword" class="input-style" id="toggle-field" />
-            <div :style="{
-              marginTop: '-35px !important'
-            }">
-              <span class="fa fa-fw fa-eye field-icon" @click="() => isShowingCPassword = !isShowingCPassword" v-if="isShowingCPassword"></span>
-              <span class="far fa-eye-slash field-icon" @click="() => isShowingCPassword = !isShowingCPassword" v-if="!isShowingCPassword"></span>
-              <p
-              class="mb-0 pb-0 requiredFieldError"
-              v-if="cPassword == '' || password != cpassword || passwordRequirements != ''"
-            >{{
-              cPassword != password ?
-                'does not match'
-              :
-                passwordRequirements != '' ?
-                  passwordRequirements
-                :
-                  ''
-              }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-      </div>
-    </div>
 
-    <roundedBtn :onClick="update_account" :icon="'fas fa-sign-in-alt'" :text="'Update'" :styles="{
+        <roundedBtn :onClick="update_account" :icon="'fas fa-sign-in-alt'" :text="'Update'" :styles="{
           backgroundColor: '#01004E',
           color: 'white'
         }" style="margin-bottom: 5%; margin-top: 5%;" />
@@ -235,7 +277,7 @@
       </div>
       <div class="col-sm-4 text-center mb-5 col-sm-push-8">
         <h3>Profile picture</h3>
-        <div class="col-sm-12 mt-3">
+        <div class="col-sm-12 mt-3" v-if="user.login_type === 'local'">
           <i class="fas fa-user-circle" aria-hidden="true" :style="{
             fontSize: '150px',
             color: '#01009A'
@@ -244,18 +286,31 @@
             width: '170px',
             height: '170px',
             borderRadius: '50%'
-          }"/>
+          }" />
         </div>
-        <div>
-        <div class="mt-4">
-          <roundedBtn :icon="'fas fa-sign-in-alt'" :text="'Change Profile Picture'" :styles="{
+        <div v-else>
+          <img
+            v-bind:src="user.profile.url"
+            v-if="user.profile"
+            :style="{
+            width: '170px',
+            height: '170px',
+            borderRadius: '50%'
+          }">
+          <i class="fas fa-user-circle" aria-hidden="true" :style="{
+            fontSize: '150px',
+            color: '#01009A'
+          }" v-else></i>
+        </div>
+        <div v-if="user.login_type === 'local'">
+          <div class="mt-4">
+            <roundedBtn :icon="'fas fa-sign-in-alt'" :text="'Change Profile Picture'" :styles="{
               backgroundColor: '#01004E',
               color: 'white',
             }" :onClick="addImage" />
 
-          <input type="file" id="Image" accept="images/*"
-            @change="setUpFileUpload($event)">
-        </div>
+            <input type="file" id="Image" accept="images/*" @change="setUpFileUpload($event)">
+          </div>
 
         </div>
       </div>
@@ -298,17 +353,22 @@ export default {
       username: '',
       email: '',
       oPassword: '',
-      cPassword: '',
+      confirmPassword: '',
       password: '',
       passwordRequirements: '',
       isValid: true,
       isValidProfile: true,
-      isValidAddress: true,
       isValidAccount: true,
       isValidPassword: true,
+      canUpdateAccount: false,
+      canUpdateAddress: true,
+      canUpdateProfile: false,
+      canUpdatePassword: false,
       isShowingOPassword: false,
       isShowingPassword: false,
-      isShowingCPassword: false
+      isShowingCPassword: false,
+      passwordVerified: false,
+      emailValidation: ''
     }
   },
   components: {
@@ -354,11 +414,42 @@ export default {
     }
   },
   mounted() {
+    if(AUTH.hash('show', localStorage.getItem('login_with')) === 'social_lite') {
+      this.passwordVerified = true
+    }
     this.retrieveInformation()
   },
   methods: {
-    connect(item){
-      // ROUTER.push('/' + item.payload)
+    checkPassword(evet){
+      if(this.oPassword === '') {
+        this.isValidPassword = false
+        this.passwordRequirements = 'Required Field!'
+        return
+      }
+      let parameter = {
+        id: this.user.userID,
+        password: this.oPassword
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('accounts_info/check_password', parameter, response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data === true) {
+          this.passwordVerified = true
+          this.passwordRequirements = ''
+          this.oPassword = ''
+          this.password = ''
+          this.confirmPassword = ''
+          this.isValidPassword = true
+        }else {
+          this.passwordVerified = false
+          this.oPassword = ''
+          this.passwordRequirements = 'Invalid Password!'
+          this.isValidPassword = false
+        }
+      }, error => {
+        $('#loading').css({'display': 'none'})
+        console.log('password erro:', error)
+      })
     },
     retrieveInformation() {
       let parameter = {
@@ -367,95 +458,113 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('accounts_info/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('ACCOUNT INFO: ', response.data)
         let data = response.data[0]
         this.username = this.user.username
+        this.email = this.user.email
+        this.businessname = this.user.merchant ? this.user.merchant.name : ''
         AUTH.user.information = response.data[0]
         if(response.data.length > 0) {
+          AUTH.user.merchant = [data.merchant]
           this.firstname = data.first_name
           this.lastname = data.last_name
           this.contactnumber = data.cellular_number
-          let address = JSON.parse(data.address)
+          let address = data.address ? JSON.parse(data.address) : {}
           this.route = address ? address.route : ''
           this.city = address ? address.city : ''
           this.region = address ? address.region : ''
           this.country = address ? address.country : ''
-          this.postalZipCode = address ? address.zipcode : ''
-          this.email = this.user.email
-          this.businessname = this.user.merchant ? this.user.merchant.name : ''
+          this.postalZipCode = address ? address.postalZipCode : ''
         }
       })
     },
     update_account(event){
+      console.log('...updating', this.canUpdateProfile, 'validated: ', !this.validate())
       if(!this.validate()) {
         return
       }
-      let condition = {
-        condition: [
-          {
-            value: this.user.userID,
-            clause: '=',
-            column: 'account_id'
-          }
-        ],
-        offset: 0,
-        limit: 1
-      }
-      if(this.isValidProfile) {
+      if(this.canUpdateProfile) {
         let parameter = {
-          id: this.user.information.id,
-          account_id: this.user.userID,
-          first_name: this.firstname,
-          middle_name: this.middlename,
-          last_name: this.lastname,
-          cellular_number: this.contactnumber
+          account_id: this.user.userID
         }
-        $('#loading').css({'display': 'block'})
-        this.APIRequest('account_informations/update', parameter).then(response => {
-          $('#loading').css({'display': 'none'})
-          console.log('RESPONSE: ', response)
-          if(!response.error) {
-            console.log('UPDATE RESPONSE: ', response)
-          }
-        })
-      }
-      if(this.isValidAddress){
-        let parameter = {
-          id: this.user.information.id,
-          account_id: this.user.userID,
-          address: JSON.stringify({
+        let info = AUTH.user.information
+        console.log('INFO: ', info)
+        // Just to check if what fields are updated and only updated fields will be pass as parameters of update
+        if(Object.keys(info).length > 1) {
+          Object.keys(info).forEach((el, ndx) => {
+            if(['first_name', 'last_name', 'cellular_number', 'address'].includes(el)) {
+              switch(el) {
+                case 'first_name':
+                  if(info[el] !== this.firstname) {
+                    parameter[el] = this.firstname
+                    if(!info[el]) {
+                      parameter[el] = this.firstname
+                    }
+                  }
+                  break
+                case 'last_name':
+                  if(info[el] !== this.lastname) {
+                    parameter[el] = this.lastname
+                    if(!info[el]) {
+                      parameter[el] = this.lastname
+                    }
+                  }
+                  break
+                case 'cellular_number':
+                  if(info[el] !== this.contactnumber) {
+                    parameter[el] = this.contactnumber
+                    if(!info[el]) {
+                      parameter[el] = this.contactnumber
+                    }
+                  }
+                  break
+                case 'address':
+                  let address = {}
+                  Object.keys(JSON.parse(info[el])).forEach(le => {
+                    if(this[le] !== JSON.parse(info[el])[le]){
+                      address[info[el]] = this[le]
+                    }
+                  })
+                  if(Object.keys(address).length > 0) {
+                    parameter['address'] = JSON.stringify(address)
+                  }
+                  break
+              }
+            }
+          })
+        }else {
+          parameter['first_name'] = this.firstname
+          parameter['middle_name'] = 'null'
+          parameter['last_name'] = this.lastname
+          parameter['cellular_number'] = this.contactnumber
+          parameter['address'] = JSON.stringify({
             route: this.route,
             city: this.city,
             region: this.region,
             country: this.country,
-            zipcode: this.postalZipCode
+            postalZipCode: this.postalZipCode
           })
         }
-        $('#loading').css({'display': 'block'})
-        this.APIRequest('account_informations/update', parameter).then(response => {
-          $('#loading').css({'display': 'none'})
-          console.log('RESPONSE: ', response)
-          if(!response.error) {
-            console.log('UPDATE RESPONSE: ', response)
-          }
-        })
-      }
-      if(this.isValidAccount) {
-        let acc = {
-          id: this.user.userID,
-          code: this.user.code,
-          email: this.email
+        console.log('Parameters: ', parameter)
+        if(Object.keys(info).length > 1 && Object.keys(parameter).length > 1){
+          $('#loading').css({'display': 'block'})
+          this.APIRequest('accounts_info/update_account', parameter).then(response => {
+            $('#loading').css({'display': 'none'})
+            if(response.error.length === 0) {
+              this.retrieveInformation()
+              console.log('UPDATE PROFILE RESPONSE: ', response)
+              this.canUpdateProfile = false
+            }
+          })
+        }else if(Object.keys(parameter).length > 1){
+          $('#loading').css({'display': 'block'})
+          this.APIRequest('account_informations/create', parameter).then(response => {
+            $('#loading').css({'display': 'none'})
+            if(response.error === 0) {
+              this.retrieveInformation()
+              this.canUpdateProfile = false
+            }
+          })
         }
-        $('#loading').css({'display': 'block'})
-        this.APIRequest('accounts/update_email', acc).then(response => {
-          $('#loading').css({'display': 'none'})
-          console.log('RESPONSE: ', response)
-          if(!response.error) {
-            console.log('UPDATE RESPONSE: ', response)
-          }
-        })
-      }
-      if(this.businessname !== ''){
         let condition = {
           condition: [
             {
@@ -467,45 +576,59 @@ export default {
           offset: 0,
           limit: 1
         }
-        if(this.isValidPassword){
-          let acc = {
-            id: this.user.userID,
-            code: this.user.code,
-            password: this.password
-          }
-          $('#loading').css({'display': 'block'})
-          this.APIRequest('accounts/update_password', acc).then(response => {
-            $('#loading').css({'display': 'none'})
-            console.log('RESPONSE: ', response)
-            if(!response.error) {
-              console.log('UPDATE RESPONSE: ', response)
-            }
-          })
-
+        let merchant = {
+          name: this.businessname,
+          account_id: this.user.userID,
+          id: this.user.merchant.id
         }
-        $('#loading').css({'display': 'block'})
-        this.APIRequest('merchants/retrieve', condition).then(response => {
-          $('#loading').css({'display': 'none'})
-          console.log('RESPONSE: ', response)
-          let merchant = {
-            name: this.businessname,
-            account_id: this.user.userID
-          }
-          let url = ''
-          if(response.data.length > 0) {
-            merchant['id'] = response.data[0].id
-            url = 'merchants/update'
-          }else {
-            url = 'merchants/create'
-          }
+        let url = 'merchants/update'
+        if(this.user.merchant.name !== this.businessname){
           $('#loading').css({'display': 'block'})
           this.APIRequest(url, merchant, response => {
             $('#loading').css({'display': 'none'})
-            console.log('MERCHANTS: ', response)
+            this.canUpdateProfile = false
+            this.retrieveInformation()
           }, error => {
             $('#loading').css({'display': 'none'})
+            this.canUpdateProfile = false
             error
           })
+        }
+      }
+      if(this.canUpdateAccount) {
+        let acc = {
+          id: this.user.userID,
+          code: this.user.code,
+          email: this.email
+        }
+        $('#loading').css({'display': 'block'})
+        this.APIRequest('accounts/update_email', acc).then(response => {
+          $('#loading').css({'display': 'none'})
+          console.log('UPDATE RESPONSE: ', response)
+          if(response.error.length > 0) {
+            this.isValidAccount = false
+            this.email = ''
+            this.emailValidation = response.error
+            // console.log('UPDATE RESPONSE: ', response)
+          }
+        })
+      }
+      if(this.canUpdatePassword) {
+        let acc = {
+          id: this.user.userID,
+          password: this.password
+        }
+        $('#loading').css({'display': 'block'})
+        this.APIRequest('accounts/update_password', acc).then(response => {
+          $('#loading').css({'display': 'none'})
+          this.password = ''
+          this.confirmPassword = ''
+          this.oPassword = ''
+          this.isValidPassword = true
+          this.passwordVerified = false
+          if(!response.error) {
+            console.log('UPDATE PASSWORD RESPONSE: ', response)
+          }
         })
       }
     },
@@ -577,41 +700,47 @@ export default {
       })
     },
     validate() {
-      if(this.firstname !== '' || this.lastname !== '' || this.businessname !== '' || this.contactnumber !== '') {
-        if(!this.firstname || !this.lastname || !this.businessname || !this.contactnumber) {
+      if(this.firstname !== '' || this.lastname !== '' || this.businessname !== '' || this.contactnumber !== '' || this.route !== '' || this.region !== '' || this.city !== '' || this.postalZipCode !== '' || this.city !== '' || this.country !== '') {
+        if(!this.firstname || !this.lastname || !this.businessname || !this.contactnumber || !this.route || !this.region || !this.city || !this.postalZipCode || !this.city || !this.country) {
           this.isValidProfile = false
+          this.canUpdateProfile = false
         }else{
           this.isValidProfile = true
+          this.canUpdateProfile = true
         }
+      }else {
+        this.canUpdateProfile = false
       }
-      if(this.route !== '' || this.region !== '' || this.city !== '' || this.postalZipCode !== '' || this.city !== '' || this.country !== '') {
-        if(!this.route || !this.region || !this.city || !this.postalZipCode || !this.city || !this.country) {
-          this.isValidAddress = false
-        }else {
-          this.isValidAddress = true
-        }
-      }
+      console.log('update profile ', this.isValidProfile)
       if(this.username !== '' || this.email !== '') {
-        if(!this.username || !this.email) {
+        if(!this.username || !this.email || this.email === this.user.email) {
           this.isValidAccount = false
+          this.canUpdateAccount = false
         }else {
           this.isValidAccount = true
+          this.canUpdateAccount = true
         }
+      }else {
+        this.canUpdateAccount = false
       }
-      if(this.password !== '' || this.cPassword !== '') {
-        if(!this.password || !this.cPassword) {
+      if(this.password !== '' || this.confirmPassword !== '') {
+        if(!this.password || !this.confirmPassword) {
           this.isValidPassword = false
+          this.canUpdatePassword = false
         }else {
           if(!global.validatePassword(this.password)){
             this.isValidPassword = false
+            this.canUpdatePassword = false
             this.passwordRequirements = 'Password should be minimum of 8 and maximum of 16 and should contain at least one digit, lower case, upper case and special character.'
           }else{
+            this.canUpdatePassword = true
             this.isValidPassword = true
           }
         }
+      }else {
+        this.canUpdatePassword = false
       }
-
-      if(!this.isValidProfile || !this.isValidAddress || !this.isValidAccount || !this.isValidPassword) {
+      if(!this.isValidProfile && !this.isValidAccount && !this.isValidPassword) {
         return false
       }else {
         return true
@@ -624,6 +753,19 @@ export default {
 
 <style scoped lang="scss" scoped>
 @import "~assets/style/colors.scss";
+.invalidEmail {
+  color: $danger;
+  font-size: 10px;
+  margin-left: 20px;
+  margin-bottom: 25px !important;
+}
+.roudedInput {
+  outline: none !important;
+  box-shadow: none !important;
+  height: 45px !important;
+  border-radius: 40px !important;
+  border: 1px solid $gray !important;
+}
 #Image{
   display: none;
   height: 200px;
@@ -700,7 +842,14 @@ h3{
 
 .field-icon {
   float: right;
-  margin-top: -29px;
+  margin-top: -58px;
+  margin-right: 24%;
+  position: relative;
+  z-index: 2;
+}
+.error-field-icon {
+  float: right;
+  margin-top: -28px;
   margin-right: 24%;
   position: relative;
   z-index: 2;

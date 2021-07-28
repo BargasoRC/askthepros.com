@@ -4,13 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Increment\Account\Models\Account;
-
+use Increment\Imarket\Merchant\Models\Merchant;
 class AccountInformationsContoller extends APIController
 {
   public function retrieveAccountInformation(Request $request) {
     $data = $request->all();
     $user = [];
     $user[] = app('Increment\Account\Http\AccountInformationController')->getAccountInformation($data['account_id']);
+    $merchant = Merchant::where('account_id', '=', $data['account_id'])->first();
+    if(isset($merchant)){
+      $user[0]['merchant'] = $merchant;
+    }
     $this->response['data'] = $user;
 
     return $this->response();

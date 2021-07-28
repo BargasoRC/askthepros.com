@@ -32,7 +32,7 @@
         <tbody>
           <tr v-for="(item, index) in data">
             <td>{{item.invoice}}</td>
-            <td>#{{item.created_at}}</td>
+            <td>{{item.created_at}}</td>
             <td>{{item.account.username}}</td>
             <td>{{item.account.email}}</td>
             <td>{{renderPlan(item.plan)}}</td>
