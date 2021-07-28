@@ -40,10 +40,10 @@
         </thead>
         <tbody>
           <tr v-for="(item, index) in tableData" :key="index">
-            <td>{{item.created_at}}</td>
-            <td>{{item.created_at}}</td>
-            <td>{{item.post[0].title}}</td>
-            <td>{{displayArray(item.post[0].channels)}}</td>
+            <td>{{item.date}}</td>
+            <td>{{item.time}}</td>
+            <td>{{item.post[0] != null ? item.post[0].title : null}}</td>
+            <td>{{item.post[0] != null ? displayArray(item.post[0].channels) : null}}</td>
             <td style="color: gray"><u>{{item.link}}</u></td>
             <td class="text-primary" v-if="item.status === 'posted'">Posted Automatically</td>
             <td class="text-warning" v-else>Posted - Reviewed by You</td>
@@ -60,7 +60,7 @@
     />
 
 
-    <empty v-if="tableData.length === 0" :title="'No accounts available!'" :action="'Keep growing.'"></empty>
+    <empty v-if="tableData.length === 0" :title="'No posts available!'" :action="'Keep growing.'"></empty>
   </div>
 </template>
 
@@ -88,7 +88,9 @@ export default {
       limit: 5,
       offset: 0,
       numPages: null,
-      activePage: 1
+      activePage: 1,
+      sort: null,
+      filter: null
     }
   },
   components: {
@@ -98,7 +100,10 @@ export default {
     Pager
   },
   created() {
-    this.retrieveHistoryPosts()
+    this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+  },
+  mounted() {
+    this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
   },
   methods: {
     displayArray(channels){
@@ -119,12 +124,31 @@ export default {
       }
     },
     forReview(){
-      console.log('[here]')
       ROUTER.push('/post_management')
     },
-    retrieveHistoryPosts(){
+    retrieve(sort, filter){
+      if(sort !== null){
+        this.sort = sort
+      }
+      if(filter !== null){
+        this.filter = filter
+      }
+      if(sort === null && this.sort !== null){
+        sort = this.sort
+      }
+      if(filter === null && this.filter !== null){
+        filter = this.filter
+      }
       let parameter = {
-        account_id: this.user.userID
+        condition: [{
+          column: filter.column,
+          value: filter.value + '%',
+          clause: 'like'
+        }],
+        sort: sort,
+        limit: this.limit,
+        account_id: this.user.userID,
+        offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve_history', parameter).then(response => {
@@ -132,6 +156,7 @@ export default {
         console.log('RESPONSE: ', response)
         if(response.data.length > 0){
           this.tableData = response.data
+          this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
         }else{
           this.tableData = []
         }

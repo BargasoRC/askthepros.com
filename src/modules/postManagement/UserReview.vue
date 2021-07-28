@@ -135,7 +135,7 @@ export default {
           description: this.description,
           // url: null,
           account_id: this.user.userID,
-          status: this.selectedItem.status,
+          status: 'review',
           channels: JSON.stringify(channels),
           category: null
         }

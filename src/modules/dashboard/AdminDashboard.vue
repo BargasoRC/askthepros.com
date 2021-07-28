@@ -16,21 +16,37 @@
     </div>
     <div class="row">
       <div class="col-lg-9 latest_posts">
-        <h3 class="mb-5">Latest Posts</h3>
+        <div class="card" style="border-color: light-grey; padding-bottom: 1%; margin-top: 25px;">
+          <h3 class="mb-4" style="margin-top: 2%; margin-left: 1%">Latest Posts</h3>
           <table class="table table-striped table-bordered">
             <thead>
               <th v-for="(item, index) in tableHeaders" :key="index">{{item.title}}</th>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in data">
+              <tr v-for="(item, index) in data" :key="index">
                 <td>{{item.title}}</td>
                 <td>{{display(item.category)}}</td>
                 <td>{{displayArray(item.channels)}}</td>
                 <td>{{item.author}}</td>
-                <td>{{item.status.toUpperCase()}}</td>
+                <td :class="item.status === 'DRAFT' ? 'text-warning' : 'text-primary'">{{item.status.toUpperCase()}}</td>
               </tr>
             </tbody>
           </table>
+          <div class="row justify-content-between">
+            <div class="col-md-6 col-sm-6 col-xs-6">
+              <div class="col-sm-12">
+                <roundedBtn 
+                  :onClick="viewMore"
+                  :text="'View more'"
+                  :styles="{
+                    backgroundColor: colors.darkPrimary,
+                    color: 'white'
+                  }"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -56,7 +72,11 @@ export default {
         {title: 'Status'}
       ],
       data: [],
-      user: AUTH.user
+      user: AUTH.user,
+      limit: 5,
+      offset: 0,
+      numPages: null,
+      activePage: 1
     }
   },
   components: {
@@ -64,9 +84,12 @@ export default {
     DataTable
   },
   created() {
-    this.retrievePosts()
+    this.retrievePosts({created_at: 'desc'}, {column: 'created_at', value: ''})
   },
   methods: {
+    viewMore(){
+      this.$router.push(`/post_management`)
+    },
     display(category){
       if(category){
         let parsedCategory = JSON.parse(category)
@@ -102,18 +125,34 @@ export default {
       }
     },
     newPost() {
-      this.$router.push(`/${this.user.type.toLowerCase()}/post_management/edit`)
-    },
-    viewMore() {
-      this.$router.push(`/${this.user.type.toLowerCase()}/post_management`)
+      this.$router.push('/post_management/edit')
     },
     onTableAction(data) {
       console.log('TABLE ACTION: ', data)
     },
-    retrievePosts() {
+    retrievePosts(sort, filter) {
+      if(sort !== null){
+        this.sort = sort
+      }
+      if(filter !== null){
+        this.filter = filter
+      }
+      if(sort === null && this.sort !== null){
+        sort = this.sort
+      }
+      if(filter === null && this.filter !== null){
+        filter = this.filter
+      }
       let parameter = {
-        edit: false,
-        account_id: this.user.userID
+        condition: [{
+          column: filter.column,
+          value: filter.value + '%',
+          clause: 'like'
+        }],
+        sort: sort,
+        limit: 5,
+        account_id: this.user.userID,
+        offset: 0
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve', parameter).then(response => {
