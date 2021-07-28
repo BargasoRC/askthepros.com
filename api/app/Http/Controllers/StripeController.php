@@ -53,6 +53,26 @@ class StripeController extends APIController
     return $this->response();
   }
 
+  public function chargeCustomerByBilling($billing){
+    // get plan
+    // get payment method
+    // get account
+    $plan = app($this->planController)->getByParams('account_id', $billing['account_id']);
+    $paymentMethod = app($this->paymentMethodController)->getByParams('account_id', $billing['account_id']);
+    if($plan && $paymentMethod && $billing){
+      // USD 299 Constructions Monthy Plan
+      $title = 'USD '.$plan['amount'].' '.$plan['plan'].' Monthy Plan';
+      $paymentMethodDetails = json_decode($paymentMethod['details'], true);
+      $charge = $this->stripe->chargeCustomer($paymentMethodDetails['customer']['email'], $paymentMethodDetails['source']['id'], $paymentMethodDetails['customer']['id'], $billing['amount'] * 100, $title);
+      if($charge && $charge->id){
+        return true;
+      }else{
+        return false;
+      }
+    }else{
+      return false;
+    }
+  }
 
   public function chargeCustomer(Request $request){
     $data = $request->all();
