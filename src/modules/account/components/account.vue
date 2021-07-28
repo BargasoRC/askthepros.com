@@ -18,7 +18,6 @@
                             border: !isValidAccount && username == '' ? '1px solid red !important' : 'none',
                           }" v-model="username" class="input-style" style="background-color: lightgrey;"
                     disabled="1" />
-
                 </div>
               </div>
               <div class="row">
@@ -31,7 +30,7 @@
                   <p
                     class="mb-0 pb-0 invalidEmail"
                     v-if="!this.isValidAccount && email == ''"
-                  >{{emailValidation}}</p>
+                  >{{ email == '' ? 'Required Field' : emailValidation }}</p>
                 </div>
               </div>
             </div>
@@ -574,8 +573,10 @@ h3{
 .requiredFieldError {
   color: $danger;
   font-size: 10px;
-  margin-left: 20px;
-  margin-bottom: 25px !important;
+  //margin-left: 20px;
+  //margin-bottom: 25px !important;
+  margin-top: -30px;
+  position: absolute;
 }
 /*
 @media (max-width: 768px){
