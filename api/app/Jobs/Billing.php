@@ -62,7 +62,7 @@ class Billing implements ShouldQueue
                 'account_id' => $plan['account_id'],
                 'currency'   => 'USD',
                 'details'    => $billing[0]['details'],
-                'amount'     => intval($plan['total']),
+                'amount'     => intval($plan['amount']),
                 'start_date' => $startDate,
                 'end_date'   => $endDate,
                 'status'     => 'not paid'
