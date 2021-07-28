@@ -365,7 +365,6 @@ export default {
             ROUTER.push('/post_management')
           })
         }).catch(() => {
-          alert('Error')
           $('#loading').css({'display': 'none'})
           this.$refs.errorModal.show()
           return false
