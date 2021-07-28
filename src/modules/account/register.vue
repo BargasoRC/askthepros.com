@@ -241,7 +241,7 @@ export default {
       config: CONFIG,
       common: COMMON,
       type: 'USER',
-      industry: global.industry,
+      industry: [],
       selectedIndustry: null,
       global: global,
       errorMessage: '',
@@ -251,6 +251,9 @@ export default {
       colors: COLORS,
       user: AUTH.user
     }
+  },
+  mounted() {
+    this.retrieveIndustry()
   },
   components: {
     dialogueBtn,
@@ -262,11 +265,29 @@ export default {
   computed: {
     returnIndustry() {
       return this.industry.map(el => {
-        return el.category
+        return el.payload
       })
     }
   },
   methods: {
+    retrieveIndustry() {
+      let parameter = {
+        condition: [
+          {
+            value: 'INDUSTRY',
+            clause: '=',
+            column: 'category'
+          }
+        ],
+        offset: 0,
+        limit: 1
+      }
+      this.APIRequest('industry/retrieve', parameter, response => {
+        this.industry = response.data
+      }, error => {
+        error
+      })
+    },
     onSelect(data) {
       console.log('On Select:::')
       this.selectedIndustry = data.index
@@ -287,7 +308,7 @@ export default {
           account_type: this.type,
           referral_code: null,
           status: 'ADMIN',
-          industry: JSON.stringify({industry: this.industry[this.selectedIndustry].category})
+          industry: JSON.stringify({industry: this.industry[this.selectedIndustry].payload})
         }
         $('#loading').css({'display': 'block'})
         this.APIRequest('account/create', parameter).then(response => {
