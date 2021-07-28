@@ -2,51 +2,7 @@
   <div class="container-fluid">
     <div class="row flex-column-reverse flex-md-row">
       <div class="col-sm-8 col-sm-pull-4">
-        <div class="my-title">
-          <h3 style="">Profile</h3>
-        </div>
-        <div class="my-form row my-row">
-          <div class=" col-sm-12 input-form">
-            <div class="row">
-              <div class="col-md-6">
-                <p>First Name</p>
-                <roundedInput :type="'text'" :placeholder="'Enter your first name here'"
-                  :class="!isValidProfile && !firstname ? 'mb-0 ' : ' SettingsField'" :styles="{
-                        border: !isValidProfile && !firstname ? '1px solid red !important' : 'none',
-                      }" v-model="firstname" class="input-style" />
-
-              </div>
-              <div class="col-md-6">
-                <p>Last Name</p>
-                <roundedInput :type="'text'" :placeholder="'Enter your last name here'"
-                  :class="!isValidProfile && !lastname ? 'mb-0 ' : ' SettingsField'" :styles="{
-                      border: !isValidProfile && !lastname ? '1px solid red !important' : 'none',
-                    }" v-model="lastname" class="input-style" />
-
-              </div>
-
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <p>Business Name</p>
-                <roundedInput :type="'text'" :placeholder="'Enter your business name here'"
-                  :class="!isValidProfile && !businessname ? 'mb-0 ' : ' SettingsField'" :styles="{
-                    border: !isValidProfile && !businessname ? '1px solid red !important' : 'none',
-                  }" v-model="businessname" class="input-style" />
-
-              </div>
-              <div class="col-md-6">
-                <p>Contact Number</p>
-                <roundedInput :type="'text'" :placeholder="'Enter your contact number here'"
-                  :class="!isValidProfile && !contactnumber ? 'mb-0 ' : ' SettingsField'" :styles="{
-                    border: !isValidProfile && !contactnumber ? '1px solid red !important' : 'none',
-                  }" v-model="contactnumber" class="input-style" />
-
-              </div>
-            </div>
-
-          </div>
-        </div>
+        <Profile></Profile>
         <div class="my-title mb-5">
           <h3>Address</h3>
         </div>
@@ -328,6 +284,10 @@ import axios from 'axios'
 import $ from 'jquery'
 import global from 'src/helpers/global'
 import ROUTER from 'src/router'
+import Profile from 'src/modules/account/components/profile.vue'
+import Address from 'src/modules/account/components/address.vue'
+import CPass from 'src/modules/account/components/cpass.vue'
+import Account from 'src/modules/account/components/account.vue'
 export default {
   data() {
     return {
@@ -374,7 +334,11 @@ export default {
   components: {
     dialogueBtn,
     roundedInput,
-    roundedBtn
+    roundedBtn,
+    Account,
+    Address,
+    CPass,
+    Profile
   },
   computed: {
     returnProfile() {
