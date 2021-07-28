@@ -46,14 +46,6 @@ export default {
           console.log('USER @ Index: ', response.user[0])
           AUTH.setUser(response.user[0])
           AUTH.checkAuthentication()
-          setTimeout(() => {
-            localStorage.removeItem('usertoken')
-            localStorage.removeItem('account_id')
-            localStorage.removeItem('google_code')
-            localStorage.removeItem('google_scope')
-            localStorage.removeItem('xyzABCdefPayhiram')
-            localStorage.clear()
-          }, response.expires)
           ROUTER.push(`/dashboard`)
         }, error => {
           // $('#loading').css({'display': 'none'})

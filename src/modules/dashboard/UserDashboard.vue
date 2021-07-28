@@ -197,7 +197,7 @@ export default {
       ROUTER.push('channels/branding')
     },
     viewMore() {
-      this.$router.push(`/post_management`)
+      this.$router.push(`/post_management/history`)
     },
     preview() {
       this.$router.push(`/post_management`)

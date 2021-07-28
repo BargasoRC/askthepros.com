@@ -428,7 +428,7 @@ export default {
         this.businessname = this.user.merchant ? this.user.merchant.name : ''
         AUTH.user.information = response.data[0]
         if(response.data.length > 0) {
-          AUTH.user.merchant = data.merchant
+          AUTH.user.merchant = [data.merchant]
           this.firstname = data.first_name
           this.lastname = data.last_name
           this.contactnumber = data.cellular_number

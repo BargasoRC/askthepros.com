@@ -111,6 +111,7 @@ class StripeController extends APIController
         }else{
           Merchant::insert(array(
             'account_id' => $data['account_id'],
+            'status'     => 'verified',
             'addition_informations' => json_encode(array(
               'industry' => $data['plan']['category']
             ))

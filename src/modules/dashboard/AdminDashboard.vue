@@ -2,7 +2,7 @@
   <div class="holder">
     <h3>Hello, Admin!</h3>
     <p>Here are the latest update of activities as of today.</p>
-    <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-end p-0 mb-5 mt-0">
+    <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-end p-0 mt-0">
         <roundedBtn
             :onClick="newPost"
             :icon="'fas fa-plus'"
@@ -17,22 +17,20 @@
     <div class="row">
       <div class="col-lg-9 latest_posts">
         <h3 class="mb-5">Latest Posts</h3>
-        <DataTable 
-          :tableActions="tableActions"
-          :tableHeaders="tableHeaders"
-          :tableData="returnTableData"
-          @onAction="onTableAction"
-        />
-        <div class="col-sm-12">
-          <roundedBtn
-            :onClick="viewMore"
-            :text="'View more'"
-            :styles="{
-              backgroundColor: '#01004E',
-              color: 'white'
-            }"
-        />
-        </div>
+          <table class="table table-striped table-bordered">
+            <thead>
+              <th v-for="(item, index) in tableHeaders" :key="index">{{item.title}}</th>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in data">
+                <td>{{item.title}}</td>
+                <td>{{display(item.category)}}</td>
+                <td>{{displayArray(item.channels)}}</td>
+                <td>{{item.author}}</td>
+                <td>{{item.status.toUpperCase()}}</td>
+              </tr>
+            </tbody>
+          </table>
       </div>
     </div>
   </div>
@@ -51,13 +49,13 @@ export default {
       tableActions: [],
       // table header: should specify;  title, key(will be used as key in table data) and type
       tableHeaders: [
-        {title: 'Post Title', key: 'title', type: 'text'},
-        {title: 'Category', key: 'category', type: 'text'},
-        {title: 'Channel Actions', key: 'channels', type: 'text'},
-        {title: 'Author', key: 'author', type: 'text'},
-        {title: 'Status', key: 'status', type: 'text'}
+        {title: 'Post Title'},
+        {title: 'Category'},
+        {title: 'Channel Actions'},
+        {title: 'Author'},
+        {title: 'Status'}
       ],
-      tableData: [],
+      data: [],
       user: AUTH.user
     }
   },
@@ -68,16 +66,41 @@ export default {
   created() {
     this.retrievePosts()
   },
-  computed: {
-    returnTableData() {
-      this.tableData = this.tableData.splice(0, 5)
-      return this.tableData.filter((el, ndx) => {
-        el.channels = JSON.parse(el.channels).join(', ').replaceAll('_', ' ')
-        return el
-      })
-    }
-  },
   methods: {
+    display(category){
+      if(category){
+        let parsedCategory = JSON.parse(category)
+        let response = ''
+        for (var i = 0; i < parsedCategory.length; i++) {
+          let item = parsedCategory[i]
+          if(i > 0){
+            response += ', ' + item.category
+          }else{
+            response = item.category
+          }
+        }
+        return response
+      }else{
+        return null
+      }
+    },
+    displayArray(channels){
+      if(channels){
+        let parsedChannels = JSON.parse(channels)
+        let response = ''
+        for (var i = 0; i < parsedChannels.length; i++) {
+          let item = parsedChannels[i]
+          if(i > 0){
+            response += ', ' + item
+          }else{
+            response = item
+          }
+        }
+        return response
+      }else{
+        return null
+      }
+    },
     newPost() {
       this.$router.push(`/${this.user.type.toLowerCase()}/post_management/edit`)
     },
@@ -95,9 +118,8 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('RESPONSE: ', response)
         if(!response.error) {
-          this.tableData = response.data
+          this.data = response.data
         }
       })
     }
@@ -106,11 +128,6 @@ export default {
 </script>
 <style scoped lang="scss" scoped>
 @import "~assets/style/colors.scss";
-.latest_posts {
-  border: 1px solid $hover;
-  padding-top: 20px;
-  padding-bottom: 50px;
-}
 .holder{
   width: 96%;
   margin-left: 2%;

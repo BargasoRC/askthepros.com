@@ -46,6 +46,12 @@
       :files="file"
       :first="'false'"
     />
+    
+    <errorModal
+    ref="errorModal"
+    :title="'Error Message'"
+    :message="'Please fill in all of the fields.'"
+    />
   </div>
 </template>
 
@@ -57,6 +63,8 @@ import COLORS from 'src/assets/style/colors.js'
 import CONFIG from 'src/config.js'
 import review from './UserPreview.vue'
 import AUTH from 'src/services/auth'
+import ROUTER from 'src/router'
+import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 export default {
   mounted(){
     this.retrieveReview(this.$route.params.parameter)
@@ -91,7 +99,8 @@ export default {
     Imagess,
     Toggle,
     roundedBtn,
-    review
+    review,
+    errorModal
   },
   computed: {
     returnIndustry() {
@@ -115,24 +124,51 @@ export default {
       this.channel.push(id)
     },
     post(){
-      console.log(this.data.title)
-      var count = {}
-      this.channel.forEach(function(i) {
-        count[i] = (count[i] || 0) + 1
-      })
-      if((count.FACEBOOK % 2 === 0) || count.FACEBOOK === undefined){
-      }else{
-        this.channels.push('FACEBOOK')
+      if(this.validate()){
+        let channels = []
+        this.facebook ? channels.push('FACEBOOK') : null
+        this.googleMyBusiness ? channels.push('GOOGLE_MY_BUSINESS') : ''
+        this.linkedin ? channels.push('LINKEDIN') : ''
+        let parameter = {
+          code: this.$route.params.parameter,
+          title: this.title,
+          description: this.description,
+          // url: null,
+          account_id: this.user.userID,
+          status: this.selectedItem.status,
+          channels: JSON.stringify(channels),
+          category: null
+        }
+        console.log('[parameters]', parameter)
+        this.isClearing = true
+        this.APIRequest('post/update', parameter).then(response => {
+          $('#loading').css({'display': 'none'})
+          console.log('[response]', response)
+          if(response.data === true){
+            ROUTER.push('/post_management')
+          }
+        })
       }
-      if((count.GOOGLE_MY_BUSINESS % 2 === 0) || count.GOOGLE_MY_BUSINESS === undefined){
-      }else{
-        this.channels.push('GOOGLE_MY_BUSINESS')
+    },
+    validate() {
+      if(this.title === '' && this.title === null && this.title === undefined && this.description === '' && this.description === null && this.description === undefined){
+        this.$refs.errorModal.show()
+        return false
       }
-      if((count.LINKEDIN % 2 === 0) || count.LINKEDIN === undefined){
-      }else{
-        this.channels.push('LINKEDIN')
+      if(this.facebook === false && this.linkedin === false && this.googleMyBusiness === false){
+        this.isValid = false
+        this.$refs.errorModal.show()
+        return false
+      }if(this.title === '' && this.title === null && this.title === undefined) {
+        this.isValid = false
+        this.$refs.errorModal.show()
+        return false
+      }if(this.description === '' && this.description === null && this.description === undefined) {
+        this.isValid = false
+        this.$refs.errorModal.show()
+        return false
       }
-      console.log('[channels]', this.channels, this.data.title, this.data.description)
+      return true
     },
     storeImages(data) {
       this.imagesList = data
