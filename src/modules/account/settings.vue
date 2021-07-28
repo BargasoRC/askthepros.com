@@ -1,235 +1,11 @@
 <template>
-  <div class="container-fluid">
-    <div class="row flex-column-reverse flex-md-row">
+  <div class="container-fluid " >
+    <div class="row flex-column-reverse flex-md-row mb-3">
       <div class="col-sm-8 col-sm-pull-4">
-        <Profile></Profile>
-        <div class="my-title mb-5">
-          <h3>Address</h3>
-        </div>
-
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="row">
-              <div class="col-md-6">
-                <p>Route</p>
-                <roundedInput :type="'text'" :placeholder="'Enter your route here'"
-                  :class="!isValidProfile && !route ? 'mb-0 ' : ' SettingsField'" :styles="{
-                            border: !isValidProfile && !route ? '1px solid red !important' : 'none',
-                          }" v-model="route" class="input-style" />
-
-              </div>
-
-              <div class="col-md-6">
-                <p>City</p>
-                <roundedInput :type="'text'" :placeholder="'Enter your city here'"
-                  :class="!isValidProfile && !city ? 'mb-0 ' : ' SettingsField'" :styles="{
-                          border: !isValidProfile && !city ? '1px solid red !important' : 'none',
-                        }" v-model="city" class="input-style" />
-
-              </div>
-            </div>
-            <div class="row">
-              <div class=" col-md-6">
-                <p>Region</p>
-                <roundedInput :type="'text'" :placeholder="'Enter your region here'"
-                  :class="!isValidProfile && !region ? 'mb-0 ' : ' SettingsField'" :styles="{
-                            border: !isValidProfile && !region ? '1px solid red !important' : 'none',
-                          }" v-model="region" class="input-style" />
-
-              </div>
-              <div class="col-md-6">
-                <p>Country</p>
-                <roundedInput :type="'text'" :placeholder="'Enter your country here'"
-                  :class="!isValidProfile && !country ? 'mb-0 ' : ' SettingsField'" :styles="{
-                          border: !isValidProfile && !country ? '1px solid red !important' : 'none',
-                        }" v-model="country" class="input-style" />
-
-              </div>
-
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <p>Postal/Zip Code</p>
-                <roundedInput :type="'text'" :placeholder="'Enter your postal/zip code here'"
-                  :class="!isValidProfile && !postalZipCode ? 'mb-0 ' : ' SettingsField'" :styles="{
-                            border: !isValidProfile && !postalZipCode ? '1px solid red !important' : 'none',
-                          }" v-model="postalZipCode" class="input-style" />
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="my-title mb-5">
-          <h3>Account</h3>
-        </div>
-
-        <div class="">
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="row">
-                <div class="col-md-6"> 
-                  <p>Username</p>
-                  <roundedInput :type="'text'" :placeholder="'Username'"
-                    :class="!isValidAccount && username == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                            border: !isValidAccount && username == '' ? '1px solid red !important' : 'none',
-                          }" v-model="username" class="input-style" style="background-color: lightgrey;"
-                    disabled="1" />
-
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <p>Email Address</p>
-                  <roundedInput :type="'text'" :placeholder="'example@email.domain'"
-                    :class="!isValidAccount && email == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                              border: !isValidAccount && email == '' ? '1px solid red !important' : 'none',
-                            }" v-model="email" class="input-style" style="background-color: lightgrey;" />
-                  <p
-                    class="mb-0 pb-0 invalidEmail"
-                    v-if="!this.isValidAccount && email == ''"
-                  >{{emailValidation}}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="my-title mb-5">
-          <h3>Change Your Password</h3>
-        </div>
-
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="row">
-              <div class="col-sm-12">
-                <div class="row" v-if="passwordVerified">
-                  <div class="col-md-6">
-                    <p>New Password</p>
-                    <roundedInput :type="isShowingPassword ? 'text' : 'password'"
-                      :placeholder="'(Leave blank if unchanged)'"
-                      :class="'input-style ' + (!isValidPassword && password == '' ? 'mb-0 ' : ' SettingsField')"
-                      :styles="{
-                        border: ((!isValidPassword && password == '' ) || (password != confirmPassword)) ? '1px solid red !important' : 'none',
-                        marginBottom: '0px'
-                      }" 
-                      v-model="password" 
-                    />
-                    <span
-                      :class="'fa fa-fw fa-eye ' + (!isValidPassword && password == '' ? 'error-field-icon' : 'field-icon')"
-                      @click="() => isShowingPassword = !isShowingPassword" :style="{
-                marginTop: '-28px !important'
-              }" v-if="isShowingPassword"></span>
-                    <span
-                      :class="'far fa-eye-slash ' + (!isValidPassword && password == '' ? 'error-field-icon' : 'field-icon')"
-                      @click="() => isShowingPassword = !isShowingPassword" :style="{
-                marginTop: '-28px !important'
-              }" v-if="!isShowingPassword"></span>
-                    <div>
-                      <p class="mb-0 pb-0 requiredFieldError"
-                        v-if="password == '' || password != confirmPassword || passwordRequirements != ''">
-                        {{
-                        password != confirmPassword ?
-                        'does not match'
-                        :
-                        passwordRequirements != '' ?
-                        passwordRequirements
-                        :
-                        ''
-                        }}</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="row" v-if="passwordVerified">
-                  <div class="col-md-6">
-                    <p>Confirm Password</p>
-                    <input :type="isShowingCPassword ? 'text' : 'password'" :placeholder="'(Leave blank if unchanged)'"
-                      :class="'form-control roudedInput input-style ' + (!isValidPassword && confirmPassword == '' ? 'mb-0 ' : ' SettingsField')"
-                      :style="{
-                border: ((!isValidPassword && confirmPassword == '') || (password != confirmPassword)) ? '1px solid red !important' : 'none',
-                marginBottom: '0px'
-              }" v-model="confirmPassword" />
-                    <span
-                      :class="'fa fa-fw fa-eye ' + (!isValidPassword && password == '' ? 'error-field-icon' : 'field-icon')"
-                      @click="() => isShowingCPassword = !isShowingCPassword" v-if="isShowingCPassword" :style="{
-                marginTop: '-28px !important'
-              }"></span>
-                    <span
-                      :class="'far fa-eye-slash ' + (!isValidPassword && password == '' ? 'error-field-icon' : 'field-icon')"
-                      @click="() => isShowingCPassword = !isShowingCPassword" v-if="!isShowingCPassword" :style="{
-                marginTop: '-28px !important'
-              }"></span>
-                    <div>
-                      <p class="mb-0 pb-0 requiredFieldError"
-                        v-if="password == '' || password != confirmPassword || passwordRequirements != ''">
-                        {{
-                        password != confirmPassword ?
-                        'does not match'
-                        :
-                        passwordRequirements != '' ?
-                        passwordRequirements
-                        :
-                        ''
-                        }}</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="row" v-if="!passwordVerified">
-                  <div class="col-md-6 pt-0">
-                    <p>Old Password</p>
-                    <!-- <roundedInput :type="isShowingOPassword ? 'text' : 'password'"
-                      :placeholder="'(Leave blank if unchanged)'"
-                      :class="'input-style ' + (!isValidPassword && oPassword == '' ? 'mb-0 ' : ' SettingsField')"
-                      :styles="{
-                border: !isValidPassword && oPassword == '' ? '1px solid red !important' : 'none',
-              }" v-model="oPassword" /> -->
-                    <input 
-                      :type="isShowingOPassword ? 'text' : 'password'" 
-                      :placeholder="'(Leave blank if unchanged)'"
-                      :class="'form-control roudedInput input-style ' + (!isValidPassword && oPassword == '' ? 'mb-0 ' : ' SettingsField')"
-                      :style="{
-                        border: !isValidPassword && oPassword == '' ? '1px solid red !important' : 'none',
-                        marginBottom: !isValidPassword && oPassword == '' ? '0px' : '30px',
-                      }"
-                      v-model="oPassword" 
-                    />
-                    <span
-                      :class="'fa fa-fw fa-eye ' + (!isValidPassword && oPassword == '' ? 'error-field-icon' : 'field-icon')"
-                      @click="() => isShowingOPassword = !isShowingOPassword" v-if="isShowingOPassword"></span>
-                    <span
-                      :class="'far fa-eye-slash ' + (!isValidPassword && oPassword == '' ? 'error-field-icon' : 'field-icon')"
-                      @click="() => isShowingOPassword = !isShowingOPassword" v-if="!isShowingOPassword"></span>
-                    <div>
-                      <p class="mb-0 pb-0 requiredFieldError" v-if="oPassword === '' && !isValidPassword">{{
-                        passwordRequirements != '' ?
-                        passwordRequirements
-                        :
-                        ''
-                        }}</p>
-                    </div>
-                  </div>
-                  <div class="col-sm-12" :style="{
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginTop: '0px'
-                  }">
-                    <roundedBtn :onClick="checkPassword" :icon="'fas fa-sign-in-alt'" :text="'Verify Password'" :styles="{
-                      backgroundColor: 'rgb(241, 184, 20)',
-                      color: 'white',
-                      height: '35px'
-                    }" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <roundedBtn :onClick="update_account" :icon="'fas fa-sign-in-alt'" :text="'Update'" :styles="{
-          backgroundColor: '#01004E',
-          color: 'white'
-        }" style="margin-bottom: 5%; margin-top: 5%;" />
-
+        <Profile/>
+        <Address/>
+        <Account/>
+        <CPass/>
       </div>
       <div class="col-sm-4 text-center mb-5 col-sm-push-8">
         <h3>Profile picture</h3>
@@ -286,8 +62,8 @@ import global from 'src/helpers/global'
 import ROUTER from 'src/router'
 import Profile from 'src/modules/account/components/profile.vue'
 import Address from 'src/modules/account/components/address.vue'
-import CPass from 'src/modules/account/components/cpass.vue'
 import Account from 'src/modules/account/components/account.vue'
+import CPass from 'src/modules/account/components/cpass.vue'
 export default {
   data() {
     return {
@@ -335,10 +111,10 @@ export default {
     dialogueBtn,
     roundedInput,
     roundedBtn,
-    Account,
+    Profile,
     Address,
-    CPass,
-    Profile
+    Account,
+    CPass
   },
   computed: {
     returnProfile() {
@@ -624,7 +400,6 @@ export default {
         if(response.data.data !== null){
           console.log('PROFILE URL: ', response.data.data)
           let profile = response.data.data
-
           let condition = {
             condition: [
               {
@@ -712,7 +487,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped lang="scss" scoped>
@@ -744,55 +518,45 @@ export default {
   margin-right: 2%;
   float: left;
 }
-
 .hidden-button{
   background: blue;
 }
-
 .my-title{
   border-bottom: solid 1px black;
   max-width: 100%;
 }
-
 h3{
   margin-top: 25px;
   font-weight: bold;
   font-size: 21px;
   padding-bottom: 1%;
 }
-
 .my-form{
   padding-left: 3%;
   padding-top: 3%;
   margin-left: -3%;
 }
-
 .input-form{
   background-color: none;
   margin-left: 0%;
 }
-
 .input-style{
   padding-left: 3%;
   background-color: none;
   max-width: 78%;
   border: 1px solid black;
 }
-
 .input-style ::-moz-placeholder{
   font-style: italic;
 }
-
 .profile-pic{
   float: center;
 }
-
 .profile-pic h3{
   font-weight: bold; 
   margin-right: 4%; 
   font-size: 19px;
 }
-
 .my-icon{
   background-color: none;
   color: $primary;
@@ -803,7 +567,6 @@ h3{
   font-size: 170px;
   margin-top: -15%;
 }
-
 .field-icon {
   float: right;
   margin-top: -58px;
@@ -818,7 +581,6 @@ h3{
   position: relative;
   z-index: 2;
 }
-
 .requiredFieldError {
   color: $danger;
   font-size: 10px;
@@ -832,5 +594,4 @@ h3{
   }
 }
 */
-
 </style>
