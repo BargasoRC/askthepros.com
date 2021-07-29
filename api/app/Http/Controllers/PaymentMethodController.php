@@ -25,4 +25,9 @@ class PaymentMethodController extends APIController
       return $code;
     }
   }
+  
+  public function getByParams($column, $value){
+    $result = PaymentMethod::where($column, '=', $value)->orderBy('created_at', 'desc')->get();
+    return sizeof($result) > 0 ? $result[0] : null;
+  }
 }

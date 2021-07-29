@@ -49,9 +49,9 @@
 
         <roundedBtn 
           :onClick="() => {
-            // add plan here
+            this.redirect('/checkout/' + data.plan.plan.toLowerCase().replace(' ', '_'))
           }"
-          :text="'Add Plan'"
+          :text="'Subscribe'"
           v-if="data.plan.end_date !== null"
           :styles="{
             marginTop: '20px',
@@ -152,7 +152,8 @@ export default {
     cancelPlan(){
       if(this.data && this.data.plan){
         let parameter = {
-          id: this.data.plan.id
+          id: this.data.plan.id,
+          account_id: this.user.userID
         }
         $('#loading').css({'display': 'block'})
         this.APIRequest('plans/cancel_plan', parameter).then(response => {
@@ -171,13 +172,28 @@ export default {
       if(this.data && this.data.plan !== null){
         return
       }
+      let conditions = [{
+        value: 'subscriptions',
+        clause: '=',
+        column: 'payload'
+      }]
+      if(this.user !== null && this.user.merchant && this.user.merchant.length > 0 && this.user.merchant[0].addition_informations){
+        let industry = JSON.parse(this.user.merchant[0].addition_informations)
+        conditions.push({
+          value: industry.industry,
+          column: 'category',
+          clause: '='
+        })
+      }
+      if(this.user !== null && this.user.merchant && this.user.merchant.addition_informations){
+        conditions.push({
+          value: this.user.merchant.addition_informations.industry,
+          column: 'category',
+          clause: '='
+        })
+      }
       let parameter = {
-        condition: [{
-          value: 'subscriptions',
-          clause: '=',
-          column: 'payload'
-        }
-        ]
+        condition: conditions
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('payloads/retrieve', parameter).then(response => {

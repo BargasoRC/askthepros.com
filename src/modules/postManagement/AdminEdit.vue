@@ -228,12 +228,11 @@ export default {
     // EDIT A POST
     retrieveEditPosts() {
       let parameter = {
-        edit: true,
         account_id: this.user.userID,
         code: this.$route.params.parameter
       }
       $('#loading').css({'display': 'block'})
-      this.APIRequest('post/retrieve', parameter).then(response => {
+      this.APIRequest('post/retrieve_by_code', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         if(!response.error) {
           response.data.filter(el => {

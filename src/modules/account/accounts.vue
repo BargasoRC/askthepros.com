@@ -89,6 +89,7 @@
   height: auto;
   margin-bottom: 100px;
   margin-top: 25px;
+  min-height: 70vh;
 }
 
 td i {

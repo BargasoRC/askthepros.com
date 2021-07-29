@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Post;
 use App\PostTarget;
 use App\PostHistory;
+use App\Page;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Increment\Common\Image\Models\Image;
@@ -13,7 +14,9 @@ use Increment\Common\Image\Models\Image;
 class PostController extends APIController
 {
     //
-    public $brandingClass = 'App\Http\Controllers\BrandingController'; 
+    public $brandingClass = 'App\Http\Controllers\BrandingController';
+    public $historyClass = 'App\Http\Controllers\PostHistoryController';
+    public $pageClass = 'App\Http\Controllers\PageController';
 
     public function create(Request $request) {
         $data = $request->all();
@@ -53,18 +56,42 @@ class PostController extends APIController
 
     public function retrieve(Request $request) {
         $data = $request->all();
-        if($data['edit'] === true){
-          $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
-          ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
-          ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
-          ->where('posts.code', '=', $data['code'])
-          ->get();
-        }else{
-          $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
-            ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
-            ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
-            ->get();
+        $con = $data['condition'];
+
+        $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
+        ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
+        ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
+        ->where('posts.'.$con[0]['column'], $con[0]['clause'], $con[0]['value'])
+        ->limit($data['limit'])
+        ->offset($data['offset'])->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+
+        $size = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
+        ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
+        ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
+        ->where('posts.'.$con[0]['column'], $con[0]['clause'], $con[0]['value'])
+        ->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+
+        $i = 0;
+        foreach ($result as $key) {
+          $result[$i]['branding'] = app($this->brandingClass)->retrieveByAccountId($data['account_id']);
+          $result[$i]['created_at_human'] = Carbon::createFromFormat('Y-m-d H:i:s', $result[$i]['created_at'])->copy()->tz($this->response['timezone'])->format('F j, Y h:i A');
+          $i++;
         }
+        $this->response['data'] = $result;
+        $this->response['size'] = count($size);
+        $this->response['error'] = null;
+        return $this->response();
+    }
+
+
+    public function retrieveByCode(Request $request) {
+        $data = $request->all();
+        $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
+        ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
+        ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
+        ->where('posts.code', '=', $data['code'])
+        ->get();
+
         $i = 0;
         foreach ($result as $key) {
           $result[$i]['branding'] = app($this->brandingClass)->retrieveByAccountId($data['account_id']);
@@ -129,14 +156,34 @@ class PostController extends APIController
 
     public function retrieveByUser(Request $request) {
       $data = $request->all();
-      $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
-              ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
-              ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
-              ->where('posts.account_id', '=', $data['account_id'])
-              ->get();
-      $this->response['data'] = $result;
-      $this->response['error'] = null;
-      return $this->response();
+      $con = $data['condition'];
+
+        $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
+        ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
+        ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
+        ->where('posts.account_id', '=', $data['account_id'])
+        ->where('posts.'.$con[0]['column'], $con[0]['clause'], $con[0]['value'])
+        ->limit($data['limit'])
+        ->offset($data['offset'])->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+
+        $size = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
+        ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
+        ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
+        ->where('posts.account_id', '=', $data['account_id'])
+        ->where('posts.'.$con[0]['column'], $con[0]['clause'], $con[0]['value'])
+        ->get();
+
+        $i = 0;
+        foreach ($result as $key) {
+          $result[$i]['created_at_human'] = Carbon::createFromFormat('Y-m-d H:i:s', $result[$i]['created_at'])->copy()->tz($this->response['timezone'])->format('F j, Y ');
+          $result[$i]['time'] = Carbon::createFromFormat('Y-m-d H:i:s', $result[$i]['created_at'])->copy()->tz($this->response['timezone'])->format('h:i A');
+          $i++;
+        }
+
+        $this->response['data'] = $result;
+        $this->response['size'] = count($size);
+        $this->response['error'] = null;
+        return $this->response();
     }
 
     public function retrieveById(Request $request) {
@@ -165,7 +212,7 @@ class PostController extends APIController
       }
     }
 
-    public function retrieveByCode($code) {
+    public function retrieveByCodeParams($code) {
       $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
               ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
               ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
@@ -176,13 +223,75 @@ class PostController extends APIController
 
     public function retrieveHistoryPosts(Request $request){
       $data = $request->all();
-      $result = PostHistory::where('account_id', '=', $data['account_id'])->get();
+      $con = $data['condition'];
+
+      $result = PostHistory::where('account_id', '=', $data['account_id'])
+      ->where($con[0]['column'], $con[0]['clause'], $con[0]['value'])
+      ->limit($data['limit'])
+      ->offset($data['offset'])->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+
+      $size = PostHistory::where('account_id', '=', $data['account_id'])
+      ->where($con[0]['column'], $con[0]['clause'], $con[0]['value'])
+      ->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+
       $i = 0;
       foreach ($result as $key) {
-        $result[$i]['post'] = $this->retrieveByCode($result[$i]['code']);
+        $result[$i]['post'] = $this->retrieveByCodeParams($result[$i]['code']);
+        $result[$i]['date'] = Carbon::createFromFormat('Y-m-d H:i:s', $result[$i]['created_at'])->copy()->tz($this->response['timezone'])->format('F j, Y ');
+        $result[$i]['time'] = Carbon::createFromFormat('Y-m-d H:i:s', $result[$i]['created_at'])->copy()->tz($this->response['timezone'])->format('h:i A');
         $i++;
       }
       $this->response['data'] = $result;
+      $this->response['size'] = count($size);
+      $this->response['error'] = null;
       return $this->response();
+    }
+
+    public function retrieveByUserIndustry(Request $request) {
+      $data = $request->all();
+      $con = $data['condition'];
+        $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
+        ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
+        ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
+        ->where('post_targets.payload_value', 'like', '%'.$data['category'].'%')
+        ->where('posts.status', '=', 'PUBLISH')
+        ->where('posts.'.$con[0]['column'], $con[0]['clause'], $con[0]['value'])
+        ->limit($data['limit'])
+        ->offset($data['offset'])->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+
+        $size = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
+        ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
+        ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
+        ->where('post_targets.payload_value', 'like', '%'.$data['category'].'%')
+        ->where('posts.status', '=', 'PUBLISH')
+        ->where('posts.'.$con[0]['column'], $con[0]['clause'], $con[0]['value'])
+        ->get();
+
+        $i = 0;
+
+        // dd($data['status']);
+        foreach ($result as $key) {
+          if($data['status'] === 'automation_settings'){
+            $post = new PostHistory();
+            $pages_id = Page::where('account_id', '=', $result[$i]['account_id'])->get('id');
+            $data = array(
+              'code' => $this->generateCode($post),
+              'post_id' => $result[$i]['id'],
+              'channel' => $result[$i]['channels'],
+              'link' => null,
+              'page_id' => sizeof($pages_id) > 0 ? $pages_id[0]['id'] : null,
+              'account_id' => $data['account_id'],
+              'status' => 'posted'
+            );
+            app($this->historyClass)->createByParams($data);
+          }
+          $result[$i]['created_at_human'] = Carbon::createFromFormat('Y-m-d H:i:s', $result[$i]['created_at'])->copy()->tz($this->response['timezone'])->format('F j, Y ');
+          $result[$i]['time'] = Carbon::createFromFormat('Y-m-d H:i:s', $result[$i]['created_at'])->copy()->tz($this->response['timezone'])->format('h:i A');
+          $i++;
+        }
+        $this->response['data'] = $result;
+        $this->response['size'] = count($size);
+        $this->response['error'] = null;
+        return $this->response();
     }
 }

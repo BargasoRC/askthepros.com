@@ -23,7 +23,7 @@
             <td>
               <roundedBtn
                 :onClick="e => {
-                  redirect('/user/checkout')
+                  redirect('/checkout/' + item.plan.plan.toLowerCase().replace(' ', '_'))
                 }"
                 :text="'Pay Now'"
                 v-if="item.status !== 'paid'"
