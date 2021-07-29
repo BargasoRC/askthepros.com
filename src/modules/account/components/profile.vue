@@ -16,7 +16,7 @@
                       }" v-model="firstname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="firstname == '' || !isValidAccount">
+                    v-if="firstname == '' && !isValidProfile">
                     {{
                     'Required Field'
                     }}</p>
@@ -30,7 +30,7 @@
                     }" v-model="lastname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="lastname == '' || !isValidAccount">
+                    v-if="lastname == '' && !isValidProfile">
                     {{
                     'Required Field'
                     }}</p>
@@ -47,7 +47,7 @@
                     }" v-model="businessname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="businessname == '' || !isValidAccount">
+                    v-if="businessname == '' && !isValidProfile">
                     {{
                     'Required Field'
                     }}</p>
@@ -61,7 +61,7 @@
                     }" v-model="contactnumber" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="contactnumber == '' || !isValidAccount">
+                    v-if="contactnumber == '' && !isValidProfile">
                     {{
                     'Required Field'
                     }}</p>
@@ -377,10 +377,8 @@ h3{
 .requiredFieldError {
   color: $danger;
   font-size: 10px;
-  //margin-left: 20px;
+  margin-left: 20px;
   margin-bottom: 25px !important;
-  margin-top: -30px;
-  position: absolute;
 }
 /*
 @media (max-width: 768px){
