@@ -255,9 +255,6 @@ export default {
       errorMessage: null
     }
   },
-  mounted() {
-    this.retrieveIndustry()
-  },
   components: {
     dialogueBtn,
     roundedInput,
@@ -293,6 +290,51 @@ export default {
       }).catch(error => {
         $('#loading').css({'display': 'none'})
         error
+      })
+    },
+    gmailLogin(event) {
+      console.log('gmail login:::')
+      $('#loading').css({'display': 'block'})
+      localStorage.setItem('login_with', 'google')
+      this.APIRequest('social_lite/authenticate/google/redirect', {}, response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data && response.data.url) {
+          console.log('Authentication with google response: ', response)
+          window.location.href = response.data.url
+        }
+      }, error => {
+        $('#loading').css({'display': 'none'})
+        console.log('Authentication with google error! ', error)
+      })
+    },
+    fbLogin(event) {
+      $('#loading').css({'display': 'block'})
+      console.log('facebook login:::')
+      localStorage.setItem('login_with', 'facebook')
+      this.APIRequest('social_lite/authenticate/facebook/redirect', {}, response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data && response.data.url) {
+          console.log('Authentication with facebook response: ', response)
+          window.location.href = response.data.url
+        }
+      }, error => {
+        $('#loading').css({'display': 'none'})
+        console.log('Authentication with facebook error! ', error)
+      })
+    },
+    linkedInLogin(event) {
+      $('#loading').css({'display': 'block'})
+      console.log('linkedin login:::')
+      localStorage.setItem('login_with', 'linkedin')
+      this.APIRequest('social_lite/authenticate/linkedin/redirect', {}, response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data && response.data.url) {
+          console.log('Authentication with linkedin response: ', response)
+          window.location.href = response.data.url
+        }
+      }, error => {
+        $('#loading').css({'display': 'none'})
+        console.log('Authentication with linkedin error! ', error)
       })
     },
     onSelect(data) {
@@ -398,15 +440,6 @@ export default {
     },
     forgotPassword(event) {
       console.log('forgot password:::')
-    },
-    gmailLogin(event) {
-      console.log('gmail login:::')
-    },
-    fbLogin(event) {
-      console.log('facebook login:::')
-    },
-    linkedInLogin(event) {
-      console.log('linkedin login:::')
     }
   }
 }

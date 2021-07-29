@@ -200,6 +200,10 @@ Route::post($route.'retrieve', $controller."retrieve");
 Route::post($route.'delete', $controller."delete");
 Route::get($route.'test', $controller."test");
 
+$route = env('PACKAGE_ROUTE', '').'/social/';
+$controller = 'SocialMediaController@';
+Route::post($route.'retrieve_fb_pages', $controller.'retrieveFacebookPages');
+
 $route = env('PACKAGE_ROUTE', '').'/industry/';
 $controller = 'IndustryController@';
 Route::post($route.'create', $controller."create");
