@@ -1,50 +1,143 @@
 <template>
-  <div class="container-fluid " >
-    <div class="row flex-column-reverse flex-md-row mb-3">
-      <div class="col-sm-8 col-sm-pull-4">
-        <Profile/>
-        <Address/>
-        <Account/>
-        <CPass/>
-      </div>
-      <div class="col-sm-4 text-center mb-5 col-sm-push-8">
-        <h3>Profile picture</h3>
-        <div class="col-sm-12 mt-3" v-if="user.login_type === 'local'">
-          <i class="fas fa-user-circle" aria-hidden="true" :style="{
-            fontSize: '150px',
-            color: '#01009A'
-          }" v-if="!returnProfile"></i>
-          <img :src="config.BACKEND_URL + returnProfile.url" v-else :style="{
-            width: '170px',
-            height: '170px',
-            borderRadius: '50%'
-          }" />
-        </div>
-        <div v-else>
-          <img
-            v-bind:src="user.profile.url"
-            v-if="user.profile"
-            :style="{
-            width: '170px',
-            height: '170px',
-            borderRadius: '50%'
-          }">
-          <i class="fas fa-user-circle" aria-hidden="true" :style="{
-            fontSize: '150px',
-            color: '#01009A'
-          }" v-else></i>
-        </div>
-        <div v-if="user.login_type === 'local'">
-          <div class="mt-4">
-            <roundedBtn :icon="'fas fa-sign-in-alt'" :text="'Change Profile Picture'" :styles="{
-              backgroundColor: '#01004E',
-              color: 'white',
-            }" :onClick="addImage" />
+  <div class="container-fluid">
+    <div class="row flex-column-reverse">
+      <div class="col-sm-pull-4">
 
-            <input type="file" id="Image" accept="images/*" @change="setUpFileUpload($event)">
+        <div class="my-title mb-5">
+          <h3>Change Your Password</h3>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="row" v-if="passwordVerified">
+                  <div class="col-md-6">
+                    <p>New Password</p>
+                    <roundedInput :type="isShowingPassword ? 'text' : 'password'"
+                      :placeholder="'(Leave blank if unchanged)'"
+                      :class="'input-style ' + (!isValidPassword && password == '' ? 'mb-0 ' : ' SettingsField')"
+                      :styles="{
+                        border: ((!isValidPassword && password == '' ) || (password != confirmPassword)) ? '1px solid red !important' : 'none',
+                        marginBottom: '0px'
+                      }" 
+                      v-model="password" 
+                    />
+                    <span
+                      :class="'fa fa-fw fa-eye ' + (!isValidPassword && password == '' ? 'error-field-icon' : 'field-icon')"
+                      @click="() => isShowingPassword = !isShowingPassword" :style="{
+                marginTop: '-28px !important'
+              }" v-if="isShowingPassword"></span>
+                    <span
+                      :class="'far fa-eye-slash ' + (!isValidPassword && password == '' ? 'error-field-icon' : 'field-icon')"
+                      @click="() => isShowingPassword = !isShowingPassword" :style="{
+                marginTop: '-28px !important'
+              }" v-if="!isShowingPassword"></span>
+                    <div>
+                      <p class="mb-0 pb-0 requiredFieldError"
+                        v-if="password == '' || password != confirmPassword || passwordRequirements != ''">
+                        {{
+                        password != confirmPassword ?
+                        'does not match'
+                        :
+                        passwordRequirements != '' ?
+                        passwordRequirements
+                        :
+                        ''
+                        }}</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" v-if="passwordVerified">
+                  <div class="col-md-6">
+                    <p>Confirm Password</p>
+                    <input :type="isShowingCPassword ? 'text' : 'password'" :placeholder="'(Leave blank if unchanged)'"
+                      :class="'form-control roudedInput input-style ' + (!isValidPassword && confirmPassword == '' ? 'mb-0 ' : ' SettingsField')"
+                      :style="{
+                border: ((!isValidPassword && confirmPassword == '') || (password != confirmPassword)) ? '1px solid red !important' : 'none',
+                marginBottom: '0px'
+              }" v-model="confirmPassword" />
+                    <span
+                      :class="'fa fa-fw fa-eye ' + (!isValidPassword && password == '' ? 'error-field-icon' : 'field-icon')"
+                      @click="() => isShowingCPassword = !isShowingCPassword" v-if="isShowingCPassword" :style="{
+                marginTop: '-28px !important'
+              }"></span>
+                    <span
+                      :class="'far fa-eye-slash ' + (!isValidPassword && password == '' ? 'error-field-icon' : 'field-icon')"
+                      @click="() => isShowingCPassword = !isShowingCPassword" v-if="!isShowingCPassword" :style="{
+                marginTop: '-28px !important'
+              }"></span>
+                    <div>
+                      <p class="mb-0 pb-0 requiredFieldError"
+                        v-if="password == '' || password != confirmPassword || passwordRequirements != ''">
+                        {{
+                        password != confirmPassword ?
+                        'does not match'
+                        :
+                        passwordRequirements != '' ?
+                        passwordRequirements
+                        :
+                        ''
+                        }}</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" v-if="!passwordVerified">
+                  <div class="col-md-6 pt-0">
+                    <p>Old Password</p>
+                    <!-- <roundedInput :type="isShowingOPassword ? 'text' : 'password'"
+                      :placeholder="'(Leave blank if unchanged)'"
+                      :class="'input-style ' + (!isValidPassword && oPassword == '' ? 'mb-0 ' : ' SettingsField')"
+                      :styles="{
+                border: !isValidPassword && oPassword == '' ? '1px solid red !important' : 'none',
+              }" v-model="oPassword" /> -->
+                    <input 
+                      :type="isShowingOPassword ? 'text' : 'password'" 
+                      :placeholder="'(Leave blank if unchanged)'"
+                      :class="'form-control roudedInput input-style ' + (!isValidPassword && oPassword == '' ? 'mb-0 ' : ' SettingsField')"
+                      :style="{
+                        border: !isValidPassword && oPassword == '' ? '1px solid red !important' : 'none',
+                        marginBottom: !isValidPassword && oPassword == '' ? '0px' : '30px',
+                      }"
+                      v-model="oPassword" 
+                    />
+                    <span
+                      :class="'fa fa-fw fa-eye ' + (!isValidPassword && oPassword == '' ? 'error-field-icon' : 'field-icon')"
+                      @click="() => isShowingOPassword = !isShowingOPassword" v-if="isShowingOPassword"></span>
+                    <span
+                      :class="'far fa-eye-slash ' + (!isValidPassword && oPassword == '' ? 'error-field-icon' : 'field-icon')"
+                      @click="() => isShowingOPassword = !isShowingOPassword" v-if="!isShowingOPassword"></span>
+                    <div>
+                      <p class="mb-0 pb-0 requiredFieldError" v-if="oPassword === '' && !isValidPassword">{{
+                        passwordRequirements != '' ?
+                        passwordRequirements
+                        :
+                        ''
+                        }}</p>
+                    </div>
+                  </div>
+                  <div class="col-sm-12" :style="{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginTop: '0px'
+                  }">
+                    <roundedBtn :onClick="checkPassword" :icon="'fas fa-sign-in-alt'" :text="'Verify Password'" :styles="{
+                      backgroundColor: 'rgb(241, 184, 20)',
+                      color: 'white',
+                      height: '35px'
+                    }" />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-
         </div>
+
+        <roundedBtn :onClick="update_account" :icon="'fas fa-sign-in-alt'" :text="'Update'" :styles="{
+          backgroundColor: '#01004E',
+          color: 'white'
+        }" style="margin-bottom: 5%; margin-top: 3%;" />
+
       </div>
     </div>
   </div>
@@ -60,10 +153,6 @@ import axios from 'axios'
 import $ from 'jquery'
 import global from 'src/helpers/global'
 import ROUTER from 'src/router'
-import Profile from 'src/modules/account/components/profile.vue'
-import Address from 'src/modules/account/components/address.vue'
-import Account from 'src/modules/account/components/account.vue'
-import CPass from 'src/modules/account/components/cpass.vue'
 export default {
   data() {
     return {
@@ -110,11 +199,7 @@ export default {
   components: {
     dialogueBtn,
     roundedInput,
-    roundedBtn,
-    Profile,
-    Address,
-    Account,
-    CPass
+    roundedBtn
   },
   computed: {
     returnProfile() {

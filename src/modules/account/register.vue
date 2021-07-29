@@ -20,7 +20,7 @@
             </div>
             <p
               class="mb-2 pb-0 errorMessage"
-              v-if="errorMessage != ''"
+              v-if="errorMessage != null"
             >{{errorMessage}}</p>
             <div>
               <p class="mt-2"><b>Username</b></p>
@@ -232,6 +232,9 @@ import CONFIG from 'src/config'
 import COMMON from 'src/common'
 import global from 'src/helpers/global'
 export default {
+  mounted(){
+    this.retrievePayloads()
+  },
   data() {
     return {
       username: '',
@@ -241,15 +244,15 @@ export default {
       config: CONFIG,
       common: COMMON,
       type: 'USER',
-      industry: global.industry,
+      industry: [],
       selectedIndustry: null,
       global: global,
-      errorMessage: '',
       isValid: true,
       isEmailValid: true,
       passwordRequirements: '',
       colors: COLORS,
-      user: AUTH.user
+      user: AUTH.user,
+      errorMessage: null
     }
   },
   components: {
@@ -267,6 +270,28 @@ export default {
     }
   },
   methods: {
+    retrievePayloads(){
+      let conditions = [{
+        value: 'subscriptions',
+        clause: '=',
+        column: 'payload'
+      }]
+      let parameter = {
+        condition: conditions
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('payloads/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data.length > 0) {
+          this.industry = response.data
+        }else{
+          this.industry = []
+        }
+      }).catch(error => {
+        $('#loading').css({'display': 'none'})
+        error
+      })
+    },
     onSelect(data) {
       console.log('On Select:::')
       this.selectedIndustry = data.index
@@ -334,6 +359,7 @@ export default {
       await this.login()
     },
     validate() {
+      this.errorMessage = null
       let email = this.email
       let username = this.username
       let password = this.password
@@ -341,6 +367,10 @@ export default {
       let selectedIndustry = this.selectedIndustry
       if(email === '' || username === '' || password === '' || cpassword === '' || selectedIndustry === null || selectedIndustry === undefined){
         this.isValid = false
+        return false
+      }else if(username.includes(' ')){
+        this.isValid = false
+        this.errorMessage = 'Username should not contain spaces.'
         return false
       }else if(!global.validateEmail(email)) {
         this.isValid = false
@@ -390,7 +420,6 @@ export default {
 .errorMessage {
   margin-top: -14px;
   color: $danger;
-  font-size: 10px;
   margin-bottom: 25px !important;
   text-align: center;
 }

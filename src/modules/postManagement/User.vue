@@ -41,11 +41,10 @@
         </thead>
         <tbody>
           <tr v-for="(item, index) in tableData" :key="index">
-            <td>{{item.created_at}}</td>
+            <td>{{item.created_at_human}}</td>
             <td>{{item.title}}</td>
             <td>{{displayArray(item.channels)}}</td>
-            <td class="text-warning" v-if="item.status.toLowerCase() === 'draft'">{{item.status.toUpperCase()}}</td>
-            <td class="text-primary" v-else>{{item.status.toUpperCase()}}</td>
+            <td class="text-warning">{{item.status.toUpperCase()}}</td>
             <td>
               <i class="fa fa-eye text-primary" @click="showPreview(item.code)"></i>
             </td>
@@ -89,7 +88,10 @@ export default {
       offset: 0,
       numPages: null,
       activePage: 1,
-      user: AUTH.user
+      filter: null,
+      sort: null,
+      user: AUTH.user,
+      status: null
     }
   },
   components: {
@@ -99,7 +101,12 @@ export default {
     Pager
   },
   created() {
-    this.retrievePosts()
+    this.retrieveAuto()
+    this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+  },
+  mounted() {
+    this.retrieveAuto()
+    // this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
   },
   computed: {
     returnTableData() {
@@ -133,16 +140,61 @@ export default {
     showPreview(code){
       ROUTER.push('post_management/view/' + code)
     },
-    retrievePosts(){
+    retrieveAuto(){
       let parameter = {
-        account_id: this.user.userID
+        condition: [{
+          value: this.user.userID,
+          clause: '=',
+          column: 'account_id'
+        }, {
+          value: 'automation_settings',
+          column: 'payload',
+          clause: '='
+        }],
+        offset: 0,
+        limit: 1
       }
       $('#loading').css({'display': 'block'})
-      this.APIRequest('post/retrieve_by_user', parameter).then(response => {
+      this.APIRequest('payloads/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('RESPONSE: ', response)
+        this.status = response.data[0].payload
+        this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+      })
+    },
+    retrieve(sort, filter){
+      if(sort !== null){
+        this.sort = sort
+      }
+      if(filter !== null){
+        this.filter = filter
+      }
+      if(sort === null && this.sort !== null){
+        sort = this.sort
+      }
+      if(filter === null && this.filter !== null){
+        filter = this.filter
+      }
+      let parameter = {
+        condition: [{
+          column: filter.column,
+          value: filter.value + '%',
+          clause: 'like'
+        }],
+        sort: sort,
+        limit: this.limit,
+        status: this.status,
+        account_id: this.user.userID,
+        category: this.user.merchant.addition_informations['industry'],
+        offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
+      }
+      console.log('[status]', parameter)
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('post/retrieve_by_user_industry', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        console.log('RESPONSEsdfd: ', response)
         if(!response.error) {
           this.tableData = response.data
+          this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
         }
       })
     }
