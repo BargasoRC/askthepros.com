@@ -206,3 +206,9 @@ $controller = 'StripeController@';
 Route::post($route.'charge_customer', $controller."chargeCustomer");
 Route::post($route.'create_customer', $controller."createCustomer");
 Route::get($route.'test', $controller."test");
+
+
+$route = env('PACKAGE_ROUTE', '').'/dashboards/';
+$controller = 'DashboardController@';
+Route::post($route.'retrieve_by_user', $controller."retrieveByUser");
+Route::get($route.'test', $controller."test");

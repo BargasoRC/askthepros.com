@@ -4,13 +4,51 @@
     <p class="subwelcome">Here are the latest update of activities as of today.</p>
 
     <div class="row">
-      <div class="col-md-4 mt-2" v-for="(item, index) in socialMediaBtns" :key="index">
-        <div class="card">
+      <div class="col-md-4 mt-2">
+        <div class="card" v-if="cards !== null && cards.google === false">
           <div class="card-body">
-            <h5 class="card-title">{{item.title}}</h5>
-            <p class="card-text" v-html="item.description"></p>
+            <h5 class="card-title">{{socialMediaBtns[0].title}}</h5>
+            <p class="card-text" v-html="socialMediaBtns[0].description"></p>
             <dialogueBtn 
-              :onClick="(event) => connect(item)"
+              :onClick="(event) => connect(socialMediaBtns[0])"
+              :icon="'fas fa-cogs'"
+              :icon_position="'right'"
+              :text="'Connect'"
+              :styles="{
+                backgroundColor: colors.darkPrimary,
+                color: 'white'
+              }"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mt-2">
+        <div class="card" v-if="cards !== null && cards.facebook === false">
+          <div class="card-body">
+            <h5 class="card-title">{{socialMediaBtns[1].title}}</h5>
+            <p class="card-text" v-html="socialMediaBtns[1].description"></p>
+            <dialogueBtn 
+              :onClick="(event) => connect(socialMediaBtns[1])"
+              :icon="'fas fa-cogs'"
+              :icon_position="'right'"
+              :text="'Connect'"
+              :styles="{
+                backgroundColor: colors.darkPrimary,
+                color: 'white'
+              }"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mt-2">
+        <div class="card" v-if="cards !== null && cards.linkedin === false">
+          <div class="card-body">
+            <h5 class="card-title">{{socialMediaBtns[2].title}}</h5>
+            <p class="card-text" v-html="socialMediaBtns[2].description"></p>
+            <dialogueBtn 
+              :onClick="(event) => connect(socialMediaBtns[2])"
               :icon="'fas fa-cogs'"
               :icon_position="'right'"
               :text="'Connect'"
@@ -60,7 +98,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4 col-sm-12 mb-5">
+      <div class="col-md-4 col-sm-12 mb-5" v-if="cards !== null && cards.brand === false">
         <div class="card"  style="margin-top: 25px; height: 200px;">
           <div class="card-body pb-3">
             <h5 class="card-title">Setup Your Brand</h5>
@@ -145,6 +183,9 @@ import AUTH from 'src/services/auth'
 import COLORS from 'src/assets/style/colors.js'
 import ROUTER from 'src/router'
 export default {
+  mounted(){
+    this.retrieveCards()
+  },
   data() {
     return {
       tableHeaders: [
@@ -175,7 +216,8 @@ export default {
       numPages: null,
       activePage: 1,
       sort: null,
-      filter: null
+      filter: null,
+      cards: null
     }
   },
   components: {
@@ -202,6 +244,18 @@ export default {
       }else{
         return null
       }
+    },
+    retrieveCards(){
+      let parameter = {
+        account_id: this.user.userID
+      }
+      this.APIRequest('dashboards/retrieve_by_user', parameter).then(response => {
+        if(response.data){
+          this.cards = response.data.cards
+        }else{
+          this.cards = null
+        }
+      })
     },
     retrieveHistoryPosts(sort, filter){
       if(sort !== null){
