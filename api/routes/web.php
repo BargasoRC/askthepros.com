@@ -128,6 +128,8 @@ Route::post($route . '/create', 'PostController@create');
 Route::post($route . '/update', 'PostController@update');
 Route::post($route . '/update_expert', 'PostController@updateExpert');
 Route::post($route . '/retrieve', 'PostController@retrieve');
+Route::post($route . '/retrieve_by_user_industry', 'PostController@retrieveByUserIndustry');
+Route::post($route . '/retrieve_by_code', 'PostController@retrieveByCode');
 Route::post($route . '/retrieve_by_user', 'PostController@retrieveByUser');
 Route::post($route . '/retrieve_by_id', 'PostController@retrieveById');
 Route::post($route. '/delete', 'PostController@delete');
@@ -203,4 +205,10 @@ $route = env('PACKAGE_ROUTE', '').'/stripe_webhooks/';
 $controller = 'StripeController@';
 Route::post($route.'charge_customer', $controller."chargeCustomer");
 Route::post($route.'create_customer', $controller."createCustomer");
+Route::get($route.'test', $controller."test");
+
+
+$route = env('PACKAGE_ROUTE', '').'/dashboards/';
+$controller = 'DashboardController@';
+Route::post($route.'retrieve_by_user', $controller."retrieveByUser");
 Route::get($route.'test', $controller."test");

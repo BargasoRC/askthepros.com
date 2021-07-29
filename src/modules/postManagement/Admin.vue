@@ -40,9 +40,9 @@
           <th v-for="(item, index) in tableHeaders" :key="index">{{item.title}}</th>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in data">
+          <tr v-for="(item, index) in data" :key="index">
             <td>#{{item.id}}</td>
-            <td>{{item.created_at}}</td>
+            <td>{{item.created_at_human}}</td>
             <td>{{item.title}}</td>
             <td>{{display(item.category)}}</td>
             <td>{{displayArray(item.channels)}}</td>
@@ -195,7 +195,9 @@ export default {
       activePage: 1,
       selectedItem: null,
       file: null,
-      deleteId: null
+      deleteId: null,
+      filter: null,
+      sort: null
     }
   },
   components: {
@@ -207,10 +209,10 @@ export default {
     preview
   },
   created() {
-    this.retrievePosts()
+    this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
   },
   mounted(){
-    this.retrievePosts()
+    this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
   },
   methods: {
     display(category){
@@ -253,16 +255,37 @@ export default {
     edit(code) {
       ROUTER.push('/post_management/edit/' + code)
     },
-    retrievePosts() {
+    retrieve(sort, filter) {
+      if(sort !== null){
+        this.sort = sort
+      }
+      if(filter !== null){
+        this.filter = filter
+      }
+      if(sort === null && this.sort !== null){
+        sort = this.sort
+      }
+      if(filter === null && this.filter !== null){
+        filter = this.filter
+      }
       let parameter = {
-        edit: false,
-        account_id: this.user.userID
+        condition: [{
+          column: filter.column,
+          value: filter.value + '%',
+          clause: 'like'
+        }],
+        sort: sort,
+        limit: this.limit,
+        account_id: this.user.userID,
+        offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve', parameter).then(response => {
+        console.log('[response]', response)
         $('#loading').css({'display': 'none'})
         if(!response.error) {
           this.data = response.data
+          this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
         }else{
           this.data = []
         }
@@ -285,7 +308,7 @@ export default {
       this.APIRequest('post/delete', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         console.log('RESPONSE: ', response)
-        this.retrievePosts()
+        this.retrieve()
       })
     },
     showPreview(item){
@@ -302,5 +325,9 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped lang="scss" scoped>
+@import "~assets/style/colors.scss";
+.container-fluid{
+  min-height: 70vh !important;
+}
 </style>

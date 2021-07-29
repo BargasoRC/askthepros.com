@@ -4,13 +4,51 @@
     <p class="subwelcome">Here are the latest update of activities as of today.</p>
 
     <div class="row">
-      <div class="col-md-4 mt-2" v-for="(item, index) in socialMediaBtns" :key="index">
-        <div class="card">
+      <div class="col-md-4 mt-2">
+        <div class="card" v-if="cards !== null && cards.google === false">
           <div class="card-body">
-            <h5 class="card-title">{{item.title}}</h5>
-            <p class="card-text" v-html="item.description"></p>
+            <h5 class="card-title">{{socialMediaBtns[0].title}}</h5>
+            <p class="card-text" v-html="socialMediaBtns[0].description"></p>
             <dialogueBtn 
-              :onClick="(event) => connect(item)"
+              :onClick="(event) => connect(socialMediaBtns[0])"
+              :icon="'fas fa-cogs'"
+              :icon_position="'right'"
+              :text="'Connect'"
+              :styles="{
+                backgroundColor: colors.darkPrimary,
+                color: 'white'
+              }"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mt-2">
+        <div class="card" v-if="cards !== null && cards.facebook === false">
+          <div class="card-body">
+            <h5 class="card-title">{{socialMediaBtns[1].title}}</h5>
+            <p class="card-text" v-html="socialMediaBtns[1].description"></p>
+            <dialogueBtn 
+              :onClick="(event) => connect(socialMediaBtns[1])"
+              :icon="'fas fa-cogs'"
+              :icon_position="'right'"
+              :text="'Connect'"
+              :styles="{
+                backgroundColor: colors.darkPrimary,
+                color: 'white'
+              }"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mt-2">
+        <div class="card" v-if="cards !== null && cards.linkedin === false">
+          <div class="card-body">
+            <h5 class="card-title">{{socialMediaBtns[2].title}}</h5>
+            <p class="card-text" v-html="socialMediaBtns[2].description"></p>
+            <dialogueBtn 
+              :onClick="(event) => connect(socialMediaBtns[2])"
               :icon="'fas fa-cogs'"
               :icon_position="'right'"
               :text="'Connect'"
@@ -23,44 +61,21 @@
         </div>
       </div>
     </div>
-
-    <div class="row" style="margin-top: 25px;">
+    <div class="row" style="margin-top: 25px; margin-bottom: 3%">
       <div class="col-md-12 col-lg-8 col-sm-12">
         <div class="card" style="border-color: light-grey; padding-bottom: 1%; margin-top: 25px;">
-          <h3 id="Tlabel">Latest Posts</h3>
-          <table class="table col-lg-11">
+          <h3 class="mb-4" style="margin-top: 2%; margin-left: 1%">Latest Posts</h3>
+          <table class="table table-striped table-bordered">
             <thead>
-              <tr>
-                <th scope="col">Title</th>
-                <th scope="col">Channels</th>
-                <th scope="col">Links</th>
-                <th scope="col">Status</th>
-              </tr>
+              <th v-for="(item, index) in tableHeaders" :key="index">{{item.title}}</th>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">Test</th>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-              </tr>
-              <tr>
-                <th scope="row">Test</th>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-              </tr>
-              <tr>
-                <th scope="row">Test</th>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-              </tr>
-              <tr>
-                <th scope="row">Test</th>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
+              <tr v-for="(item, index) in tableData" :key="index">
+                <td>{{item.post[0] != null ? item.post[0].title : null}}</td>
+                <td>{{item.post[0] != null ? displayArray(item.post[0].channels) : null}}</td>
+                <td>{{item.link != null ? item.link : null}}</td>
+                <td class="text-warning" v-if="item.status === 'review'">Posted - Reviewed by You</td>
+                <td class='text-primary' v-else>Posted Automatically</td>
               </tr>
             </tbody>
           </table>
@@ -83,7 +98,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4 col-sm-12 mb-5">
+      <div class="col-md-4 col-sm-12 mb-5" v-if="cards !== null && cards.brand === false">
         <div class="card"  style="margin-top: 25px; height: 200px;">
           <div class="card-body pb-3">
             <h5 class="card-title">Setup Your Brand</h5>
@@ -168,8 +183,18 @@ import AUTH from 'src/services/auth'
 import COLORS from 'src/assets/style/colors.js'
 import ROUTER from 'src/router'
 export default {
+  mounted(){
+    this.retrieveCards()
+  },
   data() {
     return {
+      tableHeaders: [
+        {title: 'Post Title'},
+        {title: 'Channel Posted To'},
+        {title: 'Links'},
+        {title: 'Status'}
+      ],
+      tableData: [],
       socialMediaBtns: [{
         title: 'Google My Business',
         payload: 'google',
@@ -185,14 +210,88 @@ export default {
       }],
       colors: COLORS,
       forReviewTotal: '',
-      user: AUTH.user
+      user: AUTH.user,
+      limit: 5,
+      offset: 0,
+      numPages: null,
+      activePage: 1,
+      sort: null,
+      filter: null,
+      cards: null
     }
   },
   components: {
     dialogueBtn,
     roundedBtn
   },
+  created() {
+    this.retrieveHistoryPosts({created_at: 'desc'}, {column: 'created_at', value: ''})
+  },
   methods: {
+    displayArray(channels){
+      if(channels){
+        let parsedChannels = JSON.parse(channels)
+        let response = ''
+        for (var i = 0; i < parsedChannels.length; i++) {
+          let item = parsedChannels[i]
+          if(i > 0){
+            response += ', ' + item
+          }else{
+            response = item
+          }
+        }
+        return response
+      }else{
+        return null
+      }
+    },
+    retrieveCards(){
+      let parameter = {
+        account_id: this.user.userID
+      }
+      this.APIRequest('dashboards/retrieve_by_user', parameter).then(response => {
+        if(response.data){
+          this.cards = response.data.cards
+        }else{
+          this.cards = null
+        }
+      })
+    },
+    retrieveHistoryPosts(sort, filter){
+      if(sort !== null){
+        this.sort = sort
+      }
+      if(filter !== null){
+        this.filter = filter
+      }
+      if(sort === null && this.sort !== null){
+        sort = this.sort
+      }
+      if(filter === null && this.filter !== null){
+        filter = this.filter
+      }
+      let parameter = {
+        condition: [{
+          column: filter.column,
+          value: filter.value + '%',
+          clause: 'like'
+        }],
+        sort: sort,
+        limit: 5,
+        account_id: this.user.userID,
+        offset: 0
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('post/retrieve_history', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        console.log('RESPONSE: ', response)
+        if(response.data.length > 0){
+          this.tableData = response.data
+        }else{
+          this.tableData = []
+        }
+      })
+    },
     setup(){
       ROUTER.push('channels/branding')
     },
@@ -248,6 +347,7 @@ export default {
   margin-left: 2%;
   margin-right: 2%;
   float: left;
+  min-height: 75vh;
 }
 .card-text, .subwelcome{
   color: $text;
