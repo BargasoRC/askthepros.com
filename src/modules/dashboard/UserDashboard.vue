@@ -23,44 +23,21 @@
         </div>
       </div>
     </div>
-
-    <div class="row" style="margin-top: 25px;">
+    <div class="row" style="margin-top: 25px; margin-bottom: 3%">
       <div class="col-md-12 col-lg-8 col-sm-12">
         <div class="card" style="border-color: light-grey; padding-bottom: 1%; margin-top: 25px;">
-          <h3 id="Tlabel">Latest Posts</h3>
-          <table class="table col-lg-11">
+          <h3 class="mb-4" style="margin-top: 2%; margin-left: 1%">Latest Posts</h3>
+          <table class="table table-striped table-bordered">
             <thead>
-              <tr>
-                <th scope="col">Title</th>
-                <th scope="col">Channels</th>
-                <th scope="col">Links</th>
-                <th scope="col">Status</th>
-              </tr>
+              <th v-for="(item, index) in tableHeaders" :key="index">{{item.title}}</th>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">Test</th>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-              </tr>
-              <tr>
-                <th scope="row">Test</th>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-              </tr>
-              <tr>
-                <th scope="row">Test</th>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-              </tr>
-              <tr>
-                <th scope="row">Test</th>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
+              <tr v-for="(item, index) in tableData" :key="index">
+                <td>{{item.post[0] != null ? item.post[0].title : null}}</td>
+                <td>{{item.post[0] != null ? displayArray(item.post[0].channels) : null}}</td>
+                <td>{{item.link != null ? item.link : null}}</td>
+                <td class="text-warning" v-if="item.status === 'review'">Posted - Reviewed by You</td>
+                <td class='text-primary' v-else>Posted Automatically</td>
               </tr>
             </tbody>
           </table>
@@ -170,6 +147,13 @@ import ROUTER from 'src/router'
 export default {
   data() {
     return {
+      tableHeaders: [
+        {title: 'Post Title'},
+        {title: 'Channel Posted To'},
+        {title: 'Links'},
+        {title: 'Status'}
+      ],
+      tableData: [],
       socialMediaBtns: [{
         title: 'Google My Business',
         payload: 'google',
@@ -185,14 +169,75 @@ export default {
       }],
       colors: COLORS,
       forReviewTotal: '',
-      user: AUTH.user
+      user: AUTH.user,
+      limit: 5,
+      offset: 0,
+      numPages: null,
+      activePage: 1,
+      sort: null,
+      filter: null
     }
   },
   components: {
     dialogueBtn,
     roundedBtn
   },
+  created() {
+    this.retrieveHistoryPosts({created_at: 'desc'}, {column: 'created_at', value: ''})
+  },
   methods: {
+    displayArray(channels){
+      if(channels){
+        let parsedChannels = JSON.parse(channels)
+        let response = ''
+        for (var i = 0; i < parsedChannels.length; i++) {
+          let item = parsedChannels[i]
+          if(i > 0){
+            response += ', ' + item
+          }else{
+            response = item
+          }
+        }
+        return response
+      }else{
+        return null
+      }
+    },
+    retrieveHistoryPosts(sort, filter){
+      if(sort !== null){
+        this.sort = sort
+      }
+      if(filter !== null){
+        this.filter = filter
+      }
+      if(sort === null && this.sort !== null){
+        sort = this.sort
+      }
+      if(filter === null && this.filter !== null){
+        filter = this.filter
+      }
+      let parameter = {
+        condition: [{
+          column: filter.column,
+          value: filter.value + '%',
+          clause: 'like'
+        }],
+        sort: sort,
+        limit: 5,
+        account_id: this.user.userID,
+        offset: 0
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('post/retrieve_history', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        console.log('RESPONSE: ', response)
+        if(response.data.length > 0){
+          this.tableData = response.data
+        }else{
+          this.tableData = []
+        }
+      })
+    },
     setup(){
       ROUTER.push('channels/branding')
     },

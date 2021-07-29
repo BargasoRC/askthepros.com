@@ -128,6 +128,8 @@ Route::post($route . '/create', 'PostController@create');
 Route::post($route . '/update', 'PostController@update');
 Route::post($route . '/update_expert', 'PostController@updateExpert');
 Route::post($route . '/retrieve', 'PostController@retrieve');
+Route::post($route . '/retrieve_by_user_industry', 'PostController@retrieveByUserIndustry');
+Route::post($route . '/retrieve_by_code', 'PostController@retrieveByCode');
 Route::post($route . '/retrieve_by_user', 'PostController@retrieveByUser');
 Route::post($route . '/retrieve_by_id', 'PostController@retrieveById');
 Route::post($route. '/delete', 'PostController@delete');
