@@ -277,6 +277,7 @@ export default {
           clause: 'like'
         }],
         sort: sort,
+        status: 'posted',
         limit: 5,
         account_id: this.user.userID,
         offset: 0
