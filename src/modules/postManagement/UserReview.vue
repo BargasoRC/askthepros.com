@@ -7,7 +7,7 @@
     <input class="title text-uppercase" v-model="title">
     <textarea class="form-control" placeholder="Type post description" name="post_title" id="post_title" cols="90" rows="15" v-model="description">
     </textarea>
-    <div style="margin-top: -8%; border-color: white">
+    <div style="margin-top: -8%; border-color: white" v-if="branding != null">
       <textarea style="border-color: white; color: gray; margin-left: 1%" name="branding" id="branding" cols="90" v-model="branding" disabled="disabled">
       </textarea>
     </div>
@@ -92,7 +92,8 @@ export default {
       channel: [],
       channels: [],
       file: null,
-      selectedItem: null
+      selectedItem: null,
+      branding: null
     }
   },
   components: {
@@ -178,18 +179,17 @@ export default {
     },
     retrieveReview(code){
       let parameter = {
-        account_id: this.user.userID,
         code: code
       }
       $('#loading').css({'display': 'block'})
-      this.APIRequest('post/retrieve_by_id', parameter).then(response => {
+      this.APIRequest('post/retrieve_by_codes', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data.length > 0) {
-          this.selectedItem = response.data[0]
-          this.title = response.data[0].title
-          this.description = response.data[0].description
-          this.branding = Object.values(JSON.parse(response.data[0].branding.details))
-          var channel = response.data[0].channels
+          this.selectedItem = response.data[0].post[0]
+          this.title = this.selectedItem.title
+          this.description = this.selectedItem.description
+          this.branding = this.selectedItem.branding != null ? Object.values(JSON.parse(this.selectedItem.branding.details)) : null
+          var channel = this.selectedItem.channels
           if(channel.includes('FACEBOOK')){
             this.facebook = true
           }
@@ -199,9 +199,9 @@ export default {
           if(channel.includes('GOOGLE_MY_BUSINESS')){
             this.googleMyBusiness = true
           }
-          this.description = response.data[0].description
-          this.file = response.data[0].url
-          this.imagesList = Object.values(JSON.parse(response.data[0].url)).map(el => {
+          this.description = this.selectedItem.description
+          this.file = this.selectedItem.url
+          this.imagesList = Object.values(JSON.parse(this.selectedItem.url)).map(el => {
             let temp = {}
             if(this.$route.params.parameter === undefined){
               return el
