@@ -135,4 +135,27 @@ class SocialMediaController extends APIController
         return response()->json((object) array_merge($registration, $_upload, $_status, $post));
     }
 
+    public function retrieveFacebookPages(Request $request) {
+        /**
+         * This method retrieves all the facebook pages of the user
+         */
+        $data = $request->all();
+        $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
+                ->select('accounts.token', 'social_auths.details')
+                ->where([
+                    ['accounts.id', '=', $data['account_id']],
+                    ['social_auths.type', '=', 'facebook'],
+                    ['social_auths.deleted_at', '=', null]
+                ])
+                ->get();
+        $details = json_decode($account[0]['details'], true);
+        $url = 'https://graph.facebook.com/v11.0/'. $details['id'].'/accounts';
+        $headers = [];
+        $headers[] = 'Authorization: Bearer ' . $details['token'];
+        $service = new FacebookService($url, $headers);
+        $pages = $service->getPages();
+        $this->response['data'] = $pages;
+        return $this->response();
+    }
+
 }

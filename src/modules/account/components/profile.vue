@@ -11,37 +11,61 @@
               <div class="col-md-6">
                 <p>First Name</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your first name here'"
-                  :class="!isValidProfile && !firstname ? 'mb-0 ' : ' SettingsField'" :styles="{
+                  :class="!isValidProfile && firstname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
                         border: !isValidProfile && !firstname ? '1px solid red !important' : 'none',
                       }" v-model="firstname" class="input-style" />
-
+                <div>
+                  <p class="mb-0 pb-0 requiredFieldError"
+                    v-if="firstname == '' || !isValidAccount">
+                    {{
+                    'Required Field'
+                    }}</p>
+                </div>
               </div>
               <div class="col-md-6">
                 <p>Last Name</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your last name here'"
-                  :class="!isValidProfile && !lastname ? 'mb-0 ' : ' SettingsField'" :styles="{
+                  :class="!isValidProfile && lastname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
                       border: !isValidProfile && !lastname ? '1px solid red !important' : 'none',
                     }" v-model="lastname" class="input-style" />
-
+                <div>
+                  <p class="mb-0 pb-0 requiredFieldError"
+                    v-if="lastname == '' || !isValidAccount">
+                    {{
+                    'Required Field'
+                    }}</p>
+                </div>
               </div>
-
             </div>
+            
             <div class="row">
               <div class="col-md-6">
                 <p>Business Name</p>
-                <roundedInput :type="'text'" :placeholder="'Enter your business name here'"
-                  :class="!isValidProfile && !businessname ? 'mb-0 ' : ' SettingsField'" :styles="{
-                    border: !isValidProfile && !businessname ? '1px solid red !important' : 'none',
-                  }" v-model="businessname" class="input-style" />
-
+                <roundedInput :type="'text'" :placeholder="'Enter business name here'"
+                  :class="!isValidProfile && businessname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
+                      border: !isValidProfile && !businessname ? '1px solid red !important' : 'none',
+                    }" v-model="businessname" class="input-style" />
+                <div>
+                  <p class="mb-0 pb-0 requiredFieldError"
+                    v-if="businessname == '' || !isValidAccount">
+                    {{
+                    'Required Field'
+                    }}</p>
+                </div>
               </div>
               <div class="col-md-6">
                 <p>Contact Number</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your contact number here'"
-                  :class="!isValidProfile && !contactnumber ? 'mb-0 ' : ' SettingsField'" :styles="{
-                    border: !isValidProfile && !contactnumber ? '1px solid red !important' : 'none',
-                  }" v-model="contactnumber" class="input-style" />
-
+                  :class="!isValidProfile && contactnumber == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
+                      border: !isValidProfile && !contactnumber ? '1px solid red !important' : 'none',
+                    }" v-model="contactnumber" class="input-style" />
+                <div>
+                  <p class="mb-0 pb-0 requiredFieldError"
+                    v-if="contactnumber == '' || !isValidAccount">
+                    {{
+                    'Required Field'
+                    }}</p>
+                </div>
               </div>
             </div>
 
@@ -523,8 +547,10 @@ h3{
 .requiredFieldError {
   color: $danger;
   font-size: 10px;
-  margin-left: 20px;
+  //margin-left: 20px;
   margin-bottom: 25px !important;
+  margin-top: -30px;
+  position: absolute;
 }
 /*
 @media (max-width: 768px){

@@ -11,10 +11,8 @@ class CurlController extends Controller
   protected $ch = null;
   protected $headers = array();
 
-  public function __construct($token, $contentType) {
-    $this->headers[] = $contentType;
-    $this->headers[] = 'X-Restli-Protocol-Version: 2.0.0';
-    $this->headers[] = 'Authorization: Bearer ' . $token;
+  public function __construct($headers) {
+    $this->headers = $headers;
     $this->ch = curl_init();
 
     curl_setopt($this->ch, CURLOPT_VERBOSE, 0);

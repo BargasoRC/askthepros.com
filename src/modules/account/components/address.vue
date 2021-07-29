@@ -15,7 +15,13 @@
                   :class="!isValidProfile && !route ? 'mb-0 ' : ' SettingsField'" :styles="{
                             border: !isValidProfile && !route ? '1px solid red !important' : 'none',
                           }" v-model="route" class="input-style" />
-
+                <div>
+                  <p class="mb-0 pb-0 requiredFieldError"
+                    v-if="route == '' || !isValidAccount">
+                    {{
+                    'Required Field'
+                    }}</p>
+                </div>
               </div>
 
               <div class="col-md-6">
@@ -24,7 +30,13 @@
                   :class="!isValidProfile && !city ? 'mb-0 ' : ' SettingsField'" :styles="{
                           border: !isValidProfile && !city ? '1px solid red !important' : 'none',
                         }" v-model="city" class="input-style" />
-
+                  <div>
+                  <p class="mb-0 pb-0 requiredFieldError"
+                    v-if="city == '' || !isValidAccount">
+                    {{
+                    'Required Field'
+                    }}</p>
+                </div>
               </div>
             </div>
             <div class="row">
@@ -34,7 +46,13 @@
                   :class="!isValidProfile && !region ? 'mb-0 ' : ' SettingsField'" :styles="{
                             border: !isValidProfile && !region ? '1px solid red !important' : 'none',
                           }" v-model="region" class="input-style" />
-
+                  <div>
+                  <p class="mb-0 pb-0 requiredFieldError"
+                    v-if="region == '' || !isValidAccount">
+                    {{
+                    'Required Field'
+                    }}</p>
+                </div>
               </div>
               <div class="col-md-6">
                 <p>Country</p>
@@ -42,7 +60,13 @@
                   :class="!isValidProfile && !country ? 'mb-0 ' : ' SettingsField'" :styles="{
                           border: !isValidProfile && !country ? '1px solid red !important' : 'none',
                         }" v-model="country" class="input-style" />
-
+                  <div>
+                  <p class="mb-0 pb-0 requiredFieldError"
+                    v-if="country == '' || !isValidAccount">
+                    {{
+                    'Required Field'
+                    }}</p>
+                </div>
               </div>
 
             </div>
@@ -53,7 +77,13 @@
                   :class="!isValidProfile && !postalZipCode ? 'mb-0 ' : ' SettingsField'" :styles="{
                             border: !isValidProfile && !postalZipCode ? '1px solid red !important' : 'none',
                           }" v-model="postalZipCode" class="input-style" />
-
+                  <div>
+                  <p class="mb-0 pb-0 requiredFieldError"
+                    v-if="postalZipCode == '' || !isValidAccount">
+                    {{
+                    'Required Field'
+                    }}</p>
+                </div>
               </div>
             </div>
           </div>
@@ -595,8 +625,10 @@ h3{
 .requiredFieldError {
   color: $danger;
   font-size: 10px;
-  margin-left: 20px;
-  margin-bottom: 25px !important;
+  //margin-left: 20px;
+  //margin-bottom: 25px !important;
+  margin-top: -30px;
+  position: absolute;
 }
 /*
 @media (max-width: 768px){
