@@ -6,53 +6,46 @@ use Illuminate\Http\Request;
 
 class FacebookService
 {
-    protected $api;
+    protected $url = '';
+    protected $headers = [];
 
-    public function __construct()
-    {
-        // $fb->setDefaultAccessToken(Auth::user()->token);
-        $this->api = new Facebook([
-            'app_id' => env('FACEBOOK_CLIENT_ID'),
-            'app_secret' => env('FACEBOOK_CLIENT_SECRET'),
-            'default_graph_version' => 'v2.6',
-        ]);
+    public function __construct($url = '', $headers){
+        $this->url = $url;
+        $this->headers = $headers;
     }
 
-    protected function getPageAccessToken($page_id, $id){
-        try {
-            // Get the \Facebook\GraphNodes\GraphUser object for the current user.
-            // If you provided a 'default_access_token', the '{access-token}' is optional.
-            $token = Account::where('id', '=', $id)->get();
-            $response = $this->api->get('/me/accounts', $token);
-        } catch(FacebookResponseException $e) {
-            // When Graph returns an error
-            echo 'Graph returned an error: ' . $e->getMessage();
-            exit;
-        } catch(FacebookSDKException $e) {
-            // When validation fails or other local issues
-            echo 'Facebook SDK returned an error: ' . $e->getMessage();
-            exit;
-        }
-
-        try {
-            $pages = $response->getGraphEdge()->asArray();
-            foreach ($pages as $key) {
-                if ($key['id'] == $page_id) {
-                    return $key['access_token'];
-                }
-            }
-        } catch (FacebookSDKException $e) {
-            dd($e); // handle exception
-        }
+    public function getPages() {
+        /**
+         * url should be like this;
+         * $this->url = https://graph.facebook.com/v11.0/{id}/accounts
+         * 
+         * This method is a service to retrieve user's Facebook Pages
+         * This is called in the SocialMediaController
+         */
+        $curl = new CurlController($this->headers);
+        $result = $curl->getRequest($this->url);
+        return $result;
     }
 
-    public function publishToPage($page, $title, $id){
-        try {
-            $post = $this->api->post('/' . $page . '/feed', array('message' => $title), $this->getPageAccessToken($page, $id));
+    public function textOnly($page_id, $access_token, $message) {
+        $this->url = 'https://graph.facebook.com/'.$page_id.'/feed?message='.$message.
+        '&publish=true&access_token='.$access_token;
+
+        $curl = new CurlController($this->headers);
+        $result = $curl->postRequest($this->url, '{}');
+        return $result;
+    }
+
+    public function postWithSingleMedia($caption, $access_token, $image) {
+        $body = '{
+            "caption": "'.$caption.'",
+            "access_token": "'.$access_token.'",
+            "published": true,
+            "url": "'.$image.'"
+        }';
+        $curl = new CurlController($this->headers);
+        $result = $curl->postRequest($this->url, $body);
+        return $result;
+    }
     
-            $post = $post->getGraphNode()->asArray();
-            } catch (FacebookSDKException $e) {
-                dd($e); // handle exception
-            }
-    }
 }

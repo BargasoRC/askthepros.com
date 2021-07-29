@@ -584,8 +584,10 @@ h3{
 .requiredFieldError {
   color: $danger;
   font-size: 10px;
-  margin-left: 20px;
-  margin-bottom: 25px !important;
+  //margin-left: 20px;
+  //margin-bottom: 25px !important;
+  margin-top: -30px;
+  position: absolute;
 }
 /*
 @media (max-width: 768px){
