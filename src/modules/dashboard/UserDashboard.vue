@@ -347,6 +347,7 @@ export default {
   margin-left: 2%;
   margin-right: 2%;
   float: left;
+  min-height: 75vh;
 }
 .card-text, .subwelcome{
   color: $text;
