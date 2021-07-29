@@ -14,6 +14,9 @@
                   :class="!isValidProfile && !firstname ? 'mb-0 ' : ' SettingsField'" :styles="{
                         border: !isValidProfile && !firstname ? '1px solid red !important' : 'none',
                       }" v-model="firstname" class="input-style" />
+                      {{
+                        !isValidProfile && !firstname ? 'Invalid Input': 'Required Field'
+                      }}
 
               </div>
               <div class="col-md-6">
@@ -167,6 +170,7 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('accounts_info/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
+        console.log('Data: ', response)
         let data = response.data[0]
         this.username = this.user.username
         this.email = this.user.email
@@ -187,104 +191,32 @@ export default {
       })
     },
     update_account(event){
-      console.log('...updating', this.canUpdateProfile, 'validated: ', !this.validate())
+      console.log('Can Update: ', this.canUpdateProfile, 'Validated: ', this.validate())
       if(!this.validate()) {
+        alert('Not valid')
         return
       }
-      if(this.canUpdateProfile) {
+      if(this.canUpdateProfile === true) {
         let parameter = {
-          account_id: this.user.userID
+          account_id: this.user.userID,
+          first_name: this.firstname,
+          middle_name: '',
+          last_name: this.lastname,
+          cellular_number: this.contactnumber
         }
         let info = AUTH.user.information
         console.log('INFO: ', info)
-        // Just to check if what fields are updated and only updated fields will be pass as parameters of update
-        if(Object.keys(info).length > 1) {
-          Object.keys(info).forEach((el, ndx) => {
-            if(['first_name', 'last_name', 'cellular_number', 'address'].includes(el)) {
-              switch(el) {
-                case 'first_name':
-                  if(info[el] !== this.firstname) {
-                    parameter[el] = this.firstname
-                    if(!info[el]) {
-                      parameter[el] = this.firstname
-                    }
-                  }
-                  break
-                case 'last_name':
-                  if(info[el] !== this.lastname) {
-                    parameter[el] = this.lastname
-                    if(!info[el]) {
-                      parameter[el] = this.lastname
-                    }
-                  }
-                  break
-                case 'cellular_number':
-                  if(info[el] !== this.contactnumber) {
-                    parameter[el] = this.contactnumber
-                    if(!info[el]) {
-                      parameter[el] = this.contactnumber
-                    }
-                  }
-                  break
-                case 'address':
-                  let address = {}
-                  Object.keys(JSON.parse(info[el])).forEach(le => {
-                    if(this[le] !== JSON.parse(info[el])[le]){
-                      address[info[el]] = this[le]
-                    }
-                  })
-                  if(Object.keys(address).length > 0) {
-                    parameter['address'] = JSON.stringify(address)
-                  }
-                  break
-              }
-            }
-          })
-        }else {
-          parameter['first_name'] = this.firstname
-          parameter['middle_name'] = 'null'
-          parameter['last_name'] = this.lastname
-          parameter['cellular_number'] = this.contactnumber
-          parameter['address'] = JSON.stringify({
-            route: this.route,
-            city: this.city,
-            region: this.region,
-            country: this.country,
-            postalZipCode: this.postalZipCode
-          })
-        }
         console.log('Parameters: ', parameter)
-        if(Object.keys(info).length > 1 && Object.keys(parameter).length > 1){
-          $('#loading').css({'display': 'block'})
-          this.APIRequest('accounts_info/update_account', parameter).then(response => {
-            $('#loading').css({'display': 'none'})
-            if(response.error.length === 0) {
-              this.retrieveInformation()
-              console.log('UPDATE PROFILE RESPONSE: ', response)
-              this.canUpdateProfile = false
-            }
-          })
-        }else if(Object.keys(parameter).length > 1){
-          $('#loading').css({'display': 'block'})
-          this.APIRequest('account_informations/create', parameter).then(response => {
-            $('#loading').css({'display': 'none'})
-            if(response.error === 0) {
-              this.retrieveInformation()
-              this.canUpdateProfile = false
-            }
-          })
-        }
-        let condition = {
-          condition: [
-            {
-              value: this.user.userID,
-              clause: '=',
-              column: 'account_id'
-            }
-          ],
-          offset: 0,
-          limit: 1
-        }
+        this.APIRequest('accounts_info/update_account', parameter).then(response => {
+          $('#loading').css({'display': 'none'})
+          if(response.error.length === 0){
+            this.retrieveInformation()
+            console.log('Update profile response: ', response)
+            this.canUpdateProfile = false
+            alert('Submitted')
+          }
+        })
+        console.log('Business name: ', this.businessname)
         let merchant = {
           name: this.businessname,
           account_id: this.user.userID,
@@ -303,113 +235,13 @@ export default {
             error
           })
         }
-      }
-      if(this.canUpdateAccount) {
-        let acc = {
-          id: this.user.userID,
-          code: this.user.code,
-          email: this.email
-        }
-        $('#loading').css({'display': 'block'})
-        this.APIRequest('accounts/update_email', acc).then(response => {
-          $('#loading').css({'display': 'none'})
-          console.log('UPDATE RESPONSE: ', response)
-          if(response.error.length > 0) {
-            this.isValidAccount = false
-            this.email = ''
-            this.emailValidation = response.error
-            // console.log('UPDATE RESPONSE: ', response)
-          }
-        })
-      }
-      if(this.canUpdatePassword) {
-        let acc = {
-          id: this.user.userID,
-          password: this.password
-        }
-        $('#loading').css({'display': 'block'})
-        this.APIRequest('accounts/update_password', acc).then(response => {
-          $('#loading').css({'display': 'none'})
-          this.password = ''
-          this.confirmPassword = ''
-          this.oPassword = ''
-          this.isValidPassword = true
-          this.passwordVerified = false
-          if(!response.error) {
-            console.log('UPDATE PASSWORD RESPONSE: ', response)
-          }
-        })
-      }
-    },
-    addImage(){
-      $('#Image')[0].click()
-    },
-    setUpFileUpload(event){
-      let files = event.target.files || event.dataTransfer.files
-      if(!files.length){
-        return false
       }else{
-        this.file = files[0]
-        this.createFile(files[0])
+        alert('Cant update')
       }
-    },
-    createFile(file){
-      let fileReader = new FileReader()
-      fileReader.readAsDataURL(event.target.files[0])
-      this.upload()
-    },
-    upload(){
-      let formData = new FormData()
-      formData.append('file', this.file)
-      formData.append('file_url', this.file.name)
-      formData.append('account_id', this.user.userID)
-      $('#loading').css({'display': 'block'})
-      axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
-        $('#loading').css({'display': 'none'})
-        if(response.data.data !== null){
-          console.log('PROFILE URL: ', response.data.data)
-          let profile = response.data.data
-          let condition = {
-            condition: [
-              {
-                value: this.user.userID,
-                clause: '=',
-                column: 'account_id'
-              }
-            ],
-            offset: 0,
-            limit: 1
-          }
-          $('#loading').css({'display': 'block'})
-          this.APIRequest('account_profiles/retrieve', condition, response => {
-            let accProfile = {
-              account_id: this.user.userID,
-              url: profile
-            }
-            let url = ''
-            if(response.data.length > 0) {
-              accProfile['id'] = response.data[0].id
-              url = 'account_profiles/update'
-            }else{
-              url = 'account_profiles/create'
-            }
-            this.APIRequest(url, accProfile, response => {
-              $('#loading').css({'display': 'none'})
-              AUTH.retrieveAccountProfileAndInformation(this.user.userID)
-            }, error => {
-              $('#loading').css({'display': 'none'})
-              error
-            })
-          }, error => {
-            $('#loading').css({'display': 'none'})
-            error
-          })
-        }
-      })
     },
     validate() {
       if(this.firstname !== '' || this.lastname !== '' || this.businessname !== '' || this.contactnumber !== '') {
-        if(!global.validateInput(this.firstname) || !global.validateInput(this.lastname) || !global.validateInput(this.businessname) || !global.validateNumber(this.contactnumber)) {
+        if(!global.validateField(this.firstname) && !global.validateField(this.lastname) && !global.validateField(this.businessname) && !global.validateNumber(this.contactnumber)) {
           this.isValidProfile = false
           this.canUpdateProfile = false
         }else{
@@ -418,8 +250,9 @@ export default {
         }
       }else {
         this.canUpdateProfile = false
+        this.isValidProfile = false
       }
-      console.log('update profile ', this.isValidProfile)
+      console.log('Valid: ', this.isValidProfile, 'Can update:" ', this.canUpdateProfile)
       if(!this.isValidProfile) {
         return false
       }else {
