@@ -82,6 +82,25 @@
         </div>
       </div>
     </div>
+    <div class="modal" tabindex="-1" role="dialog" ref="modal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Modal body text goes here.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -115,7 +134,8 @@ export default {
         stat: false
       }],
       user: AUTH.user,
-      socialAuths: []
+      socialAuths: [],
+      page_type: ''
     }
   },
   components: {
@@ -171,6 +191,37 @@ export default {
     },
     viewAndAddPages(provider){
       //
+      if(provider.payload === 'linkedin') {
+        this.page_type = 'linkedin'
+        let parameter = {
+          account_id: this.user.userID
+        }
+        $('#loading').css({'display': 'block'})
+        this.APIRequest('social/retrieve_linkedin_pages', parameter, response => {
+          console.log('LINKEDIN PAGES: ', response)
+          $('#loading').css({'display': 'none'})
+          let element = this.$refs.modal
+          $(element).modal('show')
+        }, error => {
+          error
+          $('#loading').css({'display': 'none'})
+        })
+      }else if(provider.payload === 'facebook') {
+        this.page_type = 'facebook'
+        let parameter = {
+          account_id: this.user.userID
+        }
+        $('#loading').css({'display': 'block'})
+        this.APIRequest('social/retrieve_fb_pages', parameter, response => {
+          console.log('FACEBOOK PAGES: ', response)
+          $('#loading').css({'display': 'none'})
+          let element = this.$refs.modal
+          $(element).modal('show')
+        }, error => {
+          error
+          $('#loading').css({'display': 'none'})
+        })
+      }
     },
     disconnect(item) {
       let index = this.socialAuths.findIndex(le => le.type.toLowerCase() === item.payload.toLowerCase())
