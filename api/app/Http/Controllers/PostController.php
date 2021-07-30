@@ -7,6 +7,7 @@ use App\Post;
 use App\PostTarget;
 use App\PostHistory;
 use App\Page;
+use App\Http\Controllers\Account;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Increment\Common\Image\Models\Image;
@@ -17,11 +18,13 @@ class PostController extends APIController
     public $brandingClass = 'App\Http\Controllers\BrandingController';
     public $historyClass = 'App\Http\Controllers\PostHistoryController';
     public $pageClass = 'App\Http\Controllers\PageController';
+    public $accountClass = 'App\Http\Controllers\AccountsController';
 
     public function create(Request $request) {
         $data = $request->all();
         \DB::beginTransaction();
         try{
+          // app($this->accountClass)->retrieveWithUpdate($data);
 
             $post = new Post();
             $post->code = $this->generateCode($post);
@@ -42,6 +45,7 @@ class PostController extends APIController
             $post_target->save();
 
             \DB::commit();
+
 
             $this->response['data'] = $post->id;
             $this->response['error'] = null;
@@ -212,11 +216,11 @@ class PostController extends APIController
       }
     }
 
-    public function retrieveByCodeParams($code) {
+    public function retrieveByCodeParams($id) {
       $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
               ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
               ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
-              ->where('posts.code', '=', $code)
+              ->where('posts.id', '=', $id)
               ->get();
       return $result;
     }
@@ -224,19 +228,21 @@ class PostController extends APIController
     public function retrieveHistoryPosts(Request $request){
       $data = $request->all();
       $con = $data['condition'];
-
+      $contains = Str::contains($data['status'], 'post');
       $result = PostHistory::where('account_id', '=', $data['account_id'])
+      ->where('status', '=', ($contains ? ('for posting') : ('for review')))
       ->where($con[0]['column'], $con[0]['clause'], $con[0]['value'])
       ->limit($data['limit'])
       ->offset($data['offset'])->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
 
       $size = PostHistory::where('account_id', '=', $data['account_id'])
+      ->where('status', '=', ($contains ? ('for posting') : ('for review')))
       ->where($con[0]['column'], $con[0]['clause'], $con[0]['value'])
       ->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
 
       $i = 0;
       foreach ($result as $key) {
-        $result[$i]['post'] = $this->retrieveByCodeParams($result[$i]['code']);
+        $result[$i]['post'] = $this->retrieveByCodeParams($result[$i]['post_id']);
         $result[$i]['date'] = Carbon::createFromFormat('Y-m-d H:i:s', $result[$i]['created_at'])->copy()->tz($this->response['timezone'])->format('F j, Y ');
         $result[$i]['time'] = Carbon::createFromFormat('Y-m-d H:i:s', $result[$i]['created_at'])->copy()->tz($this->response['timezone'])->format('h:i A');
         $i++;
@@ -247,51 +253,4 @@ class PostController extends APIController
       return $this->response();
     }
 
-    public function retrieveByUserIndustry(Request $request) {
-      $data = $request->all();
-      $con = $data['condition'];
-        $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
-        ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
-        ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
-        ->where('post_targets.payload_value', 'like', '%'.$data['category'].'%')
-        ->where('posts.status', '=', 'PUBLISH')
-        ->where('posts.'.$con[0]['column'], $con[0]['clause'], $con[0]['value'])
-        ->limit($data['limit'])
-        ->offset($data['offset'])->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
-
-        $size = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
-        ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
-        ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
-        ->where('post_targets.payload_value', 'like', '%'.$data['category'].'%')
-        ->where('posts.status', '=', 'PUBLISH')
-        ->where('posts.'.$con[0]['column'], $con[0]['clause'], $con[0]['value'])
-        ->get();
-
-        $i = 0;
-
-        // dd($data['status']);
-        foreach ($result as $key) {
-          if($data['status'] === 'automation_settings'){
-            $post = new PostHistory();
-            $pages_id = Page::where('account_id', '=', $result[$i]['account_id'])->get('id');
-            $data = array(
-              'code' => $this->generateCode($post),
-              'post_id' => $result[$i]['id'],
-              'channel' => $result[$i]['channels'],
-              'link' => null,
-              'page_id' => sizeof($pages_id) > 0 ? $pages_id[0]['id'] : null,
-              'account_id' => $data['account_id'],
-              'status' => 'posted'
-            );
-            app($this->historyClass)->createByParams($data);
-          }
-          $result[$i]['created_at_human'] = Carbon::createFromFormat('Y-m-d H:i:s', $result[$i]['created_at'])->copy()->tz($this->response['timezone'])->format('F j, Y ');
-          $result[$i]['time'] = Carbon::createFromFormat('Y-m-d H:i:s', $result[$i]['created_at'])->copy()->tz($this->response['timezone'])->format('h:i A');
-          $i++;
-        }
-        $this->response['data'] = $result;
-        $this->response['size'] = count($size);
-        $this->response['error'] = null;
-        return $this->response();
-    }
 }

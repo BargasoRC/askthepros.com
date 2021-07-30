@@ -183,4 +183,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "~assets/style/colors.scss";
+.container-fluid{
+  min-height: 85vh !important;
+}
 </style>

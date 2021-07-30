@@ -304,11 +304,12 @@ export default {
       let parameter = {
         id: e.id
       }
+      console.log('[remove]', parameter)
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/delete', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         console.log('RESPONSE: ', response)
-        this.retrieve()
+        this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
       })
     },
     showPreview(item){
@@ -325,5 +326,9 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped lang="scss" scoped>
+@import "~assets/style/colors.scss";
+.container-fluid{
+  min-height: 70vh !important;
+}
 </style>

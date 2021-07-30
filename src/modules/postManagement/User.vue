@@ -41,9 +41,9 @@
         </thead>
         <tbody>
           <tr v-for="(item, index) in tableData" :key="index">
-            <td>{{item.created_at_human}}</td>
-            <td>{{item.title}}</td>
-            <td>{{displayArray(item.channels)}}</td>
+            <td>{{item.date}}</td>
+            <td>{{item.post[0] != null ? item.post[0].title : null}}</td>
+            <td>{{item.post[0] != null ? displayArray(item.post[0].channels) : null}}</td>
             <td class="text-warning">{{item.status.toUpperCase()}}</td>
             <td>
               <i class="fa fa-eye text-primary" @click="showPreview(item.code)"></i>
@@ -101,12 +101,10 @@ export default {
     Pager
   },
   created() {
-    this.retrieveAuto()
     this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
   },
   mounted() {
-    this.retrieveAuto()
-    // this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+    this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
   },
   computed: {
     returnTableData() {
@@ -140,27 +138,6 @@ export default {
     showPreview(code){
       ROUTER.push('post_management/view/' + code)
     },
-    retrieveAuto(){
-      let parameter = {
-        condition: [{
-          value: this.user.userID,
-          clause: '=',
-          column: 'account_id'
-        }, {
-          value: 'automation_settings',
-          column: 'payload',
-          clause: '='
-        }],
-        offset: 0,
-        limit: 1
-      }
-      $('#loading').css({'display': 'block'})
-      this.APIRequest('payloads/retrieve', parameter).then(response => {
-        $('#loading').css({'display': 'none'})
-        this.status = response.data[0].payload
-        this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
-      })
-    },
     retrieve(sort, filter){
       if(sort !== null){
         this.sort = sort
@@ -182,14 +159,14 @@ export default {
         }],
         sort: sort,
         limit: this.limit,
-        status: this.status,
+        status: 'for review',
         account_id: this.user.userID,
         category: this.user.merchant.addition_informations['industry'],
         offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
       console.log('[status]', parameter)
       $('#loading').css({'display': 'block'})
-      this.APIRequest('post/retrieve_by_user_industry', parameter).then(response => {
+      this.APIRequest('post/retrieve_history', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         console.log('RESPONSEsdfd: ', response)
         if(!response.error) {

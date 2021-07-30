@@ -134,6 +134,7 @@ Route::post($route . '/retrieve_by_user', 'PostController@retrieveByUser');
 Route::post($route . '/retrieve_by_id', 'PostController@retrieveById');
 Route::post($route. '/delete', 'PostController@delete');
 Route::post($route. '/retrieve_history', 'PostController@retrieveHistoryPosts');
+Route::post($route. '/retrieve_by_codes', 'PostHistoryController@retrieveByCodes');
 
 $route = env('PACKAGE_ROUTE', '').'/file';
 Route::post($route . '/upload', 'FileUploadController@upload');
@@ -200,9 +201,27 @@ Route::post($route.'retrieve', $controller."retrieve");
 Route::post($route.'delete', $controller."delete");
 Route::get($route.'test', $controller."test");
 
+$route = env('PACKAGE_ROUTE', '').'/social/';
+$controller = 'SocialMediaController@';
+Route::post($route.'retrieve_fb_pages', $controller.'retrieveFacebookPages');
+
+$route = env('PACKAGE_ROUTE', '').'/industry/';
+$controller = 'IndustryController@';
+Route::post($route.'create', $controller."create");
+Route::post($route.'update', $controller."update");
+Route::post($route.'retrieve', $controller."retrieve");
+Route::post($route.'delete', $controller."delete");
+Route::get($route.'test', $controller."test");
+
 
 $route = env('PACKAGE_ROUTE', '').'/stripe_webhooks/';
 $controller = 'StripeController@';
 Route::post($route.'charge_customer', $controller."chargeCustomer");
 Route::post($route.'create_customer', $controller."createCustomer");
+Route::get($route.'test', $controller."test");
+
+
+$route = env('PACKAGE_ROUTE', '').'/dashboards/';
+$controller = 'DashboardController@';
+Route::post($route.'retrieve_by_user', $controller."retrieveByUser");
 Route::get($route.'test', $controller."test");

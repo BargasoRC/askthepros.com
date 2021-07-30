@@ -45,7 +45,7 @@
             <td>{{item.post[0] != null ? item.post[0].title : null}}</td>
             <td>{{item.post[0] != null ? displayArray(item.post[0].channels) : null}}</td>
             <td style="color: gray"><u>{{item.link}}</u></td>
-            <td class="text-primary" v-if="item.status === 'posted'">Posted Automatically</td>
+            <td class="text-primary" v-if="item.post[0].parent === null">Posted Automatically</td>
             <td class="text-warning" v-else>Posted - Reviewed by You</td>
           </tr>
         </tbody>
@@ -147,6 +147,7 @@ export default {
         }],
         sort: sort,
         limit: this.limit,
+        status: 'for posting',
         account_id: this.user.userID,
         offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
