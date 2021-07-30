@@ -145,7 +145,7 @@ $route = env('PACKAGE_ROUTE', '').'/posting';
 $controller = 'SocialMediaController@';
 Route::post($route.'/linkedin_post', $controller.'linkedinPost');
 Route::post($route.'/register_upload', $controller.'linkedinRegisterUpload');
-Route::get($route.'/test',  $controller.'post');
+Route::get($route.'/test',  $controller.'retrieveLinkedinPages');
 
 $route = env('PACKAGE_ROUTE', '').'/plans/';
 $controller = 'PlanController@';
@@ -204,6 +204,7 @@ Route::get($route.'test', $controller."test");
 $route = env('PACKAGE_ROUTE', '').'/social/';
 $controller = 'SocialMediaController@';
 Route::post($route.'retrieve_fb_pages', $controller.'retrieveFacebookPages');
+Route::post($route.'retrieve_linkedin_pages', $controller.'retrieveLinkedinPages');
 
 $route = env('PACKAGE_ROUTE', '').'/industry/';
 $controller = 'IndustryController@';

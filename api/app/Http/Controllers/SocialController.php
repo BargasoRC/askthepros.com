@@ -21,7 +21,7 @@ class SocialController extends APIController
         $_provider = 'facebook';
         $redirect_uri = $provider == 'facebook' ? env('FACEBOOK_URL') : env('CONNECT_CALLBACK_URL');
       }else if(strtolower($provider) == 'linkedin' || strtolower($provider) == 'linkedin_connect') {
-        $scopes = ["r_emailaddress", "r_liteprofile", "w_member_social"];
+        $scopes = ["r_emailaddress", "r_liteprofile", "w_member_social", "rw_organization_admin", "r_organization_social", "w_organization_social"];
         $_provider = 'linkedin';
         $redirect_uri = $provider == 'linkedin' ? env('LINKEDIN_URL') : env('CONNECT_CALLBACK_URL');
       }else if(strtolower($provider) == 'google' || strtolower($provider) == 'google_connect') {
