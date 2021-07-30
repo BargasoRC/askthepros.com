@@ -265,7 +265,7 @@ export default {
   computed: {
     returnIndustry() {
       return this.industry.map(el => {
-        return el.payload
+        return el.category
       })
     }
   },
@@ -357,7 +357,7 @@ export default {
           account_type: this.type,
           referral_code: null,
           status: 'ADMIN',
-          industry: JSON.stringify({industry: this.industry[this.selectedIndustry].payload})
+          industry: JSON.stringify({industry: this.industry[this.selectedIndustry].category})
         }
         $('#loading').css({'display': 'block'})
         this.APIRequest('account/create', parameter).then(response => {
