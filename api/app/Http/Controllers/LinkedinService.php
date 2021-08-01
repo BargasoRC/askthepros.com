@@ -13,6 +13,22 @@ class LinkedinService extends Controller
     function __construct($url) {
         $this->url = $url;
     }
+
+    public function getPages($token) {
+        /**
+         * url should be like this;
+         * $this->url = https://api.linkedin.com/v2/organizations?ids=List({organization-id})
+         * 
+         * This method is a service to retrieve user's Linkedin Organizations or pages
+         * This is called in the SocialMediaController
+         */
+        $this->headers[] = 'Authorization: Bearer '.$token;
+        $this->headers[] = 'X-Restli-Protocol-Version: 2.0.0';
+        $curl = new CurlController($this->headers);
+        $result = $curl->getRequest($this->url);
+        return $result;
+    }
+
     public function textOnly($token, $message, $author) {
         $body = '{
             "author": "urn:li:person:'.$author.'",

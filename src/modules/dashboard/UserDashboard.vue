@@ -4,8 +4,8 @@
     <p class="subwelcome">Here are the latest update of activities as of today.</p>
 
     <div class="row">
-      <div class="col-md-4 mt-2">
-        <div class="card" v-if="cards !== null && cards.google === false">
+      <div class="col-md-4 mt-2" v-if="cards !== null && cards.google === false">
+        <div class="card" >
           <div class="card-body">
             <h5 class="card-title">{{socialMediaBtns[0].title}}</h5>
             <p class="card-text" v-html="socialMediaBtns[0].description"></p>
@@ -23,8 +23,8 @@
         </div>
       </div>
 
-      <div class="col-md-4 mt-2">
-        <div class="card" v-if="cards !== null && cards.facebook === false">
+      <div class="col-md-4 mt-2" v-if="cards !== null && cards.facebook === false">
+        <div class="card">
           <div class="card-body">
             <h5 class="card-title">{{socialMediaBtns[1].title}}</h5>
             <p class="card-text" v-html="socialMediaBtns[1].description"></p>
@@ -42,8 +42,8 @@
         </div>
       </div>
 
-      <div class="col-md-4 mt-2">
-        <div class="card" v-if="cards !== null && cards.linkedin === false">
+      <div class="col-md-4 mt-2" v-if="cards !== null && cards.linkedin === false">
+        <div class="card" >
           <div class="card-body">
             <h5 class="card-title">{{socialMediaBtns[2].title}}</h5>
             <p class="card-text" v-html="socialMediaBtns[2].description"></p>

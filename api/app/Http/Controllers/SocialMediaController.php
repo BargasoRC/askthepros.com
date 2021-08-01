@@ -18,7 +18,7 @@ class SocialMediaController extends APIController
          * POSTING, for TESTING PURPOSES ONLY
          */
         $body = '{
-            "author": "urn:li:person:JHTK8LWD7X",
+            "author": "urn:li:organization:75023337",
             "lifecycleState": "PUBLISHED",
             "specificContent": {
                 "com.linkedin.ugc.ShareContent": {
@@ -45,15 +45,35 @@ class SocialMediaController extends APIController
                 "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
             }
         }';
-        $token = "AQXLmE7WTnNGdiYqpVzHWnQKLX7TmgNaBmsMnJSA7VuCz6iPjy6JoT1PH5P-FWsDMyQrBqb69CyvbKdrEvQXjq0ue4h2hEU6X5DqtCeKLzXhA1e_SysnZWsmMGsJN8E0AruVOYd380Hj2lajFre45OkFHUbhuK0tQvs56Ao-B6qGT-tCFGmbGTwCwypFvKdHFkbVjZb3WWo0GC1vrEjK-CkEyqKZl9_dIyD5WJaTSEOPxu1UXcjqftQACtdZqaNNS8QnfeWLVNGXVMLmvprtuLAGqE2dmqvZIPatFbnphOomprBosF8kgPy42FRq6MFUZONemZsA_AiK7Np_fU6F7eetO9whEQ";
-        $curl = new CurlController($token);
+        $token = "AQV94Qvo5At9SE34VKd6AIRqbYOi-XfmiCYb8LqEvoyJxqtiU3Ngnp4TqG6pzfWi1CGWl4h0mPJRR2fqiMJ4mSHSATCC8wJbrCNlNMi1Rw-M78TW7U4jPqIaUkDh_HNoupJ8MYENOhsKUUzj_-GHQaCbq6fb5z7-YYq92ItSgzVN9s4hsIIsot2d1-XVU-xDHoOYC19z_qfawL-gmqDpA_2OaJ4tGGeb4n3TcGRc81lesKFm8a8p92WjyyGqJ4qVZadIEWR8eSA2gGGxEXsTH5kdvXsBy_q4JeDsu3d24YCJvW_XRw7_ws_cF1CrhOCndZuzWTngv-WrFBaHP4dz3P7w5xw3HA";
+        $headers = [
+            'Authorization: Bearer '.$token
+        ];
+        $curl = new CurlController($headers);
 
         $result = $curl->postRequest("https://api.linkedin.com/v2/ugcPosts", $body);
 
         return response()->json($result);
+    
         /**
          * End of TEST METHOD
          */
+    }
+
+    public function retrieveLinkedinPages(Request $request) {
+        $data = $request->all();
+        $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
+                ->select('accounts.token', 'social_auths.details')
+                ->where([
+                    ['accounts.id', '=', $data['account_id']],
+                    ['social_auths.type', '=', 'linkedin']
+                ])
+                ->get();
+        $details = json_decode($account[0]['details'], true);
+        $url = 'https://api.linkedin.com/v2/organizationAcls?q=roleAssignee&role=ADMINISTRATOR&projection=(elements*(*,organization~(localizedName)))';
+        $service = new LinkedinService($url);
+        $result = $service->getPages($details['token']);
+        return response()->json($result);
     }
 
     public function linkedinPost(Request $request) {
