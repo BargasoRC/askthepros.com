@@ -51,7 +51,7 @@ class SocialMediaController extends APIController
         ];
         $curl = new CurlController($headers);
 
-        $result = $curl->postRequest("https://api.linkedin.com/v2/ugcPosts", $body);
+        $result = $curl->postRequest($this->linkedInHostApi."/ugcPosts", $body);
 
         return response()->json($result);
     
@@ -70,7 +70,7 @@ class SocialMediaController extends APIController
                 ])
                 ->get();
         $details = json_decode($account[0]['details'], true);
-        $url = 'https://api.linkedin.com/v2/organizationAcls?q=roleAssignee&role=ADMINISTRATOR&projection=(elements*(*,organization~(localizedName)))';
+        $url = $this->linkedInHostApi.'organizationAcls?q=roleAssignee&role=ADMINISTRATOR&projection=(elements*(*,organization~(localizedName)))';
         $service = new LinkedinService($url);
         $result = $service->getPages($details['token']);
         return response()->json($result);
@@ -90,13 +90,13 @@ class SocialMediaController extends APIController
                 ])
                 ->get();
         $details = json_decode($account[0]['details'], true);
-        $service = new LinkedinService('https://api.linkedin.com/v2/ugcPosts');
+        $service = new LinkedinService($this->linkedInHostApi.'ugcPosts');
         $result = $service->textOnly($details['token'], 'Hello World! Sample LINKEDIN Posting using UGC Post API, with text only!', $details['id']); // Text to post on linkedin is static for now.
         return response()->json($result);
     }
 
     public function linkedinPostWithMedia($token, $owner, $message, $media, $media_type) {
-        $service = new LinkedinService('https://api.linkedin.com/v2/ugcPosts');
+        $service = new LinkedinService($this->linkedInHostApi.'ugcPosts');
         $result = $service->postWithMedia($token, $owner, $message, $media, $media_type);
         return $result;
     }
@@ -125,7 +125,7 @@ class SocialMediaController extends APIController
         $type = \File::mimeType($path);
 
         $details = json_decode($account[0]['details'], true);
-        $service = new LinkedinService('https://api.linkedin.com/v2/assets?action=registerUpload');
+        $service = new LinkedinService($this->linkedInHostApi.'assets?action=registerUpload');
         $result = $service->shareMedia($details['token'], $details['id']);
         $registration = [];
         $registration['registration'] = $result;
@@ -144,7 +144,7 @@ class SocialMediaController extends APIController
         $media_uri = ((object)(((object)$result)->value))->asset;
         $asset = explode(':', $media_uri);
 
-        $status_service = new LinkedinService("https://api.linkedin.com/v2/assets/" . $asset[sizeof($asset) - 1]);
+        $status_service = new LinkedinService($this->linkedInHostApi."assets/" . $asset[sizeof($asset) - 1]);
         $status = $status_service->checkUploadStatus($details['token']);
         $_status = [];
         $_status['status'] = $status;
@@ -169,12 +169,12 @@ class SocialMediaController extends APIController
                 ])
                 ->get();
         $details = json_decode($account[0]['details'], true);
-        $url = 'https://graph.facebook.com/v11.0/'. $details['id'].'/accounts';
+        $url = $this->facebookHostApi.$details['id'].'/accounts'.(env('CHANNEL_PRODUCTION_MODE') ? '' : '?limit=3');
         $headers = [];
         $headers[] = 'Authorization: Bearer ' . $details['token'];
         $service = new FacebookService($url, $headers);
         $pages = $service->getPages();
-        $this->response['data'] = $pages;
+        $this->response['data'] = $pages && $pages['data'] ? $pages['data'] : [];
         return $this->response();
     }
 

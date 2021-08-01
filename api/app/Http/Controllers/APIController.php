@@ -26,10 +26,13 @@ class APIController extends Controller
   /*
     Author: Kennette Canales
     Version: 1.0
-    Company: Payhiram
+    Company: Increment Technologies Inc.
     Website: www.increment.ltd
   */
   public $ratingClass = 'Increment\Common\Rating\Http\RatingController';
+  
+  public $facebookHostApi = 'https://graph.facebook.com/v11.0/';
+  public $linkedInHostApi = 'https://api.linkedin.com/v2/';
 
   protected $model = NULL;
   protected $foreignTable = [];

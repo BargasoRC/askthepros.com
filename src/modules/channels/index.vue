@@ -86,17 +86,19 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
+            <h5 class="modal-title">Selec Page</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <p>Modal body text goes here.</p>
+            <ul v-if="data && data.length > 0" class="pages-holder">
+              <li v-for="(item, index) in data">{{item.name}}</li>
+            </ul>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Save changes</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Add to selected</button>
           </div>
         </div>
       </div>
@@ -135,7 +137,8 @@ export default {
       }],
       user: AUTH.user,
       socialAuths: [],
-      page_type: ''
+      page_type: '',
+      data: []
     }
   },
   components: {
@@ -215,6 +218,7 @@ export default {
         this.APIRequest('social/retrieve_fb_pages', parameter, response => {
           console.log('FACEBOOK PAGES: ', response)
           $('#loading').css({'display': 'none'})
+          this.data = response.data
           let element = this.$refs.modal
           $(element).modal('show')
         }, error => {
@@ -330,6 +334,29 @@ h3{
   color: $text;
 }
 
+
+.pages-holder{
+  width: 100%;
+  float: left;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.pages-holder li{
+  line-height: 60px;
+  padding-left: 20px;
+}
+
+.modal-body{
+  padding: 0px !important;
+}
+
+.pages-holder li:hover{
+  background-color: $gray;
+  cursor: pointer;
+
+}
 @media screen and (max-width: 600px) {
   .column {
     width: 100%;
