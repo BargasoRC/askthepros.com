@@ -55,6 +55,7 @@
         <div class="card">
           <h3 style="font-weight: bolder;font-size: 21px; color: #01009A;" v-if="item.details === null || (item.details && item.details.page === null)">{{item.title}}</h3>
           <h3 style="font-weight: bolder;font-size: 21px; color: #01009A;" v-if="item.details && item.details.page !== null">
+            <i :class="'fa fa-' + item.details.page.type"></i>
             <img :src="item.details.page.details.image" class="page-image-holder">
             {{item.details.page.details.name}}
           </h3>
