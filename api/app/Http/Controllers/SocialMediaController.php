@@ -73,7 +73,18 @@ class SocialMediaController extends APIController
         $url = $this->linkedInHostApi.'organizationAcls?q=roleAssignee&role=ADMINISTRATOR&projection=(elements*(*,organization~(localizedName)))';
         $service = new LinkedinService($url);
         $result = $service->getPages($details['token']);
-        return response()->json($result);
+
+        if($result && sizeof($result['elements']) > 0){
+          $i = 0;
+          foreach ($result['elements'] as $key => $element) {
+            $result['elements'][$i]['name'] = $element['organization~']['localizedName'];
+            $result['elements'][$i]['image'] = $element['organization~']['localizedName'];
+            $result['elements'][$i]['id'] = $element['organization'];
+            $i++;
+          }
+          $this->response['data'] = $result['elements'];
+        }
+        return $this->response();
     }
 
     public function linkedinPost(Request $request) {

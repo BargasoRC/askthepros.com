@@ -236,6 +236,7 @@ export default {
         this.APIRequest('social/retrieve_linkedin_pages', parameter, response => {
           // console.log('LINKEDIN PAGES: ', response)
           $('#loading').css({'display': 'none'})
+          this.data = response.data
           let element = this.$refs.modal
           $(element).modal('show')
         }, error => {

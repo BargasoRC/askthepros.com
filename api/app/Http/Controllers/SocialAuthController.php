@@ -26,6 +26,7 @@ class SocialAuthController extends APIController
       $i = 0;
       foreach ($auths as $key => $auth) {
         $auths[$i]['page'] = app($this->pageController)->getActiveByParams($auth['account_id'], $auth['type']);
+        $i++;
       }
     }
 
