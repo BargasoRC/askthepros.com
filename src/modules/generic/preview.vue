@@ -110,6 +110,7 @@ export default {
   props: ['selected', 'previewBodyStyle', 'files', 'first'],
   mounted(){
     this.verdict = this.first
+    console.log('[dfsdf]', this.first)
   },
   data() {
     return {
@@ -133,26 +134,29 @@ export default {
       return this.selected ? ((this.selected.branding && this.selected.branding.details !== undefined) ? Object.values(JSON.parse(this.selected.branding.details)) : null) : null
     },
     returnDescription() {
-      console.log('[seleceted]', this.selected)
       return this.selected ? this.selected.description : null
     },
     returnFiles() {
-      if(this.verdict === true || this.verdict === undefined){
-        console.log('here')
-        this.files = Object.values(JSON.parse(this.files)).map(el => {
-          let temp = {}
-          temp['url'] = this.config.BACKEND_URL + el
-          return temp
-        })
-        return (this.files ? this.files.filter((el, index) => {
-          return index <= 3
-        }) : [])
-      }else{
-        console.log('that')
-        return (this.files ? this.files.filter((el, index) => {
-          return index <= 3
-        }) : [])
-      }
+      // if(this.verdict === true || this.verdict === undefined){
+      console.log(this.files, '[files here]')
+      this.files = Object.values(this.files).map(el => {
+      // this.files = Object.values(JSON.parse(this.files)).map(el => {
+        // console.log('[el]', el)
+        let temp = {}
+        temp['url'] = el.url
+        // temp['url'] = el
+        console.log('[temp]', temp)
+        return temp
+      })
+      return (this.files ? this.files.filter((el, index) => {
+        return index <= 3
+      }) : [])
+      // }else{
+      //   console.log('that')
+      //   return (this.files ? this.files.filter((el, index) => {
+      //     return index <= 3
+      //   }) : [])
+      // }
     }
   },
   methods: {

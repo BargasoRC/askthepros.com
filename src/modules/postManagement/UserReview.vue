@@ -4,7 +4,7 @@
   }">
     <h3 style="margin-top: 25px;">Customize Prior To Posting Channels</h3>
     <p style="color: gray">Review and edit your posts prior to us sending them to your social medial channels. Then, approve once done.</p>
-    <input class="title text-uppercase" v-model="title">
+    <input class="title text-uppercase" v-model="title" size="120">
     <textarea class="form-control" placeholder="Type post description" name="post_title" id="post_title" cols="90" rows="15" v-model="description">
     </textarea>
     <div style="margin-top: -8%; border-color: white" v-if="branding != null">
@@ -15,7 +15,7 @@
     <br>
     <br>
     <h5>Files:</h5>
-    <Imagess @formData="form" @filePreview="storeImages" :edit="$route.params.parameter != undefined ? true : false" :imagesRetrieve="imagesList"></Imagess>
+    <Imagess @formData="form" @filePreview="storeImages" :edit="$route.params.parameter != undefined ? true : false" :imagesRetrieve="imagesList" :code="$route.params.parameter != undefined ? $route.params.parameter : null"></Imagess>
     <br>
     <br>
 
@@ -134,21 +134,21 @@ export default {
           code: this.$route.params.parameter,
           title: this.title,
           description: this.description,
-          // url: null,
+          url: null,
           account_id: this.user.userID,
           status: 'review',
           channels: JSON.stringify(channels),
           category: null
         }
         console.log('[parameters]', parameter)
-        this.isClearing = true
-        this.APIRequest('post/update', parameter).then(response => {
-          $('#loading').css({'display': 'none'})
-          console.log('[response]', response)
-          if(response.data === true){
-            ROUTER.push('/post_management')
-          }
-        })
+        // this.isClearing = true
+        // this.APIRequest('post/update', parameter).then(response => {
+        //   $('#loading').css({'display': 'none'})
+        //   console.log('[response]', response)
+        //   if(response.data === true){
+        //     ROUTER.push('/post_management')
+        //   }
+        // })
       }
     },
     validate() {

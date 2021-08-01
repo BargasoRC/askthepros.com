@@ -63,7 +63,11 @@
     </div>
     <div class="row" style="margin-top: 25px; margin-bottom: 3%">
       <div class="col-md-12 col-lg-8 col-sm-12">
-        <div class="card" style="border-color: light-grey; padding-bottom: 1%; margin-top: 25px;">
+        <div class="card" style="border-color: transparent; padding-bottom: 1%; margin-top: 0px;" v-if="tableData.length === 0">
+          <!-- <h3 class="mb-4" style="margin-top: 3%; text-align: center">No Posts History Found</h3> -->
+          <empty :title="'No posts available!'" :action="'Keep growing.'"></empty>
+        </div>
+        <div class="card" style="border-color: #E5E5E5; padding-bottom: 1%; margin-top: 25px;" v-if="tableData.length > 0">
           <h3 class="mb-4" style="margin-top: 2%; margin-left: 1%">Latest Posts</h3>
           <table class="table table-striped table-bordered">
             <thead>
@@ -222,7 +226,8 @@ export default {
   },
   components: {
     dialogueBtn,
-    roundedBtn
+    roundedBtn,
+    'empty': require('components/increment/generic/empty/Empty.vue')
   },
   created() {
     this.retrieveHistoryPosts({created_at: 'desc'}, {column: 'created_at', value: ''})
