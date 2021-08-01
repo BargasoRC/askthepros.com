@@ -51,7 +51,7 @@ class SocialMediaController extends APIController
         ];
         $curl = new CurlController($headers);
 
-        $result = $curl->postRequest("https://api.linkedin.com/v2/ugcPosts", $body);
+        $result = $curl->postRequest($this->linkedInHostApi."/ugcPosts", $body);
 
         return response()->json($result);
     
@@ -70,10 +70,21 @@ class SocialMediaController extends APIController
                 ])
                 ->get();
         $details = json_decode($account[0]['details'], true);
-        $url = 'https://api.linkedin.com/v2/organizationAcls?q=roleAssignee&role=ADMINISTRATOR&projection=(elements*(*,organization~(localizedName)))';
+        $url = $this->linkedInHostApi.'organizationAcls?q=roleAssignee&role=ADMINISTRATOR&projection=(elements*(*,organization~(localizedName)))';
         $service = new LinkedinService($url);
         $result = $service->getPages($details['token']);
-        return response()->json($result);
+
+        if($result && sizeof($result['elements']) > 0){
+          $i = 0;
+          foreach ($result['elements'] as $key => $element) {
+            $result['elements'][$i]['name'] = $element['organization~']['localizedName'];
+            $result['elements'][$i]['image'] = $element['organization~']['localizedName'];
+            $result['elements'][$i]['id'] = $element['organization'];
+            $i++;
+          }
+          $this->response['data'] = $result['elements'];
+        }
+        return $this->response();
     }
 
     public function linkedinPost(Request $request) {
@@ -90,13 +101,13 @@ class SocialMediaController extends APIController
                 ])
                 ->get();
         $details = json_decode($account[0]['details'], true);
-        $service = new LinkedinService('https://api.linkedin.com/v2/ugcPosts');
+        $service = new LinkedinService($this->linkedInHostApi.'ugcPosts');
         $result = $service->textOnly($details['token'], 'Hello World! Sample LINKEDIN Posting using UGC Post API, with text only!', $details['id']); // Text to post on linkedin is static for now.
         return response()->json($result);
     }
 
     public function linkedinPostWithMedia($token, $owner, $message, $media, $media_type) {
-        $service = new LinkedinService('https://api.linkedin.com/v2/ugcPosts');
+        $service = new LinkedinService($this->linkedInHostApi.'ugcPosts');
         $result = $service->postWithMedia($token, $owner, $message, $media, $media_type);
         return $result;
     }
@@ -125,7 +136,7 @@ class SocialMediaController extends APIController
         $type = \File::mimeType($path);
 
         $details = json_decode($account[0]['details'], true);
-        $service = new LinkedinService('https://api.linkedin.com/v2/assets?action=registerUpload');
+        $service = new LinkedinService($this->linkedInHostApi.'assets?action=registerUpload');
         $result = $service->shareMedia($details['token'], $details['id']);
         $registration = [];
         $registration['registration'] = $result;
@@ -144,7 +155,7 @@ class SocialMediaController extends APIController
         $media_uri = ((object)(((object)$result)->value))->asset;
         $asset = explode(':', $media_uri);
 
-        $status_service = new LinkedinService("https://api.linkedin.com/v2/assets/" . $asset[sizeof($asset) - 1]);
+        $status_service = new LinkedinService($this->linkedInHostApi."assets/" . $asset[sizeof($asset) - 1]);
         $status = $status_service->checkUploadStatus($details['token']);
         $_status = [];
         $_status['status'] = $status;
@@ -155,27 +166,37 @@ class SocialMediaController extends APIController
         return response()->json((object) array_merge($registration, $_upload, $_status, $post));
     }
 
-    public function retrieveFacebookPages(Request $request) {
-        /**
-         * This method retrieves all the facebook pages of the user
-         */
-        $data = $request->all();
-        $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
-                ->select('accounts.token', 'social_auths.details')
-                ->where([
-                    ['accounts.id', '=', $data['account_id']],
-                    ['social_auths.type', '=', 'facebook'],
-                    ['social_auths.deleted_at', '=', null]
-                ])
-                ->get();
-        $details = json_decode($account[0]['details'], true);
-        $url = 'https://graph.facebook.com/v11.0/'. $details['id'].'/accounts';
-        $headers = [];
-        $headers[] = 'Authorization: Bearer ' . $details['token'];
-        $service = new FacebookService($url, $headers);
-        $pages = $service->getPages();
-        $this->response['data'] = $pages;
-        return $this->response();
+  public function retrieveFacebookPages(Request $request) {
+    /**
+     * This method retrieves all the facebook pages of the user
+     */
+    $data = $request->all();
+    $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
+            ->select('accounts.token', 'social_auths.details')
+            ->where([
+                ['accounts.id', '=', $data['account_id']],
+                ['social_auths.type', '=', 'facebook'],
+                ['social_auths.deleted_at', '=', null]
+            ])
+            ->get();
+    $details = json_decode($account[0]['details'], true);
+    $url = $this->facebookHostApi.$details['id'].'/accounts'.(env('CHANNEL_PRODUCTION_MODE') ? '' : '?limit=3');
+    $headers = [];
+    $headers[] = 'Authorization: Bearer ' . $details['token'];
+    $service = new FacebookService($url, $headers);
+    $pages = $service->getPages();
+    $pages = $pages && $pages['data'] ? $pages['data'] : [];
+    if($pages && sizeof($pages) > 0){
+      $i = 0;
+      foreach ($pages as $key => $page) {
+        $url = $this->facebookHostApi.$page['id'].'/picture';
+        // $image = $service->requestHandler($url);
+        $pages[$i]['image'] = $url;
+        $i++;
+      }
     }
+    $this->response['data'] =  $pages;
+    return $this->response();
+  }
 
 }

@@ -192,6 +192,14 @@ export default{
     meta: {
       tokenRequired: false
     }
+  },
+  {
+    path: '/thankyou',
+    name: 'thankyou',
+    component: resolve => require(['src/modules/subscriptions/thankYou.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
   }
   ]
 }

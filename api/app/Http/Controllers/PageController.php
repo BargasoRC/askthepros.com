@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Page;
 use Carbon\Carbon;
-class PageController extends Controller
+class PageController extends APIController
 {
   function __construct(){
     $this->model = new Page();
@@ -13,6 +13,12 @@ class PageController extends Controller
 
   public function create(Request $request){
     $data = $request->all();
+    
+    // delete all previous
+    Page::where('account_id', '=', $data['account_id'])->where('type', '=', $data['type'])->update(array(
+      'deleted_at' => Carbon::now()
+    ));
+
     $data['code'] = $this->generateCode();
     $this->model = new Page();
     $this->insertDB($data);
@@ -28,4 +34,13 @@ class PageController extends Controller
       return $code;
     }
   }
+
+  public function getActiveByParams($accountId, $type){
+    $result = Page::where('account_id', '=', $accountId)->where('type', '=', $type)->get();
+    if($result && sizeof($result) > 0){
+      $result[0]['details'] = json_decode($result[0]['details'], true);
+    }
+    return sizeof($result) > 0 ? $result[0] : null;
+  }
+
 }

@@ -45,7 +45,7 @@ class Posting implements ShouldQueue
     
     // Get channels credentials
     // Send to curl of the channel
-    $schedule = 'MondayTuesdayWednesdayFriday';
+    $schedule = 'MondayTuesdayWednesdayThursdayFriday';
     $currentDate = Carbon::now()->format('l');
     echo "currentDate = ".$currentDate;
     if(str_contains($schedule, $currentDate)){
