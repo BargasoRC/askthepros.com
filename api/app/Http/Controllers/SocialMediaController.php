@@ -155,27 +155,37 @@ class SocialMediaController extends APIController
         return response()->json((object) array_merge($registration, $_upload, $_status, $post));
     }
 
-    public function retrieveFacebookPages(Request $request) {
-        /**
-         * This method retrieves all the facebook pages of the user
-         */
-        $data = $request->all();
-        $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
-                ->select('accounts.token', 'social_auths.details')
-                ->where([
-                    ['accounts.id', '=', $data['account_id']],
-                    ['social_auths.type', '=', 'facebook'],
-                    ['social_auths.deleted_at', '=', null]
-                ])
-                ->get();
-        $details = json_decode($account[0]['details'], true);
-        $url = $this->facebookHostApi.$details['id'].'/accounts'.(env('CHANNEL_PRODUCTION_MODE') ? '' : '?limit=3');
-        $headers = [];
-        $headers[] = 'Authorization: Bearer ' . $details['token'];
-        $service = new FacebookService($url, $headers);
-        $pages = $service->getPages();
-        $this->response['data'] = $pages && $pages['data'] ? $pages['data'] : [];
-        return $this->response();
+  public function retrieveFacebookPages(Request $request) {
+    /**
+     * This method retrieves all the facebook pages of the user
+     */
+    $data = $request->all();
+    $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
+            ->select('accounts.token', 'social_auths.details')
+            ->where([
+                ['accounts.id', '=', $data['account_id']],
+                ['social_auths.type', '=', 'facebook'],
+                ['social_auths.deleted_at', '=', null]
+            ])
+            ->get();
+    $details = json_decode($account[0]['details'], true);
+    $url = $this->facebookHostApi.$details['id'].'/accounts'.(env('CHANNEL_PRODUCTION_MODE') ? '' : '?limit=3');
+    $headers = [];
+    $headers[] = 'Authorization: Bearer ' . $details['token'];
+    $service = new FacebookService($url, $headers);
+    $pages = $service->getPages();
+    $pages = $pages && $pages['data'] ? $pages['data'] : [];
+    if($pages && sizeof($pages) > 0){
+      $i = 0;
+      foreach ($pages as $key => $page) {
+        $url = $this->facebookHostApi.$page['id'].'/picture';
+        // $image = $service->requestHandler($url);
+        $pages[$i]['image'] = $url;
+        $i++;
+      }
     }
+    $this->response['data'] =  $pages;
+    return $this->response();
+  }
 
 }

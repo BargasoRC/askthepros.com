@@ -53,7 +53,11 @@
     <div class="row">
       <div class="col-xs-12 col-sm-6 col-md-4 mt-3"  v-for="(item, index) in socialCards" :key="index">
         <div class="card">
-          <h3 style="font-weight: bolder;font-size: 21px; color: #01009A;">{{item.title}}</h3>
+          <h3 style="font-weight: bolder;font-size: 21px; color: #01009A;" v-if="item.details === null || (item.details && item.details.page === null)">{{item.title}}</h3>
+          <h3 style="font-weight: bolder;font-size: 21px; color: #01009A;" v-if="item.details && item.details.page !== null">
+            <img :src="item.details.page.details.image" class="page-image-holder">
+            {{item.details.page.details.name}}
+          </h3>
           <p>{{item.description}}</p>
           <p v-if="!item.stat">Setup and link your account now!</p>
           <p v-if="item.stat">Your account has successfully <span style="color: #51DB78">CONNECTED</span>.</p>
@@ -71,13 +75,13 @@
           <roundedBtn
               v-if="item.stat"
               :onClick="(e) => viewAndAddPages(item)"
-              :text="'View / Add Pages'"
+              :text="'Add or Remove Pages'"
               :styles="{
                 backgroundColor: 'white',
                 border: '1px solid #01004E',
                 color: '#01004E',
                 height: '45px',
-                width: '150px'
+                width: '200px'
               }"/>
         </div>
       </div>
@@ -86,19 +90,23 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Selec Page</h5>
+            <h5 class="modal-title">Select Page</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
             <ul v-if="data && data.length > 0" class="pages-holder">
-              <li v-for="(item, index) in data">{{item.name}}</li>
+              <li v-for="(item, index) in data" @click="selectedPage = item" :class="{'active': selectedPage && selectedPage.id === item.id}">
+                <img :src="item.image" class="page-image-holder">
+                {{item.name}}
+              </li>
             </ul>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Add to selected</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" @click="activePayload = null">Close</button>
+            <button type="button" class="btn btn-primary" v-if="selectedPage !== null && activePayload && activePayload.details && (activePayload.details.page === null || activePayload.details.page.page !== selectedPage.id)" @click="addPage()">Manage this page</button>
+            <button type="button" class="btn btn-danger" v-if="selectedPage !== null && activePayload && activePayload.details && activePayload.details.page !== null && activePayload.details.page.page === selectedPage.id" @click="removePage(activePayload.details.page.id)">Remove this page</button>
           </div>
         </div>
       </div>
@@ -121,24 +129,29 @@ export default {
         title: 'Google My Business',
         payload: 'google',
         description: 'Reap the benefits of automating your Google My Business postings.',
-        stat: false
+        stat: false,
+        details: null
       }, {
         index: 1,
         title: 'Facebook',
         payload: 'facebook',
         description: 'Reap the benefits of automating your Facebook postings.',
-        stat: false
+        stat: false,
+        details: null
       }, {
         index: 2,
         title: 'Linkedin',
         payload: 'linkedin',
         description: 'Reap the benefits of automating your Linkedin postings.',
-        stat: false
+        stat: false,
+        details: null
       }],
       user: AUTH.user,
       socialAuths: [],
       page_type: '',
-      data: []
+      data: [],
+      selectedPage: null,
+      activePayload: null
     }
   },
   components: {
@@ -169,6 +182,7 @@ export default {
             let index = this.socialCards.findIndex(le => le.payload.toLowerCase() === el.type.toLowerCase())
             if(index >= 0) {
               this.socialCards[index].stat = true
+              this.socialCards[index].details = el
             }
           })
         }
@@ -192,8 +206,27 @@ export default {
         this.connectToLinkedIn(item.payload)
       }
     },
+    addPage(){
+      if(this.selectedPage === null){
+        return null
+      }
+      let parameter = {
+        account_id: this.user.userID,
+        type: this.activePayload.payload,
+        page: this.selectedPage.id,
+        details: JSON.stringify(this.selectedPage)
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('pages/create', parameter, response => {
+        $('#loading').css({'display': 'none'})
+        this.retrieveSocialAuths()
+      }, error => {
+        error
+        $('#loading').css({'display': 'none'})
+      })
+    },
     viewAndAddPages(provider){
-      //
+      this.activePayload = provider
       if(provider.payload === 'linkedin') {
         this.page_type = 'linkedin'
         let parameter = {
@@ -201,7 +234,7 @@ export default {
         }
         $('#loading').css({'display': 'block'})
         this.APIRequest('social/retrieve_linkedin_pages', parameter, response => {
-          console.log('LINKEDIN PAGES: ', response)
+          // console.log('LINKEDIN PAGES: ', response)
           $('#loading').css({'display': 'none'})
           let element = this.$refs.modal
           $(element).modal('show')
@@ -226,6 +259,22 @@ export default {
           $('#loading').css({'display': 'none'})
         })
       }
+    },
+    removePage(id){
+      if(id === null){
+        return null
+      }
+      let parameter = {
+        id: id
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('pages/delete', parameter, response => {
+        $('#loading').css({'display': 'none'})
+        this.retrieveSocialAuths()
+      }, error => {
+        error
+        $('#loading').css({'display': 'none'})
+      })
     },
     disconnect(item) {
       let index = this.socialAuths.findIndex(le => le.type.toLowerCase() === item.payload.toLowerCase())
@@ -352,11 +401,22 @@ h3{
   padding: 0px !important;
 }
 
+.page-image-holder{
+  height: 40px;
+  width: 40px;
+  border-radius: 20px;
+  margin-right: 10px;
+}
 .pages-holder li:hover{
   background-color: $gray;
   cursor: pointer;
-
 }
+
+.active{
+  background: $primary;
+  color: #ffffff;
+}
+
 @media screen and (max-width: 600px) {
   .column {
     width: 100%;
