@@ -23,18 +23,20 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-12 p-0 mt-5 mb-4" v-if="(returnDescription !== '' && returnDescription) || ((files) && (files) ? files.length : 0) > 0">
+        <div class="col-sm-12 p-0 mt-5 mb-4" v-if="(returnDescription !== '')">
           <p class="mb-0 p-0">
             {{returnDescription}}
           </p>
         </div>
-        <div class="col-sm-12" v-for="(el, ndx) in footer" :key="'footer' + ndx" v-if="(returnDescription !== '' && returnDescription) || files && (files ? files.length : 0) > 0">
+        <!-- <div class="col-sm-12" v-for="(el, ndx) in footer" :key="'footer' + ndx" v-if="(returnDescription !== '' && returnDescription) || files && (files ? files.length : 0) > 0"> -->
+        <div class="col-sm-12" v-for="(el, ndx) in footer" :key="'footer' + ndx">
           <p class="mb-0 p-0" style="margin-left: -2%">
             {{el}}
           </p>
         </div>
         <br>
-        <div class="col-sm-12 p-0 d-flex justify-content-between file_container" v-if="(returnDescription !== '' && returnDescription) || files && (files ? files.length : 0) > 0">
+        <div class="col-sm-12 p-0 d-flex justify-content-between file_container" v-if="(files && (files ? files.length : 0) > 0)">
+        <!-- <div class="col-sm-12 p-0 d-flex justify-content-between file_container" v-if="(returnDescription !== '' && returnDescription) || files && (files ? files.length : 0) > 0"> -->
           <div v-for="(el, ndx) in returnFiles" :key="ndx + String(el.id)"
             :class="'file_width ' + (([1, 3, 4].includes((files ? files.length : 0)) || (files ? files.length : 0) >= 5) && ndx === 0 ? 'whole_page ' : '') + ( (files ? files.length : 0) >= 4 && ndx !== 0 ? 'compressed ' : '')" :style="{
               background: `url(${el.url})`,
@@ -107,7 +109,7 @@ import COLORS from 'src/assets/style/colors.js'
 import CONFIG from 'src/config.js'
 import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
 export default {
-  props: ['selected', 'previewBodyStyle', 'files', 'first'],
+  props: ['selected', 'previewBodyStyle', 'files', 'first', 'isAddd'],
   mounted(){
     this.verdict = this.first
   },
@@ -119,7 +121,8 @@ export default {
       previewTypes: ['Facebook', 'Linkedin', 'Google My Business'],
       previewIndex: 0,
       blank: [1, 2, 3],
-      verdict: false
+      verdict: false,
+      add: false
     }
   },
   components: {
@@ -133,13 +136,41 @@ export default {
       return this.selected ? ((this.selected.branding && this.selected.branding.details !== undefined) ? Object.values(JSON.parse(this.selected.branding.details)) : null) : null
     },
     returnDescription() {
-      console.log('[seleceted]', this.selected)
       return this.selected ? this.selected.description : null
     },
     returnFiles() {
-      if(this.verdict === true || this.verdict === undefined){
-        console.log('here')
-        this.files = Object.values(JSON.parse(this.files)).map(el => {
+      if((this.verdict === 'true' && this.isAddd === false) || (this.verdict === true && this.isAddd === 'false')){
+        this.files = Object.values(this.files).map(el => {
+          let temp = {}
+          temp['url'] = el.url
+          return temp
+        })
+        return (this.files ? this.files.filter((el, index) => {
+          return index <= 3
+        }) : [])
+      }
+      if(!this.isAddd && this.verdict === 'false'){
+        this.files = Object.values(this.files).map(el => {
+          let temp = {}
+          temp['url'] = el.url
+          return temp
+        })
+        return (this.files ? this.files.filter((el, index) => {
+          return index <= 3
+        }) : [])
+      }
+      if(this.verdict === 'false' && this.isAddd === true){
+        this.files = Object.values(this.files).map(el => {
+          let temp = {}
+          temp['url'] = el.url
+          return temp
+        })
+        return (this.files ? this.files.filter((el, index) => {
+          return index <= 3
+        }) : [])
+      }
+      if(this.verdict === 'true' && this.isAddd === true){
+        this.files = Object.values(this.files).map(el => {
           let temp = {}
           temp['url'] = this.config.BACKEND_URL + el
           return temp
@@ -147,11 +178,19 @@ export default {
         return (this.files ? this.files.filter((el, index) => {
           return index <= 3
         }) : [])
-      }else{
-        console.log('that')
+      }
+      if((this.verdict === 'undefined' && this.isAddd === 'undefined') || (this.verdict === undefined && this.isAddd === undefined)){
+        this.files = Object.values(this.files).map(el => {
+          let temp = {}
+          temp['url'] = el.url
+          return temp
+        })
         return (this.files ? this.files.filter((el, index) => {
           return index <= 3
         }) : [])
+      }
+      if(this.files === null){
+        return null
       }
     }
   },

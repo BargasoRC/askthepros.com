@@ -4,7 +4,7 @@
   }">
     <h3 style="margin-top: 25px;">Customize Prior To Posting Channels</h3>
     <p style="color: gray">Review and edit your posts prior to us sending them to your social medial channels. Then, approve once done.</p>
-    <input class="title text-uppercase" v-model="title">
+    <input class="title text-uppercase" v-model="title" size="120">
     <textarea class="form-control" placeholder="Type post description" name="post_title" id="post_title" cols="90" rows="15" v-model="description">
     </textarea>
     <div style="margin-top: -8%; border-color: white" v-if="branding != null">
@@ -15,7 +15,7 @@
     <br>
     <br>
     <h5>Files:</h5>
-    <Imagess @formData="form" @filePreview="storeImages" :edit="$route.params.parameter != undefined ? true : false" :imagesRetrieve="imagesList"></Imagess>
+    <Imagess @formData="form" @filePreview="storeImages" @add="add" :edit="$route.params.parameter != undefined ? true : false" :imagesRetrieve="imagesList" :code="$route.params.parameter != undefined ? $route.params.parameter : null"></Imagess>
     <br>
     <br>
 
@@ -45,6 +45,7 @@
       :selected="selectedItem"
       :files="file"
       :first="'false'"
+      :isAddd="isAdd"
     />
     
     <errorModal
@@ -93,7 +94,9 @@ export default {
       channels: [],
       file: null,
       selectedItem: null,
-      branding: null
+      branding: null,
+      addImage: [],
+      isAdd: false
     }
   },
   components: {
@@ -134,21 +137,21 @@ export default {
           code: this.$route.params.parameter,
           title: this.title,
           description: this.description,
-          // url: null,
+          url: null,
           account_id: this.user.userID,
           status: 'review',
           channels: JSON.stringify(channels),
           category: null
         }
         console.log('[parameters]', parameter)
-        this.isClearing = true
-        this.APIRequest('post/update', parameter).then(response => {
-          $('#loading').css({'display': 'none'})
-          console.log('[response]', response)
-          if(response.data === true){
-            ROUTER.push('/post_management')
-          }
-        })
+        // this.isClearing = true
+        // this.APIRequest('post/update', parameter).then(response => {
+        //   $('#loading').css({'display': 'none'})
+        //   console.log('[response]', response)
+        //   if(response.data === true){
+        //     ROUTER.push('/post_management')
+        //   }
+        // })
       }
     },
     validate() {
@@ -171,8 +174,27 @@ export default {
       }
       return true
     },
+    add(add){
+      this.isAdd = add
+    },
     storeImages(data) {
-      this.imagesList = data
+      // this.imagesList = data
+      this.addImage = data
+      if(this.$route.params.parameter === undefined){
+        this.imagesList = Object.values(data).map(el => {
+          let temp = {}
+          temp['url'] = this.config.BACKEND_URL + el
+          return temp
+        })
+      }else if(this.$route.params.parameter !== undefined && this.isAdd === true){
+        this.imagesList = Object.values(data).map(el => {
+          let temp = {}
+          temp['url'] = this.config.BACKEND_URL + el
+          return temp
+        })
+      }else{
+        this.imagesList = data
+      }
     },
     preview(){
       this.$refs.previewSelected.show()
