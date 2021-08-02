@@ -56,7 +56,7 @@
             </td>
             <td v-if="item.status.toLowerCase() === 'publish'">
               <i class="fa fa-eye text-primary"  @click="showPreview(item)"></i>
-              <i class="fas fa-copy text-primary" @click="edit(item.code)"></i>
+              <!-- <i class="fas fa-copy text-primary" @click="edit(item.code)"></i> -->
               <i class="fa fa-trash text-danger" @click="showDeleteConfirmation(item.id)"></i>
             </td>
           </tr>
@@ -98,12 +98,14 @@ import roundedBtn from 'src/modules/generic/roundedBtn'
 import Pager from 'src/components/increment/generic/pager/Pager.vue'
 import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
 import ROUTER from 'src/router'
+import CONFIG from 'src/config.js'
 import Search from 'src/components/increment/generic/filter/Basic'
 import preview from './UserPreview.vue'
 export default {
   data() {
     return {
       user: AUTH.user,
+      config: CONFIG,
       tableHeaders: [
         {title: 'Post No.'},
         {title: 'Date'},
@@ -317,7 +319,12 @@ export default {
         this.selectedItem = null
       }else{
         this.selectedItem = item
-        this.file = item.url
+        // this.file = item.url
+        this.file = Object.values(JSON.parse(item.url)).map(el => {
+          let temp = {}
+          temp['url'] = this.config.BACKEND_URL + el
+          return temp
+        })
       }
       setTimeout(() => {
         this.$refs.previewSelected.show()

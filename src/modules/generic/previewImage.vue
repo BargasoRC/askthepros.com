@@ -16,7 +16,7 @@
       <div class="d-flex justify-content-start mt-5">
         <button id="imageCont" type="button" class="btn add_file" @click="addImage(edit)">Add File</button>
         <input type="file" id="Image" accept="image/*"
-          @change="setUpFileUpload($event, edit)">
+          @change="setUpFileUpload($event, add)">
       </div>
     </div>
   </div>
@@ -41,7 +41,8 @@ export default {
     productId: null,
     hasError: false,
     files: [],
-    fileUrls: []
+    fileUrls: [],
+    add: true
   }),
   mounted(){
     this.retrieveImage()
@@ -64,34 +65,32 @@ export default {
     selectImage(url){
       this.selectedImage = url
     },
-    setUpFileUpload(event){
+    setUpFileUpload(event, add){
       let files = event.target.files || event.dataTransfer.files
-      console.log(files)
       if(!files.length){
         return false
       }else{
         this.file = files[0]
         let filename = this.file.name.toLowerCase()
         if(filename.substring(filename.lastIndexOf('.')) === '.png' || filename.substring(filename.lastIndexOf('.')) === '.jpg' || filename.substring(filename.lastIndexOf('.')) === '.jpeg' || filename.substring(filename.lastIndexOf('.')) === '.gif' || filename.substring(filename.lastIndexOf('.')) === '.tif' || filename.substring(filename.lastIndexOf('.')) === '.bmp'){
-          this.createFile(files[0])
+          this.createFile(files[0], add)
         }else{
           this.errorMessage = 'Upload images only!'
           this.file = null
         }
       }
     },
-    createFile(file){
+    createFile(file, add){
       let fileReader = new FileReader()
       fileReader.readAsDataURL(file)
-      this.upload()
+      this.upload(add)
     },
-    upload(){
+    upload(add){
       if(parseInt(this.file.size / 1024) > 1024){
         this.errorMessage = 'Allowed size is up to 1 MB only'
         this.file = null
         return
       }
-      console.log('fdsfadsfds', this.file.name)
       this.validateImage(this.file.name)
       if(this.hasError === true){
         return
@@ -102,20 +101,18 @@ export default {
       formData.append('account_id', this.user.userID)
       formData.append('category', `product${this.productId}`)
       $('#loading').css({'display': 'block'})
-      console.log('imageRoute', formData)
       axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
         $('#loading').css({'display': 'none'})
         this.hasError = false
         if(response.data.data !== null){
-          console.log('[response.data.sdat]', response.data.data)
           this.imagesList.push(response.data.data)
           this.$emit('filePreview', this.imagesList)
+          this.$emit('add', add)
         }
       })
       this.prevIndex = null
     },
     deleteImage(id){
-      console.log('[id]', id)
       let params = {
         id: id
       }
@@ -124,7 +121,7 @@ export default {
         console.log('[response Image]', response.data)
         $('#loading').css({display: 'none'})
         // if(response.data.length > 0){
-        this.retrieveImage()
+        // this.retrieveImage()
         // }
       })
     },
@@ -134,19 +131,18 @@ export default {
           account_id: this.user.userID,
           code: this.code
         }
-        console.log('[prame]', parameter)
         $('#loading').css({'display': 'block'})
         this.APIRequest('post/retrieve_by_code', parameter).then(response => {
-          console.log('[image]', response)
+          console.log('[erer]', response.data)
           $('#loading').css({'display': 'none'})
           if(!response.error) {
             response.data.filter(el => {
               if(el.code === this.$route.params.parameter){
                 Object.values(JSON.parse(el.url)).map(el => {
+                  console.log('[eeeeeeeeeeel]', el)
                   // let temp = {}
                   // temp['url'] = this.config.BACKEND_URL + el
                   this.imagesList.push(el)
-                  console.log('[temp]', this.imagesList)
                 })
               }
             })
@@ -156,7 +152,6 @@ export default {
     },
     validateImage(imageName){
       this.imagesList.map(el => {
-        console.log('efdsafdsfsd', el)
         let name = el.substring(el.lastIndexOf('_') + 1)
         if(imageName === name){
           this.hasError = true

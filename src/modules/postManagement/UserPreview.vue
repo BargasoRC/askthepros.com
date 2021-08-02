@@ -13,6 +13,7 @@
           ref="preview"
           :selected="selected"
           :files="returnFiles"
+          :isAddd="isAdd"
           :previewBodyStyle="{
             minHeight: 'calc(100vh - 100px) !important'
           }"
