@@ -191,7 +191,7 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('accounts_info/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('Data: ', response)
+        console.log('Data1: ', response)
         let data = response.data[0]
         this.username = this.user.username
         this.email = this.user.email
@@ -221,22 +221,33 @@ export default {
         let parameter = {
           account_id: this.user.userID,
           first_name: this.firstname,
-          middle_name: '',
+          middle_name: 'null',
           last_name: this.lastname,
           cellular_number: this.contactnumber
         }
         let info = AUTH.user.information
         console.log('INFO: ', info)
         console.log('Parameters: ', parameter)
-        this.APIRequest('accounts_info/update_account', parameter).then(response => {
-          $('#loading').css({'display': 'none'})
-          if(response.error.length === 0){
-            this.retrieveInformation()
-            console.log('Update profile response: ', response)
-            this.canUpdateProfile = false
-            alert('Submitted')
-          }
-        })
+        if(Object.keys(info).length > 1){
+          this.APIRequest('accounts_info/update_account', parameter).then(response => {
+            $('#loading').css({'display': 'none'})
+            if(response.error.length === 0){
+              this.retrieveInformation()
+              console.log('Update profile response: ', response)
+              this.canUpdateProfile = false
+              alert('Submitted')
+            }
+          })
+        }else{
+          $('#loading').css({'display': 'block'})
+          this.APIRequest('account_informations/create', parameter).then(response => {
+            $('#loading').css({'display': 'none'})
+            if(response.error === 0) {
+              this.retrieveInformation()
+              this.canUpdateProfile = false
+            }
+          })
+        }
         console.log('Business name: ', this.businessname)
         let merchant = {
           name: this.businessname,
