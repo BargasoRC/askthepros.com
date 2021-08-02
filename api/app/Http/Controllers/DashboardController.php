@@ -29,10 +29,10 @@ class DashboardController extends APIController
             $facebook = true;
             break;
           case 'google':
-            $facebook = true;
+            $google = true;
             break;
           case 'linkedin':
-            $facebook = true;
+            $linkedin = true;
             break;
         }
       }
