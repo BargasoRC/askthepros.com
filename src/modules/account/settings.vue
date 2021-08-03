@@ -5,7 +5,9 @@
         <Profile/>
         <Address/>
         <Account/>
+        <div  v-if="passwordVerified === false">
         <CPass/>
+        </div>
       </div>
       <div class="col-sm-4 text-center mb-5 col-sm-push-8">
         <h3>Profile picture</h3>
@@ -69,11 +71,6 @@ export default {
     return {
       eyeToggle: false,
       colors: COLORS,
-      firstname: '',
-      middlename: '',
-      lastname: '',
-      businessname: '',
-      contactnumber: '',
       user: AUTH.user,
       config: CONFIG,
       global: global,
@@ -81,30 +78,7 @@ export default {
       data: null,
       file: null,
       copiedIndex: null,
-      route: '',
-      city: '',
-      region: '',
-      country: '',
-      postalZipCode: '',
-      username: '',
-      email: '',
-      oPassword: '',
-      confirmPassword: '',
-      password: '',
-      passwordRequirements: '',
-      isValid: true,
-      isValidProfile: true,
-      isValidAccount: true,
-      isValidPassword: true,
-      canUpdateAccount: false,
-      canUpdateAddress: true,
-      canUpdateProfile: false,
-      canUpdatePassword: false,
-      isShowingOPassword: false,
-      isShowingPassword: false,
-      isShowingCPassword: false,
-      passwordVerified: false,
-      emailValidation: ''
+      passwordVerified: false
     }
   },
   components: {
