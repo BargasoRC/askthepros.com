@@ -2,7 +2,7 @@
 @endcomponent
 <span class="text">
     <h3>Payment Due Reminder</h3>
-    Hello {{$data['account']['username']}}!
+    Hello {{$user['username']}}!
     <br>
     <br>
     Here is your billing from {{env('APP_NAME')}}

@@ -2,7 +2,7 @@
 @endcomponent
 <span class="text">
     <h3>Receipt</h3>
-    Hello {{$data['account']['username']}}!
+    Hello {{$user['username']}}!
     <br>
     <br>
     Here is your receipt from {{env('APP_NAME')}}

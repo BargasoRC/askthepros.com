@@ -13,14 +13,16 @@ class Billing extends Mailable
     use Queueable, SerializesModels;
     public $data;
     public $date;
+    public $user;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data, $timezone)
+    public function __construct($user, $data, $timezone)
     {
+        $this->user = $user;
         $this->data = $data;
         $this->date = Carbon::now()->copy()->tz($timezone)->format('F j, Y h:i A');
     }

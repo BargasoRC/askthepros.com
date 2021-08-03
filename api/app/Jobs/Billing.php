@@ -21,7 +21,7 @@ class Billing implements ShouldQueue
    */
 
   public $billingController = 'App\Http\Controllers\BillingController';
-  public $emailController = 'App\Http\Controllers\BillingController';
+  public $emailController = 'App\Http\Controllers\EmailController';
 
   public function __construct()
   {
@@ -59,7 +59,7 @@ class Billing implements ShouldQueue
             }
 
             if($startDate && $endDate){
-              $billing = app($this->billingController)->addToBilling(array(
+              $billingData = array(
                 'account_id' => $plan['account_id'],
                 'currency'   => 'USD',
                 'details'    => $billing[0]['details'],
@@ -67,9 +67,13 @@ class Billing implements ShouldQueue
                 'start_date' => $startDate,
                 'end_date'   => $endDate,
                 'status'     => 'not paid'
-              ));
+              );
+
+
+              $billing = app($this->billingController)->addToBilling($billingData);
+              $billingData['plan'] = $plan['plan'];
               echo "\n\t [Billing] New billing created";
-              // send an email
+              app($this->emailController)->billing($plan['account_id'], $billingData);
             }else{
               echo "\n\t [Billing] Invalid start and end date..";
             }

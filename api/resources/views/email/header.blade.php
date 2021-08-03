@@ -39,14 +39,14 @@
                 float: left;
             }
             .text-primary{
-                color:#005b96;   
+                color:#000;   
             }
             .text-secondary{
-                color:#005b96;
+                color:#000;
             }
             .text{
                 color: #555;
-                font-size: 18px;
+                font-size: 13px;
             }
             .holder{
                 width: 100%;
