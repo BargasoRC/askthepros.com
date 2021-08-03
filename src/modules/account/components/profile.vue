@@ -18,7 +18,7 @@
                   <p class="mb-0 pb-0 requiredFieldError"
                     v-if="firstname == '' && !isValidProfile">
                     {{
-                    firstname == '' ? 'Required Field' : ''
+                    'Required Field'
                     }}</p>
                 </div>
               </div>
@@ -134,6 +134,9 @@ export default {
     },
     contactnumber: function(val) {
       this.contactnumber = val
+    },
+    businessname: function(val){
+      this.businessname = val
     }
   },
   created() {
@@ -154,7 +157,7 @@ export default {
         let data = response.data[0]
         this.username = this.user.username
         this.email = this.user.email
-        this.businessname = this.user.merchant ? this.user.merchant.name : 'a'
+        this.businessname = this.user.merchant ? this.user.merchant[0].name : 'a'
         AUTH.user.information = response.data[0]
         if(response.data.length > 0) {
           AUTH.user.merchant = [data.merchant]
@@ -230,6 +233,20 @@ export default {
       }else{
         console.log('Cant update')
       }
+      let newinfo = {
+        ...AUTH.user.information,
+        first_name: this.firstname,
+        middle_name: 'null',
+        last_name: this.lastname,
+        cellular_number: this.contactnumber
+      }
+      let newMerchant = {
+        name: this.businessname
+      }
+      setTimeout(() => {
+        AUTH.user.information = newinfo
+        AUTH.user.merchant[0].name = newMerchant
+      }, 100)
     },
     validate() {
       if(this.firstname !== '' || this.lastname !== '' || this.businessname !== '' || this.contactnumber !== '') {

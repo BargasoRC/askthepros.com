@@ -140,11 +140,21 @@ export default {
     }
   },
   watch: {
-    route: this.route,
-    city: this.city,
-    region: this.region,
-    country: this.country,
-    postalZipCode: this.postalZipCode
+    route: function(val){
+      this.route = val
+    },
+    city: function(val){
+      this.city = val
+    },
+    region: function(val){
+      this.region = val
+    },
+    country: function(val){
+      this.country = val
+    },
+    postalZipCode: function(val){
+      this.postalZipCode = val
+    }
   },
   created() {
     this.retrieveInformation()
