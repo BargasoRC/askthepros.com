@@ -158,42 +158,22 @@ export default {
     return {
       eyeToggle: false,
       colors: COLORS,
-      firstname: '',
-      middlename: '',
-      lastname: '',
-      businessname: '',
-      contactnumber: '',
       user: AUTH.user,
       config: CONFIG,
       global: global,
       errorMessage: null,
       data: null,
-      file: null,
-      copiedIndex: null,
-      route: '',
-      city: '',
-      region: '',
-      country: '',
-      postalZipCode: '',
-      username: '',
-      email: '',
       oPassword: '',
       confirmPassword: '',
       password: '',
       passwordRequirements: '',
       isValid: true,
-      isValidProfile: true,
-      isValidAccount: true,
       isValidPassword: true,
-      canUpdateAccount: false,
-      canUpdateAddress: true,
-      canUpdateProfile: false,
       canUpdatePassword: false,
       isShowingOPassword: false,
       isShowingPassword: false,
       isShowingCPassword: false,
-      passwordVerified: false,
-      emailValidation: ''
+      passwordVerified: false
     }
   },
   components: {
@@ -207,38 +187,8 @@ export default {
     }
   },
   watch: {
-    username: function(val) {
-      this.username = val
-    },
-    firstname: function(val) {
-      this.firstname = val
-    },
-    lastname: function(val) {
-      this.lastname = val
-    },
-    contactnumber: function(val) {
-      this.contactnumber = val
-    },
-    route: function(val) {
-      this.route = val
-    },
-    city: function(val) {
-      this.city = val
-    },
-    region: function(val) {
-      this.region = val
-    },
-    country: function(val) {
-      this.country = val
-    },
-    postalZipCode: function(val) {
-      this.postalZipCode = val
-    },
-    email: function(val) {
-      this.email = val
-    }
   },
-  mounted() {
+  created() {
     if(AUTH.hash('show', localStorage.getItem('login_with')) === 'social_lite') {
       this.passwordVerified = true
     }
@@ -449,10 +399,8 @@ h3{
 .requiredFieldError {
   color: $danger;
   font-size: 10px;
-  //margin-left: 20px;
-  //margin-bottom: 25px !important;
-  margin-top: -30px;
-  position: absolute;
+  margin-left: 20px;
+  margin-bottom: 25px !important;
 }
 /*
 @media (max-width: 768px){

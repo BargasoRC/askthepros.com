@@ -7,8 +7,8 @@
         </div>
         <div class="my-form row my-row">
           <div class=" col-sm-12 input-form">
-            <div class="row">
-              <div class="col-md-6">
+            <div class="row mb-3">
+              <div class="col-md-6" >
                 <p>First Name</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your first name here'"
                   :class="!isValidProfile && firstname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
@@ -22,7 +22,7 @@
                     }}</p>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6" >
                 <p>Last Name</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your last name here'"
                   :class="!isValidProfile && lastname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
@@ -30,7 +30,7 @@
                     }" v-model="lastname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="lastname == '' && !isValidProfile">
+                    v-if="lastname == ''  && !isValidProfile">
                     {{
                     'Required Field'
                     }}</p>
@@ -38,8 +38,8 @@
               </div>
             </div>
             
-            <div class="row">
-              <div class="col-md-6">
+            <div class="row mb-3">
+              <div class="col-md-6" >
                 <p>Business Name</p>
                 <roundedInput :type="'text'" :placeholder="'Enter business name here'"
                   :class="!isValidProfile && businessname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
@@ -47,13 +47,13 @@
                     }" v-model="businessname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="businessname == '' && !isValidProfile">
+                    v-if="businessname == ''  && !isValidProfile">
                     {{
                     'Required Field'
                     }}</p>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6" >
                 <p>Contact Number</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your contact number here'"
                   :class="!isValidProfile && contactnumber == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
@@ -61,7 +61,7 @@
                     }" v-model="contactnumber" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="contactnumber == '' && !isValidProfile">
+                    v-if="contactnumber == ''  && !isValidProfile">
                     {{
                     'Required Field'
                     }}</p>
@@ -71,7 +71,7 @@
 
           </div>
         </div>
-
+        <br><br>
         <roundedBtn :onClick="update_account" :icon="'fas fa-sign-in-alt'" :text="'Update'" :styles="{
           backgroundColor: '#01004E',
           color: 'white'
@@ -107,32 +107,9 @@ export default {
       global: global,
       errorMessage: null,
       data: null,
-      file: null,
-      copiedIndex: null,
-      route: '',
-      city: '',
-      region: '',
-      country: '',
-      postalZipCode: '',
-      username: '',
-      email: '',
-      oPassword: '',
-      confirmPassword: '',
-      password: '',
-      passwordRequirements: '',
       isValid: true,
       isValidProfile: true,
-      isValidAccount: true,
-      isValidPassword: true,
-      canUpdateAccount: false,
-      canUpdateAddress: true,
-      canUpdateProfile: false,
-      canUpdatePassword: false,
-      isShowingOPassword: false,
-      isShowingPassword: false,
-      isShowingCPassword: false,
-      passwordVerified: false,
-      emailValidation: ''
+      canUpdateProfile: false
     }
   },
   components: {
@@ -158,26 +135,11 @@ export default {
     contactnumber: function(val) {
       this.contactnumber = val
     },
-    route: function(val) {
-      this.route = val
-    },
-    city: function(val) {
-      this.city = val
-    },
-    region: function(val) {
-      this.region = val
-    },
-    country: function(val) {
-      this.country = val
-    },
-    postalZipCode: function(val) {
-      this.postalZipCode = val
-    },
-    email: function(val) {
-      this.email = val
+    businessname: function(val){
+      this.businessname = val
     }
   },
-  mounted() {
+  created() {
     if(AUTH.hash('show', localStorage.getItem('login_with')) === 'social_lite') {
       this.passwordVerified = true
     }
@@ -195,7 +157,7 @@ export default {
         let data = response.data[0]
         this.username = this.user.username
         this.email = this.user.email
-        this.businessname = this.user.merchant ? this.user.merchant.name : ''
+        this.businessname = this.user.merchant ? this.user.merchant[0].name : 'a'
         AUTH.user.information = response.data[0]
         if(response.data.length > 0) {
           AUTH.user.merchant = [data.merchant]
@@ -214,7 +176,7 @@ export default {
     update_account(event){
       console.log('Can Update: ', this.canUpdateProfile, 'Validated: ', this.validate())
       if(!this.validate()) {
-        alert('Not valid')
+        console.log('Not valid')
         return
       }
       if(this.canUpdateProfile === true) {
@@ -235,7 +197,7 @@ export default {
               this.retrieveInformation()
               console.log('Update profile response: ', response)
               this.canUpdateProfile = false
-              alert('Submitted')
+              console.log('Submitted')
             }
           })
         }else{
@@ -252,7 +214,7 @@ export default {
         let merchant = {
           name: this.businessname,
           account_id: this.user.userID,
-          id: this.user.merchant.id
+          id: this.user.merchant[0].id
         }
         let url = 'merchants/update'
         if(this.user.merchant.name !== this.businessname){
@@ -261,6 +223,7 @@ export default {
             $('#loading').css({'display': 'none'})
             this.canUpdateProfile = false
             this.retrieveInformation()
+            console.log('Updated business')
           }, error => {
             $('#loading').css({'display': 'none'})
             this.canUpdateProfile = false
@@ -268,8 +231,22 @@ export default {
           })
         }
       }else{
-        alert('Cant update')
+        console.log('Cant update')
       }
+      let newinfo = {
+        ...AUTH.user.information,
+        first_name: this.firstname,
+        middle_name: 'null',
+        last_name: this.lastname,
+        cellular_number: this.contactnumber
+      }
+      let newMerchant = {
+        name: this.businessname
+      }
+      setTimeout(() => {
+        AUTH.user.information = newinfo
+        AUTH.user.merchant[0].name = newMerchant
+      }, 100)
     },
     validate() {
       if(this.firstname !== '' || this.lastname !== '' || this.businessname !== '' || this.contactnumber !== '') {
@@ -316,7 +293,7 @@ export default {
   width: 200px;
 }
 .SettingsField {
-  margin-bottom: 35px;
+  // margin-bottom: 35px;
 }
 .holder{
   width: 96%;
@@ -389,7 +366,8 @@ h3{
   color: $danger;
   font-size: 10px;
   margin-left: 20px;
-  margin-bottom: 25px !important;
+  // margin-bottom: 25px !important;
+  margin-bottom: -35px;
 }
 /*
 @media (max-width: 768px){

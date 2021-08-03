@@ -17,6 +17,7 @@ class StripeController extends APIController
   public $planController = 'App\Http\Controllers\PlanController';
   public $paymentMethodController = 'App\Http\Controllers\PaymentMethodController';
   public $billingController = 'App\Http\Controllers\BillingController';
+  public $emailController = 'App\Http\Controllers\EmailController';
 
   function __construct(){
     $this->pk = env('STRIPE_PK');
@@ -139,7 +140,7 @@ class StripeController extends APIController
             'status'   => 'paid'
           ));
         }else{
-          $billing = app($this->billingController)->addToBilling(array(
+          $billingData = array(
             'account_id' => $data['account_id'],
             'currency'   => 'USD',
             'details'    => json_encode(array(
@@ -150,7 +151,10 @@ class StripeController extends APIController
             'start_date' => $startDate,
             'end_date'   => $billingEndDate,
             'status'     => 'paid'
-          ));          
+          );
+          $billing = app($this->billingController)->addToBilling($billingData);
+          $billingData['plan'] = $data['plan']['category'];
+          app($this->emailController)->receipt($plan['account_id'], $billingData);     
         }
 
 

@@ -7,13 +7,12 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Carbon\Carbon;
-
-class Billing extends Mailable
+class Receipt extends Mailable
 {
     use Queueable, SerializesModels;
-    public $data;
-    public $date;
     public $user;
+    public $date;
+    public $data;
 
     /**
      * Create a new message instance.
@@ -27,14 +26,14 @@ class Billing extends Mailable
         $this->date = Carbon::now()->copy()->tz($timezone)->format('F j, Y h:i A');
     }
 
-
     /**
      * Build the message.
      *
      * @return $this
      */
+
     public function build()
     {
-         return $this->subject('Billing')->from(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))->view('email.billing');
+        return $this->subject('Receipt notification')->from(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))->view('email.receipt');
     }
 }

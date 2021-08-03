@@ -12,12 +12,12 @@
               <div class="col-md-6">
                 <p>Route</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your route here'"
-                  :class="!isValidProfile && !route ? 'mb-0 ' : ' SettingsField'" :styles="{
-                            border: !isValidProfile && !route ? '1px solid red !important' : 'none',
+                  :class="!isValidAddress && !route ? 'mb-0 ' : ' SettingsField'" :styles="{
+                            border: !isValidAddress && !route ? '1px solid red !important' : 'none',
                           }" v-model="route" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="route == '' || !isValidAccount">
+                    v-if="route == ''  && !isValidAddress">
                     {{
                     'Required Field'
                     }}</p>
@@ -27,12 +27,12 @@
               <div class="col-md-6">
                 <p>City</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your city here'"
-                  :class="!isValidProfile && !city ? 'mb-0 ' : ' SettingsField'" :styles="{
-                          border: !isValidProfile && !city ? '1px solid red !important' : 'none',
+                  :class="!isValidAddress && !city ? 'mb-0 ' : ' SettingsField'" :styles="{
+                          border: !isValidAddress && !city ? '1px solid red !important' : 'none',
                         }" v-model="city" class="input-style" />
                   <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="city == '' || !isValidAccount">
+                    v-if="city == ''  && !isValidAddress">
                     {{
                     'Required Field'
                     }}</p>
@@ -43,12 +43,12 @@
               <div class=" col-md-6">
                 <p>Region</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your region here'"
-                  :class="!isValidProfile && !region ? 'mb-0 ' : ' SettingsField'" :styles="{
-                            border: !isValidProfile && !region ? '1px solid red !important' : 'none',
+                  :class="!isValidAddress && !region ? 'mb-0 ' : ' SettingsField'" :styles="{
+                            border: !isValidAddress && !region ? '1px solid red !important' : 'none',
                           }" v-model="region" class="input-style" />
                   <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="region == '' || !isValidAccount">
+                    v-if="region == ''  && !isValidAddress">
                     {{
                     'Required Field'
                     }}</p>
@@ -57,12 +57,12 @@
               <div class="col-md-6">
                 <p>Country</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your country here'"
-                  :class="!isValidProfile && !country ? 'mb-0 ' : ' SettingsField'" :styles="{
-                          border: !isValidProfile && !country ? '1px solid red !important' : 'none',
+                  :class="!isValidAddress && !country ? 'mb-0 ' : ' SettingsField'" :styles="{
+                          border: !isValidAddress && !country ? '1px solid red !important' : 'none',
                         }" v-model="country" class="input-style" />
                   <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="country == '' || !isValidAccount">
+                    v-if="country == ''  && !isValidAddress">
                     {{
                     'Required Field'
                     }}</p>
@@ -74,12 +74,12 @@
               <div class="col-md-6">
                 <p>Postal/Zip Code</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your postal/zip code here'"
-                  :class="!isValidProfile && !postalZipCode ? 'mb-0 ' : ' SettingsField'" :styles="{
-                            border: !isValidProfile && !postalZipCode ? '1px solid red !important' : 'none',
+                  :class="!isValidAddress && !postalZipCode ? 'mb-0 ' : ' SettingsField'" :styles="{
+                            border: !isValidAddress && !postalZipCode ? '1px solid red !important' : 'none',
                           }" v-model="postalZipCode" class="input-style" />
                   <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="postalZipCode == '' || !isValidAccount">
+                    v-if="postalZipCode == ''  && !isValidAddress">
                     {{
                     'Required Field'
                     }}</p>
@@ -114,42 +114,19 @@ export default {
     return {
       eyeToggle: false,
       colors: COLORS,
-      firstname: '',
-      middlename: '',
-      lastname: '',
-      businessname: '',
-      contactnumber: '',
       user: AUTH.user,
       config: CONFIG,
       global: global,
       errorMessage: null,
       data: null,
-      file: null,
-      copiedIndex: null,
       route: '',
       city: '',
       region: '',
       country: '',
       postalZipCode: '',
-      username: '',
-      email: '',
-      oPassword: '',
-      confirmPassword: '',
-      password: '',
-      passwordRequirements: '',
       isValid: true,
-      isValidProfile: true,
-      isValidAccount: true,
-      isValidPassword: true,
-      canUpdateAccount: false,
-      canUpdateAddress: false,
-      canUpdateProfile: false,
-      canUpdatePassword: false,
-      isShowingOPassword: false,
-      isShowingPassword: false,
-      isShowingCPassword: false,
-      passwordVerified: false,
-      emailValidation: ''
+      isValidAddress: true,
+      canUpdateAddress: false
     }
   },
   components: {
@@ -163,41 +140,23 @@ export default {
     }
   },
   watch: {
-    username: function(val) {
-      this.username = val
-    },
-    firstname: function(val) {
-      this.firstname = val
-    },
-    lastname: function(val) {
-      this.lastname = val
-    },
-    contactnumber: function(val) {
-      this.contactnumber = val
-    },
-    route: function(val) {
+    route: function(val){
       this.route = val
     },
-    city: function(val) {
+    city: function(val){
       this.city = val
     },
-    region: function(val) {
+    region: function(val){
       this.region = val
     },
-    country: function(val) {
+    country: function(val){
       this.country = val
     },
-    postalZipCode: function(val) {
+    postalZipCode: function(val){
       this.postalZipCode = val
-    },
-    email: function(val) {
-      this.email = val
     }
   },
-  mounted() {
-    if(AUTH.hash('show', localStorage.getItem('login_with')) === 'social_lite') {
-      this.passwordVerified = true
-    }
+  created() {
     this.retrieveInformation()
   },
   methods: {
@@ -253,7 +212,7 @@ export default {
               this.retrieveInformation()
               console.log('Update profile response: ', response)
               this.canUpdateProfile = false
-              alert('Submitted')
+              console.log('Submitted')
             }
           })
         }else{
@@ -272,11 +231,14 @@ export default {
       if(this.route !== '' || this.region !== '' || this.city !== '' || this.postalZipCode !== '' || this.city !== '' || this.country !== '') {
         if(!this.route || !this.region || !this.city || !this.postalZipCode || !this.city || !this.country) {
           this.canUpdateAddress = false
+          this.isValidAddress = false
         }else{
           this.canUpdateAddress = true
+          this.isValidAddress = true
         }
       }else {
         this.canUpdateAddress = false
+        this.isValidAddress = false
       }
       console.log('update profile ', this.canUpdateAddress)
       if(!this.canUpdateAddress) {
@@ -384,10 +346,8 @@ h3{
 .requiredFieldError {
   color: $danger;
   font-size: 10px;
-  //margin-left: 20px;
-  //margin-bottom: 25px !important;
-  margin-top: -30px;
-  position: absolute;
+  margin-left: 20px;
+  margin-bottom: 25px !important;
 }
 /*
 @media (max-width: 768px){
