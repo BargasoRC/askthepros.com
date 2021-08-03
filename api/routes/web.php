@@ -135,6 +135,7 @@ Route::post($route . '/retrieve_by_id', 'PostController@retrieveById');
 Route::post($route. '/delete', 'PostController@delete');
 Route::post($route. '/retrieve_history', 'PostController@retrieveHistoryPosts');
 Route::post($route. '/retrieve_by_codes', 'PostHistoryController@retrieveByCodes');
+Route::post($route. '/update_user', 'PostController@updateUser');
 
 $route = env('PACKAGE_ROUTE', '').'/file';
 Route::post($route . '/upload', 'FileUploadController@upload');
