@@ -6,14 +6,11 @@ use Mail;
 use App\Mail\ResetPassword;
 use App\Mail\Verification;
 use App\Mail\ChangedPassword;
-use App\Mail\Referral;
 use App\Mail\LoginEmail;
 use App\Mail\OtpEmail;
-use App\Mail\NotifyReferrer;
 use App\Mail\Receipt;
+use App\Mail\Billing;
 use App\Mail\NewMessage;
-use App\Mail\Ledger;
-use App\Mail\Deposit;
 use Illuminate\Http\Request;
 
 class EmailController extends APIController
@@ -65,16 +62,6 @@ class EmailController extends APIController
         return false;
     }
 
-    public function notifyReferrer($id){
-        $user = $this->retrieveAccountDetails($id);
-        if($user != null){
-            Mail::to($user['email'])->send(new NotifyReferrer($user, $this->response['timezone']));
-            return true;
-        }
-        return false;
-    }
-
-
     public function invitation($user, $data){
         return Mail::to($data['to_email'])->send(new Referral($user, $data['content'], $data['to_email'], $this->response['timezone']));
     }
@@ -83,6 +70,15 @@ class EmailController extends APIController
         $user = $this->retrieveAccountDetails($accountId);
         if($user != null && sizeof($data) > 0){
             Mail::to($user['email'])->send(new Receipt($user, $data[0], $this->response['timezone']));
+            return true;
+        }
+        return false;
+    }
+
+    public function billing($accountId, $data){
+        $user = $this->retrieveAccountDetails($accountId);
+        if($user != null && $data != null){
+            Mail::to($user['email'])->send(new Billing($user, $data, $this->response['timezone']));
             return true;
         }
         return false;

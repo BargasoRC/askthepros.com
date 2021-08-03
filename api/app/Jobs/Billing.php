@@ -21,6 +21,7 @@ class Billing implements ShouldQueue
    */
 
   public $billingController = 'App\Http\Controllers\BillingController';
+  public $emailController = 'App\Http\Controllers\BillingController';
 
   public function __construct()
   {
