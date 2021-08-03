@@ -90,7 +90,7 @@
         <br>
         
         <b>File(s)</b>
-        <Images @formData="form" v-if="!isClearing" @filePreview="storeImages" :edit="$route.params.parameter != undefined ? true : false" :imagesRetrieve="imagesList"></Images>
+        <Images @formData="form" v-if="!isClearing" @filePreview="storeImages" @add="add" :edit="$route.params.parameter != undefined ? true : false" :imagesRetrieve="imagesList" :code="$route.params.parameter != undefined ? $route.params.parameter : null"></Images>
         <br>
         <br>
       </div>
@@ -125,6 +125,7 @@
           :selected="returnSelected"
           :files="returnImagesList"
           :first="status === null ? 'false' : 'true'"
+          :isAddd="isAdd"
           />
           <!-- :selected="selectedItem" -->
         </div>
@@ -154,6 +155,7 @@ import searchField from 'src/modules/generic/searchField.vue'
 import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 export default {
   mounted(){
+    this.retrievePayloads()
     if(this.$route.params.parameter === undefined){
       this.title = ''
       this.description = ''
@@ -190,7 +192,9 @@ export default {
       character: 0,
       selectedIndex: null,
       selectedItem: null,
-      render: false
+      render: false,
+      addImage: [],
+      isAdd: false
     }
   },
   components: {
@@ -226,6 +230,28 @@ export default {
   },
   methods: {
     // EDIT A POST
+    retrievePayloads(){
+      let conditions = [{
+        value: 'subscriptions',
+        clause: '=',
+        column: 'payload'
+      }]
+      let parameter = {
+        condition: conditions
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('payloads/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data.length > 0) {
+          this.industry = response.data
+        }else{
+          this.industry = []
+        }
+      }).catch(error => {
+        $('#loading').css({'display': 'none'})
+        error
+      })
+    },
     retrieveEditPosts() {
       let parameter = {
         account_id: this.user.userID,
@@ -297,17 +323,15 @@ export default {
           code: this.$route.params.parameter,
           title: this.title,
           description: this.description,
-          // url: null,
+          url: JSON.stringify(this.imagesList),
           account_id: this.user.userID,
           status: status,
           channels: JSON.stringify(channels),
           category: JSON.stringify(selectIndustry)
         }
-        console.log('[parameters]', parameter)
         this.isClearing = true
         this.APIRequest('post/update', parameter).then(response => {
           $('#loading').css({'display': 'none'})
-          console.log('[response]', response)
           if(response.data === true){
             ROUTER.push('/post_management')
           }
@@ -315,8 +339,26 @@ export default {
       }
     },
     // Adding a Post
+    add(add){
+      this.isAdd = add
+    },
     storeImages(data) {
-      this.imagesList = data
+      this.addImage = data
+      if(this.$route.params.parameter === undefined){
+        this.imagesList = Object.values(data).map(el => {
+          let temp = {}
+          temp['url'] = this.config.BACKEND_URL + el
+          return temp
+        })
+      }else if(this.$route.params.parameter !== undefined && this.isAdd === true){
+        this.imagesList = Object.values(data).map(el => {
+          let temp = {}
+          temp['url'] = this.config.BACKEND_URL + el
+          return temp
+        })
+      }else{
+        this.imagesList = data
+      }
     },
     onSelect(data) {
       this.selectedIndustry = data
@@ -329,44 +371,34 @@ export default {
       })
       if(this.validate()) {
         $('#loading').css({'display': 'block'})
-        axios.post(this.config.BACKEND_URL + '/file/upload?token=' + AUTH.tokenData.token, this.file).then(response => {
+        let channels = []
+        this.facebook ? channels.push('FACEBOOK') : null
+        this.googleMyBusiness ? channels.push('GOOGLE_MY_BUSINESS') : ''
+        this.linkedin ? channels.push('LINKEDIN') : ''
+        let parameter = {
+          title: this.title,
+          description: this.description,
+          url: JSON.stringify(this.addImage),
+          account_id: this.user.userID,
+          status: status,
+          channels: JSON.stringify(channels),
+          parent: null,
+          category: JSON.stringify(selectIndustry)
+        }
+        this.isClearing = true
+        this.APIRequest('post/create', parameter).then(response => {
           $('#loading').css({'display': 'none'})
-          $('#loading').css({'display': 'block'})
-          let channels = []
-          this.facebook ? channels.push('FACEBOOK') : null
-          this.googleMyBusiness ? channels.push('GOOGLE_MY_BUSINESS') : ''
-          this.linkedin ? channels.push('LINKEDIN') : ''
-          let parameter = {
-            title: this.title,
-            description: this.description,
-            url: JSON.stringify(response.data.data),
-            account_id: this.user.userID,
-            status: status,
-            channels: JSON.stringify(channels),
-            parent: null,
-            category: JSON.stringify(selectIndustry)
+          if(response.error === null){
+            this.title = ''
+            this.description = ''
+            this.selectedIndustry = null
+            this.facebook = false
+            this.googleMyBusiness = false
+            this.linkedin = false
+            this.isClearing = false
+            this.imagesList = []
           }
-          console.log('[parameters]', parameter)
-          this.isClearing = true
-          this.APIRequest('post/create', parameter).then(response => {
-            $('#loading').css({'display': 'none'})
-            console.log('[response]', response)
-            if(response.error === null){
-              this.title = ''
-              this.description = ''
-              this.selectedIndustry = null
-              this.facebook = false
-              this.googleMyBusiness = false
-              this.linkedin = false
-              this.isClearing = false
-              this.imagesList = []
-            }
-            ROUTER.push('/post_management')
-          })
-        }).catch(() => {
-          $('#loading').css({'display': 'none'})
-          this.$refs.errorModal.show()
-          return false
+          ROUTER.push('/post_management')
         })
       }
     },

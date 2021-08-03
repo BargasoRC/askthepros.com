@@ -43,7 +43,7 @@
             </td>
             <td v-if="item.status.toLowerCase() === 'publish'">
               <i class="fa fa-eye text-primary"  @click="showPreview(item)"></i>
-              <i class="fas fa-copy text-primary" @click="edit(item.code)"></i>
+              <!-- <i class="fas fa-copy text-primary" @click="edit(item.code)"></i> -->
             </td>
           </tr>
         </tbody>
@@ -247,11 +247,26 @@ export default {
         this.selectedItem = null
       }else{
         this.selectedItem = item
-        this.file = item.url
+        if(item.url !== null){
+          this.file = Object.values(JSON.parse(item.url)).map(el => {
+            let temp = {}
+            temp['url'] = this.config.BACKEND_URL + el
+            return temp
+          })
+        }
       }
       setTimeout(() => {
         this.$refs.previewSelected.show()
       }, 100)
+      // if(this.selectedItem && this.selectedItem.id === item.id){
+      //   this.selectedItem = null
+      // }else{
+      //   this.selectedItem = item
+      //   this.file = item.url
+      // }
+      // setTimeout(() => {
+      //   this.$refs.previewSelected.show()
+      // }, 100)
     },
     edit(code) {
       ROUTER.push('/post_management/content_edit/' + code)

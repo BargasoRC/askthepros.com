@@ -121,7 +121,7 @@ class PostController extends APIController
         'parent' => null,
         'description' => $data['description'],
         'channels' => $data['channels'],
-        // 'url' => $data['url'],
+        'url' => $data['url'],
         'account_id' => $data['account_id'],
         'status' => $data['status'],
         'updated_at' => Carbon::now()

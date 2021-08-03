@@ -4,19 +4,19 @@
       <div class="other-image">
       </div>
       <div class="scrolling-wrapper custom_scroll d-flex" style="height: 130px">
-        <div v-for="item in (edit === true ? imagesData : returnImageList)" :key="item.id" :group="item" style="height:100px;width:100px"
+        <div v-for="(item, index) in returnImageList" :key="index" :group="item" style="height:100px;width:100px"
           :class="'imageContainer p-10'">
-          <img :src="item.url" class="image" @click="selectImage(item.url)">
+          <img :src="config.BACKEND_URL + item" class="image">
           <label class="middle">
-            <i class="fa fa-times-circle text"  @click="deleteImage(item.id)" v-if="item.status !== 'featured'"></i>
+            <i class="fa fa-times-circle text"  @click="deleteImage(index)"></i>
           </label>
         </div>
       </div>
 
       <div class="d-flex justify-content-start mt-5">
         <button id="imageCont" type="button" class="btn add_file" @click="addImage(edit)">Add File</button>
-        <input type="file" id="Image" accept="file_extension|audio/*|video/*|image/*|media_type"
-          @change="setUpFileUpload($event, edit)">
+        <input type="file" id="Image" accept="image/*"
+          @change="setUpFileUpload($event, add)">
       </div>
     </div>
   </div>
@@ -25,9 +25,10 @@
 <script>
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
+import axios from 'axios'
 import COMMON from 'src/common.js'
 export default {
-  props: ['imagesRetrieve', 'formData', 'edit'],
+  props: ['imagesRetrieve', 'formData', 'edit', 'code'],
   data: () => ({
     user: AUTH.user,
     config: CONFIG,
@@ -40,9 +41,11 @@ export default {
     productId: null,
     hasError: false,
     files: [],
-    fileUrls: []
+    fileUrls: [],
+    add: true
   }),
   mounted(){
+    this.retrieveImage()
     this.imagesList = []
     this.files = []
     this.fileUrls = []
@@ -62,63 +65,94 @@ export default {
     selectImage(url){
       this.selectedImage = url
     },
-    setUpFileUpload(event, edit){
+    setUpFileUpload(event, add){
       let files = event.target.files || event.dataTransfer.files
       if(!files.length){
         return false
       }else{
         this.file = files[0]
-        this.createFile(this.file)
+        let filename = this.file.name.toLowerCase()
+        if(filename.substring(filename.lastIndexOf('.')) === '.png' || filename.substring(filename.lastIndexOf('.')) === '.jpg' || filename.substring(filename.lastIndexOf('.')) === '.jpeg' || filename.substring(filename.lastIndexOf('.')) === '.gif' || filename.substring(filename.lastIndexOf('.')) === '.tif' || filename.substring(filename.lastIndexOf('.')) === '.bmp'){
+          this.createFile(files[0], add)
+        }else{
+          this.errorMessage = 'Upload images only!'
+          this.file = null
+        }
       }
     },
-    createFile(file){
+    createFile(file, add){
       let fileReader = new FileReader()
       fileReader.readAsDataURL(file)
-      this.upload()
+      this.upload(add)
     },
-    upload(){
-      let formData = new FormData()
-      this.files.push(this.file)
-      this.fileUrls.push(this.file.name.replace(' ', '_'))
-      this.files.forEach((el, index) => {
-        formData.append('file' + index, el)
-      })
-      formData.append('file_url', this.fileUrls)
-      formData.append('account_id', this.user.userID)
-      this.$emit('formData', formData)
-      var reader = new FileReader()
-      let self = this
-      reader.onloadend = function() {
-        let temp = {
-          id: self.imagesList.length + 1,
-          url: reader.result
-        }
-        self.imagesList.push(temp)
+    upload(add){
+      if(parseInt(this.file.size / 1024) > 1024){
+        this.errorMessage = 'Allowed size is up to 1 MB only'
+        this.file = null
+        return
       }
-      reader.readAsDataURL(this.file)
-      this.$emit('filePreview', this.imagesList)
+      this.validateImage(this.file.name)
+      if(this.hasError === true){
+        return
+      }
+      let formData = new FormData()
+      formData.append('file', this.file)
+      formData.append('file_url', this.file.name.replace(' ', '_'))
+      formData.append('account_id', this.user.userID)
+      formData.append('category', `product${this.productId}`)
+      $('#loading').css({'display': 'block'})
+      axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
+        $('#loading').css({'display': 'none'})
+        this.hasError = false
+        if(response.data.data !== null){
+          this.imagesList.push(response.data.data)
+          this.$emit('filePreview', this.imagesList)
+          this.$emit('add', add)
+        }
+      })
+      this.prevIndex = null
     },
     deleteImage(id){
-      this.imagesList = this.imagesList.filter((el, index) => {
-        if(el.id === id){
-          this.files.splice(index, 1)
+      let params = {
+        id: id
+      }
+      $('#loading').css({display: 'block'})
+      axios.post(this.config.BACKEND_URL + '/images/delete?token=' + AUTH.tokenData.token, params).then(response => {
+        console.log('[response Image]', response.data)
+        $('#loading').css({display: 'none'})
+        // if(response.data.length > 0){
+        // this.retrieveImage()
+        // }
+      })
+    },
+    retrieveImage(){
+      if(this.code != null){
+        let parameter = {
+          account_id: this.user.userID,
+          code: this.code
         }
-        return el.id !== id
-      })
-      this.$emit('filePreview', this.imagesList)
-      let formData = new FormData()
-      this.files.push(this.file)
-      this.fileUrls.push(this.file.name.replace(' ', '_'))
-      this.files.forEach((el, index) => {
-        formData.append('file' + index, el)
-      })
-      formData.append('file_url', this.fileUrls)
-      formData.append('account_id', this.user.userID)
-      this.$emit('formData', formData)
+        $('#loading').css({'display': 'block'})
+        this.APIRequest('post/retrieve_by_code', parameter).then(response => {
+          console.log('[erer]', response.data)
+          $('#loading').css({'display': 'none'})
+          if(!response.error) {
+            response.data.filter(el => {
+              if(el.code === this.$route.params.parameter){
+                Object.values(JSON.parse(el.url)).map(el => {
+                  console.log('[eeeeeeeeeeel]', el)
+                  // let temp = {}
+                  // temp['url'] = this.config.BACKEND_URL + el
+                  this.imagesList.push(el)
+                })
+              }
+            })
+          }
+        })
+      }
     },
     validateImage(imageName){
       this.imagesList.map(el => {
-        let name = el.url.substring(el.url.lastIndexOf('_') + 1)
+        let name = el.substring(el.lastIndexOf('_') + 1)
         if(imageName === name){
           this.hasError = true
         }
