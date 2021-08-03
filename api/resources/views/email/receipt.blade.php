@@ -1,11 +1,11 @@
 @component('email.header')
 @endcomponent
 <span class="text">
-    <h3>Payment Due Reminder</h3>
+    <h3>Receipt</h3>
     Hello {{$user['username']}}!
     <br>
     <br>
-    Here is your billing from {{env('APP_NAME')}}
+    Here is your receipt from {{env('APP_NAME')}}
     <br>
     <br>
     <br>
@@ -24,7 +24,7 @@
     <br>
     <br>
     <p>
-        <b>For Payments:</b>
+        <b>To view your plan:</b>
     </p>
     <p>
         Login to your account and visit subsciption page.
