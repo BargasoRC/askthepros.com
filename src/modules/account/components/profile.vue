@@ -157,7 +157,7 @@ export default {
         let data = response.data[0]
         this.username = this.user.username
         this.email = this.user.email
-        this.businessname = this.user.merchant ? this.user.merchant[0].name : 'a'
+        this.businessname = this.user.merchant ? this.user.merchant[0].name : ''
         AUTH.user.information = response.data[0]
         if(response.data.length > 0) {
           AUTH.user.merchant = [data.merchant]
