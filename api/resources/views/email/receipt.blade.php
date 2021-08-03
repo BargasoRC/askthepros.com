@@ -24,7 +24,7 @@
     <br>
     <br>
     <p>
-        <b>For Payments:</b>
+        <b>To view your plan:</b>
     </p>
     <p>
         Login to your account and visit subsciption page.

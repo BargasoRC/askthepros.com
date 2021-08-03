@@ -68,8 +68,8 @@ class EmailController extends APIController
 
     public function receipt($accountId, $data){
         $user = $this->retrieveAccountDetails($accountId);
-        if($user != null && sizeof($data) > 0 && $user['status'] !== 'INVALID_EMAIL'){
-            Mail::to($user['email'])->send(new Receipt($user, $data[0], $this->response['timezone']));
+        if($user != null && $data !== null && $user['status'] !== 'INVALID_EMAIL'){
+            Mail::to($user['email'])->send(new Receipt($user, $data, $this->response['timezone']));
             return true;
         }
         return false;
