@@ -18,6 +18,7 @@ class PostHistoryController extends APIController
     );
   }
   public $postClass = 'App\Http\Controllers\PostController';
+  public $brandingClass = 'App\Http\Controllers\BrandingController';
   
   public function createByParams($data){
     $data['code'] = $this->generateCode();

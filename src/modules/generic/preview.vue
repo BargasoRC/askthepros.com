@@ -23,19 +23,20 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-12 p-0 mt-5 mb-4" v-if="(returnDescription !== '')">
+        <div class="col-sm-12 p-0 mt-5 mb-4" v-if="(returnDescription !== '' && returnDescription) && files && (files ? files.length : 0) > 0">
           <p class="mb-0 p-0">
             {{returnDescription}}
           </p>
         </div>
-        <div class="col-sm-12" v-for="(el, ndx) in footer" :key="'footer' + ndx" v-if="(returnDescription !== '' && returnDescription) || files && (files ? files.length : 0) > 0">
+        <!-- {{footer}}
+        <div class="col-sm-12" v-for="(el, ndx) in footer" :key="'footer' + ndx">
           <p class="mb-0 p-0" style="margin-left: -2%">
             {{el}}
           </p>
-        </div>
+        </div> -->
         <br>
-        <div class="col-sm-12 p-0 d-flex justify-content-between file_container" v-if="(files && (files ? files.length : 0) > 0)">
-        <!-- <div class="col-sm-12 p-0 d-flex justify-content-between file_container" v-if="(returnDescription !== '' && returnDescription) || files && (files ? files.length : 0) > 0"> -->
+        <!-- <div class="col-sm-12 p-0 d-flex justify-content-between file_container" v-if="(files && (files ? files.length : 0) > 0)"> -->
+        <div class="col-sm-12 p-0 d-flex justify-content-between file_container" v-if="(returnDescription !== '' && returnDescription) || files && (files ? files.length : 0) > 0">
           <div v-for="(el, ndx) in returnFiles" :key="ndx + String(el.id)"
             :class="'file_width ' + (([1, 3, 4].includes((files ? files.length : 0)) || (files ? files.length : 0) >= 5) && ndx === 0 ? 'whole_page ' : '') + ( (files ? files.length : 0) >= 4 && ndx !== 0 ? 'compressed ' : '')" :style="{
               background: `url(${el.url})`,
@@ -132,13 +133,25 @@ export default {
   },
   computed: {
     footer() {
-      console.log('[sadfasdf]', this.selected.branding)
-      return this.selected ? ((this.selected.branding && this.selected.branding.details !== undefined) ? Object.values(JSON.parse(this.selected.branding.details)) : null) : null
+      if(this.user.type === 'USER' && this.selected === null){
+        let parameter = {
+          account_id: this.user.userID
+        }
+        this.APIRequest('brandings/retrieve_by_accountId', parameter).then(response => {
+          $('#loading').css({'display': 'none'})
+          if(response.details != null){
+            return Object.values(JSON.parse(response.details))
+          }
+        })
+      }else{
+        return this.selected ? ((this.selected.branding && this.selected.branding.details !== undefined) ? Object.values(JSON.parse(this.selected.branding.details)) : null) : null
+      }
     },
     returnDescription() {
       return this.selected ? this.selected.description : null
     },
     returnFiles() {
+      console.log('[files]', this.files, this.verdict, this.isAddd)
       if((this.verdict === 'true' && this.isAddd === false) || (this.verdict === true && this.isAddd === 'false')){
         this.files = Object.values(this.files).map(el => {
           let temp = {}
@@ -169,7 +182,7 @@ export default {
           return index <= 3
         }) : [])
       }
-      if(this.verdict === 'true' && this.isAddd === true){
+      if((this.verdict === 'true' && this.isAddd === true)){
         this.files = Object.values(this.files).map(el => {
           let temp = {}
           temp['url'] = this.config.BACKEND_URL + el
@@ -183,6 +196,16 @@ export default {
         this.files = Object.values(this.files).map(el => {
           let temp = {}
           temp['url'] = el.url
+          return temp
+        })
+        return (this.files ? this.files.filter((el, index) => {
+          return index <= 3
+        }) : [])
+      }
+      if(this.verdict === undefined && this.isAddd === false){
+        this.files = JSON.parse(this.files).map(el => {
+          let temp = {}
+          temp['url'] = this.config.BACKEND_URL + el
           return temp
         })
         return (this.files ? this.files.filter((el, index) => {
