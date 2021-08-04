@@ -100,16 +100,10 @@ Route::post($route.'search', $controller."search");
 
 //Emails Controller
 $route = env('PACKAGE_ROUTE', '').'/emails';
-Route::post($route.'/create', "EmailController@create");
-Route::post($route.'/retrieve', "EmailController@retrieve");
-Route::post($route.'/update', "EmailController@update");
-Route::post($route.'/delete', "EmailController@delete");
 Route::post($route.'/reset_password', 'EmailController@resetPassword');
 Route::post($route.'/verification', 'EmailController@verification');
 Route::post($route.'/changed_password', 'EmailController@changedPassword');
-Route::post($route.'/referral', 'EmailController@referral');
 Route::post($route.'/trial', 'EmailController@trial');
-Route::post($route.'/test_sms', 'EmailController@testSMS');
 Route::get($route.'/test', 'EmailController@test');
 
 
@@ -135,6 +129,7 @@ Route::post($route . '/retrieve_by_id', 'PostController@retrieveById');
 Route::post($route. '/delete', 'PostController@delete');
 Route::post($route. '/retrieve_history', 'PostController@retrieveHistoryPosts');
 Route::post($route. '/retrieve_by_codes', 'PostHistoryController@retrieveByCodes');
+Route::post($route. '/update_user', 'PostController@updateUser');
 
 $route = env('PACKAGE_ROUTE', '').'/file';
 Route::post($route . '/upload', 'FileUploadController@upload');

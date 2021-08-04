@@ -176,6 +176,7 @@ return [
         Increment\Imarket\Merchant\MerchantServiceProvider::class,
         Increment\Common\Image\ImageServiceProvider::class,
         Increment\Imarket\Location\LocationServiceProvider::class,
+        Increment\Common\Mail\MailServiceProvider::class,
 
         // Increment\Account\AccountServiceProvider::class,
         /*
