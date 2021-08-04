@@ -28,8 +28,7 @@
             {{returnDescription}}
           </p>
         </div>
-        <!-- <div class="col-sm-12" v-for="(el, ndx) in footer" :key="'footer' + ndx" v-if="(returnDescription !== '' && returnDescription) || files && (files ? files.length : 0) > 0"> -->
-        <div class="col-sm-12" v-for="(el, ndx) in footer" :key="'footer' + ndx">
+        <div class="col-sm-12" v-for="(el, ndx) in footer" :key="'footer' + ndx" v-if="(returnDescription !== '' && returnDescription) || files && (files ? files.length : 0) > 0">
           <p class="mb-0 p-0" style="margin-left: -2%">
             {{el}}
           </p>
@@ -133,6 +132,7 @@ export default {
   },
   computed: {
     footer() {
+      console.log('[sadfasdf]', this.selected.branding)
       return this.selected ? ((this.selected.branding && this.selected.branding.details !== undefined) ? Object.values(JSON.parse(this.selected.branding.details)) : null) : null
     },
     returnDescription() {
