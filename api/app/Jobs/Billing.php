@@ -73,7 +73,9 @@ class Billing implements ShouldQueue
               $billing = app($this->billingController)->addToBilling($billingData);
               $billingData['plan'] = $plan['plan'];
               echo "\n\t [Billing] New billing created";
-              app($this->emailController)->billing($plan['account_id'], $billingData);
+              if(env('SES_KEY')){
+                app($this->emailController)->billing($plan['account_id'], $billingData);
+              }
             }else{
               echo "\n\t [Billing] Invalid start and end date..";
             }
