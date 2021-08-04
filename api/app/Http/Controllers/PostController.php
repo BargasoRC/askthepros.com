@@ -24,7 +24,6 @@ class PostController extends APIController
         $data = $request->all();
         \DB::beginTransaction();
         try{
-          // app($this->accountClass)->retrieveWithUpdate($data);
 
             $post = new Post();
             $post->code = $this->generateCode($post);
@@ -249,6 +248,30 @@ class PostController extends APIController
       }
       $this->response['data'] = $result;
       $this->response['size'] = count($size);
+      $this->response['error'] = null;
+      return $this->response();
+    }
+
+    public function updateUser(Request $request){
+      $data = $request->all();
+      $post = new Post();
+      $post->code = $this->generateCode($post);
+      $post->parent = $data['parent'];
+      $post->title = $data['title'];
+      $post->description = $data['description'];
+      $post->channels = $data['channels'];
+      $post->url = $data['url'];
+      $post->account_id = $data['account_id'];
+      $post->status = 'PUBLISH';
+      $post->save();
+
+      PostHistory::where('id', '=', $data['id'])->update(array(
+        'post_id' => $post->id,
+        'status' => 'for posting',
+        'updated_at' => Carbon::now()
+      ));
+
+      $this->response['data'] = $post->id;
       $this->response['error'] = null;
       return $this->response();
     }

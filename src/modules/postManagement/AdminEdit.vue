@@ -402,8 +402,6 @@ export default {
         })
       }
     },
-    draft() {
-    },
     validate() {
       if(this.selectedIndustry.length <= 0 && this.title === '' && this.title === null && this.title === undefined && this.description === '' && this.description === null && this.description === undefined){
         this.$refs.errorModal.show()

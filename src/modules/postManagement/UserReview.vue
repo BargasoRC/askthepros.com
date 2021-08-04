@@ -96,7 +96,8 @@ export default {
       selectedItem: null,
       branding: null,
       addImage: [],
-      isAdd: false
+      isAdd: false,
+      dataRetrieve: []
     }
   },
   components: {
@@ -129,6 +130,7 @@ export default {
     },
     post(){
       if(this.validate()){
+        console.log('[', this.dataRetrieve)
         let channels = []
         this.facebook ? channels.push('FACEBOOK') : null
         this.googleMyBusiness ? channels.push('GOOGLE_MY_BUSINESS') : ''
@@ -137,21 +139,21 @@ export default {
           code: this.$route.params.parameter,
           title: this.title,
           description: this.description,
-          url: null,
+          url: JSON.stringify(this.imagesList),
           account_id: this.user.userID,
-          status: 'review',
           channels: JSON.stringify(channels),
-          category: null
+          parent: this.dataRetrieve.post_id,
+          id: this.dataRetrieve.id
         }
         console.log('[parameters]', parameter)
-        // this.isClearing = true
-        // this.APIRequest('post/update', parameter).then(response => {
-        //   $('#loading').css({'display': 'none'})
-        //   console.log('[response]', response)
-        //   if(response.data === true){
-        //     ROUTER.push('/post_management')
-        //   }
-        // })
+        this.isClearing = true
+        this.APIRequest('post/update_user', parameter).then(response => {
+          $('#loading').css({'display': 'none'})
+          console.log('[response]', response)
+          // if(response.data === true){
+          //   ROUTER.push('/post_management')
+          // }
+        })
       }
     },
     validate() {
@@ -207,6 +209,7 @@ export default {
       this.APIRequest('post/retrieve_by_codes', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data.length > 0) {
+          this.dataRetrieve = response.data[0]
           this.selectedItem = response.data[0].post[0]
           this.title = this.selectedItem.title
           this.description = this.selectedItem.description
