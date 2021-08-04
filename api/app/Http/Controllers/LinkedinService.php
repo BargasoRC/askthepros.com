@@ -31,7 +31,7 @@ class LinkedinService extends Controller
 
     public function textOnly($token, $message, $author) {
         $body = '{
-            "author": "urn:li:person:'.$author.'",
+            "author": "'.$author.'",
             "lifecycleState": "PUBLISHED",
             "specificContent": {
                 "com.linkedin.ugc.ShareContent": {
@@ -56,9 +56,10 @@ class LinkedinService extends Controller
         return $result;
     }
     public function shareMedia($token, $owner) {
+        echo "\n\t\t\t file media... ".$owner;
         $body = '{
             "registerUploadRequest":{
-               "owner":"urn:li:person:'.$owner.'",
+               "owner":"'.$owner.'",
                "recipes":[
                   "urn:li:digitalmediaRecipe:feedshare-image"
                ],
@@ -84,8 +85,9 @@ class LinkedinService extends Controller
     }
 
     public function postWithMedia($token, $author, $message, $media, $media_type) {
+        return $author;
         $body = '{
-            "author": "urn:li:person:'.$author.'",
+            "author": "'.$author.'",
             "lifecycleState": "PUBLISHED",
             "specificContent": {
                 "com.linkedin.ugc.ShareContent": {
@@ -134,6 +136,7 @@ class LinkedinService extends Controller
         $this->headers[] = 'X-Restli-Protocol-Version: 2.0.0';
         $this->headers[] = 'Authorization: Bearer ' . $token;
         $this->headers[] = 'Content-Type: application/json';
+        $curl = new CurlController($this->headers);
         $result = $curl->getRequest($this->url);
         return $result;
     }
