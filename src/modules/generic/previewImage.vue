@@ -45,13 +45,18 @@ export default {
     add: true
   }),
   mounted(){
-    this.retrieveImage()
+    if(this.user.type === 'USER'){
+      this.retrieveImageUser()
+    }else{
+      this.retrieveImage()
+    }
     this.imagesList = []
     this.files = []
     this.fileUrls = []
   },
   computed: {
     returnImageList(){
+      console.log('[this.ima]', this.imagesList)
       return this.imagesList
     },
     imagesData(){
@@ -113,17 +118,7 @@ export default {
       this.prevIndex = null
     },
     deleteImage(id){
-      let params = {
-        id: id
-      }
-      $('#loading').css({display: 'block'})
-      axios.post(this.config.BACKEND_URL + '/images/delete?token=' + AUTH.tokenData.token, params).then(response => {
-        console.log('[response Image]', response.data)
-        $('#loading').css({display: 'none'})
-        // if(response.data.length > 0){
-        // this.retrieveImage()
-        // }
-      })
+      this.imagesList.splice(id, 1)
     },
     retrieveImage(){
       if(this.code != null){
@@ -133,15 +128,11 @@ export default {
         }
         $('#loading').css({'display': 'block'})
         this.APIRequest('post/retrieve_by_code', parameter).then(response => {
-          console.log('[erer]', response.data)
           $('#loading').css({'display': 'none'})
           if(!response.error) {
             response.data.filter(el => {
               if(el.code === this.$route.params.parameter){
                 Object.values(JSON.parse(el.url)).map(el => {
-                  console.log('[eeeeeeeeeeel]', el)
-                  // let temp = {}
-                  // temp['url'] = this.config.BACKEND_URL + el
                   this.imagesList.push(el)
                 })
               }
@@ -149,6 +140,20 @@ export default {
           }
         })
       }
+    },
+    retrieveImageUser(){
+      let parameter = {
+        code: this.code
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('post/retrieve_by_codes', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        response.data[0].post.filter(el => {
+          Object.values(JSON.parse(el.url)).map(el => {
+            this.imagesList.push(el)
+          })
+        })
+      })
     },
     validateImage(imageName){
       this.imagesList.map(el => {

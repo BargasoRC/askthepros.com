@@ -255,23 +255,24 @@ class PostController extends APIController
     public function updateUser(Request $request){
       $data = $request->all();
       $post = new Post();
-      $post->code = $this->generateCode($post);
-      $post->parent = $data['parent'];
-      $post->title = $data['title'];
-      $post->description = $data['description'];
-      $post->channels = $data['channels'];
-      $post->url = $data['url'];
-      $post->account_id = $data['account_id'];
-      $post->status = 'PUBLISH';
-      $post->save();
-
+      $dataArray = array(
+        'code' => $this->generateCode($post),
+        'parent' => $data['parent'],
+        'title' => $data['title'],
+        'description' => $data['description'],
+        'channels' => $data['channels'],
+        'url' => $data['url'],
+        'account_id' => $data['account_id'],
+        'status' => 'PUBLISH'
+      );
+      $var = Post::create($dataArray);
       PostHistory::where('id', '=', $data['id'])->update(array(
-        'post_id' => $post->id,
+        'post_id' => $var->id,
         'status' => 'for posting',
         'updated_at' => Carbon::now()
       ));
 
-      $this->response['data'] = $post->id;
+      $this->response['data'] = $var->id;
       $this->response['error'] = null;
       return $this->response();
     }
