@@ -34,7 +34,7 @@
                 margin-right: 10px;
             }
             .header span{
-                font-size: 40px;
+                font-size: 16px;
                 font-weight: 600;
                 float: left;
             }
@@ -114,6 +114,6 @@
     </head>
     <body>
 		<span class="header">
-		    <img src="{{env('APP_URL')}}{{env('PACKAGE_ROUTE')}}/storage/logo/logo.png" height="60px" width="60px">
+		    <img src="{{env('APP_URL')}}{{env('PACKAGE_ROUTE')}}/storage/logo/logo.png" height="60px" width="auto">
 		    <span><label class="text-secondary">{{env('APP_NAME')}}</label></span>
 		</span>
