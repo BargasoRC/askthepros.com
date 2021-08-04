@@ -160,7 +160,7 @@ class SocialMediaController extends APIController
         $_status = [];
         $_status['status'] = $status;
 
-        $post = $this->linkedinPostWithMedia($details['token'], $details['id'], 'Sample LINKEDIN Posting using UGC Post API, with Text and Image!\n#VueJs\n#PHP-Laravel\n#UGC_POSTS_API', $media_uri, 'IMAGE');
+        // $post = $this->linkedinPostWithMedia($details['token'], $details['id'], 'Sample LINKEDIN Posting using UGC Post API, with Text and Image!\n#VueJs\n#PHP-Laravel\n#UGC_POSTS_API', $media_uri, 'IMAGE');
          // Text to post on linkedin is static for now.
 
         return response()->json((object) array_merge($registration, $_upload, $_status, $post));
@@ -197,6 +197,26 @@ class SocialMediaController extends APIController
     }
     $this->response['data'] =  $pages;
     return $this->response();
+  }
+
+  public function googleBusinessPostWithMedia(Request $request) {
+    $data = $request->all();
+    $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
+            ->select('accounts.token', 'social_auths.details')
+            ->where([
+                ['accounts.id', '=', $data['id']],
+                ['social_auths.type', '=', 'google']
+            ])
+            ->get();
+    $details = json_decode($account[0]['details'], true);
+    $headers = [];
+    $headers[] = 'Authorization: Bearer ' . $details['token'];
+    $this->headers[] = 'Content-Type: application/json';
+    $service = new GoogleMyBusinessService($this->googleMyBusinessHostApi.'accounts/'.$details['id'], $headers);
+    $message = 'Buy one Google jetpack, get a second one free!!';
+    $url = '';
+    $result = $service->postWithMedia($message, $images = []);
+    return response()->json($result);
   }
 
 }

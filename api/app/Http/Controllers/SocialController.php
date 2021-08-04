@@ -26,6 +26,7 @@ class SocialController extends APIController
         $redirect_uri = $provider == 'linkedin' ? env('LINKEDIN_URL') : env('CONNECT_CALLBACK_URL');
       }else if(strtolower($provider) == 'google' || strtolower($provider) == 'google_connect') {
         $_provider = 'google';
+        $scopes = ['https://www.googleapis.com/auth/plus.business.manage', 'https://www.googleapis.com/auth/business.manage'];
         $redirect_uri = $provider == 'google' ? env('GOOGLE_URL') : env('CONNECT_CALLBACK_URL');
       }
 

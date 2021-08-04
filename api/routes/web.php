@@ -145,6 +145,7 @@ $route = env('PACKAGE_ROUTE', '').'/posting';
 $controller = 'SocialMediaController@';
 Route::post($route.'/linkedin_post', $controller.'linkedinPost');
 Route::post($route.'/register_upload', $controller.'linkedinRegisterUpload');
+Route::post($route.'/google_mybusiness_post', $controller.'googleBusinessPostWithMedia');
 Route::get($route.'/test',  $controller.'retrieveLinkedinPages');
 
 $route = env('PACKAGE_ROUTE', '').'/plans/';

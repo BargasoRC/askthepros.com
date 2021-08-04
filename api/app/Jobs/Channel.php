@@ -57,8 +57,8 @@ class Channel implements ShouldQueue
     echo "\n\t\t\t Manage Facebook => ".$postHistory['post_id'];
   }
 
-  public function manageLinkedIn(){
-
+  public function manageLinkedIn($postHistory){
+    echo "\n\t\t\t Manage Linkedin => ".$postHistory;
   }
 
   public function manageGoogle(){
