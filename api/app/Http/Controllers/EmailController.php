@@ -10,6 +10,7 @@ use App\Mail\LoginEmail;
 use App\Mail\OtpEmail;
 use App\Mail\Receipt;
 use App\Mail\Billing;
+use App\Mail\SetupSNS;
 use App\Mail\NewMessage;
 use Illuminate\Http\Request;
 
@@ -73,6 +74,12 @@ class EmailController extends APIController
             return true;
         }
         return false;
+    }
+
+    public function setupSNS($data){
+        $this->localization();
+        Mail::to("kennettecanales@gmail.com")->send(new SetupSNS($data, $this->response['timezone']));
+        return true;
     }
 
     public function billing($accountId, $data){
