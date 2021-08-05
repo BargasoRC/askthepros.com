@@ -9,7 +9,7 @@ class FacebookService extends APIController
   protected $url = '';
   protected $headers = [];
 
-  public function __construct($url = '', $headers){
+  public function __construct($url = '', $headers = []){
     $this->url = $url;
     $this->headers = $headers;
   }

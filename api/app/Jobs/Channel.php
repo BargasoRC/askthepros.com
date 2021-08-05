@@ -58,7 +58,23 @@ class Channel implements ShouldQueue
   }
 
   public function manageFacebook($postHistory){
-    // echo "\n\t\t\t Manage Facebook => ".$postHistory['post_id'];
+    echo "\n\t\t\t Manage Facebook => ".$postHistory;
+    $media = '';
+    $result = null;
+    if($postHistory['url']) {
+      $url = $postHistory['url'];
+      // $media = json_decode($url)[0];
+      $media = 'http://127.0.0.1:8000/increment/v1'. json_decode($url)[0];
+    }
+    echo "\n\t\t\t media... ".$postHistory['post_id'];
+    if($postHistory['url']) {
+      echo "\n\t\t\t with media... ";
+      $result = app('App\Http\Controllers\SocialMediaController')->facebookPostWithMedia($postHistory['description'], $media, $postHistory['account_id']);
+    }else {
+      echo "\n\t\t\t without media... ";
+      $result = app('App\Http\Controllers\SocialMediaController')->facebookPostTextOnly($postHistory['description'], $postHistory['account_id']);
+    }
+    echo "\n\t\t\t Manage facebook => ".json_encode($result);
   }
 
   public function manageLinkedIn($postHistory){
