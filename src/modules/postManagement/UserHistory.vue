@@ -183,4 +183,5 @@ export default {
 .button1{
   border-color: $primary !important;
 }
+
 </style>

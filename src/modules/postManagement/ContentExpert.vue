@@ -506,4 +506,5 @@ textarea{
 .preview{
   color: $primary
 }
+
 </style>
