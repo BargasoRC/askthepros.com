@@ -147,6 +147,7 @@ import searchField from 'src/modules/generic/searchField.vue'
 import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 export default {
   mounted(){
+    this.retrievePayloads()
     if(this.$route.params.parameter === undefined){
       this.title = ''
       this.description = ''
@@ -219,6 +220,28 @@ export default {
   },
   methods: {
     // EDIT A POST
+    retrievePayloads(){
+      let conditions = [{
+        value: 'subscriptions',
+        clause: '=',
+        column: 'payload'
+      }]
+      let parameter = {
+        condition: conditions
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('payloads/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data.length > 0) {
+          this.industry = response.data
+        }else{
+          this.industry = []
+        }
+      }).catch(error => {
+        $('#loading').css({'display': 'none'})
+        error
+      })
+    },
     retrieveEditPosts() {
       let parameter = {
         account_id: this.user.userID,
@@ -259,6 +282,7 @@ export default {
               })
             }
           })
+          this.charCount()
         }
       })
     },

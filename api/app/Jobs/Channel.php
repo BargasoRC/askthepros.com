@@ -9,6 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
 use App\PostHistory;
+use App\Post;
 
 class Channel implements ShouldQueue
 {
@@ -33,7 +34,10 @@ class Channel implements ShouldQueue
   {
     // get all post histories with for posting status
 
-    $posts = PostHistory::where('status', '=', 'for posting')->get();
+    $posts = PostHistory::leftJoin('posts', 'post_histories.post_id', '=', 'posts.id')
+            ->where('post_histories.status', '=', 'for posting')
+            ->select('post_histories.*', 'posts.url', 'posts.description')
+            ->get();
 
     if($posts && sizeof($posts) > 0){
       foreach ($posts as $key => $postHistory) {
@@ -54,11 +58,26 @@ class Channel implements ShouldQueue
   }
 
   public function manageFacebook($postHistory){
-    echo "\n\t\t\t Manage Facebook => ".$postHistory['post_id'];
+    // echo "\n\t\t\t Manage Facebook => ".$postHistory['post_id'];
   }
 
-  public function manageLinkedIn(){
-
+  public function manageLinkedIn($postHistory){
+    // echo "\n\t\t\t Manage Linkedin => ".$postHistory;
+    $media = '';
+    $result = null;
+    if($postHistory['url']) {
+      $url = $postHistory['url'];
+      $media = json_decode($url)[0];
+    }
+    echo "\n\t\t\t media... ".$postHistory['post_id'];
+    if($postHistory['url']) {
+      echo "\n\t\t\t with media... ";
+      $result = app('App\Http\Controllers\SocialMediaController')->linkedinRegisterUpload($postHistory['account_id'], $postHistory['description'], substr($media, 15));
+    }else {      
+      echo "\n\t\t\t without media... ";
+      $result = app('App\Http\Controllers\SocialMediaController')->linkedinPost($postHistory['account_id'], $postHistory['description']);
+    }
+    echo "\n\t\t\t Manage Linkedin => ".json_encode($result);
   }
 
   public function manageGoogle(){

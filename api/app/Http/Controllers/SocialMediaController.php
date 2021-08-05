@@ -87,23 +87,24 @@ class SocialMediaController extends APIController
         return $this->response();
     }
 
-    public function linkedinPost(Request $request) {
+    public function linkedinPost($id, $message) {
         /**
          * This method post to linkedin with only PURE TEXT
          * It shoud accept ID and Text
          */
-        $data = $request->all();
         $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
-                ->select('accounts.token', 'social_auths.details')
+                ->leftJoin('pages', 'social_auths.account_id', '=', 'pages.account_id')
+                ->select('accounts.token', 'social_auths.details', 'pages.page as page')
                 ->where([
-                    ['accounts.id', '=', $data['id']],
-                    ['social_auths.type', '=', 'linkedin']
+                    ['accounts.id', '=', $id],
+                    ['social_auths.type', '=', 'linkedin'],
+                    ['pages.type', '=', 'linkedin' ]
                 ])
                 ->get();
         $details = json_decode($account[0]['details'], true);
         $service = new LinkedinService($this->linkedInHostApi.'ugcPosts');
-        $result = $service->textOnly($details['token'], 'Hello World! Sample LINKEDIN Posting using UGC Post API, with text only!', $details['id']); // Text to post on linkedin is static for now.
-        return response()->json($result);
+        $result = $service->textOnly($details['token'], $message, $account[0]['page']); // Text to post on linkedin is static for now.
+        return $result;
     }
 
     public function linkedinPostWithMedia($token, $owner, $message, $media, $media_type) {
@@ -112,21 +113,22 @@ class SocialMediaController extends APIController
         return $result;
     }
 
-    public function linkedinRegisterUpload(Request $request) {
+    public function linkedinRegisterUpload($id, $message, $image) {
         /**
          * Register an upload to get upload URL for image,
          * It should Accept ID and FILE as Parameters
          */
-        $data = $request->all();
         $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
-                ->select('accounts.token', 'social_auths.details')
+                ->leftJoin('pages', 'social_auths.account_id', '=', 'pages.account_id')
+                ->select('accounts.token', 'social_auths.details', 'pages.page as page')
                 ->where([
-                    ['accounts.id', '=', $data['id']],
+                    ['accounts.id', '=', $id],
                     ['social_auths.type', '=', 'linkedin'],
-                    ['social_auths.deleted_at', '=', null]
+                    ['social_auths.deleted_at', '=', null],
+                    ['pages.type', '=', 'linkedin' ]
                 ])
                 ->get();
-        $path = storage_path('/app/images/' . '1_2021-06-23_01_58_13_robot.png'); // file here is static for now
+        $path = storage_path('/app/images/' . $image); // file here is static for now
         
         if (!\File::exists($path)) {
             abort(404);
@@ -137,7 +139,7 @@ class SocialMediaController extends APIController
 
         $details = json_decode($account[0]['details'], true);
         $service = new LinkedinService($this->linkedInHostApi.'assets?action=registerUpload');
-        $result = $service->shareMedia($details['token'], $details['id']);
+        $result = $service->shareMedia($details['token'], $account[0]['page']);
         $registration = [];
         $registration['registration'] = $result;
 
@@ -145,7 +147,9 @@ class SocialMediaController extends APIController
             return response('Cannot register Image', 500);
         }
 
+        
         $registerResult = (array)json_decode(json_encode($result))->value->uploadMechanism;
+        return $registerResult;
 
         $upload = new LinkedinService(((object)$registerResult['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'])->uploadUrl);
         $uploaded = $upload->uploadImage($details['token'], $path);
@@ -160,10 +164,10 @@ class SocialMediaController extends APIController
         $_status = [];
         $_status['status'] = $status;
 
-        $post = $this->linkedinPostWithMedia($details['token'], $details['id'], 'Sample LINKEDIN Posting using UGC Post API, with Text and Image!\n#VueJs\n#PHP-Laravel\n#UGC_POSTS_API', $media_uri, 'IMAGE');
+        $post = $this->linkedinPostWithMedia($details['token'], $account[0]['page'], $message, $media_uri, 'IMAGE');
          // Text to post on linkedin is static for now.
 
-        return response()->json((object) array_merge($registration, $_upload, $_status, $post));
+        return (object) array_merge($registration, $_upload, $_status, $post);
     }
 
   public function retrieveFacebookPages(Request $request) {
@@ -197,6 +201,26 @@ class SocialMediaController extends APIController
     }
     $this->response['data'] =  $pages;
     return $this->response();
+  }
+
+  public function googleBusinessPostWithMedia(Request $request) {
+    $data = $request->all();
+    $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
+            ->select('accounts.token', 'social_auths.details')
+            ->where([
+                ['accounts.id', '=', $data['id']],
+                ['social_auths.type', '=', 'google']
+            ])
+            ->get();
+    $details = json_decode($account[0]['details'], true);
+    $headers = [];
+    $headers[] = 'Authorization: Bearer ' . $details['token'];
+    $this->headers[] = 'Content-Type: application/json';
+    $service = new GoogleMyBusinessService($this->googleMyBusinessHostApi.'accounts/'.$details['id'], $headers);
+    $message = 'Buy one Google jetpack, get a second one free!!';
+    $url = '';
+    $result = $service->postWithMedia($message, $images = []);
+    return response()->json($result);
   }
 
 }

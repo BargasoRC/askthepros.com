@@ -292,6 +292,7 @@ export default {
               })
             }
           })
+          this.charCount()
         }
       })
     },
@@ -432,7 +433,7 @@ export default {
       console.log('forms: ', data)
     },
     charCount(){
-      console.log('charcounting..')
+      console.log('charcounting..', this.description)
       this.character = this.description.length
     }
   }

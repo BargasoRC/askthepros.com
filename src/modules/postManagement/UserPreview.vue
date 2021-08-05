@@ -13,7 +13,7 @@
           ref="preview"
           :selected="selected"
           :files="returnFiles"
-          :isAddd="isAdd"
+          :isAddd="isAddd"
           :previewBodyStyle="{
             minHeight: 'calc(100vh - 100px) !important'
           }"
@@ -57,8 +57,9 @@ import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import preview from 'src/modules/generic/preview.vue'
 export default {
-  props: ['selected', 'files'],
+  props: ['selected', 'files', 'isAddd'],
   mounted(){
+    console.log('[is]', this.isAddd)
   },
   data(){
     return {

@@ -5,12 +5,13 @@
     <h3 style="margin-top: 25px;">Customize Prior To Posting Channels</h3>
     <p style="color: gray">Review and edit your posts prior to us sending them to your social medial channels. Then, approve once done.</p>
     <input class="title text-uppercase" v-model="title" size="120">
-    <textarea class="form-control" placeholder="Type post description" name="post_title" id="post_title" cols="90" rows="15" v-model="description">
+    <textarea class="form-control" placeholder="Type post description" name="post_title" id="post_title" cols="90" rows="15" v-model="description" @keyup="charCount()">
     </textarea>
     <div style="margin-top: -8%; border-color: white" v-if="branding != null">
       <textarea style="border-color: white; color: gray; margin-left: 1%" name="branding" id="branding" cols="90" v-model="branding" disabled="disabled">
       </textarea>
     </div>
+    <p style="text-align: right; font-size: 12px; color: gray;">Character count: {{character}}</p>
     <br>
     <br>
     <br>
@@ -121,6 +122,10 @@ export default {
     }
   },
   methods: {
+    charCount(){
+      console.log('charcounting..', this.description)
+      this.character = this.description.length
+    },
     form(data){
       this.file = data
       console.log('forms: ', data)
@@ -130,7 +135,11 @@ export default {
     },
     post(){
       if(this.validate()){
-        console.log('[', this.dataRetrieve)
+        if(this.addImage.length === 0){
+          this.imagesList = Object.values(JSON.parse(this.selectedItem.url)).map(el => {
+            return el
+          })
+        }
         let channels = []
         this.facebook ? channels.push('FACEBOOK') : null
         this.googleMyBusiness ? channels.push('GOOGLE_MY_BUSINESS') : ''
@@ -139,7 +148,7 @@ export default {
           code: this.$route.params.parameter,
           title: this.title,
           description: this.description,
-          url: JSON.stringify(this.imagesList),
+          url: this.addImage.length > 0 ? JSON.stringify(this.addImage) : JSON.stringify(this.imagesList),
           account_id: this.user.userID,
           channels: JSON.stringify(channels),
           parent: this.dataRetrieve.post_id,
@@ -150,9 +159,9 @@ export default {
         this.APIRequest('post/update_user', parameter).then(response => {
           $('#loading').css({'display': 'none'})
           console.log('[response]', response)
-          // if(response.data === true){
-          //   ROUTER.push('/post_management')
-          // }
+          if(response.data > 0){
+            ROUTER.push('/post_management/history')
+          }
         })
       }
     },
@@ -180,7 +189,6 @@ export default {
       this.isAdd = add
     },
     storeImages(data) {
-      // this.imagesList = data
       this.addImage = data
       if(this.$route.params.parameter === undefined){
         this.imagesList = Object.values(data).map(el => {
@@ -203,7 +211,8 @@ export default {
     },
     retrieveReview(code){
       let parameter = {
-        code: code
+        code: code,
+        account_id: this.user.userID
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve_by_codes', parameter).then(response => {
@@ -224,7 +233,6 @@ export default {
           if(channel.includes('GOOGLE_MY_BUSINESS')){
             this.googleMyBusiness = true
           }
-          this.description = this.selectedItem.description
           this.file = this.selectedItem.url
           this.imagesList = Object.values(JSON.parse(this.selectedItem.url)).map(el => {
             let temp = {}
@@ -235,6 +243,7 @@ export default {
               return temp
             }
           })
+          this.charCount()
         }
       })
     }

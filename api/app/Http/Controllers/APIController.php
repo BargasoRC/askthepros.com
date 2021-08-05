@@ -33,6 +33,7 @@ class APIController extends Controller
   
   public $facebookHostApi = 'https://graph.facebook.com/v11.0/';
   public $linkedInHostApi = 'https://api.linkedin.com/v2/';
+  public $googleMyBusinessHostApi = 'https://mybusiness.googleapis.com/v4/';
 
   protected $model = NULL;
   protected $foreignTable = [];
