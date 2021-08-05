@@ -68,17 +68,15 @@
               overflow: 'hidden',
               width: 'calc(100% - 30px)'
             }"
-            :class="!this.isValid && selectedIndustry.length === 0 ? 'multiselect__tags1': ''"
             :selectedIndex="selectedIndex"
             @onSelect="onSelect"
-            @onAmount="onAmount"
             v-if="!isClearing"
             ref="searchField"
           />
-          <!-- <p
+          <p
             class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
-            v-if="!this.isValid && this.selectedIndustry.length === 0"
-          >Required Field</p> -->
+            v-if="!this.isValid && selectedIndustry.length === 0"
+          >Required Field</p>
         </div>
 
         <div class="form-group" style="margin-top: 3%">
@@ -228,11 +226,6 @@ export default {
       }
       this.render = true
       return this.selectedItem
-    }
-  },
-  watch: {
-    selectedIndustry: function(val) {
-      this.selectedIndustry = val
     }
   },
   methods: {
@@ -542,9 +535,5 @@ textarea{
 }
 .preview{
   color: $primary
-}
-.multiselect__tags1 {
-  border: 1px solid red!important;
-  border-radius: 5px;
 }
 </style>

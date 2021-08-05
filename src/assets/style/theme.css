@@ -48,9 +48,7 @@
 .multiselect__tag-icon{
   color: #fff !important;
 }
-.multiselect__tag-icon:hover{
-  background-color: #F1BF14!important;
-}
+
 .multiselect__option--highlight::after{
   background-color: #F1BF14 !important;
 }

@@ -57,20 +57,14 @@
                 <p>Contact Number</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your contact number here'"
                   :class="!isValidProfile && contactnumber == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                      border: !isValidProfile && !contactnumber || !isValidNumber ? '1px solid red !important' : 'none',
+                      border: !isValidProfile && !contactnumber ? '1px solid red !important' : 'none',
                     }" v-model="contactnumber" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="contactnumber == ''  && !isValidProfile ">
+                    v-if="contactnumber == ''  && !isValidProfile">
                     {{
                     'Required Field'
-                    }}
-                  </p>
-                  <p class="mb-0 pb-0 requiredFieldError" v-if="!isValidNumber && !isValidProfile">
-                    {{
-                      'Invalid Number'
-                    }}
-                  </p>
+                    }}</p>
                 </div>
               </div>
             </div>
@@ -115,8 +109,7 @@ export default {
       data: null,
       isValid: true,
       isValidProfile: true,
-      canUpdateProfile: false,
-      isValidNumber: true
+      canUpdateProfile: false
     }
   },
   components: {
@@ -181,6 +174,7 @@ export default {
       })
     },
     update_account(event){
+      console.log('Can Update: ', this.canUpdateProfile, 'Validated: ', this.validate())
       if(!this.validate()) {
         console.log('Not valid')
         return
@@ -256,11 +250,6 @@ export default {
     },
     validate() {
       if(this.firstname !== '' || this.lastname !== '' || this.businessname !== '' || this.contactnumber !== '') {
-        if(!global.validateNumber(this.contactnumber)){
-          this.isValidNumber = false
-        }else{
-          this.isValidNumber = true
-        }
         if(!global.validateField(this.firstname) && !global.validateField(this.lastname) && !global.validateField(this.businessname) && !global.validateNumber(this.contactnumber)) {
           this.isValidProfile = false
           this.canUpdateProfile = false
@@ -271,9 +260,8 @@ export default {
       }else {
         this.canUpdateProfile = false
         this.isValidProfile = false
-        this.isValidNumber = false
       }
-      console.log('Valid: ', this.isValidProfile, 'Can update:" ', this.canUpdateProfile, 'Number:', this.isValidNumber)
+      console.log('Valid: ', this.isValidProfile, 'Can update:" ', this.canUpdateProfile)
       if(!this.isValidProfile) {
         return false
       }else {

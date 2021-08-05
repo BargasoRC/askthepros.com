@@ -73,11 +73,11 @@ export default{
     return re.test(password)
   },
   validateField(input){
-    const re = /^[A-Za-z.]{1,30}\s\d$/
+    const re = /^[A-Za-z.]{1,30}\s\d/
     return re.test(input)
   },
   validateNumber(number){
-    const re = /^[0-9+]{11,13}$/
+    const re = /^[0-9+]{11,13}/
     return re.test(number)
   }
 }
