@@ -186,4 +186,7 @@ h3 {
 p {
   color: $text;
 } 
+.text-primary{
+  color: #01004E!important;
+}
 </style>

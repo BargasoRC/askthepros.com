@@ -338,4 +338,7 @@ export default {
 .container-fluid{
   min-height: 70vh !important;
 }
+.text-primary{
+  color: #01004E!important;
+}
 </style>

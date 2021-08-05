@@ -155,7 +155,7 @@ class StripeController extends APIController
           $billing = app($this->billingController)->addToBilling($billingData);
           $billingData['plan'] = $data['plan']['category'];
           if(env('SES_KEY')){
-            app($this->emailController)->receipt($plan['account_id'], $billingData);
+            app($this->emailController)->receipt($data['account_id'], $billingData);
           }
         }
 
