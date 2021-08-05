@@ -58,7 +58,27 @@ class Channel implements ShouldQueue
   }
 
   public function manageFacebook($postHistory){
-    // echo "\n\t\t\t Manage Facebook => ".$postHistory['post_id'];
+    // echo "\n\t\t\t Manage Facebook => ".$postHistory;
+    $media = '';
+    $result = null;
+    // echo "\n\t\t\t real media... " . json_decode($postHistory['url']);
+    if(isset($postHistory['url'])) {
+      if(json_decode($postHistory['url'])) {
+        $url = $postHistory['url'];
+        $media = json_decode($url);
+        $media = env('BACKEND_URL', ''). $media[0];
+      }
+      // echo "\n\t\t\t without media... " . $media;
+    }
+    // echo "\n\t\t\t media... ".$postHistory['post_id'];
+    if($postHistory['url']) {
+      // echo "\n\t\t\t with media... ";
+      $result = app('App\Http\Controllers\SocialMediaController')->facebookPostWithMedia($postHistory['description'], $media, $postHistory['account_id']);
+    }else {
+      // echo "\n\t\t\t without media... ";
+      $result = app('App\Http\Controllers\SocialMediaController')->facebookPostTextOnly($postHistory['description'], $postHistory['account_id']);
+    }
+    echo "\n\t\t\t Manage facebook => ".json_encode($result);
   }
 
   public function manageLinkedIn($postHistory){
@@ -69,15 +89,15 @@ class Channel implements ShouldQueue
       $url = $postHistory['url'];
       $media = json_decode($url)[0];
     }
-    echo "\n\t\t\t media... ".$postHistory['post_id'];
+    // echo "\n\t\t\t media... ".$postHistory['post_id'];
     if($postHistory['url']) {
-      echo "\n\t\t\t with media... ";
+      // echo "\n\t\t\t with media... ";
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinRegisterUpload($postHistory['account_id'], $postHistory['description'], substr($media, 15));
     }else {      
-      echo "\n\t\t\t without media... ";
+      // echo "\n\t\t\t without media... ";
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinPost($postHistory['account_id'], $postHistory['description']);
     }
-    echo "\n\t\t\t Manage Linkedin => ".json_encode($result);
+    // echo "\n\t\t\t Manage Linkedin => ".json_encode($result);
   }
 
   public function manageGoogle(){

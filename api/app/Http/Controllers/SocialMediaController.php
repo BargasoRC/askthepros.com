@@ -205,13 +205,7 @@ class SocialMediaController extends APIController
 
   public function googleBusinessPostWithMedia(Request $request) {
     $data = $request->all();
-    $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
-            ->select('accounts.token', 'social_auths.details')
-            ->where([
-                ['accounts.id', '=', $data['id']],
-                ['social_auths.type', '=', 'google']
-            ])
-            ->get();
+    $account = $this->retrieveToken('google', $id);
     $details = json_decode($account[0]['details'], true);
     $headers = [];
     $headers[] = 'Authorization: Bearer ' . $details['token'];
@@ -221,6 +215,42 @@ class SocialMediaController extends APIController
     $url = '';
     $result = $service->postWithMedia($message, $images = []);
     return response()->json($result);
+  }
+
+  public function facebookPostTextOnly($message, $id) {
+    //$page_id, $access_token, $message
+    $account = $this->retrieveToken('facebook', $id);
+    $service = new FacebookService();
+    $page_token = json_decode($account[0]['page_details'])->access_token;
+    $details = json_decode($account[0]['details'], true);
+    $result = $service->textOnly( $account[0]['page'], $page_token, $message);
+    return $result;
+  }
+
+  public function facebookPostWithMedia($caption, $image, $id) {
+    //$caption, $access_token, $image
+    $account = $this->retrieveToken('facebook', $id);
+    $page_token = json_decode($account[0]['page_details'])->access_token;
+    $service = new FacebookService();
+    $details = json_decode($account[0]['details'], true);
+    $url = 'https://graph.facebook.com/me/photos';
+    $service = new FacebookService($url);
+    $result = $service->postWithSingleMedia($caption, $page_token, $image);
+    return $result;
+  }
+
+  public function retrieveToken($provider, $id) {
+    $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
+              ->leftJoin('pages', 'social_auths.account_id', '=', 'pages.account_id')
+              ->select('accounts.token', 'social_auths.details', 'pages.page as page', 'pages.details as page_details')
+              ->where([
+                  ['accounts.id', '=', $id],
+                  ['social_auths.type', '=', 'facebook'],
+                  ['social_auths.deleted_at', '=', null],
+                  ['pages.type', '=', $provider ]
+              ])
+              ->get();
+    return $account;
   }
 
 }

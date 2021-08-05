@@ -199,13 +199,41 @@ export default {
       this.$router.push('/channels/automation')
     },
     connect(item) {
-      if(item.payload === 'google') {
-        this.connectToGmail(item.payload)
-      }else if(item.payload === 'facebook') {
-        this.connectToFb(item.payload)
-      }else if(item.payload === 'linkedin') {
-        this.connectToLinkedIn(item.payload)
+      $('#loading').css({'display': 'block'})
+      let condition = {
+        condition: [
+          {
+            value: this.user.userID,
+            clause: '=',
+            column: 'account_id'
+          },
+          {
+            value: null,
+            clause: '!=',
+            column: 'end_date'
+          }
+        ],
+        offset: 0,
+        limit: 3
       }
+      this.APIRequest('plans/retrieve', condition, response => {
+        $('#loading').css({'display': 'none'})
+        console.log('response.data', response)
+        if(response.data.length > 0) {
+          if(item.payload === 'google') {
+            this.connectToGmail(item.payload)
+          }else if(item.payload === 'facebook') {
+            this.connectToFb(item.payload)
+          }else if(item.payload === 'linkedin') {
+            this.connectToLinkedIn(item.payload)
+          }
+        }else {
+          this.$router.push('/subscriptions')
+        }
+      }, error => {
+        error
+        $('#loading').css({'display': 'none'})
+      })
     },
     addPage(){
       if(this.selectedPage === null){
