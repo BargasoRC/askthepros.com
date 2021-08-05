@@ -76,7 +76,7 @@
           <p
             class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
             v-if="!this.isValid && selectedIndustry.length === 0"
-          >Required Field</p>
+          >Required Field{{selectedIndustry.length}}</p>
         </div>
 
         <div class="form-group" style="margin-top: 3%">
@@ -430,10 +430,8 @@ export default {
     },
     form(data){
       this.file = data
-      console.log('forms: ', data)
     },
     charCount(){
-      console.log('charcounting..', this.description)
       this.character = this.description.length
     }
   }

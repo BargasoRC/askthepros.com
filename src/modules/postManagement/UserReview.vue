@@ -44,7 +44,7 @@
     <review
       ref="previewSelected"
       :selected="selectedItem"
-      :files="file"
+      :files="returnImagesList"
       :first="'false'"
       :isAddd="isAdd"
     />
@@ -123,12 +123,10 @@ export default {
   },
   methods: {
     charCount(){
-      console.log('charcounting..', this.description)
       this.character = this.description.length
     },
     form(data){
       this.file = data
-      console.log('forms: ', data)
     },
     toggle(id){
       this.channel.push(id)
@@ -154,11 +152,9 @@ export default {
           parent: this.dataRetrieve.post_id,
           id: this.dataRetrieve.id
         }
-        console.log('[parameters]', parameter)
         this.isClearing = true
         this.APIRequest('post/update_user', parameter).then(response => {
           $('#loading').css({'display': 'none'})
-          console.log('[response]', response)
           if(response.data > 0){
             ROUTER.push('/post_management/history')
           }

@@ -235,7 +235,6 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve_by_user', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('RESPONSE: ', response)
         if(response.data.length > 0) {
           this.tableData = response.data
           this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
@@ -272,9 +271,6 @@ export default {
       ROUTER.push('/post_management/content_edit/' + code)
     },
     showDeleteConfirmation(id){
-      console.log({
-        test: 'again'
-      })
       this.deleteId = id
       setTimeout(() => {
         this.$refs.confirm.show(id)
@@ -287,7 +283,6 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/delete', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('RESPONSE: ', response)
         this.retrieve()
       })
     }

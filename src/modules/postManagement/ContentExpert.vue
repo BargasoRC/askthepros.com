@@ -258,6 +258,7 @@ export default {
               this.render = true
               this.title = el.title
               this.description = el.description
+              this.charCount()
               var channel = el.channels
               if(channel.includes('FACEBOOK')){
                 this.facebook = true
@@ -319,11 +320,9 @@ export default {
           channels: JSON.stringify(channels),
           category: JSON.stringify(selectIndustry)
         }
-        console.log('[parameters]', parameter)
         this.isClearing = true
         this.APIRequest('post/update_expert', parameter).then(response => {
           $('#loading').css({'display': 'none'})
-          console.log('[response]', response)
           if(response.data === true){
             ROUTER.push('/dashboard')
           }
@@ -359,11 +358,9 @@ export default {
           url: null,
           category: JSON.stringify(selectIndustry)
         }
-        console.log('[parameters]', parameter)
         this.isClearing = true
         this.APIRequest('post/create', parameter).then(response => {
           $('#loading').css({'display': 'none'})
-          console.log('[response]', response)
           if(response.error === null){
             this.title = ''
             this.description = ''
@@ -403,7 +400,6 @@ export default {
       return true
     },
     charCount(){
-      console.log('charcounting..')
       this.character = this.description.length
     }
   }
