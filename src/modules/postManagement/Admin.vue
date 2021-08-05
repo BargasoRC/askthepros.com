@@ -338,4 +338,5 @@ export default {
 .container-fluid{
   min-height: 70vh !important;
 }
+
 </style>
