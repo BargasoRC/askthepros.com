@@ -56,7 +56,6 @@ export default {
   },
   computed: {
     returnImageList(){
-      console.log('[this.ima]', this.imagesList)
       return this.imagesList
     },
     imagesData(){
@@ -119,6 +118,7 @@ export default {
     },
     deleteImage(id){
       this.imagesList.splice(id, 1)
+      this.$parent.imagesList = this.imagesList
     },
     retrieveImage(){
       if(this.code != null){

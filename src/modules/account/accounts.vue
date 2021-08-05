@@ -74,7 +74,6 @@
       v-if="data.length > 0"
     />
 
-
     <empty v-if="data.length <= 0" :title="'No accounts available!'" :action="'Keep growing.'"></empty>
   </div>
 </template>
@@ -226,6 +225,7 @@ export default{
       }
     },
     updateType(item, index){
+      console.log('[df]', item)
       if(this.newAccountType === null || this.newAccountType === item.account_type){
         this.setEditTypeIndex(index, item)
         return
@@ -234,6 +234,7 @@ export default{
         id: item.id,
         account_type: this.newAccountType
       }
+      console.log('[od]', parameter)
       $('#loading').css({display: 'block'})
       this.APIRequest('accounts/update_account_type', parameter).then(response => {
         $('#loading').css({display: 'none'})
@@ -290,6 +291,7 @@ export default{
       }
       $('#loading').css({display: 'block'})
       this.APIRequest('users/retrieve', parameter).then(response => {
+        console.log('[dfg]', response.data)
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data

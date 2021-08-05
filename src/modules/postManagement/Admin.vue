@@ -7,8 +7,8 @@
         :text="'New Post'"
         :icon_position="'right'"
         :styles="{
-          backgroundColor: '#01009A',
-          color: 'white'
+            backgroundColor: '#01004E',
+            color: 'white'
         }"
       />
     </div>
@@ -17,7 +17,7 @@
         :category="category"
         :activeCategoryIndex="0"
         :activeSortingIndex="0"
-        @changeSortEvent="() => {} "
+        @changeSortEvent="() => {}"
         :grid="['list']"
         :sortByStyle="{
           background: '#01004E !important',
@@ -283,7 +283,6 @@ export default {
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve', parameter).then(response => {
-        console.log('[response]', response)
         $('#loading').css({'display': 'none'})
         if(!response.error) {
           this.data = response.data
@@ -294,9 +293,6 @@ export default {
       })
     },
     showDeleteConfirmation(id){
-      console.log({
-        test: 'again'
-      })
       this.deleteId = id
       setTimeout(() => {
         this.$refs.confirm.show(id)
@@ -306,11 +302,9 @@ export default {
       let parameter = {
         id: e.id
       }
-      console.log('[remove]', parameter)
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/delete', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('RESPONSE: ', response)
         this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
       })
     },
