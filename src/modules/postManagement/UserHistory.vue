@@ -154,7 +154,6 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve_history', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('RESPONSE: ', response)
         if(response.data.length > 0){
           this.tableData = response.data
           this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)

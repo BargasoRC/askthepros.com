@@ -118,7 +118,6 @@ export default {
     },
     deleteImage(id){
       this.imagesList.splice(id, 1)
-      console.log('[parent]', this.$parent.imagesList)
       this.$parent.imagesList = this.imagesList
     },
     retrieveImage(){

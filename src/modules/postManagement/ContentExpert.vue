@@ -249,7 +249,6 @@ export default {
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve_by_code', parameter).then(response => {
-        console.log('[]', response.data)
         $('#loading').css({'display': 'none'})
         if(!response.error) {
           response.data.filter(el => {
@@ -321,11 +320,9 @@ export default {
           channels: JSON.stringify(channels),
           category: JSON.stringify(selectIndustry)
         }
-        console.log('[parameters]', parameter)
         this.isClearing = true
         this.APIRequest('post/update_expert', parameter).then(response => {
           $('#loading').css({'display': 'none'})
-          console.log('[response]', response)
           if(response.data === true){
             ROUTER.push('/dashboard')
           }
@@ -361,11 +358,9 @@ export default {
           url: null,
           category: JSON.stringify(selectIndustry)
         }
-        console.log('[parameters]', parameter)
         this.isClearing = true
         this.APIRequest('post/create', parameter).then(response => {
           $('#loading').css({'display': 'none'})
-          console.log('[response]', response)
           if(response.error === null){
             this.title = ''
             this.description = ''
@@ -405,7 +400,6 @@ export default {
       return true
     },
     charCount(){
-      console.log('charcounting..', this.description)
       this.character = this.description.length
     }
   }
