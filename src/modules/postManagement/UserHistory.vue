@@ -183,4 +183,10 @@ export default {
 .button1{
   border-color: $primary !important;
 }
+.text-primary{
+  color: #01004E!important;
+}
+.text-warning{
+  color:#ffc107!important;
+}
 </style>

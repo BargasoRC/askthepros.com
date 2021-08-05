@@ -177,13 +177,15 @@ export default {
         clause: '=',
         column: 'payload'
       }]
-      if(this.user !== null && this.user.merchant && this.user.merchant.length > 0 && this.user.merchant[0].addition_informations){
-        let industry = JSON.parse(this.user.merchant[0].addition_informations)
-        conditions.push({
-          value: industry.industry,
-          column: 'category',
-          clause: '='
-        })
+      if(this.user !== null && this.user.merchant && this.user.merchant.length > 0 && this.user.merchant[0] !== undefined){
+        if(this.user.merchant[0].addition_informations){
+          let industry = JSON.parse(this.user.merchant[0].addition_informations)
+          conditions.push({
+            value: industry.industry,
+            column: 'category',
+            clause: '='
+          })
+        }
       }
       if(this.user !== null && this.user.merchant && this.user.merchant.addition_informations){
         conditions.push({
