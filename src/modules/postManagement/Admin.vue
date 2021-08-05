@@ -7,8 +7,8 @@
         :text="'New Post'"
         :icon_position="'right'"
         :styles="{
-          backgroundColor: '#01009A',
-          color: 'white'
+            backgroundColor: '#01004E',
+            color: 'white'
         }"
       />
     </div>
@@ -17,7 +17,7 @@
         :category="category"
         :activeCategoryIndex="0"
         :activeSortingIndex="0"
-        @changeSortEvent="() => {} "
+        @changeSortEvent="() => {}"
         :grid="['list']"
         :sortByStyle="{
           background: '#01004E !important',

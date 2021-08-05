@@ -76,7 +76,7 @@
           <p
             class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
             v-if="!this.isValid && selectedIndustry.length === 0"
-          >Required Field</p>
+          >Required Field{{selectedIndustry.length}}</p>
         </div>
 
         <div class="form-group" style="margin-top: 3%">
@@ -362,10 +362,12 @@ export default {
       }
     },
     onSelect(data) {
+      console.log('[this.selected]', data)
       this.selectedIndustry = data
     },
     save(status) {
       this.$refs.searchField.returnCategory()
+      console.log('[df]', this.selectedIndustry)
       let selectIndustry = []
       this.selectedIndustry.forEach(element => {
         selectIndustry.push({category: element.category, id: element.id})
@@ -386,6 +388,7 @@ export default {
           parent: null,
           category: JSON.stringify(selectIndustry)
         }
+        console.log('[param]', parameter)
         this.isClearing = true
         this.APIRequest('post/create', parameter).then(response => {
           $('#loading').css({'display': 'none'})

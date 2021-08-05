@@ -249,6 +249,7 @@ export default {
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve_by_code', parameter).then(response => {
+        console.log('[]', response.data)
         $('#loading').css({'display': 'none'})
         if(!response.error) {
           response.data.filter(el => {
@@ -258,6 +259,7 @@ export default {
               this.render = true
               this.title = el.title
               this.description = el.description
+              this.charCount()
               var channel = el.channels
               if(channel.includes('FACEBOOK')){
                 this.facebook = true
@@ -403,7 +405,7 @@ export default {
       return true
     },
     charCount(){
-      console.log('charcounting..')
+      console.log('charcounting..', this.description)
       this.character = this.description.length
     }
   }
