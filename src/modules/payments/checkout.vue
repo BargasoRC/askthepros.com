@@ -175,6 +175,11 @@ export default {
 .choose_payment {
   margin-top: 30px !important;
 }
+
+.container-fluid{
+  min-height: 70vh;
+}
+
 #stripe {
   color: $darkPrimary !important;
   cursor: pointer;
