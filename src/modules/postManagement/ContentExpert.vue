@@ -506,4 +506,10 @@ textarea{
 .preview{
   color: $primary
 }
+.text-primary{
+  color: #01004E!important;
+}
+.text-warning{
+  color:#ffc107!important;
+}
 </style>
