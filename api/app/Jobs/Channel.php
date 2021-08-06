@@ -94,9 +94,12 @@ class Channel implements ShouldQueue
   public function manageGoogle($postHistory){
     $media = [];
     $result = null;
-    if($postHistory['url']) {
-      $url = $postHistory['url'];
-      $media = json_decode($url);
+    if(isset($postHistory['url'])) {
+      if(json_decode($postHistory['url'])) {
+        $url = $postHistory['url'];
+        $media = json_decode($url);
+        $media = env('BACKEND_URL', ''). $media[0];
+      }
     }
     if($postHistory['url']) {
       $result = app('App\Http\Controllers\SocialMediaController')->googleBusinessPostWithMedia($postHistory['account_id'], $postHistory['description'], $media);

@@ -24,7 +24,7 @@ class GoogleMyBusinessService extends APIController
         return $result;
     } 
 
-    public function postWithMedia($message, $images) {
+    public function postWithMedia($message, $image) {
         /**
          * The media in the body below should look like this...
          * 
@@ -35,18 +35,15 @@ class GoogleMyBusinessService extends APIController
          *  }
          * ]
          */
-        $media = [];
-        foreach ($images as $image) {
-            $temp = array(
-                "mediaFormat" => "PHOTO",
-                "sourceURL" => $image
-            );
-            array_push($media, (object)$temp);
-        }
         $body = '{
             "languageCode": "en-US",
             "summary": "'.$message.'",
-            "media": $media
+            "media": [
+                {
+                  "mediaFormat": "PHOTO",
+                  "sourceUrl": "'.$image.'",
+                }
+            ]
         }';
         $curl = new CurlController($this->headers);
         $result = $curl->postRequest($this->url, $body);

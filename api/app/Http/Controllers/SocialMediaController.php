@@ -224,7 +224,7 @@ class SocialMediaController extends APIController
     return $this->response();
   }
 
-  public function googleBusinessPostWithMedia($id, $message, $images) {
+  public function googleBusinessPostWithMedia($id, $message, $image) {
     // $data = $request->all();
     $account = $this->retrieveToken('google', $id);
     $details = json_decode($account[0]['details']);
@@ -234,7 +234,7 @@ class SocialMediaController extends APIController
     $service = new GoogleMyBusinessService('', $headers);
     $url = $this->googleMyBusinessHostApi . json_decode($account[0]->page_details)->name . '/localPosts';
     $service->setUrl($url);
-    $result = $service->postWithMedia($message, $images);
+    $result = $service->postWithMedia($message, $image);
     return $result;
   }
 
