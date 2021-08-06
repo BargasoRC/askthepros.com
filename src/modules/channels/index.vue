@@ -106,7 +106,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-danger" data-dismiss="modal" @click="activePayload = null">Close</button>
-            <button type="button" class="btn btn-primary" v-if="selectedPage !== null && activePayload && activePayload.details && (activePayload.details.page === null || activePayload.details.page.page !== selectedPage.id) && activePayload.details.page.page !== selectedPage.name" @click="addPage()">Manage this page</button>
+            <button type="button" class="btn btn-primary" v-if="selectedPage !== null && activePayload && activePayload.details && (activePayload.details.page === null || activePayload.details.page.page !== selectedPage.id)" @click="addPage()">Manage this page</button>
             <button type="button" class="btn btn-danger" v-if="selectedPage !== null && activePayload && activePayload.details && activePayload.details.page !== null && (activePayload.details.page.page === selectedPage.id || activePayload.details.page.page === selectedPage.name)" @click="removePage(activePayload.details.page.id)">Remove this page</button>
           </div>
         </div>

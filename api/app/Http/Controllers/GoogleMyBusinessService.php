@@ -19,13 +19,22 @@ class GoogleMyBusinessService extends APIController
     }
 
     public function retrieveLocations($account_id) {
-        $url = $this->googleMyBusinessHostApi.'accounts/'.$account_id.'/locations';
         $curl = new CurlController($this->headers);
         $result = $curl->getRequest($this->url);
         return $result;
     } 
 
     public function postWithMedia($message, $images) {
+        /**
+         * The media in the body below should look like this...
+         * 
+         * "media": [
+         *  {
+         *      "mediaFormat": "PHOTO",
+         *      "sourceURL": "link of image"
+         *  }
+         * ]
+         */
         $media = [];
         foreach ($images as $image) {
             $temp = array(
@@ -37,7 +46,7 @@ class GoogleMyBusinessService extends APIController
         $body = '{
             "languageCode": "en-US",
             "summary": "'.$message.'",
-            "media": '.json_encode($media).',
+            "media": $media
         }';
         $curl = new CurlController($this->headers);
         $result = $curl->postRequest($this->url, $body);

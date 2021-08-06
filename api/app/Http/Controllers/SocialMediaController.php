@@ -227,27 +227,15 @@ class SocialMediaController extends APIController
   public function googleBusinessPostWithMedia($id, $message, $images) {
     // $data = $request->all();
     $account = $this->retrieveToken('google', $id);
-    // dd($id, $message, $images);
-    // $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
-    // ->select('accounts.token', 'social_auths.details')
-    // ->where([
-    //     ['accounts.id', '=', $id],
-    //     ['social_auths.type', '=', 'google'],
-    //     ['social_auths.deleted_at', '=', null]
-    // ])
-    // ->get();
-    // dd($account);
-    $details = json_decode($account[0]['details'], true);
+    $details = json_decode($account[0]['details']);
     $headers = [];
-    $headers[] = 'Authorization: Bearer ' . $details['token'];
+    $headers[] = 'Authorization: Bearer ' . $details->token;
     $headers[] = 'Content-Type: application/json';
     $service = new GoogleMyBusinessService('', $headers);
-    $service->setUrl($this->googleMyBusinessHostApi . 'accounts/'. $details['id'] .'/locations');
-    $location = $service->retrieveLocations($details['id']);
-    $url = $this->googleMyBusinessHostApi . $location['locations'][0]['name'] . '/localPosts';
+    $url = $this->googleMyBusinessHostApi . json_decode($account[0]->page_details)->name . '/localPosts';
     $service->setUrl($url);
-    $result = $service->postWithMedia($message, json_decode($images));
-    return response()->json($result);
+    $result = $service->postWithMedia($message, $images);
+    return $result;
   }
 
   public function facebookPostTextOnly($message, $id) {
@@ -278,7 +266,7 @@ class SocialMediaController extends APIController
               ->select('accounts.token', 'social_auths.details', 'pages.page as page', 'pages.details as page_details')
               ->where([
                   ['accounts.id', '=', $id],
-                  ['social_auths.type', '=', 'facebook'],
+                  ['social_auths.type', '=', $provider],
                   ['social_auths.deleted_at', '=', null],
                   ['pages.type', '=', $provider ]
               ])
