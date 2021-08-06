@@ -169,6 +169,7 @@ export default {
       vue.APIRequest(verifyUrl, parameters, (userInfo) => {
         this.setUser(userInfo, null, null)
       }, (response) => {
+        localStorage.clear()
         this.setToken(null)
         this.tokenData.verifyingToken = false
         this.tokenData.loading = false
@@ -369,7 +370,7 @@ export default {
   },
   updateData(){
     // console.log('dashboard')
-    ROUTER.push(`/dashboard`)
+    // ROUTER.push(`/dashboard`)
   },
   setGoogleCode(code, scope){
     localStorage.setItem('google_code', code)

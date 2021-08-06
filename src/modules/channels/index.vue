@@ -57,7 +57,7 @@
           <h3 style="font-weight: bolder;font-size: 21px; color: #01009A;" v-if="item.details && item.details.page !== null">
             <i :class="'fa fa-' + item.details.page.type"></i>
             <img :src="item.details.page.details.image" class="page-image-holder">
-            {{item.details.page.details.name}}
+            {{item.details.page.type === 'google' ? item.details.page.details.locationName : item.details.page.details.name}}
           </h3>
           <p>{{item.description}}</p>
           <p v-if="!item.stat">Setup and link your account now!</p>
@@ -100,14 +100,14 @@
             <ul v-if="data && data.length > 0" class="pages-holder">
               <li v-for="(item, index) in data" @click="selectedPage = item" :class="{'active': selectedPage && selectedPage.id === item.id}">
                 <img :src="item.image" class="page-image-holder">
-                {{item.name}}
+                {{page_type === 'google' ? item.locationName : item.name}}
               </li>
             </ul>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-danger" data-dismiss="modal" @click="activePayload = null">Close</button>
-            <button type="button" class="btn btn-primary" v-if="selectedPage !== null && activePayload && activePayload.details && (activePayload.details.page === null || activePayload.details.page.page !== selectedPage.id)" @click="addPage()">Manage this page</button>
-            <button type="button" class="btn btn-danger" v-if="selectedPage !== null && activePayload && activePayload.details && activePayload.details.page !== null && activePayload.details.page.page === selectedPage.id" @click="removePage(activePayload.details.page.id)">Remove this page</button>
+            <button type="button" class="btn btn-primary" v-if="selectedPage !== null && activePayload && activePayload.details && (activePayload.details.page === null || activePayload.details.page.page !== selectedPage.id) && activePayload.details.page.page !== selectedPage.name" @click="addPage()">Manage this page</button>
+            <button type="button" class="btn btn-danger" v-if="selectedPage !== null && activePayload && activePayload.details && activePayload.details.page !== null && (activePayload.details.page.page === selectedPage.id || activePayload.details.page.page === selectedPage.name)" @click="removePage(activePayload.details.page.id)">Remove this page</button>
           </div>
         </div>
       </div>
@@ -236,13 +236,14 @@ export default {
       })
     },
     addPage(){
+      console.log(this.activePayload.payload, this.selectedPage)
       if(this.selectedPage === null){
         return null
       }
       let parameter = {
         account_id: this.user.userID,
         type: this.activePayload.payload,
-        page: this.selectedPage.id,
+        page: this.page_type === 'google' ? this.selectedPage.name : this.selectedPage.id,
         details: JSON.stringify(this.selectedPage)
       }
       $('#loading').css({'display': 'block'})
@@ -282,6 +283,25 @@ export default {
           console.log('FACEBOOK PAGES: ', response)
           $('#loading').css({'display': 'none'})
           this.data = response.data
+          let element = this.$refs.modal
+          $(element).modal('show')
+        }, error => {
+          error
+          $('#loading').css({'display': 'none'})
+        })
+      }else if(provider.payload === 'google') {
+        this.page_type = 'google'
+        let parameter = {
+          account_id: this.user.userID
+        }
+        $('#loading').css({'display': 'block'})
+        this.APIRequest('social/retrive_businesses', parameter, response => {
+          console.log('Businesses: ', response)
+          $('#loading').css({'display': 'none'})
+          this.data = response.data.locations.map((el, ndx) => {
+            el['id'] = ndx + 1
+            return el
+          })
           let element = this.$refs.modal
           $(element).modal('show')
         }, error => {
