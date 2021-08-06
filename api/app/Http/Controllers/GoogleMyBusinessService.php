@@ -14,23 +14,36 @@ class GoogleMyBusinessService extends APIController
         $this->headers = $headers;
     }
 
+    public function setUrl($url) {
+        $this->url = $url;
+    }
+
     public function retrieveLocations($account_id) {
-        $url = $this->googleMyBusinessHostApi.'accounts/"'.$account_id.'"/locations';
         $curl = new CurlController($this->headers);
         $result = $curl->getRequest($this->url);
         return $result;
     } 
 
-    public function postWithMedia($message, $images) {
+    public function postWithMedia($message, $image) {
+        /**
+         * The media in the body below should look like this...
+         * 
+         * "media": [
+         *  {
+         *      "mediaFormat": "PHOTO",
+         *      "sourceURL": "link of image"
+         *  }
+         * ]
+         */
         $body = '{
             "languageCode": "en-US",
             "summary": "'.$message.'",
             "media": [
-              {
-                "mediaFormat": "PHOTO",
-                "sourceUrl": "https://api.staging.askthepros.com/increment/v1/storage/image/2_2021-08-03_02_00_17_robot.png",
-              }
-            ],
+                {
+                  "mediaFormat": "PHOTO",
+                  "sourceUrl": "'.$image.'",
+                }
+            ]
         }';
         $curl = new CurlController($this->headers);
         $result = $curl->postRequest($this->url, $body);

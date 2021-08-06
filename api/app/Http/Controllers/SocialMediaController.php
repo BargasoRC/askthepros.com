@@ -203,18 +203,39 @@ class SocialMediaController extends APIController
     return $this->response();
   }
 
-  public function googleBusinessPostWithMedia(Request $request) {
+  public function retrieveBusinesses(Request $request) {
     $data = $request->all();
-    $account = $this->retrieveToken('google', $id);
+    $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
+    ->select('accounts.token', 'social_auths.details')
+    ->where([
+        ['accounts.id', '=', $data['account_id']],
+        ['social_auths.type', '=', 'google'],
+        ['social_auths.deleted_at', '=', null]
+    ])
+    ->get();
     $details = json_decode($account[0]['details'], true);
     $headers = [];
     $headers[] = 'Authorization: Bearer ' . $details['token'];
-    $this->headers[] = 'Content-Type: application/json';
-    $service = new GoogleMyBusinessService($this->googleMyBusinessHostApi.'accounts/'.$details['id'], $headers);
-    $message = 'Buy one Google jetpack, get a second one free!!';
-    $url = '';
-    $result = $service->postWithMedia($message, $images = []);
-    return response()->json($result);
+    $headers[] = 'Content-Type: application/json';
+    $service = new GoogleMyBusinessService('', $headers);
+    $service->setUrl($this->googleMyBusinessHostApi . 'accounts/'. $details['id'] .'/locations');
+    $location = $service->retrieveLocations($details['id']);
+    $this->response['data'] = $location;
+    return $this->response();
+  }
+
+  public function googleBusinessPostWithMedia($id, $message, $image) {
+    // $data = $request->all();
+    $account = $this->retrieveToken('google', $id);
+    $details = json_decode($account[0]['details']);
+    $headers = [];
+    $headers[] = 'Authorization: Bearer ' . $details->token;
+    $headers[] = 'Content-Type: application/json';
+    $service = new GoogleMyBusinessService('', $headers);
+    $url = $this->googleMyBusinessHostApi . json_decode($account[0]->page_details)->name . '/localPosts';
+    $service->setUrl($url);
+    $result = $service->postWithMedia($message, $image);
+    return $result;
   }
 
   public function facebookPostTextOnly($message, $id) {
@@ -245,7 +266,7 @@ class SocialMediaController extends APIController
               ->select('accounts.token', 'social_auths.details', 'pages.page as page', 'pages.details as page_details')
               ->where([
                   ['accounts.id', '=', $id],
-                  ['social_auths.type', '=', 'facebook'],
+                  ['social_auths.type', '=', $provider],
                   ['social_auths.deleted_at', '=', null],
                   ['pages.type', '=', $provider ]
               ])
