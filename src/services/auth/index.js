@@ -66,6 +66,7 @@ export default {
   attachmentValue: null,
   setUser(user, notifSetting, subAccount){
     $('#loading').css({display: 'none'})
+    console.log('user', user)
     let vue = new Vue()
     if(user === null){
       this.user.userID = 0
@@ -369,7 +370,7 @@ export default {
   },
   updateData(){
     // console.log('dashboard')
-    // ROUTER.push(`/dashboard`)
+    ROUTER.push(`/dashboard`)
   },
   setGoogleCode(code, scope){
     localStorage.setItem('google_code', code)

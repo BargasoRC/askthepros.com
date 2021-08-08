@@ -198,7 +198,14 @@ export default {
     automationSettings(e) {
       this.$router.push('/channels/automation')
     },
+    redirect(route){
+      ROUTER.push(route)
+    },
     connect(item) {
+      if(this.user && (this.user.plan === null || this.user.plan === undefined)){
+        this.redirect('/subscriptions')
+        return
+      }
       $('#loading').css({'display': 'block'})
       let condition = {
         condition: [
@@ -256,6 +263,10 @@ export default {
       })
     },
     viewAndAddPages(provider){
+      if(this.user && (this.user.plan === null || this.user.plan === undefined)){
+        this.redirect('/subscriptions')
+        return
+      }
       this.activePayload = provider
       if(provider.payload === 'linkedin') {
         this.page_type = 'linkedin'
