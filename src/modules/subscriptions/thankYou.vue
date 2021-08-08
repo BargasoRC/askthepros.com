@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     redirect(route) {
-      ROUTER.push(route)
+      ROUTER.go(route)
     }
   }
 }

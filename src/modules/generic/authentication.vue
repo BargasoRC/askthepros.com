@@ -45,8 +45,8 @@ export default {
           AUTH.hash('hide', response.login_type)
           // console.log('USER @ Index: ', response.user)
           AUTH.setUser(response.user)
-          // AUTH.checkAuthentication()
-          // ROUTER.push(`/dashboard`)
+          AUTH.checkAuthentication()
+          ROUTER.push(`/dashboard`)
         }, error => {
           // $('#loading').css({'display': 'none'})
           localStorage.removeItem('login_with')
