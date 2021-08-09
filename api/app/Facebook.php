@@ -17,9 +17,17 @@ class Facebook
 
   public function publishContentWithPhoto($pageId, $params){
     $fields = array();
-    echo json_encode((new Page($pageId))->createPhoto(
+    return (new Page($pageId))->createPhoto(
       $fields,
       $params
-    )->exportAllData(), JSON_PRETTY_PRINT);
+    )->exportAllData();
+  }
+
+  public function publishContentTextOnly($pageId, $params){
+    $fields = array();
+    return (new Page($pageId))->createFeed(
+      $fields,
+      $params
+    )->exportAllData();
   }
 }

@@ -73,42 +73,43 @@ class Channel implements ShouldQueue
     }
 
     $token = $page['details']['access_token'];
-    if(isset($postHistory['url'])) {
-      if(json_decode($postHistory['url'])) {
-        $url = $postHistory['url'];
-        $media = json_decode($url);
-        $media = env('BACKEND_URL', ''). $media[0];
-      }
+    $media = env('BACKEND_URL').'/storage/image/2_2021-08-03_02_00_17_robot.png';
+    // if(isset($postHistory['url'])) {
+    //   if(json_decode($postHistory['url'])) {
+    //     $url = $postHistory['url'];
+    //     $media = json_decode($url);
+    //     $media = env('BACKEND_URL', ''). $media[0];
+    //   }
+    // }
+
+
+    $params = null;
+    $facebook = new Facebook($token);
+    $postHistory['url'] = null;
+    if($postHistory['url']){
+      // post with image
+      $params = array(
+        "message" => $postHistory['description'],
+        "access_token" => $token,
+        "url" => $media
+      );
+
+      $result = $facebook->publishContentWithPhoto($page['page'], $params);
+    }else{
+      // post without image
+      $params = array(
+        "message" => $postHistory['description'],
+        "access_token" => $token
+      );
+      $result = $facebook->publishContentTextOnly($page['page'], $params);
     }
 
-    $url = $page['page'].'/photos';
-    $params = array(
-      "message" => $postHistory['description'],
-      "access_token" => $token,
-      "url" => "https://documents.trendmicro.com/images/WORM_MEYLME_B-spam.jpg"
-    );
-
-    // if($postHistory['url']){
-    //   $urls = json_decode($postHistory['url'], true);
-    //   echo print_r($urls);
-    // }else{
-
-    // }
-
-    $facebook = new Facebook($token);
-    $facebook->publishContentWithPhoto($page['page'], $params);
-    // app($this->facebookController)->publishContent($url, $params, $token);
-
-    // if($postHistory['url']) {
-    //   $result = app('App\Http\Controllers\SocialMediaController')->facebookPostTextOnly($postHistory['description'], $postHistory['account_id']);
-    //   $result = app('App\Http\Controllers\SocialMediaController')->facebookPostWithMedia($postHistory['description'], $media, $postHistory['account_id']);
-    //   print_r($result);
-    //   $this->updatePostHistories($postHistory);
-    // }else {
-    //   $result = app('App\Http\Controllers\SocialMediaController')->facebookPostTextOnly($postHistory['description'], $postHistory['account_id']);
-    //   $this->updatePostHistories($postHistory);
-    // }
-    echo "\n\t\t\t Manage facebook => ".json_encode($result);
+    if($result && isset($result['id'])){
+      $this->updatePostHistories($postHistory, 'https://www.facebook.com/'.$result['id']);
+      echo "\n\t\t Posted on facebook => ".$result['id'];
+    }else{
+      echo "\n\t\t Unable to post on facebook";
+    }
   }
 
   public function manageLinkedIn($postHistory){
@@ -142,9 +143,10 @@ class Channel implements ShouldQueue
     echo "\n\t\t\t Manage GOOGLE => ".json_encode($result);
   }
 
-  public function updatePostHistories($postHistory){
+  public function updatePostHistories($postHistory, $link){
     PostHistory::where('id', '=', $postHistory['id'])->update(array(
       'status' => 'posted',
+      'link'   => $link,
       'updated_at' => Carbon::now()
     ));
   }
