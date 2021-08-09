@@ -24,6 +24,7 @@ class Channel implements ShouldQueue
 
   public $facebookController = 'App\Http\Controllers\FacebookService';
   public $pageController = 'App\Http\Controllers\PageController';
+  public $brandingController = 'App\Http\Controllers\BrandingController';
   public function __construct()
   {
       //
@@ -45,12 +46,24 @@ class Channel implements ShouldQueue
 
     if($posts && sizeof($posts) > 0){
       foreach ($posts as $key => $postHistory) {
+        $branding = app($this->brandingController)->getActiveByParams($postHistory['account_id']);
+
+        
+
         switch(strtolower($postHistory['channel'])){
           case 'facebook':
+            if($branding && $branding['details'] !== null){
+              $message = "\n\n".$branding['details']['brand1']."\n\n".$branding['details']['brand2']."\n\n".$branding['details']['brand3'];
+              $postHistory['description'] .= $message;
+            }
             $this->manageFacebook($postHistory);
             break;
           case 'linkedin':
-            // $this->manageLinkedIn($postHistory);
+            if($branding && $branding['details'] !== null){
+              $message = "//n//n".$branding['details']['brand1']."//n//n".$branding['details']['brand2']."//n//n".$branding['details']['brand3'];
+              $postHistory['description'] .= $message;
+            }
+            $this->manageLinkedIn($postHistory);
             break;
           case 'google_my_business':
             // $this->manageGoogle($postHistory);
@@ -85,7 +98,6 @@ class Channel implements ShouldQueue
 
     $params = null;
     $facebook = new Facebook($token);
-    $postHistory['url'] = null;
     if($postHistory['url']){
       // post with image
       $params = array(
@@ -119,12 +131,19 @@ class Channel implements ShouldQueue
       $url = $postHistory['url'];
       $media = json_decode($url)[0];
     }
+    $postHistory['url'] = null;
     if($postHistory['url']) {
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinRegisterUpload($postHistory['account_id'], $postHistory['description'], substr($media, 15));
     }else {
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinPost($postHistory['account_id'], $postHistory['description']);
     }
-    echo "\n\t\t\t Manage Linkedin => ".json_encode($result);
+    
+    if($result && isset($result['id'])){
+      $this->updatePostHistories($postHistory, 'https://www.linkedin.com/embed/feed/update/'.$result['id']);
+      echo "\n\t\t Posted on linkedin => ".$result['id'];
+    }else{
+      echo "\n\t\t Unable to post on facebook";
+    }
   }
 
   public function manageGoogle($postHistory){
