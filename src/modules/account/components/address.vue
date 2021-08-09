@@ -9,30 +9,30 @@
         <div class="row">
           <div class="col-sm-12">
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-6 mb-3">
                 <p>Route</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your route here'"
-                  :class="!isValidAddress && !route ? 'mb-0 ' : ' SettingsField'" :styles="{
+                  :class="!isValidAddress && route == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
                             border: !isValidAddress && !route ? '1px solid red !important' : 'none',
                           }" v-model="route" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="route == ''  && !isValidAddress">
+                    v-if="route == '' || route == undefined  && !isValidAddress">
                     {{
                     'Required Field'
                     }}</p>
                 </div>
               </div>
 
-              <div class="col-md-6">
+              <div class="col-md-6 mb-3">
                 <p>City</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your city here'"
-                  :class="!isValidAddress && !city ? 'mb-0 ' : ' SettingsField'" :styles="{
+                  :class="!isValidAddress && city == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
                           border: !isValidAddress && !city ? '1px solid red !important' : 'none',
                         }" v-model="city" class="input-style" />
                   <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="city == ''  && !isValidAddress">
+                    v-if="city == '' || city == undefined && !isValidAddress">
                     {{
                     'Required Field'
                     }}</p>
@@ -40,29 +40,29 @@
               </div>
             </div>
             <div class="row">
-              <div class=" col-md-6">
+              <div class=" col-md-6 mb-3">
                 <p>Region</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your region here'"
-                  :class="!isValidAddress && !region ? 'mb-0 ' : ' SettingsField'" :styles="{
+                  :class="!isValidAddress && region == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
                             border: !isValidAddress && !region ? '1px solid red !important' : 'none',
                           }" v-model="region" class="input-style" />
                   <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="region == ''  && !isValidAddress">
+                    v-if="region == '' || region == undefined  && !isValidAddress">
                     {{
                     'Required Field'
                     }}</p>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 mb-3">
                 <p>Country</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your country here'"
-                  :class="!isValidAddress && !country ? 'mb-0 ' : ' SettingsField'" :styles="{
+                  :class="!isValidAddress && country == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
                           border: !isValidAddress && !country ? '1px solid red !important' : 'none',
                         }" v-model="country" class="input-style" />
                   <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="country == ''  && !isValidAddress">
+                    v-if="country == '' || country == undefined && !isValidAddress">
                     {{
                     'Required Field'
                     }}</p>
@@ -70,16 +70,16 @@
               </div>
 
             </div>
-            <div class="row">
-              <div class="col-md-6">
+            <div class="row mb-5">
+              <div class="col-md-6 mb-3">
                 <p>Postal/Zip Code</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your postal/zip code here'"
-                  :class="!isValidAddress && !postalZipCode ? 'mb-0 ' : ' SettingsField'" :styles="{
+                  :class="!isValidAddress && postalZipCode == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
                             border: !isValidAddress && !postalZipCode ? '1px solid red !important' : 'none',
                           }" v-model="postalZipCode" class="input-style" />
                   <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="postalZipCode == ''  && !isValidAddress">
+                    v-if="postalZipCode == '' || postalZipCode == undefined && !isValidAddress">
                     {{
                     'Required Field'
                     }}</p>
@@ -187,9 +187,10 @@ export default {
       })
     },
     update_account(event){
-      console.log('...updating', this.canUpdateAddress, 'validated: ', !this.validate())
+      console.log('...updating', this.canUpdateAddress, 'validated: ', this.validate())
       if(!this.validate()) {
-        return
+        console.log('Validation Failed')
+        // return
       }
       if(this.canUpdateAddress) {
         let parameter = {
@@ -240,8 +241,9 @@ export default {
         this.canUpdateAddress = false
         this.isValidAddress = false
       }
-      console.log('update profile ', this.canUpdateAddress)
-      if(!this.canUpdateAddress) {
+      console.log('Can update profile ', this.canUpdateAddress, 'Is valid address', this.isValidAddress)
+      console.log('Route', this.route)
+      if(!this.isValidAddress) {
         return false
       }else {
         return true
@@ -272,7 +274,7 @@ export default {
   width: 200px;
 }
 .SettingsField {
-  margin-bottom: 35px;
+  // margin-bottom: 35px;
 }
 .holder{
   width: 96%;
@@ -347,7 +349,8 @@ h3{
   color: $danger;
   font-size: 10px;
   margin-left: 20px;
-  margin-bottom: 25px !important;
+  // margin-bottom: 25px !important;
+  margin-bottom: -35px;
 }
 /*
 @media (max-width: 768px){
