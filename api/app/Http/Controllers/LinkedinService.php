@@ -56,7 +56,6 @@ class LinkedinService extends Controller
         return $result;
     }
     public function shareMedia($token, $owner) {
-        echo "\n\t\t\t file media... ".$owner;
         $body = '{
             "registerUploadRequest":{
                "owner":"'.$owner.'",
@@ -85,7 +84,6 @@ class LinkedinService extends Controller
     }
 
     public function postWithMedia($token, $author, $message, $media, $media_type) {
-        return $author;
         $body = '{
             "author": "'.$author.'",
             "lifecycleState": "PUBLISHED",
