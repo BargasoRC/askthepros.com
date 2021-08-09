@@ -127,17 +127,19 @@ class Channel implements ShouldQueue
   public function manageLinkedIn($postHistory){
     $media = '';
     $result = null;
+    // $media = env('BACKEND_URL').'/storage/image/2_2021-08-03_02_00_17_robot.png';
     if($postHistory['url']) {
       $url = $postHistory['url'];
       $media = json_decode($url)[0];
     }
-    $postHistory['url'] = null;
+    // $postHistory['url'] = null;
     if($postHistory['url']) {
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinRegisterUpload($postHistory['account_id'], $postHistory['description'], substr($media, 15));
     }else {
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinPost($postHistory['account_id'], $postHistory['description']);
     }
-    
+   
+    // print_r($result); 
     if($result && isset($result['id'])){
       $this->updatePostHistories($postHistory, 'https://www.linkedin.com/embed/feed/update/'.$result['id']);
       echo "\n\t\t Posted on linkedin => ".$result['id'];
