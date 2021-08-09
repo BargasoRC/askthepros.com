@@ -184,7 +184,7 @@ export default {
   margin-left: 2%;
   margin-right: 2%;
   float: left;
-  min-height: 70vh;
+  min-height: 80vh;
 }
 .button{
   border-bottom-right-radius: 0px !important;
