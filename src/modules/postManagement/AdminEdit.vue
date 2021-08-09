@@ -74,10 +74,10 @@
             v-if="!isClearing"
             ref="searchField"
           />
-          <!-- <p
+          <p
             class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
-            v-if="!this.isValid && selectedIndustry.length === 0"
-          >Required Field{{selectedIndustry.length}}</p> -->
+            v-if="!this.isValid &&selectedIndustry.length === 0"
+          >Required Field</p>
         </div>
 
         <div class="form-group" style="margin-top: 3%">
@@ -195,7 +195,8 @@ export default {
       selectedItem: null,
       render: false,
       addImage: [],
-      isAdd: false
+      isAdd: false,
+      isEmpty: true
     }
   },
   components: {
@@ -364,6 +365,7 @@ export default {
     },
     onSelect(data) {
       this.selectedIndustry = data
+      this.isEmpty = false
     },
     save(status) {
       this.$refs.searchField.returnCategory()
