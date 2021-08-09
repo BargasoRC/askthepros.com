@@ -70,6 +70,7 @@ import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 export default {
   mounted(){
     this.retrieveReview(this.$route.params.parameter)
+    this.retrieveBranding()
   },
   data() {
     return {
@@ -204,6 +205,18 @@ export default {
     },
     preview(){
       this.$refs.previewSelected.show()
+    },
+    retrieveBranding(){
+      let parameter = {
+        account_id: this.user.userID
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('brandings/retrieve_by_accountId', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.details != null) {
+          this.branding = Object.values(JSON.parse(response.details))
+        }
+      })
     },
     retrieveReview(code){
       let parameter = {

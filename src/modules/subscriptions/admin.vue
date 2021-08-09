@@ -30,7 +30,7 @@
           <th v-for="(item, index) in tableHeaders" :key="index">{{item.title}}</th>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in data">
+          <tr v-for="(item, index) in data" :key="index">
             <td>{{item.account.username}}</td>
             <td>{{item.account.email}}</td>
             <td>{{renderPlan(item.plan)}}</td>
@@ -44,15 +44,23 @@
     </div>
 
     <empty v-if="data.length <= 0" :title="'No billings available!'" :action="'Keep growing.'"></empty>
+
+    <Pager
+      :pages="numPages"
+      :active="activePage"
+      :limit="limit"
+      v-if="data.length > 0"
+    />
   </div>
 </template>
 
 <script>
 import DataTable from 'src/modules/generic/table'
 import Search from 'src/components/increment/generic/filter/Basic'
+import Pager from 'src/components/increment/generic/pager/Pager.vue'
 export default {
   mounted(){
-    this.retrieve()
+    this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
   },
   data() {
     return {
@@ -140,13 +148,20 @@ export default {
           payload_value: 'desc',
           type: 'text'
         }]
-      }]
+      }],
+      limit: 5,
+      offset: 0,
+      numPages: null,
+      filter: null,
+      sort: null,
+      activePage: 1
     }
   },
   components: {
     DataTable,
     Search,
-    'empty': require('components/increment/generic/empty/Empty.vue')
+    'empty': require('components/increment/generic/empty/Empty.vue'),
+    Pager
   },
   methods: {
     renderPlan(plan){
@@ -159,21 +174,38 @@ export default {
     onTableAction(data) {
       console.log('Table Action: ', data)
     },
-    retrieve(){
+    retrieve(sort, filter){
+      if(sort !== null){
+        this.sort = sort
+      }
+      if(filter !== null){
+        this.filter = filter
+      }
+      if(sort === null && this.sort !== null){
+        sort = this.sort
+      }
+      if(filter === null && this.filter !== null){
+        filter = this.filter
+      }
       let parameter = {
-        sort: {
-          start_date: 'desc'
-        },
-        offset: 0,
-        limit: 50
+        condition: [{
+          value: filter.value + '%',
+          column: filter.column,
+          clause: 'like'
+        }],
+        sort: sort,
+        limit: this.limit,
+        offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('billings/retrieve_on_history', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.length > 0) {
           this.data = response.data
+          this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
         }else{
           this.data = []
+          this.numPages = null
         }
       })
     }
