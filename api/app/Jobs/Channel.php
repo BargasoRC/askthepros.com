@@ -118,7 +118,7 @@ class Channel implements ShouldQueue
     }else {
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinPost($postHistory['account_id'], $postHistory['description']);
     }
-    // echo "\n\t\t\t Manage Linkedin => ".json_encode($result);
+    echo "\n\t\t\t Manage Linkedin => ".json_encode($result);
   }
 
   public function manageGoogle($postHistory){

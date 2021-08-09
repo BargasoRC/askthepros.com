@@ -151,7 +151,6 @@ class SocialMediaController extends APIController
 
         
         $registerResult = (array)json_decode(json_encode($result))->value->uploadMechanism;
-        return $registerResult;
 
         $upload = new LinkedinService(((object)$registerResult['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'])->uploadUrl);
         $uploaded = $upload->uploadImage($details['token'], $path);

@@ -370,7 +370,7 @@ export default {
   },
   updateData(){
     // console.log('dashboard')
-    ROUTER.push(`/dashboard`)
+    // ROUTER.push(`/dashboard`)
   },
   setGoogleCode(code, scope){
     localStorage.setItem('google_code', code)
