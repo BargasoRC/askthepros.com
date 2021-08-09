@@ -10,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 
 use App\PostHistory;
 use App\Post;
-
+use Carbon\Carbon;
 class Channel implements ShouldQueue
 {
   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -20,6 +20,9 @@ class Channel implements ShouldQueue
    *
    * @return void
    */
+
+  public $facebookController = 'App\Http\Controllers\FacebookService';
+  public $pageController = 'App\Http\Controllers\PageController';
   public function __construct()
   {
       //
@@ -61,6 +64,13 @@ class Channel implements ShouldQueue
   public function manageFacebook($postHistory){
     $media = '';
     $result = null;
+    $page = app($this->pageController)->getActiveByParams($postHistory['account_id'], 'facebook');
+
+    if($page == null){
+        return false;
+    }
+
+    $token = $page['details']['access_token'];
     if(isset($postHistory['url'])) {
       if(json_decode($postHistory['url'])) {
         $url = $postHistory['url'];
@@ -68,11 +78,31 @@ class Channel implements ShouldQueue
         $media = env('BACKEND_URL', ''). $media[0];
       }
     }
-    if($postHistory['url']) {
-      $result = app('App\Http\Controllers\SocialMediaController')->facebookPostWithMedia($postHistory['description'], $media, $postHistory['account_id']);
-    }else {
-      $result = app('App\Http\Controllers\SocialMediaController')->facebookPostTextOnly($postHistory['description'], $postHistory['account_id']);
-    }
+
+    $url = $page['page'].'/feed';
+    $params = array(
+      "message" => $postHistory['description'],
+      "access_token" => $token
+    );
+
+    // if($postHistory['url']){
+    //   $urls = json_decode($postHistory['url'], true);
+    //   echo print_r($urls);
+    // }else{
+
+    // }
+
+    app($this->facebookController)->publishContent($url, $params, $token);
+
+    // if($postHistory['url']) {
+    //   $result = app('App\Http\Controllers\SocialMediaController')->facebookPostTextOnly($postHistory['description'], $postHistory['account_id']);
+    //   $result = app('App\Http\Controllers\SocialMediaController')->facebookPostWithMedia($postHistory['description'], $media, $postHistory['account_id']);
+    //   print_r($result);
+    //   $this->updatePostHistories($postHistory);
+    // }else {
+    //   $result = app('App\Http\Controllers\SocialMediaController')->facebookPostTextOnly($postHistory['description'], $postHistory['account_id']);
+    //   $this->updatePostHistories($postHistory);
+    // }
     echo "\n\t\t\t Manage facebook => ".json_encode($result);
   }
 
@@ -105,5 +135,12 @@ class Channel implements ShouldQueue
       $result = app('App\Http\Controllers\SocialMediaController')->googleBusinessPostWithMedia($postHistory['account_id'], $postHistory['description'], $media);
     }
     echo "\n\t\t\t Manage GOOGLE => ".json_encode($result);
+  }
+
+  public function updatePostHistories($postHistory){
+    PostHistory::where('id', '=', $postHistory['id'])->update(array(
+      'status' => 'posted',
+      'updated_at' => Carbon::now()
+    ));
   }
 }
