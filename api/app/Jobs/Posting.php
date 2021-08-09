@@ -61,7 +61,7 @@ class Posting implements ShouldQueue
           ->where('T1.payload_value', 'like', '%'.$plan['plan'].'%')
           ->get(['T2.*']);
           $posts = json_decode($posts, true);
-
+          // echo  "\n\t" . $posts;
           if($posts && sizeof($posts) > 0){
             foreach ($posts as $pKey => $post) {
               $this->manageChannels($post, $plan);
@@ -112,7 +112,7 @@ class Posting implements ShouldQueue
     if($postSetting && sizeof($postSetting) > 0){
       $page = Page::where(array(
         array('account_id', '=', $plan['account_id']),
-        array('type', '=', $channel)
+        array('type', '=', $channel === 'GOOGLE_MY_BUSINESS' ? 'google' : $channel)
       ))->orderBy('created_at', 'desc')
       ->limit(1)
       ->get();

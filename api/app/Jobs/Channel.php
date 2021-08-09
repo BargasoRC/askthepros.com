@@ -48,8 +48,9 @@ class Channel implements ShouldQueue
           case 'linkedin':
             $this->manageLinkedIn($postHistory);
             break;
-          case 'google':
+          case 'google_my_business':
             $this->manageGoogle($postHistory);
+            break;
         }
       }
     }else{
@@ -58,29 +59,51 @@ class Channel implements ShouldQueue
   }
 
   public function manageFacebook($postHistory){
-    // echo "\n\t\t\t Manage Facebook => ".$postHistory['post_id'];
+    $media = '';
+    $result = null;
+    if(isset($postHistory['url'])) {
+      if(json_decode($postHistory['url'])) {
+        $url = $postHistory['url'];
+        $media = json_decode($url);
+        $media = env('BACKEND_URL', ''). $media[0];
+      }
+    }
+    if($postHistory['url']) {
+      $result = app('App\Http\Controllers\SocialMediaController')->facebookPostWithMedia($postHistory['description'], $media, $postHistory['account_id']);
+    }else {
+      $result = app('App\Http\Controllers\SocialMediaController')->facebookPostTextOnly($postHistory['description'], $postHistory['account_id']);
+    }
+    echo "\n\t\t\t Manage facebook => ".json_encode($result);
   }
 
   public function manageLinkedIn($postHistory){
-    // echo "\n\t\t\t Manage Linkedin => ".$postHistory;
     $media = '';
     $result = null;
     if($postHistory['url']) {
       $url = $postHistory['url'];
       $media = json_decode($url)[0];
     }
-    echo "\n\t\t\t media... ".$postHistory['post_id'];
     if($postHistory['url']) {
-      echo "\n\t\t\t with media... ";
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinRegisterUpload($postHistory['account_id'], $postHistory['description'], substr($media, 15));
-    }else {      
-      echo "\n\t\t\t without media... ";
+    }else {
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinPost($postHistory['account_id'], $postHistory['description']);
     }
-    echo "\n\t\t\t Manage Linkedin => ".json_encode($result);
+    // echo "\n\t\t\t Manage Linkedin => ".json_encode($result);
   }
 
-  public function manageGoogle(){
-
+  public function manageGoogle($postHistory){
+    $media = [];
+    $result = null;
+    if(isset($postHistory['url'])) {
+      if(json_decode($postHistory['url'])) {
+        $url = $postHistory['url'];
+        $media = json_decode($url);
+        $media = env('BACKEND_URL', ''). $media[0];
+      }
+    }
+    if($postHistory['url']) {
+      $result = app('App\Http\Controllers\SocialMediaController')->googleBusinessPostWithMedia($postHistory['account_id'], $postHistory['description'], $media);
+    }
+    echo "\n\t\t\t Manage GOOGLE => ".json_encode($result);
   }
 }

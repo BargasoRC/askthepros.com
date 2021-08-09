@@ -9,7 +9,7 @@ class FacebookService extends APIController
   protected $url = '';
   protected $headers = [];
 
-  public function __construct($url = '', $headers){
+  public function __construct($url = '', $headers = []){
     $this->url = $url;
     $this->headers = $headers;
   }
@@ -45,10 +45,10 @@ class FacebookService extends APIController
 
   public function postWithSingleMedia($caption, $access_token, $image) {
     $body = '{
-        "caption": "'.$caption.'",
-        "access_token": "'.$access_token.'",
-        "published": true,
-        "url": "'.$image.'"
+      "url": "'.$image.'",
+      "published": true,
+      "caption": "'.$caption.'",
+      "access_token": "'.$access_token.'"
     }';
     $curl = new CurlController($this->headers);
     $result = $curl->postRequest($this->url, $body);

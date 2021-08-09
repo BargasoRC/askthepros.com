@@ -118,11 +118,17 @@ class SocialController extends APIController
         $social_auth->save();
       }
 
-      $user_account = Account::where('id', $acc->id)->get();
+      $userAccount = Account::where('id', $acc->id)->get();
+
+       if($userAccount && sizeof($userAccount) > 0){
+        $userAccount = $userAccount[0];
+        $userAccount['merchant'] = app('Increment\Imarket\Merchant\Http\MerchantController')->getByParams('account_id', $userAccount['id']);
+        $userAccount['plan'] = app('App\Http\Controllers\PlanController')->getByParams('account_id', $userAccount['id']);
+      }
 
       return response()->json([
-        'token' => $user_account[0]->token,
-        'user' => $user_account,
+        'token' => $user->token,
+        'user' => $userAccount,
         'expires' => $user->expiresIn,
         'avatar' => $user->getAvatar(),
         'name' => $user->getName(),
@@ -198,6 +204,8 @@ class SocialController extends APIController
                 $response['information'] = app('Increment\Account\Http\AccountProfileController')->getProfileUrlByAccountId($result[0]['id']);
                 $response['merchant'] = app('Increment\Imarket\Merchant\Http\MerchantController')->getByParams('account_id', $result[0]['id']);
                 $response['profile'] = app('Increment\Account\Http\AccountProfileController')->getProfileUrlByAccountId($result[0]['id']);
+                $response['plan'] = app('App\Http\Controllers\PlanController')->getByParams('account_id', $result[0]['id']);
+
             } else {
                 return response()->json(['user_not_found'], 404);
             }

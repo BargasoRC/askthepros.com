@@ -68,15 +68,16 @@
               overflow: 'hidden',
               width: 'calc(100% - 30px)'
             }"
+            :class="!this.isValid && selectedIndustry.length === 0 ? 'multiselect__tags1' : 'none'"
             :selectedIndex="selectedIndex"
             @onSelect="onSelect"
             v-if="!isClearing"
             ref="searchField"
           />
-          <p
+          <!-- <p
             class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
             v-if="!this.isValid && selectedIndustry.length === 0"
-          >Required Field</p>
+          >Required Field{{selectedIndustry.length}}</p> -->
         </div>
 
         <div class="form-group" style="margin-top: 3%">
@@ -430,10 +431,8 @@ export default {
     },
     form(data){
       this.file = data
-      console.log('forms: ', data)
     },
     charCount(){
-      console.log('charcounting..', this.description)
       this.character = this.description.length
     }
   }
@@ -535,5 +534,9 @@ textarea{
 }
 .preview{
   color: $primary
+}
+.multiselect__tags1 {
+  border-radius: 5px;
+  border: 1px solid red!important;;
 }
 </style>

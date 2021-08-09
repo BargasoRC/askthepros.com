@@ -435,7 +435,39 @@ export default {
       menuFlag: true
     }
   },
+  watch: {
+    '$route' (to, from) {
+      let index = null
+      for(var i = 0; i < COMMON.sidebarMenu.length && !index; i++) {
+        let item = COMMON.sidebarMenu[i]
+        if(to.path === '/' + item.path) {
+          index = i
+        }
+      }
+      if(index !== null){
+        this.setActiveOnWatch(index, to.path)
+      }else{
+        if(this.prevMenu !== null){
+          this.menu[this.prevMenu].flag = false
+        }
+      }
+    }
+  },
   methods: {
+    setActiveOnWatch(index, path){
+      if(this.prevMenu !== index){
+        this.menu[this.prevMenu].flag = false
+        this.menu[index].flag = true
+        if(this.menu[this.prevMenu].subMenu !== null){
+          this.menu[this.prevMenu].subMenu[this.subPrevMenu].flag = false
+        }
+        this.prevMenu = index
+      }
+      if(this.menu[index].subMenu === null){
+        ROUTER.push(path)
+        $('.navbar-collapse').collapse('hide')
+      }
+    },
     setActive(index){
       if(this.prevMenu !== index){
         this.menu[this.prevMenu].flag = false

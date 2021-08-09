@@ -16,6 +16,7 @@ export default {
     status: null,
     profile: null,
     information: null,
+    plan: null,
     amount: null,
     subAccount: null,
     code: null,
@@ -28,10 +29,6 @@ export default {
     messages: {
       data: null,
       totalUnreadMessages: 0
-    },
-    ledger: {
-      amount: 0,
-      currency: 'PHP'
     },
     merchant: null
   },
@@ -69,6 +66,7 @@ export default {
   attachmentValue: null,
   setUser(user, notifSetting, subAccount){
     $('#loading').css({display: 'none'})
+    console.log('user', user)
     let vue = new Vue()
     if(user === null){
       this.user.userID = 0
@@ -81,6 +79,7 @@ export default {
       this.user.subAccount = null
       this.user.code = null
       this.user.merchant = null
+      this.user.plan = null
     }else{
       this.user.userID = user.id
       this.user.username = user.username
@@ -91,6 +90,7 @@ export default {
       this.user.information = user.information
       this.user.subAccount = null
       this.user.code = user.code
+      this.user.plan = user.plan
       let merchant = null
       if(user.merchant){
         merchant = {
@@ -169,6 +169,7 @@ export default {
       vue.APIRequest(verifyUrl, parameters, (userInfo) => {
         this.setUser(userInfo, null, null)
       }, (response) => {
+        localStorage.clear()
         this.setToken(null)
         this.tokenData.verifyingToken = false
         this.tokenData.loading = false

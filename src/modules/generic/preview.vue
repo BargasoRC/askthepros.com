@@ -23,7 +23,7 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-12 p-0 mt-5 mb-4" v-if="(returnDescription !== '' && returnDescription) && files && (files ? files.length : 0) > 0">
+        <div class="col-sm-12 p-0 mt-5 mb-4" v-if="(returnDescription !== '' && returnDescription) || files && (files ? files.length : 0) > 0">
           <p class="mb-0 p-0">
             {{returnDescription}}
           </p>
@@ -148,71 +148,94 @@ export default {
       }
     },
     returnDescription() {
-      return this.selected ? this.selected.description : null
+      if(this.selected != null){
+        return this.selected ? this.selected.description : null
+      }
     },
     returnFiles() {
-      console.log('[files]', this.files, this.verdict, this.isAddd)
-      if((this.verdict === 'true' && this.isAddd === false) || (this.verdict === true && this.isAddd === 'false')){
-        this.files = Object.values(this.files).map(el => {
-          let temp = {}
-          temp['url'] = el.url
-          return temp
-        })
-        return (this.files ? this.files.filter((el, index) => {
-          return index <= 3
-        }) : [])
-      }
-      if(!this.isAddd && this.verdict === 'false'){
-        this.files = Object.values(this.files).map(el => {
-          let temp = {}
-          temp['url'] = el.url
-          return temp
-        })
-        return (this.files ? this.files.filter((el, index) => {
-          return index <= 3
-        }) : [])
-      }
-      if(this.verdict === 'false' && this.isAddd === true){
-        this.files = Object.values(this.files).map(el => {
-          let temp = {}
-          temp['url'] = el.url
-          return temp
-        })
-        return (this.files ? this.files.filter((el, index) => {
-          return index <= 3
-        }) : [])
-      }
-      if((this.verdict === 'true' && this.isAddd === true)){
-        this.files = Object.values(this.files).map(el => {
-          let temp = {}
-          temp['url'] = this.config.BACKEND_URL + el
-          return temp
-        })
-        return (this.files ? this.files.filter((el, index) => {
-          return index <= 3
-        }) : [])
-      }
-      if((this.verdict === 'undefined' && this.isAddd === 'undefined') || (this.verdict === undefined && this.isAddd === undefined)){
-        this.files = Object.values(this.files).map(el => {
-          let temp = {}
-          temp['url'] = el.url
-          return temp
-        })
-        return (this.files ? this.files.filter((el, index) => {
-          return index <= 3
-        }) : [])
-      }
-      if(this.verdict === undefined && this.isAddd === false){
-        this.files = JSON.parse(this.files).map(el => {
-          let temp = {}
-          temp['url'] = this.config.BACKEND_URL + el
-          return temp
-        })
-        return (this.files ? this.files.filter((el, index) => {
-          return index <= 3
-        }) : [])
-      }
-      if(this.files === null){
+      if(this.files != null){
+        if((this.verdict === 'true' && this.isAddd === false) || (this.verdict === true && this.isAddd === 'false')){
+          this.files = Object.values(this.files).map(el => {
+            let temp = {}
+            temp['url'] = el.url
+            return temp
+          })
+          return (this.files ? this.files.filter((el, index) => {
+            return index <= 3
+          }) : [])
+        }
+        if(!this.isAddd && this.verdict === 'false'){
+          this.files = Object.values(this.files).map(el => {
+            let temp = {}
+            temp['url'] = el.url
+            return temp
+          })
+          return (this.files ? this.files.filter((el, index) => {
+            return index <= 3
+          }) : [])
+        }
+        if(this.verdict === 'false' && this.isAddd === true){
+          this.files = Object.values(this.files).map(el => {
+            let temp = {}
+            temp['url'] = el.url
+            return temp
+          })
+          return (this.files ? this.files.filter((el, index) => {
+            return index <= 3
+          }) : [])
+        }
+        if((this.verdict === 'true' && this.isAddd === true)){
+          this.files = Object.values(this.files).map(el => {
+            let temp = {}
+            temp['url'] = this.config.BACKEND_URL + el
+            return temp
+          })
+          return (this.files ? this.files.filter((el, index) => {
+            return index <= 3
+          }) : [])
+        }
+        if((this.verdict === 'undefined' && this.isAddd === 'undefined') || (this.verdict === undefined && this.isAddd === undefined)){
+          this.files = Object.values(this.files).map(el => {
+            let temp = {}
+            temp['url'] = el.url
+            return temp
+          })
+          return (this.files ? this.files.filter((el, index) => {
+            return index <= 3
+          }) : [])
+        }
+        if(this.verdict === undefined && this.isAddd === false){
+          if(this.files[0].url){
+            this.files = this.files.map(el => {
+              let temp = {}
+              temp['url'] = el.url
+              return temp
+            })
+            return (this.files ? this.files.filter((el, index) => {
+              return index <= 3
+            }) : [])
+          }else{
+            this.files = this.files.map(el => {
+              let temp = {}
+              temp['url'] = this.config.BACKEND_URL + el
+              return temp
+            })
+            return (this.files ? this.files.filter((el, index) => {
+              return index <= 3
+            }) : [])
+          }
+        }
+        if(this.verdict === undefined && this.isAddd === true){
+          this.files = this.files.map(el => {
+            let temp = {}
+            temp['url'] = this.config.BACKEND_URL + el
+            return temp
+          })
+          return (this.files ? this.files.filter((el, index) => {
+            return index <= 3
+          }) : [])
+        }
+      }else{
         return null
       }
     }

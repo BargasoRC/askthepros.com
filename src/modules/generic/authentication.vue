@@ -43,8 +43,8 @@ export default {
           localStorage.removeItem('login_with')
           localStorage.setItem('usertoken', response.token)
           AUTH.hash('hide', response.login_type)
-          console.log('USER @ Index: ', response.user[0])
-          AUTH.setUser(response.user[0])
+          // console.log('USER @ Index: ', response.user)
+          AUTH.setUser(response.user)
           AUTH.checkAuthentication()
           ROUTER.push(`/dashboard`)
         }, error => {

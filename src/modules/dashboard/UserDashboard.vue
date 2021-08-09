@@ -188,7 +188,10 @@ import COLORS from 'src/assets/style/colors.js'
 import ROUTER from 'src/router'
 export default {
   mounted(){
-    this.retrieveCards()
+    setTimeout(() => {
+      this.retrieveHistoryPosts({created_at: 'desc'}, {column: 'created_at', value: ''})
+      this.retrieveCards()
+    }, 1000)
   },
   data() {
     return {
@@ -228,9 +231,6 @@ export default {
     dialogueBtn,
     roundedBtn,
     'empty': require('components/increment/generic/empty/Empty.vue')
-  },
-  created() {
-    this.retrieveHistoryPosts({created_at: 'desc'}, {column: 'created_at', value: ''})
   },
   methods: {
     displayArray(channels){

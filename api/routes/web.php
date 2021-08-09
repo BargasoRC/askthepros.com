@@ -201,6 +201,8 @@ $route = env('PACKAGE_ROUTE', '').'/social/';
 $controller = 'SocialMediaController@';
 Route::post($route.'retrieve_fb_pages', $controller.'retrieveFacebookPages');
 Route::post($route.'retrieve_linkedin_pages', $controller.'retrieveLinkedinPages');
+Route::post($route.'retrive_businesses', $controller.'retrieveBusinesses');
+Route::post($route.'retrieve_locations/{id}/{message}/{images}', $controller.'googleBusinessPostWithMedia');
 
 $route = env('PACKAGE_ROUTE', '').'/industry/';
 $controller = 'IndustryController@';

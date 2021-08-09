@@ -59,7 +59,6 @@ import preview from 'src/modules/generic/preview.vue'
 export default {
   props: ['selected', 'files', 'isAddd'],
   mounted(){
-    console.log('[is]', this.isAddd)
   },
   data(){
     return {

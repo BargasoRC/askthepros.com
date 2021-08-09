@@ -164,11 +164,9 @@ export default {
         category: this.user.merchant.addition_informations['industry'],
         offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
-      console.log('[status]', parameter)
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve_history', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('RESPONSEsdfd: ', response)
         if(!response.error) {
           this.tableData = response.data
           this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
