@@ -64,7 +64,7 @@ class CurlController extends Controller
     curl_setopt($this->ch, CURLOPT_URL, $url);
     curl_setopt($this->ch, CURLOPT_POST, 1);
     if($body){
-      curl_setopt($this->ch, CURLOPT_POSTFIELDS, http_build_query($body));
+      curl_setopt($this->ch, CURLOPT_POSTFIELDS, $body);
     }
 
     $result = curl_exec($this->ch);

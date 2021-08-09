@@ -11,6 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use App\PostHistory;
 use App\Post;
 use Carbon\Carbon;
+use App\Facebook;
 class Channel implements ShouldQueue
 {
   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -49,10 +50,10 @@ class Channel implements ShouldQueue
             $this->manageFacebook($postHistory);
             break;
           case 'linkedin':
-            $this->manageLinkedIn($postHistory);
+            // $this->manageLinkedIn($postHistory);
             break;
           case 'google_my_business':
-            $this->manageGoogle($postHistory);
+            // $this->manageGoogle($postHistory);
             break;
         }
       }
@@ -65,6 +66,7 @@ class Channel implements ShouldQueue
     $media = '';
     $result = null;
     $page = app($this->pageController)->getActiveByParams($postHistory['account_id'], 'facebook');
+    echo "\n\t\t\t pageController => ".$postHistory['account_id'];
 
     if($page == null){
         return false;
@@ -79,10 +81,11 @@ class Channel implements ShouldQueue
       }
     }
 
-    $url = $page['page'].'/feed';
+    $url = $page['page'].'/photos';
     $params = array(
       "message" => $postHistory['description'],
-      "access_token" => $token
+      "access_token" => $token,
+      "url" => "https://documents.trendmicro.com/images/WORM_MEYLME_B-spam.jpg"
     );
 
     // if($postHistory['url']){
@@ -92,7 +95,9 @@ class Channel implements ShouldQueue
 
     // }
 
-    app($this->facebookController)->publishContent($url, $params, $token);
+    $facebook = new Facebook($token);
+    $facebook->publishContentWithPhoto($page['page'], $params);
+    // app($this->facebookController)->publishContent($url, $params, $token);
 
     // if($postHistory['url']) {
     //   $result = app('App\Http\Controllers\SocialMediaController')->facebookPostTextOnly($postHistory['description'], $postHistory['account_id']);
