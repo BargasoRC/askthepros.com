@@ -12,6 +12,8 @@ class SocialMediaController extends APIController
     /**
      * A controller to post on LINKEDIN
     */
+
+    public $pageController = 'App\Http\Controllers\PageController';
  
     public function post(Request $request) {
         /**
@@ -102,14 +104,14 @@ class SocialMediaController extends APIController
                 ])
                 ->get();
         $details = json_decode($account[0]['details'], true);
-        $service = new LinkedinService($this->linkedInHostApi.'ugcPosts');
+        $service = new LinkedinService($this->linkedInHostApi.'shares');
         $result = $service->textOnly($details['token'], $message, $account[0]['page']); // Text to post on linkedin is static for now.
         return $result;
     }
 
     public function linkedinPostWithMedia($token, $owner, $message, $media, $media_type) {
         $service = new LinkedinService($this->linkedInHostApi.'ugcPosts');
-        $result = $service->postWithMedia($token, $owner, $message, $media, $media_type);
+        $result = $service->contentWithMedia($token, $owner, $message, $media, $media_type);
         return $result;
     }
 
@@ -149,7 +151,6 @@ class SocialMediaController extends APIController
 
         
         $registerResult = (array)json_decode(json_encode($result))->value->uploadMechanism;
-        return $registerResult;
 
         $upload = new LinkedinService(((object)$registerResult['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'])->uploadUrl);
         $uploaded = $upload->uploadImage($details['token'], $path);
@@ -164,10 +165,15 @@ class SocialMediaController extends APIController
         $_status = [];
         $_status['status'] = $status;
 
-        $post = $this->linkedinPostWithMedia($details['token'], $account[0]['page'], $message, $media_uri, 'IMAGE');
+        $post = null;
+        if($status && $status['status'] == 'ALLOWED'){
+            $post = $this->linkedinPostWithMedia($details['token'], $account[0]['page'], $message, $media_uri, 'IMAGE');
          // Text to post on linkedin is static for now.
+        }
 
-        return (object) array_merge($registration, $_upload, $_status, $post);
+        return $post;
+
+        // return (object) array_merge($registration, $_upload, $_status, $post);
     }
 
   public function retrieveFacebookPages(Request $request) {
@@ -250,14 +256,27 @@ class SocialMediaController extends APIController
 
   public function facebookPostWithMedia($caption, $image, $id) {
     //$caption, $access_token, $image
-    $account = $this->retrieveToken('facebook', $id);
-    $page_token = json_decode($account[0]['page_details'])->access_token;
-    $service = new FacebookService();
-    $details = json_decode($account[0]['details'], true);
-    $url = 'https://graph.facebook.com/me/photos';
-    $service = new FacebookService($url);
-    $result = $service->postWithSingleMedia($caption, $page_token, $image);
-    return $result;
+    $page = app($this->pageController)->getActiveByParams($id, 'facebook');
+    if($page == null){
+        return false;
+    }
+
+    // $account = $this->retrieveToken('facebook', $id);
+    // $page_token = json_decode($account[0]['page_details'])->access_token;
+    // echo $page_token;
+    // $details = json_decode($page['details'], true);
+    
+    $url = 'https://graph.facebook.com/'.$page['page'].'/feed';
+    echo "\n".$url;
+    $headers = [];
+    $headers[] = 'Authorization: Bearer ' . $page['details']['access_token'];
+    $service = new FacebookService($url, $headers);
+    $result = $service->postWithSingleMedia($caption, $page['details']['access_token'], $image);
+    echo print_r($result);
+    if($result){
+        return true;
+    }
+    return false;
   }
 
   public function retrieveToken($provider, $id) {

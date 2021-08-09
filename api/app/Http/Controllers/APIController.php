@@ -32,6 +32,7 @@ class APIController extends Controller
   public $ratingClass = 'Increment\Common\Rating\Http\RatingController';
   
   public $facebookHostApi = 'https://graph.facebook.com/v11.0/';
+  public $facebookHost = 'https://graph.facebook.com/';
   public $linkedInHostApi = 'https://api.linkedin.com/v2/';
   public $googleMyBusinessHostApi = 'https://mybusiness.googleapis.com/v4/';
 

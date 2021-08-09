@@ -33,12 +33,31 @@ class FacebookService extends APIController
     return $result;
   }
 
+
+  public function publishContent($url, $params, $token){
+    // $body = '{
+    //   "url": "'.$image.'",
+    //   "published": true,
+    //   "caption": "'.$caption.'",
+    //   "access_token": "'.$access_token.'"
+    // }';
+    // echo "\n".$body;
+    $url = $this->facebookHost.$url;
+    echo "\n".$url;
+    $headers = [];
+    // $headers[] = 'Authorization: Bearer ' . $token;
+    $curl = new CurlController($headers);
+    $result = $curl->postRequestDirect($this->url, $params);
+    print_r($result);
+    return $result;
+  }
+
   public function textOnly($page_id, $access_token, $message) {
     $this->url = 'https://graph.facebook.com/'.$page_id.'/feed?message='.$message.
     '&publish=true&access_token='.$access_token;
 
     $curl = new CurlController($this->headers);
-    $result = $curl->postRequest($this->url, '{}');
+    $result = $curl->postRequest($this->url, null);
     return $result;
   }
 
@@ -50,6 +69,7 @@ class FacebookService extends APIController
       "caption": "'.$caption.'",
       "access_token": "'.$access_token.'"
     }';
+    echo "\n".$body;
     $curl = new CurlController($this->headers);
     $result = $curl->postRequest($this->url, $body);
     return $result;

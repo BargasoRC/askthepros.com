@@ -55,6 +55,25 @@ class CurlController extends Controller
     return json_decode($result, true);
   }
 
+  public function postRequestDirect($url, $body) {
+    $this->ch = curl_init();
+
+    curl_setopt($this->ch, CURLOPT_VERBOSE, 0);
+    // curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($this->ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
+    curl_setopt($this->ch, CURLOPT_URL, $url);
+    curl_setopt($this->ch, CURLOPT_POST, 1);
+    if($body){
+      curl_setopt($this->ch, CURLOPT_POSTFIELDS, $body);
+    }
+
+    $result = curl_exec($this->ch);
+    
+    curl_close($this->ch);
+    // print_r(curl_getinfo($this->ch));
+    return $result;
+  }
+
   public function getRequest($url) {
     curl_setopt($this->ch, CURLOPT_URL, $url);
 

@@ -31,7 +31,6 @@ class LinkedinService extends Controller
 
     public function textOnly($token, $message, $author) {
         $body = '{
-            "author": "'.$author.'",
             "lifecycleState": "PUBLISHED",
             "specificContent": {
                 "com.linkedin.ugc.ShareContent": {
@@ -55,8 +54,9 @@ class LinkedinService extends Controller
 
         return $result;
     }
+
+    
     public function shareMedia($token, $owner) {
-        echo "\n\t\t\t file media... ".$owner;
         $body = '{
             "registerUploadRequest":{
                "owner":"'.$owner.'",
@@ -84,8 +84,27 @@ class LinkedinService extends Controller
         return $result;
     }
 
-    public function postWithMedia($token, $author, $message, $media, $media_type) {
-        return $author;
+    public function contentWithMedia($token, $author, $message, $media, $media_type) {
+        // $body = '{
+        //         "content": {
+        //             "contentEntities": [
+        //                 {
+        //                     "entity": "'.$media.'"
+        //                 }
+        //             ],
+        //             "description": "Uploaded image",
+        //             "title": "AskThePros Image",
+        //             "shareMediaCategory": "IMAGE"
+        //         },
+        //         "distribution": {
+        //             "linkedInDistributionTarget": {}
+        //         },
+        //         "subject": "test",
+        //         "text": {
+        //             "text": "'.$message.'"
+        //         },
+        //         "owner": "'.$author.'"
+        //     }';
         $body = '{
             "author": "'.$author.'",
             "lifecycleState": "PUBLISHED",
@@ -105,6 +124,42 @@ class LinkedinService extends Controller
                         "attributes": [],
                         "text": "'.$message.'"
                     },
+                    "shareMediaCategory": "IMAGE"
+                }
+            },
+            "visibility": {
+                "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+            }
+        }';
+        $this->headers[] = 'X-Restli-Protocol-Version: 2.0.0';
+        $this->headers[] = 'Authorization: Bearer ' . $token;
+        $this->headers[] = 'Content-Type: application/json';
+        $curl = new CurlController($this->headers);
+
+        $result = $curl->postRequest($this->url, $body);
+        return $result;
+    }
+
+    public function postWithMedia($token, $author, $message, $media, $media_type) {
+        $body = '{
+            "author": "'.$author.'",
+            "lifecycleState": "PUBLISHED",
+            "specificContent": {
+                "com.linkedin.ugc.ShareContent": {
+                    "media": [
+                        {
+                            "media": "'.$media.'",
+                            "status": "READY",
+                            "title": {
+                                "attributes": [],
+                                "text": "'.$message.'"
+                            }
+                        }
+                    ],
+                    "shareCommentary": {
+                        "attributes": [],
+                        "text": "'.$message.'"
+                    },
                     "shareMediaCategory": "'.$media_type.'"
                 }
             },
@@ -112,6 +167,7 @@ class LinkedinService extends Controller
                 "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
             }
         }';
+        // echo "\nbody".$body;
         $this->headers[] = 'X-Restli-Protocol-Version: 2.0.0';
         $this->headers[] = 'Authorization: Bearer ' . $token;
         $this->headers[] = 'Content-Type: application/json';

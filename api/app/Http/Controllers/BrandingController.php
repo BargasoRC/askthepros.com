@@ -53,4 +53,12 @@ class BrandingController extends APIController
       return $code;
     }
   }
+
+  public function getActiveByParams($accountId){
+    $result = Branding::where('account_id', '=', $accountId)->get();
+    if($result && sizeof($result) > 0){
+      $result[0]['details'] = json_decode($result[0]['details'], true);
+    }
+    return sizeof($result) > 0 ? $result[0] : null;
+  }
 }

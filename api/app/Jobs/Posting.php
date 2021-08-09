@@ -97,7 +97,7 @@ class Posting implements ShouldQueue
         }
       }
     }else{
-      echo "\n\t\t No added was added";
+      echo "\n\t\t No channel was added";
     }
   }
 
@@ -112,7 +112,7 @@ class Posting implements ShouldQueue
     if($postSetting && sizeof($postSetting) > 0){
       $page = Page::where(array(
         array('account_id', '=', $plan['account_id']),
-        array('type', '=', $channel === 'GOOGLE_MY_BUSINESS' ? 'google' : $channel)
+        array('type', '=', $channel === 'GOOGLE_MY_BUSINESS' ? 'google' : strtolower($channel))
       ))->orderBy('created_at', 'desc')
       ->limit(1)
       ->get();
