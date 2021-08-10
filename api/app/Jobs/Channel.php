@@ -86,19 +86,19 @@ class Channel implements ShouldQueue
     }
 
     $token = $page['details']['access_token'];
-    $media = env('BACKEND_URL').'/storage/image/2_2021-08-03_02_00_17_robot.png';
-    // if(isset($postHistory['url'])) {
-    //   if(json_decode($postHistory['url'])) {
-    //     $url = $postHistory['url'];
-    //     $media = json_decode($url);
-    //     $media = env('BACKEND_URL', ''). $media[0];
-    //   }
-    // }
+    // $media = env('BACKEND_URL').'/storage/image/2_2021-08-03_02_00_17_robot.png';
+    if(isset($postHistory['url'])) {
+      if(json_decode($postHistory['url'])) {
+        $url = $postHistory['url'];
+        $media = json_decode($url);
+        $media = env('BACKEND_URL', ''). $media[0];
+      }
+    }
 
 
     $params = null;
     $facebook = new Facebook($token);
-    $postHistory['url'] = null;
+    // $postHistory['url'] = null;
     if($postHistory['url']){
       // post with image
       $params = array(
@@ -133,7 +133,7 @@ class Channel implements ShouldQueue
       $url = $postHistory['url'];
       $media = json_decode($url)[0];
     }
-    $postHistory['url'] = null;
+    // $postHistory['url'] = null;
     if($postHistory['url']) {
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinRegisterUpload($postHistory['account_id'], $postHistory['description'], substr($media, 15));
     }else {
