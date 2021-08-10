@@ -140,9 +140,14 @@ class Channel implements ShouldQueue
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinPost($postHistory['account_id'], $postHistory['description']);
     }
    
-    print_r($result); 
     if($result && isset($result['id'])){
-      $this->updatePostHistories($postHistory, 'https://www.linkedin.com/embed/feed/update/'.$result['id']);
+      $link = '';
+      if(strpos($result['id'], 'li') > -1){
+        $link = $result['id'];
+      }else{
+        $link = $postHistory['url'] ? 'urn:li:ugcPost:'.$result['id'] : 'urn:li:share:'.$result['id'];
+      }
+      $this->updatePostHistories($postHistory, 'https://www.linkedin.com/embed/feed/update/'.$link);
       echo "\n\t\t Posted on linkedin => ".$result['id'];
     }else{
       echo "\n\t\t Unable to post on linkedin";
