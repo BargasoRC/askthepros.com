@@ -30,19 +30,30 @@ class LinkedinService extends Controller
     }
 
     public function textOnly($token, $message, $author) {
+        // $body = '{
+        //     "lifecycleState": "PUBLISHED",
+        //     "specificContent": {
+        //         "com.linkedin.ugc.ShareContent": {
+        //             "shareCommentary": {
+        //                 "attributes": [],
+        //                 "text": "'.$message.'"
+        //             },
+        //             "shareMediaCategory": "NONE"
+        //         }
+        //     },
+        //     "visibility": {
+        //         "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+        //     }
+        // }';
+
         $body = '{
-            "lifecycleState": "PUBLISHED",
-            "specificContent": {
-                "com.linkedin.ugc.ShareContent": {
-                    "shareCommentary": {
-                        "attributes": [],
-                        "text": "'.$message.'"
-                    },
-                    "shareMediaCategory": "NONE"
-                }
+            "distribution": {
+                    "linkedInDistributionTarget": {}
             },
-            "visibility": {
-                "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+            "owner": "'.$author.'",
+            "subject": "Test text only",
+            "text": {
+                "text": "'.$message.'"
             }
         }';
         $this->headers[] = 'X-Restli-Protocol-Version: 2.0.0';

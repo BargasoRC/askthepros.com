@@ -98,6 +98,7 @@ class Channel implements ShouldQueue
 
     $params = null;
     $facebook = new Facebook($token);
+    $postHistory['url'] = null;
     if($postHistory['url']){
       // post with image
       $params = array(
@@ -132,19 +133,19 @@ class Channel implements ShouldQueue
       $url = $postHistory['url'];
       $media = json_decode($url)[0];
     }
-    // $postHistory['url'] = null;
+    $postHistory['url'] = null;
     if($postHistory['url']) {
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinRegisterUpload($postHistory['account_id'], $postHistory['description'], substr($media, 15));
     }else {
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinPost($postHistory['account_id'], $postHistory['description']);
     }
    
-    // print_r($result); 
+    print_r($result); 
     if($result && isset($result['id'])){
       $this->updatePostHistories($postHistory, 'https://www.linkedin.com/embed/feed/update/'.$result['id']);
       echo "\n\t\t Posted on linkedin => ".$result['id'];
     }else{
-      echo "\n\t\t Unable to post on facebook";
+      echo "\n\t\t Unable to post on linkedin";
     }
   }
 
