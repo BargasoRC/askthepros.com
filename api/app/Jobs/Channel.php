@@ -133,7 +133,7 @@ class Channel implements ShouldQueue
       $url = $postHistory['url'];
       $media = json_decode($url)[0];
     }
-    // $postHistory['url'] = null;
+    $postHistory['url'] = null;
     if($postHistory['url']) {
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinRegisterUpload($postHistory['account_id'], $postHistory['description'], substr($media, 15));
     }else {
