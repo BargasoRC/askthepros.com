@@ -66,7 +66,7 @@ class Channel implements ShouldQueue
             $this->manageLinkedIn($postHistory);
             break;
           case 'google_my_business':
-            // $this->manageGoogle($postHistory);
+            $this->manageGoogle($postHistory);
             break;
         }
       }
