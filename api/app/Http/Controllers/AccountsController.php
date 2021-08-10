@@ -14,9 +14,14 @@ class AccountsController extends APIController
         $data = $request->all();
         $this->model = new Account();
         $result = $this->retrieveDB($data);
+        
+        $con = $data['condition'];
+        $result = Account::where($con[0]['column'], $con[0]['clause'], $con[0]['value'])->limit($data['limit'])
+          ->offset($data['offset'])->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+
         if(sizeof($result) > 0){
+
           $i = 0;
-          // dd($result);
           foreach ($result as $key) {
             $result[$i] = Account::leftJoin('account_informations', 'accounts.id', '=', 'account_informations.account_id')
                       ->leftJoin('merchants', 'accounts.id', '=', 'merchants.account_id')
@@ -25,7 +30,10 @@ class AccountsController extends APIController
                       ->first();
             $i++;
           }
-          return response()->json(array('data' => $result));
+          return response()->json(array(
+            'data' => $result,
+            'size' => Account::where('deleted_at', '=', null)->count()
+          ));
         }else{
           return $this->response();
         }

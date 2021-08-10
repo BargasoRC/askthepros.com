@@ -225,7 +225,6 @@ export default{
       }
     },
     updateType(item, index){
-      console.log('[df]', item)
       if(this.newAccountType === null || this.newAccountType === item.account_type){
         this.setEditTypeIndex(index, item)
         return
@@ -234,7 +233,6 @@ export default{
         id: item.id,
         account_type: this.newAccountType
       }
-      console.log('[od]', parameter)
       $('#loading').css({display: 'block'})
       this.APIRequest('accounts/update_account_type', parameter).then(response => {
         $('#loading').css({display: 'none'})
@@ -253,15 +251,6 @@ export default{
     },
     redirect(params){
       ROUTER.push(params)
-    },
-    pagination(flag){
-      if(flag === false && this.offset > 5){
-        this.offset = this.offset - 5
-        this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
-      }else{
-        this.offset = this.offset + 5
-        this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
-      }
     },
     retrieve(sort, filter){
       if(sort !== null){
@@ -286,12 +275,8 @@ export default{
         limit: this.limit,
         offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
-      if(this.activeItem !== 'home'){
-        parameter['accountType'] = this.activeItem
-      }
       $('#loading').css({display: 'block'})
       this.APIRequest('users/retrieve', parameter).then(response => {
-        console.log('[dfg]', response.data)
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data
@@ -353,13 +338,6 @@ export default{
       }else{
         alert('Not Allowed!')
       }
-    },
-    isActive (menuItem) {
-      return this.activeItem === menuItem
-    },
-    setActive (menuItem) {
-      this.activeItem = menuItem
-      this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
     }
   }
 }

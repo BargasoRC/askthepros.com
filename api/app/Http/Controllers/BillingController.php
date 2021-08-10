@@ -18,8 +18,9 @@ class BillingController extends APIController
     $data = $request->all();
     $this->model = new Billing();
     $this->retrieveDB($data);
-
-    $result = $this->response['data'];
+    $con = $data['condition'];
+    $result = Billing::where($con[0]['column'], $con[0]['clause'], $con[0]['value'])->limit($data['limit'])
+      ->offset($data['offset'])->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
 
     if(sizeof($result) > 0){
       $i = 0;
@@ -32,6 +33,7 @@ class BillingController extends APIController
       }
     }
     $this->response['data'] = $result;
+    $this->response['size'] = Billing::where('deleted_at', '=', null)->count();
     return $this->response();
   }
 
@@ -39,7 +41,9 @@ class BillingController extends APIController
     $data = $request->all();
     $this->model = new Billing();
     $this->retrieveDB($data);
-    $billing = $this->response['data'];
+    $con = $data['condition'];
+    $billing = Billing::where($con[0]['column'], $con[0]['clause'], $con[0]['value'])->limit($data['limit'])
+      ->offset($data['offset'])->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
 
     $i = 0;
     foreach ($billing as $key => $value) {
@@ -56,7 +60,7 @@ class BillingController extends APIController
     }
 
     $this->response['data'] = $billing;
-
+    $this->response['size'] = Billing::where('deleted_at', '=', null)->count();
     return $this->response();
   }
 
