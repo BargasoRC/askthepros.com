@@ -66,7 +66,7 @@ class Channel implements ShouldQueue
             $this->manageLinkedIn($postHistory);
             break;
           case 'google_my_business':
-            // $this->manageGoogle($postHistory);
+            $this->manageGoogle($postHistory);
             break;
         }
       }
@@ -86,18 +86,19 @@ class Channel implements ShouldQueue
     }
 
     $token = $page['details']['access_token'];
-    $media = env('BACKEND_URL').'/storage/image/2_2021-08-03_02_00_17_robot.png';
-    // if(isset($postHistory['url'])) {
-    //   if(json_decode($postHistory['url'])) {
-    //     $url = $postHistory['url'];
-    //     $media = json_decode($url);
-    //     $media = env('BACKEND_URL', ''). $media[0];
-    //   }
-    // }
+    // $media = env('BACKEND_URL').'/storage/image/2_2021-08-03_02_00_17_robot.png';
+    if(isset($postHistory['url'])) {
+      if(json_decode($postHistory['url'])) {
+        $url = $postHistory['url'];
+        $media = json_decode($url);
+        $media = env('BACKEND_URL', ''). $media[0];
+      }
+    }
 
 
     $params = null;
     $facebook = new Facebook($token);
+    // $postHistory['url'] = null;
     if($postHistory['url']){
       // post with image
       $params = array(
@@ -132,19 +133,24 @@ class Channel implements ShouldQueue
       $url = $postHistory['url'];
       $media = json_decode($url)[0];
     }
-    // $postHistory['url'] = null;
+    $postHistory['url'] = null;
     if($postHistory['url']) {
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinRegisterUpload($postHistory['account_id'], $postHistory['description'], substr($media, 15));
     }else {
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinPost($postHistory['account_id'], $postHistory['description']);
     }
    
-    // print_r($result); 
     if($result && isset($result['id'])){
-      $this->updatePostHistories($postHistory, 'https://www.linkedin.com/embed/feed/update/'.$result['id']);
+      $link = '';
+      if(strpos($result['id'], 'li') > -1){
+        $link = $result['id'];
+      }else{
+        $link = $postHistory['url'] ? 'urn:li:ugcPost:'.$result['id'] : 'urn:li:share:'.$result['id'];
+      }
+      $this->updatePostHistories($postHistory, 'https://www.linkedin.com/embed/feed/update/'.$link);
       echo "\n\t\t Posted on linkedin => ".$result['id'];
     }else{
-      echo "\n\t\t Unable to post on facebook";
+      echo "\n\t\t Unable to post on linkedin";
     }
   }
 
@@ -161,7 +167,12 @@ class Channel implements ShouldQueue
     if($postHistory['url']) {
       $result = app('App\Http\Controllers\SocialMediaController')->googleBusinessPostWithMedia($postHistory['account_id'], $postHistory['description'], $media);
     }
-    echo "\n\t\t\t Manage GOOGLE => ".json_encode($result);
+    if($result && isset($result['searchUrl']) && $result['searchUrl'] !== null){
+      $this->updatePostHistories($postHistory, $result['searchUrl']);
+      echo "\n\t\t Posted on google_my_business => ".$result['searchUrl'];
+    }else{
+      echo "\n\t\t Unable to post on google_my_business\n error => ".json_encode($result);
+    }
   }
 
   public function updatePostHistories($postHistory, $link){

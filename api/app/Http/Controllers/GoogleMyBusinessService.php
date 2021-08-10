@@ -38,6 +38,10 @@ class GoogleMyBusinessService extends APIController
         $body = '{
             "languageCode": "en-US",
             "summary": "'.$message.'",
+            "callToAction": {
+            "actionType": "ORDER",
+                "url": "https://askthepros.com"
+            },
             "media": [
                 {
                   "mediaFormat": "PHOTO",
