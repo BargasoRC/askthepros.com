@@ -66,7 +66,7 @@ class Channel implements ShouldQueue
             $this->manageLinkedIn($postHistory);
             break;
           case 'google_my_business':
-            // $this->manageGoogle($postHistory);
+            $this->manageGoogle($postHistory);
             break;
         }
       }
@@ -167,7 +167,12 @@ class Channel implements ShouldQueue
     if($postHistory['url']) {
       $result = app('App\Http\Controllers\SocialMediaController')->googleBusinessPostWithMedia($postHistory['account_id'], $postHistory['description'], $media);
     }
-    echo "\n\t\t\t Manage GOOGLE => ".json_encode($result);
+    if($result && isset($result['searchUrl']) && $result['searchUrl'] !== null){
+      $this->updatePostHistories($postHistory, $result['searchUrl']);
+      echo "\n\t\t Posted on google_my_business => ".$result['searchUrl'];
+    }else{
+      echo "\n\t\t Unable to post on google_my_business\n error => ".json_encode($result);
+    }
   }
 
   public function updatePostHistories($postHistory, $link){

@@ -232,7 +232,18 @@ class SocialMediaController extends APIController
 
   public function googleBusinessPostWithMedia($id, $message, $image) {
     // $data = $request->all();
-    $account = $this->retrieveToken('google', $id);
+    // $account = $this->retrieveToken('google', $id);
+    $account = Account::leftJoin('social_auths', 'accounts.id', '=', 'social_auths.account_id')
+              ->leftJoin('pages', 'social_auths.account_id', '=', 'pages.account_id')
+              ->select('accounts.token', 'social_auths.details', 'pages.page as page', 'pages.details as page_details')
+              ->where([
+                  ['accounts.id', '=', $id],
+                  ['social_auths.type', '=', 'google'],
+                  ['social_auths.deleted_at', '=', null],
+                  ['pages.type', '=', 'google' ]
+              ])
+              ->orderBy('pages.created_at', 'desc')
+              ->get();
     $details = json_decode($account[0]['details']);
     $headers = [];
     $headers[] = 'Authorization: Bearer ' . $details->token;
@@ -240,6 +251,8 @@ class SocialMediaController extends APIController
     $service = new GoogleMyBusinessService('', $headers);
     $url = $this->googleMyBusinessHostApi . json_decode($account[0]->page_details)->name . '/localPosts';
     $service->setUrl($url);
+    // echo $url;
+    // echo "\n".$details->token;
     $result = $service->postWithMedia($message, $image);
     return $result;
   }
