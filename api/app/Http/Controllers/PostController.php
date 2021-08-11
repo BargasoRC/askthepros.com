@@ -227,17 +227,30 @@ class PostController extends APIController
     public function retrieveHistoryPosts(Request $request){
       $data = $request->all();
       $con = $data['condition'];
-      $contains = Str::contains($data['status'], 'post');
-      $result = PostHistory::where('account_id', '=', $data['account_id'])
-      ->where('status', '=', ($contains ? ('for posting') : ('for review')))
-      ->where($con[0]['column'], $con[0]['clause'], $con[0]['value'])
-      ->limit($data['limit'])
-      ->offset($data['offset'])->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+      $contains = !Str::contains($data['status'], 'for');
+      if($contains){
+        $result = PostHistory::where('account_id', '=', $data['account_id'])
+        ->where('status', '=', 'posted')
+        ->where($con[0]['column'], $con[0]['clause'], $con[0]['value'])
+        ->limit($data['limit'])
+        ->offset($data['offset'])->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
 
-      $size = PostHistory::where('account_id', '=', $data['account_id'])
-      ->where('status', '=', ($contains ? ('for posting') : ('for review')))
-      ->where($con[0]['column'], $con[0]['clause'], $con[0]['value'])
-      ->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+        $size = PostHistory::where('account_id', '=', $data['account_id'])
+        ->where('status', '=', 'posted')
+        ->where($con[0]['column'], $con[0]['clause'], $con[0]['value'])
+        ->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+      }else{
+        $result = PostHistory::where('account_id', '=', $data['account_id'])
+        ->where('status', '!=', 'posted')
+        ->where($con[0]['column'], $con[0]['clause'], $con[0]['value'])
+        ->limit($data['limit'])
+        ->offset($data['offset'])->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+
+        $size = PostHistory::where('account_id', '=', $data['account_id'])
+        ->where('status', '!=', 'posted')
+        ->where($con[0]['column'], $con[0]['clause'], $con[0]['value'])
+        ->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+      }
 
       $i = 0;
       foreach ($result as $key) {
@@ -268,7 +281,7 @@ class PostController extends APIController
       $var = Post::create($dataArray);
       PostHistory::where('id', '=', $data['id'])->update(array(
         'post_id' => $var->id,
-        'status' => 'for posting',
+        'status' => 'posted',
         'updated_at' => Carbon::now()
       ));
 
