@@ -78,8 +78,7 @@
                 <td>{{item.post[0] != null ? item.post[0].title : null}}</td>
                 <td>{{item.post[0] != null ? displayArray(item.post[0].channels) : null}}</td>
                 <td>{{item.link != null ? item.link : null}}</td>
-                <td class="text-warning" v-if="item.status === 'review'">Posted - Reviewed by You</td>
-                <td class='text-primary' v-else>Posted Automatically</td>
+                <td class="text-primary">Posted - Reviewed by You</td>
               </tr>
             </tbody>
           </table>

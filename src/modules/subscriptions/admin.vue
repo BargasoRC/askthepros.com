@@ -58,12 +58,16 @@
 import DataTable from 'src/modules/generic/table'
 import Search from 'src/components/increment/generic/filter/Basic'
 import Pager from 'src/components/increment/generic/pager/Pager.vue'
+import AUTH from 'src/services/auth'
 export default {
   mounted(){
-    this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+    if(this.user.type === 'ADMIN'){
+      this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+    }
   },
   data() {
     return {
+      user: AUTH.user,
       tableActions: [],
       tableHeaders: [
         {title: 'Username'},
@@ -197,6 +201,7 @@ export default {
         limit: this.limit,
         offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
+      console.log('[parameter]', parameter)
       $('#loading').css({'display': 'block'})
       this.APIRequest('billings/retrieve_on_history', parameter).then(response => {
         $('#loading').css({'display': 'none'})
