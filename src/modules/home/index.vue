@@ -2,9 +2,10 @@
   <div>
     <NewBanner></NewBanner>
     <!-- <HomeBanner></HomeBanner> -->
-    <CallToAction></CallToAction>
+    <!-- <CallToAction></CallToAction>
     <Subscription></Subscription>
-    <Testimonials></Testimonials>
+    <Testimonials></Testimonials> -->
+    <newTestimonials></newTestimonials>
   </div>
 </template>
 <script>
@@ -15,13 +16,15 @@ import HomeBanner from 'src/modules/home/Banner.vue'
 import CallToAction from 'src/modules/home/CallToAction.vue'
 import Subscription from 'src/modules/home/Subscription.vue'
 import Testimonials from 'src/modules/home/Testimonials.vue'
+import newTestimonials from 'src/modules/home/new/newTestimonial.vue'
 export default {
   components: {
     HomeBanner,
     CallToAction,
     Subscription,
     Testimonials,
-    NewBanner
+    NewBanner,
+    newTestimonials
   },
   data() {
     return {}
