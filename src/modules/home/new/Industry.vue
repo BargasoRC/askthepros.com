@@ -1,30 +1,45 @@
 <template>
-    <div >
-        <!-- <img class="image_format" :src="require('assets/img/boardd.jpg')"/> -->
-        <div class="button_styling">
-            <a class="s_button" href="">Veterinarian's</a>
-        </div>
-        <div class="button_styling">
-            <a class="s_button" href="">Medicare Agents</a>
-        </div>
-        <div class="button_styling">
-            <a class="s_button" href="">Real Estate Agents</a>
-        </div>
+    <div>
+        <div><img class="image_format" :src="require('assets/img/boardd.jpg')"/></div>
+         <div class="button_list">
+            <div class="button_styling">
+                <a class="s_button" href="">Veterinarian's</a>
+            </div>
+            <div class="button_styling">
+                <a class="s_button" href="">Medicare Agents</a>
+            </div>
+            <div class="button_styling">
+                <a class="s_button" href="">Real Estate Agents</a>
+            </div>
+        </div> 
     </div>
 </template>
 <style scoped lang="scss">
 .image_format{
-    height: 600px;
-    width: 650px;
+    height: 300px;
+    width: 500px;
+    position: relative;
+    top: 3.438rem;
+    left: 5rem;
+    z-index: -1;
+}
+
+.button_list{
+    margin-top: -15rem;
+
+    @media only screen and (max-width: 600px) {
+        body {
+            background-color: lightblue;
+        }
+    }
 }
 
 .button_styling {
-    margin-bottom: 20px;
+    margin-bottom: 3.125rem;
+    //background-color: lightblue;
     text-align: center;
     justify-content: center;
-    position: relative;
-    bottom: 350px;
-    margin-bottom: 50px;
+    width: 70%;
 }
 
 .button_styling .s_button{
@@ -37,8 +52,6 @@
     font-size: 30px;
     color: yellow;
     border-radius: 10px;
-
-
 }
 
 </style>
