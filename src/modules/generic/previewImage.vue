@@ -19,6 +19,11 @@
           @change="setUpFileUpload($event, add)">
       </div>
     </div>
+    <errorModal
+    ref="errorModal"
+    :title="'Error Message'"
+    :message="'Invalid Image'"
+    />
   </div>
 </template>
 
@@ -27,6 +32,7 @@ import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import axios from 'axios'
 import COMMON from 'src/common.js'
+import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 export default {
   props: ['imagesRetrieve', 'formData', 'edit', 'code'],
   data: () => ({
@@ -62,6 +68,9 @@ export default {
       return this.imagesRetrieve
     }
   },
+  components: {
+    errorModal
+  },
   methods: {
     addImage(edit){
       $('#Image')[0].click()
@@ -79,7 +88,7 @@ export default {
         if(filename.substring(filename.lastIndexOf('.')) === '.png' || filename.substring(filename.lastIndexOf('.')) === '.jpg' || filename.substring(filename.lastIndexOf('.')) === '.jpeg' || filename.substring(filename.lastIndexOf('.')) === '.gif' || filename.substring(filename.lastIndexOf('.')) === '.tif' || filename.substring(filename.lastIndexOf('.')) === '.bmp'){
           this.createFile(files[0], add)
         }else{
-          this.errorMessage = 'Upload images only!'
+          this.$refs.errorModal.show()
           this.file = null
         }
       }
@@ -90,8 +99,8 @@ export default {
       this.upload(add)
     },
     upload(add){
-      if(parseInt(this.file.size / 1024) > 1024){
-        this.errorMessage = 'Allowed size is up to 1 MB only'
+      if(this.file.size < 10240){
+        this.$refs.errorModal.show()
         this.file = null
         return
       }

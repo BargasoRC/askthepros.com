@@ -57,7 +57,7 @@
             <td v-if="item.status.toLowerCase() === 'publish'">
               <i class="fa fa-eye text-primary"  @click="showPreview(item)"></i>
               <!-- <i class="fas fa-copy text-primary" @click="edit(item.code)"></i> -->
-              <i class="fa fa-trash text-danger" @click="showDeleteConfirmation(item.id)"></i>
+              <!-- <i class="fa fa-trash text-danger" @click="showDeleteConfirmation(item.id)"></i> -->
             </td>
           </tr>
         </tbody>
