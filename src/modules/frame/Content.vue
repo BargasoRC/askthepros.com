@@ -11,7 +11,7 @@
 export default {
   components: {
     'login-header': () => import('modules/frame/Header2.vue'),
-    'landing-footer': () => import('modules/frame/Footer.vue')
+    'landing-footer': () => import('modules/frame/Footer2.vue')
   }
 }
 </script>
