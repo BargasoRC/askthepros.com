@@ -26,7 +26,7 @@
         <div class="row w-100  justify-content-end no-gutters"  style="padding-right:20%; padding-top:20%; color:#01004E">
           <i class="fas fa-times fa-3x" @click="showSidebar()"></i>
         </div>
-        <!-- <div class="row no-gutters justify-content-center nav-container">
+        <div class="row no-gutters justify-content-center nav-container">
             <div class="nav_item_m" @click="headerScrollTo('#learn-how')">
               <b class="font-weight-normal nav-text" href="#learn-how" @click="headerScrollTo('#learn-how')">Learn How</b>
             </div>
@@ -34,11 +34,6 @@
         <div class="row no-gutters justify-content-center nav-container">
             <div class="nav_item_m" @click="headerScrollTo('#pricing')">
               <b class="font-weight-normal nav-text" href="#pricing"  @click="headerScrollTo('#pricing')">Pricing</b>
-            </div>
-        </div> -->
-        <div class="row no-gutters justify-content-center nav-container">
-            <div class="nav_item_m" @click="headerScrollTo('#how-it-works')">
-              <b class="font-weight-normal nav-text" href="#how-it-works"  @click="headerScrollTo('#how-it-works')">How it Works</b>
             </div>
         </div>
         <div class="row no-gutters justify-content-center nav-container">
@@ -60,14 +55,11 @@
     <!-- Show  when screen is >991px -->
     <div class="navbar-collapse text-center d-none d-lg-block" id="navbarSupportedContent">
       <ul class="nav navbar-nav navbar-right ml-auto">
-        <!-- <li class="pl-5 pr-5 nav_item">
+        <li class="pl-5 pr-5 nav_item">
           <b class="font-weight-normal" href="#learn-how" @click="headerScrollTo('#learn-how')">Learn How</b>
         </li>
         <li class="pl-5 pr-5 nav_item">
           <b class="font-weight-normal" href="#pricing" @click="headerScrollTo('#pricing')">Pricing</b>
-        </li> -->
-        <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal" href="#how-it-works" @click="headerScrollTo('#how-it-works')">How it Works</b>
         </li>
         <li class="pl-5 pr-5 nav_item">
           <b class="font-weight-normal" @click="navigate('contact')" :style="'color: ' + ($route.name == 'contactPage' ? '#007bff' : 'black')">Contact Us</b>
