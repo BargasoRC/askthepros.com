@@ -138,9 +138,6 @@ export default {
     redirect(parameter){
       this.$router.push(parameter)
     },
-    test(parameter){
-      console.log(parameter)
-    },
     cancelPlanConfirmation(){
       if(this.data && this.data.plan){
         this.selectedId = this.data.plan.id

@@ -7,8 +7,8 @@
         :text="'New Post'"
         :icon_position="'right'"
         :styles="{
-            backgroundColor: '#01004E',
-            color: 'white'
+          backgroundColor: '#01009A',
+          color: 'white'
         }"
       />
     </div>
@@ -17,7 +17,7 @@
         :category="category"
         :activeCategoryIndex="0"
         :activeSortingIndex="0"
-        @changeSortEvent="() => {}"
+        @changeSortEvent="() => {} "
         :grid="['list']"
         :sortByStyle="{
           background: '#01004E !important',
@@ -57,7 +57,7 @@
             <td v-if="item.status.toLowerCase() === 'publish'">
               <i class="fa fa-eye text-primary"  @click="showPreview(item)"></i>
               <!-- <i class="fas fa-copy text-primary" @click="edit(item.code)"></i> -->
-              <i class="fa fa-trash text-danger" @click="showDeleteConfirmation(item.id)"></i>
+              <!-- <i class="fa fa-trash text-danger" @click="showDeleteConfirmation(item.id)"></i> -->
             </td>
           </tr>
         </tbody>
@@ -283,6 +283,7 @@ export default {
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve', parameter).then(response => {
+        console.log('[response]', response)
         $('#loading').css({'display': 'none'})
         if(!response.error) {
           this.data = response.data
@@ -293,6 +294,9 @@ export default {
       })
     },
     showDeleteConfirmation(id){
+      console.log({
+        test: 'again'
+      })
       this.deleteId = id
       setTimeout(() => {
         this.$refs.confirm.show(id)
@@ -302,9 +306,11 @@ export default {
       let parameter = {
         id: e.id
       }
+      console.log('[remove]', parameter)
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/delete', parameter).then(response => {
         $('#loading').css({'display': 'none'})
+        console.log('RESPONSE: ', response)
         this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
       })
     },
@@ -332,7 +338,5 @@ export default {
 .container-fluid{
   min-height: 70vh !important;
 }
-.text-primary{
-  color: #01004E!important;
-}
+
 </style>

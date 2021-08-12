@@ -281,7 +281,7 @@ class PostController extends APIController
       $var = Post::create($dataArray);
       PostHistory::where('id', '=', $data['id'])->update(array(
         'post_id' => $var->id,
-        'status' => 'posted',
+        'status' => 'for posting',
         'updated_at' => Carbon::now()
       ));
 

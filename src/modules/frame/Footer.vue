@@ -3,7 +3,7 @@
   <!-- Footer Links -->
   <div class="container-fluid d-flex justify-content-center" style="background: #F1B814; padding-top: 50px;padding-bottom: 30px;">
     <!-- Grid row -->
-    <div class="row w-75 " style="padding-bottom:1%;">
+    <div class="row w-70 " style="padding-bottom:1%;">
 <!--       <div class="col-md-4 ft-col-left ">
         <h5 class="font-weight-bold mt-3 mb-4 ft-title">About</h5>
       </div> -->
@@ -46,7 +46,6 @@
 </template>
 <style type="text/css">
 .page-footer {
-  
 }
 .ft-title {
   font-size:18px;

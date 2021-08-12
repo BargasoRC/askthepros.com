@@ -1,6 +1,7 @@
 <template>
   <div>
-    <HomeBanner></HomeBanner>
+    <NewBanner></NewBanner>
+    <!-- <HomeBanner></HomeBanner> -->
     <CallToAction></CallToAction>
     <Subscription></Subscription>
     <Testimonials></Testimonials>
@@ -9,6 +10,7 @@
 <script>
 import ROUTER from 'src/router'
 import Jquery from 'jquery'
+import NewBanner from 'src/modules/home/new/newBanner.vue'
 import HomeBanner from 'src/modules/home/Banner.vue'
 import CallToAction from 'src/modules/home/CallToAction.vue'
 import Subscription from 'src/modules/home/Subscription.vue'
@@ -18,7 +20,8 @@ export default {
     HomeBanner,
     CallToAction,
     Subscription,
-    Testimonials
+    Testimonials,
+    NewBanner
   },
   data() {
     return {}
