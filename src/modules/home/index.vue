@@ -2,8 +2,8 @@
   <div>
     <NewBanner></NewBanner>
     <!-- <HomeBanner></HomeBanner> -->
-    <CallToAction></CallToAction>
-    <Subscription></Subscription>
+    <!-- <CallToAction></CallToAction>
+    <Subscription></Subscription> -->
     <Testimonials></Testimonials>
   </div>
 </template>
@@ -14,7 +14,7 @@ import NewBanner from 'src/modules/home/new/newBanner.vue'
 import HomeBanner from 'src/modules/home/Banner.vue'
 import CallToAction from 'src/modules/home/CallToAction.vue'
 import Subscription from 'src/modules/home/Subscription.vue'
-import Testimonials from 'src/modules/home/Testimonials.vue'
+import Testimonials from 'src/modules/home/Testimonials2.vue'
 export default {
   components: {
     HomeBanner,
