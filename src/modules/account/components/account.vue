@@ -85,12 +85,11 @@ export default {
     }
   },
   watch: {
-    email: this.email
+    email: function(val){
+      this.email = val
+    }
   },
   created() {
-    if(AUTH.hash('show', localStorage.getItem('login_with')) === 'social_lite') {
-      this.passwordVerified = true
-    }
     this.retrieveInformation()
   },
   methods: {
