@@ -7,6 +7,7 @@
         </div>
       </div>
     </section>
+<<<<<<< HEAD
     <div class="row no-gutters mb-5" >
       <div class="col pt-5 m-auto">
         <CoolLightBox 
@@ -29,6 +30,24 @@
     <div class="row mb-5">
       <div class="col d-flex justify-content-center align-items-center myheader2">
         <p class="header-text-2 text-center">3 Posts / Week to Google My Business, Facebook & LinkedIn <br> written by subject matter experts in your field.</p>
+=======
+    <div class="row" >
+      <span>hello</span>
+      <Industry></Industry>
+      <CoolLightBox 
+        :items="items" 
+        :index="index"
+        @close="index = null"
+      />
+      <div class="images-wrapper">
+      <div
+        class="image"
+        v-for="(image, imageIndex) in items"
+        :key="imageIndex"
+        @click="index = imageIndex"
+        :style="{ backgroundImage: 'url(' + image.thumb + ')' }"
+      ></div>
+>>>>>>> 7ef397f2ec76d79fda192f6ad9a4cf62c20f03de
       </div>
     </div>
   </div>
@@ -66,9 +85,11 @@
 <script>
 import CoolLightBox from 'vue-cool-lightbox'
 import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css'
+import Industry from 'src/modules/home/new/Industry.vue'
 export default {
   components: {
-    CoolLightBox
+    CoolLightBox,
+    Industry
   },
   data() {
     return {
