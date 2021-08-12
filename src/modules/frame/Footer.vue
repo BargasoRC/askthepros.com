@@ -12,10 +12,10 @@
       <!-- Grid column -->
       <div class="col-md-4 mx-auto ">
         <!-- Links -->
-        <h5 class="font-weight-bold mt-3 mb-4 ft-title">Information</h5>
+        <h5 class="font-weight-bold mt-3 mb-4 ft-title">About</h5>
         <ul class="list-unstyled">
           <li>
-            <a class="ft-link" href="https://askthepros.com/terms-of-service/" target="_blank">Terms and Conditions</a>
+            <a class="ft-link" href="https://askthepros.com/terms-of-service/" target="_blank">Terms of Use</a>
           </li>
           <li>
             <a class="ft-link" href="https://askthepros.com/privacy-policy/" target="_blank">Privacy Policy</a>
