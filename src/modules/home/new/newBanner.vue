@@ -2,45 +2,64 @@
   <div class="container-fluid">
     <section>
       <div class="row">
-        <div class="col d-flex justify-content-center align-items-center myheader">
-          <p class="header-text">Become the Local Pro with Automated Social Media Posting</p>
+        <div class="col d-flex justify-content-center align-items-center myheader1">
+          <p class="header-text-1">Become the Local Pro with Automated Social Media Posting</p>
         </div>
       </div>
     </section>
-    <div class="row" >
-      <span>hello</span>
+    <div class="row no-gutters mb-5" >
+      <div class="col pt-5 m-auto">
+        <CoolLightBox 
+          :items="items" 
+          :index="index"
+          @close="index = null">
+        </CoolLightBox>
+          <div
+            class="image"
+            v-for="(image, imageIndex) in items"
+            :key="imageIndex"
+            @click="index = imageIndex"
+            :style="{ backgroundImage: 'url(' + image.alt + ')' }"
+          ></div>
+      </div>
+      <div class="col">
       <Industry></Industry>
-      <CoolLightBox 
-        :items="items" 
-        :index="index"
-        @close="index = null"
-      />
-      <div class="images-wrapper">
-      <div
-        class="image"
-        v-for="(image, imageIndex) in items"
-        :key="imageIndex"
-        @click="index = imageIndex"
-        :style="{ backgroundImage: 'url(' + image.thumb + ')' }"
-      ></div>
+      </div>
+    </div>
+    <div class="row mb-5">
+      <div class="col d-flex justify-content-center align-items-center myheader2">
+        <p class="header-text-2 text-center">3 Posts / Week to Google My Business, Facebook & LinkedIn <br> written by subject matter experts in your field.</p>
       </div>
     </div>
   </div>
 </template>
 <style scoped lang="scss">
 @import "~assets/style/colors.scss";
-.myheader {
+.myheader1 {
   height: 20vh;
   background-color: #01009A;
 }
-.header-text {
+.myheader2 {
+  height: 30vh;
+  background-color: white;
+  color: #01009A;
+}
+.header-text-1 {
   color: white;
   font-size: 40px;
   font-weight: 600;
   font-family: "Work Sans", Sans-serif;
 }
+.header-text-2 {
+  color: #01009A;
+  font-size: 40px;
+  font-weight: 600;
+  font-family: "Work Sans", Sans-serif;
+}
 .image {
-  height: 50vh;
+  width: 500px;
+  height: 300px;
+  margin: 0 0 0 auto;
 }
 </style>
 
@@ -57,16 +76,22 @@ export default {
     return {
       items: [
         {
-          title: 'Adamantium walls and plasteel bulkheads may seem formidable, but an unshakeable faith in the Immortal Emperor of Man can overcome any barriers',
-          description: 'Only in death does duty end',
-          thumb: 'https://cosmos-images2.imgix.net/file/spina/photo/20565/191010_nature.jpg?ixlib=rails-2.1.4&auto=format&ch=Width%2CDPR&fit=max&w=835',
-          src: 'https://www.youtube.com/embed/DkRIdQa9otU'
+          title: 'title',
+          description: 'desc',
+          thumb: 'https://images.pexels.com/photos/2764678/pexels-photo-2764678.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
+          alt: require('assets/img/banner.jpg'),
+          src: 'https://www.youtube.com/embed/DkRIdQa9otU',
+          autoplay: true
         }
       ],
-      index: null
+      index: null,
+      imageIndex1: null
     }
   },
   methods: {
+    caller(){
+      // this.index = imageIndex
+    },
     login(){
       this.redirect('login')
       window.scrollTo(0, 0)
