@@ -9,6 +9,7 @@
     </section>
     <div class="row" >
       <span>hello</span>
+      <Industry></Industry>
       <CoolLightBox 
         :items="items" 
         :index="index"
@@ -46,9 +47,11 @@
 <script>
 import CoolLightBox from 'vue-cool-lightbox'
 import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css'
+import Industry from 'src/modules/home/new/Industry.vue'
 export default {
   components: {
-    CoolLightBox
+    CoolLightBox,
+    Industry
   },
   data() {
     return {
