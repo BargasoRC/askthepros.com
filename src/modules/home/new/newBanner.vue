@@ -7,7 +7,6 @@
         </div>
       </div>
     </section>
-<<<<<<< HEAD
     <div class="row no-gutters mb-5" >
       <div class="col pt-5 m-auto">
         <CoolLightBox 
@@ -24,30 +23,12 @@
           ></div>
       </div>
       <div class="col">
-      <!-- Industry here -->
+      <Industry></Industry>
       </div>
     </div>
     <div class="row mb-5">
       <div class="col d-flex justify-content-center align-items-center myheader2">
         <p class="header-text-2 text-center">3 Posts / Week to Google My Business, Facebook & LinkedIn <br> written by subject matter experts in your field.</p>
-=======
-    <div class="row" >
-      <span>hello</span>
-      <Industry></Industry>
-      <CoolLightBox 
-        :items="items" 
-        :index="index"
-        @close="index = null"
-      />
-      <div class="images-wrapper">
-      <div
-        class="image"
-        v-for="(image, imageIndex) in items"
-        :key="imageIndex"
-        @click="index = imageIndex"
-        :style="{ backgroundImage: 'url(' + image.thumb + ')' }"
-      ></div>
->>>>>>> 7ef397f2ec76d79fda192f6ad9a4cf62c20f03de
       </div>
     </div>
   </div>
@@ -98,7 +79,7 @@ export default {
           title: 'title',
           description: 'desc',
           thumb: 'https://images.pexels.com/photos/2764678/pexels-photo-2764678.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-          alt: require('assets/img/section3-img.png'),
+          alt: require('assets/img/banner.jpg'),
           src: 'https://www.youtube.com/embed/DkRIdQa9otU',
           autoplay: true
         }

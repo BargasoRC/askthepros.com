@@ -3,7 +3,7 @@
     <div class="navbar-header"> 
       <a class="navbar-brand" href="#" >
         <img 
-          :src="require('../../assets/img/asktheprooslogo-clear.png')" 
+          :src="require('assets/img/asktheprooslogo-clear.png')" 
           class="logo-brand"
           @click="navigate('')"
         />
@@ -56,11 +56,11 @@
     <div class="navbar-collapse text-center d-none d-lg-block" id="navbarSupportedContent">
       <ul class="nav navbar-nav navbar-right ml-auto">
         <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal" href="#learn-how" @click="headerScrollTo('#learn-how')">Learn How</b>
+          <b class="font-weight-normal" href="#learn-how" @click="headerScrollTo('#learn-how')">How it works</b>
         </li>
-        <li class="pl-5 pr-5 nav_item">
+        <!-- <li class="pl-5 pr-5 nav_item">
           <b class="font-weight-normal" href="#pricing" @click="headerScrollTo('#pricing')">Pricing</b>
-        </li>
+        </li> -->
         <li class="pl-5 pr-5 nav_item">
           <b class="font-weight-normal" @click="navigate('contact')" :style="'color: ' + ($route.name == 'contactPage' ? '#007bff' : 'black')">Contact Us</b>
         </li>

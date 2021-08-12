@@ -1,6 +1,6 @@
 <template>
     <div >
-        <img class="image_format" :src="require('assets/img/boardd.jpg')"/>
+        <!-- <img class="image_format" :src="require('assets/img/boardd.jpg')"/> -->
         <div class="button_styling">
             <a class="s_button" href="">Veterinarian's</a>
         </div>
