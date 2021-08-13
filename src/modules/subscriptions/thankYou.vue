@@ -7,8 +7,8 @@
     </p>
 
     <roundedBtn
-      :onClick="(e) => redirect('/channels')"
-      :text="'Connect Pages'"
+      :onClick="(e) => redirect('/dashboard')"
+      :text="'Go to Dashboard'"
       :styles="{
         backgroundColor: colors.primary,
         border: '1px solid #01004E',
@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     redirect(route) {
-      ROUTER.go(route)
+      ROUTER.push(route)
     }
   }
 }
