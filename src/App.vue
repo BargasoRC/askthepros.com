@@ -210,8 +210,7 @@ export default {
   },
   components: {
     // 'login-header': () => import('modules/frame/Header2.vue'),
-    // 'system-header': () => import('modules/frame/Header.vue'),
-    'system-header': () => import('modules/frame/new/newHeader.vue'),
+    'system-header': () => import('modules/frame/Header.vue'),
     'system-sidebar': () => import('modules/frame/Sidebar.vue'),
     'system-content': () => import('modules/frame/Content.vue'),
     'system-footer': () => import('modules/frame/Footer.vue'),
