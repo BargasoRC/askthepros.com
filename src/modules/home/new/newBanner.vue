@@ -36,7 +36,7 @@
 <style scoped lang="scss">
 @import "~assets/style/colors.scss";
 .myheader1 {
-  height: 20vh;
+  height: 13vh;
   background-color: #01009A;
 }
 .myheader2 {

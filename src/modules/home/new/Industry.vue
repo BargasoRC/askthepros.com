@@ -1,17 +1,4 @@
 <template>
-<<<<<<< HEAD
-    <div >
-        <img class="image_format" :src="require('assets/img/boardd.jpg')"/>
-        <div class="button_styling">
-            <a class="s_button" href="">Veterinarian's</a>
-        </div>
-        <div class="button_styling">
-            <a class="s_button" href="">Medicare Agents</a>
-        </div>
-        <div class="button_styling">
-            <a class="s_button" href="">Real Estate Agents</a>
-        </div>
-=======
     <div>
         <div><img class="image_format" :src="require('assets/img/boardd.jpg')"/></div>
          <div class="button_list">
@@ -25,7 +12,6 @@
                 <a class="s_button" href="">Real Estate Agents</a>
             </div>
         </div> 
->>>>>>> 267e099b310d9c2b2c2b5d033061c8840d13a747
     </div>
 </template>
 <style scoped lang="scss">

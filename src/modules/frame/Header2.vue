@@ -58,9 +58,9 @@
         <li class="pl-5 pr-5 nav_item">
           <b class="font-weight-normal" href="#learn-how" @click="headerScrollTo('#learn-how')">How It Works</b>
         </li>
-        <li class="pl-5 pr-5 nav_item">
+        <!-- <li class="pl-5 pr-5 nav_item">
           <b class="font-weight-normal" href="#pricing" @click="headerScrollTo('#pricing')">Pricing</b>
-        </li>
+        </li> -->
         <li class="pl-5 pr-5 nav_item">
           <b class="font-weight-normal" @click="navigate('contact')" :style="'color: ' + ($route.name == 'contactPage' ? '#007bff' : 'black')">Contact Us</b>
         </li>
