@@ -28,14 +28,14 @@
         </div>
         <div class="row no-gutters justify-content-center nav-container">
             <div class="nav_item_m" @click="headerScrollTo('#learn-how')">
-              <b class="font-weight-normal nav-text" href="#learn-how" @click="headerScrollTo('#learn-how')">Learn How</b>
+              <b class="font-weight-normal nav-text" href="#learn-how" @click="headerScrollTo('#learn-how')">How it Works</b>
             </div>
         </div>
-        <div class="row no-gutters justify-content-center nav-container">
+        <!-- <div class="row no-gutters justify-content-center nav-container">
             <div class="nav_item_m" @click="headerScrollTo('#pricing')">
               <b class="font-weight-normal nav-text" href="#pricing"  @click="headerScrollTo('#pricing')">Pricing</b>
             </div>
-        </div>
+        </div> -->
         <div class="row no-gutters justify-content-center nav-container">
             <div class="nav_item_m" @click="navigate('contact')">
               <b class="font-weight-normal nav-text" @click="navigate('contact')" :style="'color: ' + ($route.name == 'contactPage' ? '#007bff' : 'black')">Contact Us</b>
@@ -56,11 +56,11 @@
     <div class="navbar-collapse text-center d-none d-lg-block" id="navbarSupportedContent">
       <ul class="nav navbar-nav navbar-right ml-auto">
         <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal" href="#learn-how" @click="headerScrollTo('#learn-how')">Learn How</b>
+          <b class="font-weight-normal" href="#learn-how" @click="headerScrollTo('#learn-how')">How It Works</b>
         </li>
-        <li class="pl-5 pr-5 nav_item">
+        <!-- <li class="pl-5 pr-5 nav_item">
           <b class="font-weight-normal" href="#pricing" @click="headerScrollTo('#pricing')">Pricing</b>
-        </li>
+        </li> -->
         <li class="pl-5 pr-5 nav_item">
           <b class="font-weight-normal" @click="navigate('contact')" :style="'color: ' + ($route.name == 'contactPage' ? '#007bff' : 'black')">Contact Us</b>
         </li>
