@@ -19,7 +19,7 @@
             v-for="(image, imageIndex) in items"
             :key="imageIndex"
             @click="index = imageIndex"
-            :style="{ backgroundImage: 'url(' + image.alt + ')' }"
+            :style="{ backgroundImage: 'url(' + image.thumb + ')' }"
           >
           <div class="play-btn">
             <i class="fa fa-play-circle" aria-hidden="true"></i>
@@ -67,7 +67,7 @@
 }
 // button 
 .play-btn {
-    background: #fff;
+    background: transparent;
     border-radius: 50%;
     text-align: center;
     line-height: 108px;
@@ -81,7 +81,8 @@
     transform: translate(-50%,-50%);
 }
 .play-btn i {
-    color: lightgrey;
+    color: grey;
+    opacity: 0.75;
     font-size: 102px;
 }
 @keyframes animate{
@@ -115,8 +116,8 @@ export default {
         {
           title: 'title',
           description: 'desc',
-          thumb: 'https://images.pexels.com/photos/2764678/pexels-photo-2764678.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-          alt: require('assets/img/banner.jpg'),
+          thumb: require('assets/img/section3-img_small.png'),
+          alt: require('assets/img/section3-img.png'),
           src: 'https://www.youtube.com/embed/DkRIdQa9otU',
           autoplay: true
         }
