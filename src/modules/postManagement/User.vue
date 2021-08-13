@@ -43,7 +43,7 @@
           <tr v-for="(item, index) in tableData" :key="index">
             <td>{{item.date}}</td>
             <td>{{item.post[0] != null ? item.post[0].title : null}}</td>
-            <td>{{item.post[0] != null ? displayArray(item.post[0].channels) : null}}</td>
+            <td>{{item.channel}}</td>
             <td class="text-warning">{{item.status.toUpperCase()}}</td>
             <td>
               <i class="fa fa-eye text-primary" @click="showPreview(item.code)"></i>
@@ -168,6 +168,7 @@ export default {
       this.APIRequest('post/retrieve_history', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         if(!response.error) {
+          console.log('[data]', response.data)
           this.tableData = response.data
           this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
         }

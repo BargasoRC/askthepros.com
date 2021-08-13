@@ -43,7 +43,7 @@
             <td>{{item.date}}</td>
             <td>{{item.time}}</td>
             <td>{{item.post[0] != null ? item.post[0].title : null}}</td>
-            <td>{{item.post[0] != null ? displayArray(item.post[0].channels) : null}}</td>
+            <td>{{item.channel}}</td>
             <td style="color: gray"><u>{{item.link}}</u></td>
             <td class="text-primary">Posted - Reviewed by You</td>
             <!-- <td class="text-primary" v-if="item.post[0].parent === null">Posted Automatically</td>

@@ -150,6 +150,7 @@ export default {
           url: this.addImage.length > 0 ? JSON.stringify(this.addImage) : JSON.stringify(this.imagesList),
           account_id: this.user.userID,
           channels: JSON.stringify(channels),
+          category: this.selectedItem.category,
           parent: this.dataRetrieve.post_id,
           id: this.dataRetrieve.id
         }
@@ -157,7 +158,7 @@ export default {
         this.APIRequest('post/update_user', parameter).then(response => {
           $('#loading').css({'display': 'none'})
           if(response.data > 0){
-            ROUTER.push('/post_management/history')
+            ROUTER.push('/post_management')
           }
         })
       }
