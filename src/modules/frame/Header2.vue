@@ -56,7 +56,7 @@
     <div class="navbar-collapse text-center d-none d-lg-block" id="navbarSupportedContent">
       <ul class="nav navbar-nav navbar-right ml-auto">
         <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal" href="#learn-how" @click="headerScrollTo('#learn-how')">How It Works</b>
+          <b class="font-weight-normal" @click="this.$refs.content.newBanner.caller()">How It Works</b>
         </li>
         <!-- <li class="pl-5 pr-5 nav_item">
           <b class="font-weight-normal" href="#pricing" @click="headerScrollTo('#pricing')">Pricing</b>

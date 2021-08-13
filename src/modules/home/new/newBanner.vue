@@ -20,7 +20,11 @@
             :key="imageIndex"
             @click="index = imageIndex"
             :style="{ backgroundImage: 'url(' + image.alt + ')' }"
-          ></div>
+          >
+          <div class="play-btn">
+            <i class="fa fa-play-circle" aria-hidden="true"></i>
+          </div>
+          </div>
       </div>
       <div class="col">
       <Industry></Industry>
@@ -61,6 +65,39 @@
   height: 300px;
   margin: 0 0 0 auto;
 }
+// button 
+.play-btn {
+    background: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 108px;
+    animation: animate 2s linear;
+    cursor: pointer;
+    width: 100px;
+    height: 100px;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+.play-btn i {
+    color: lightgrey;
+    font-size: 102px;
+}
+@keyframes animate{
+  0%{
+    box-shadow: 0 0 0 0 lightgrey;
+  }
+  40%{
+    box-shadow: 0 0 0 50px rgba(255,193,7,0);
+  }
+  80%{
+    box-shadow: 0 0 0 50px rgba(255,193,7,0);
+  }
+  100%{
+    box-shadow: 0 0 0 rgba(255,193,7,0);
+  }
+}
 </style>
 
 <script>
@@ -90,7 +127,7 @@ export default {
   },
   methods: {
     caller(){
-      // this.index = imageIndex
+      this.index = 0
     },
     login(){
       this.redirect('login')
