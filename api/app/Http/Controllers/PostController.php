@@ -259,6 +259,7 @@ class PostController extends APIController
         $result[$i]['time'] = Carbon::createFromFormat('Y-m-d H:i:s', $result[$i]['created_at'])->copy()->tz($this->response['timezone'])->format('h:i A');
         $i++;
       }
+      // dd($result);
       $this->response['data'] = $result;
       $this->response['size'] = count($size);
       $this->response['error'] = null;
@@ -279,6 +280,16 @@ class PostController extends APIController
         'status' => 'PUBLISH'
       );
       $var = Post::create($dataArray);
+
+      $post_target = new PostTarget();
+      $dataPostHistory = array(
+        'code' => $this->generateCode($post_target),
+        'post_id' => $var->id,
+        'payload' => 'INDUSTRY',
+        'payload_value' => $data['category']
+      );
+      PostTarget::create($dataPostHistory);
+
       PostHistory::where('id', '=', $data['id'])->update(array(
         'post_id' => $var->id,
         'status' => 'for posting',
