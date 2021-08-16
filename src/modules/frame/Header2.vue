@@ -56,7 +56,7 @@
     <div class="navbar-collapse text-center d-none d-lg-block" id="navbarSupportedContent">
       <ul class="nav navbar-nav navbar-right ml-auto">
         <li class="pl-5 pr-5 nav_item">
-          <b class="font-weight-normal" @click="this.$refs.NewBanner.caller()">How It Works</b>
+          <b class="font-weight-normal" @click="openVid()">How It Works</b>
         </li>
         <!-- <li class="pl-5 pr-5 nav_item">
           <b class="font-weight-normal" href="#pricing" @click="headerScrollTo('#pricing')">Pricing</b>
@@ -87,6 +87,9 @@ export default {
   computed: {
   },
   methods: {
+    openVid(){
+      this.$root.$emit('openVideo')
+    },
     navigate(route) {
       this.$router.push(`/${route}`)
       this.isActive = true
