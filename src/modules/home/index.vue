@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NewBanner ref="newBanner"></NewBanner>
+    <NewBanner ref="ThisBanner"></NewBanner>
     <!-- <HomeBanner></HomeBanner> -->
     <!-- <CallToAction></CallToAction>
     <Subscription></Subscription>

@@ -126,10 +126,12 @@ export default {
       imageIndex1: null
     }
   },
-  methods: {
-    caller(){
+  mounted(){
+    this.$root.$on('openVideo', () => {
       this.index = 0
-    },
+    })
+  },
+  methods: {
     login(){
       this.redirect('login')
       window.scrollTo(0, 0)
