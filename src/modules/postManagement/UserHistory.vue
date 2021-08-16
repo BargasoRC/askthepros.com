@@ -45,9 +45,8 @@
             <td>{{item.post[0] != null ? item.post[0].title : null}}</td>
             <td>{{item.channel}}</td>
             <td style="color: gray"><u>{{item.link}}</u></td>
-            <td class="text-primary">Posted - Reviewed by You</td>
-            <!-- <td class="text-primary" v-if="item.post[0].parent === null">Posted Automatically</td>
-            <td class="text-warning" v-else>Posted - Reviewed by You</td> -->
+            <td class="text-primary" v-if="item.post[0].account_id != user.userID">Posted Automatically</td>
+            <td class="text-warning" v-else>Posted - Reviewed by You</td>
           </tr>
         </tbody>
       </table>

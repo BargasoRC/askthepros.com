@@ -11,8 +11,8 @@
       <textarea style="border-color: white; color: gray; margin-left: 1%" name="branding" id="branding" cols="90" v-model="branding" disabled="disabled">
       </textarea>
     </div>
-    <p style="text-align: right; font-size: 12px; color: gray;">Character count: {{character}}</p>
     <br>
+    <p style="text-align: right; font-size: 12px; color: gray;">Character count: {{character}}</p>
     <br>
     <br>
     <h5>Files:</h5>
