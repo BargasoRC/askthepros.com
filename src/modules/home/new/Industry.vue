@@ -16,7 +16,7 @@
 </template>
 <style scoped lang="scss">
 .image_format{
-    height: 300px;
+    height: 400px;
     width: 500px;
     position: relative;
     top: 3.438rem;
@@ -44,7 +44,7 @@
 
 .button_styling .s_button{
     background-color: #01009A;
-    padding: 20px;
+    padding: 16px;
     padding-left: 35px;
     padding-right: 35px;
     font-family: "Work Sans", Sans-serif;
