@@ -177,19 +177,24 @@ export default {
           $('#loading').css({'display': 'none'})
           this.errorMessage = data.error.message
         }else{
-          let parameter = {
-            source: data.source,
-            account_id: this.user.userID,
-            plan: this.data,
-            email: this.user.email,
-            name: this.user.information.first_name + ' ' + this.user.information.last_name
-          }
-          this.APIRequest('stripe_webhooks/charge_customer', parameter).then(response => {
-            $('#loading').css({'display': 'none'})
-            if(response.data){
-              this.redirect('/thankyou')
+          if(this.user.information.first_name !== undefined){
+            let parameter = {
+              source: data.source,
+              account_id: this.user.userID,
+              plan: this.data,
+              email: this.user.email,
+              name: this.user.information.first_name + ' ' + this.user.information.last_name
             }
-          })
+            this.APIRequest('stripe_webhooks/charge_customer', parameter).then(response => {
+              $('#loading').css({'display': 'none'})
+              if(response.data){
+                this.redirect('/thankyou')
+              }
+            })
+          }else{
+            $('#loading').css({'display': 'none'})
+            this.redirect('/settings')
+          }
         }
       })
     },
