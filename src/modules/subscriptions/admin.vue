@@ -8,7 +8,7 @@
         :category="category"
         :activeCategoryIndex="0"
         :activeSortingIndex="0"
-        @changeSortEvent="() => {} "
+        @changeSortEvent="retrieve($event.sort, $event.filter)"
         :grid="['list']"
         :sortByStyle="{
           background: '#01004E !important',
@@ -82,16 +82,6 @@ export default {
       category: [{
         title: 'Sort By',
         sorting: [{
-          title: 'Post ascending',
-          payload: 'post',
-          payload_value: 'asc',
-          type: 'date'
-        }, {
-          title: 'Post descending',
-          payload: 'post',
-          payload_value: 'desc',
-          type: 'date'
-        }, {
           title: 'Created ascending',
           payload: 'created_at',
           payload_value: 'asc',
@@ -102,45 +92,35 @@ export default {
           payload_value: 'desc',
           type: 'date'
         }, {
-          title: 'Title ascending',
-          payload: 'title',
+          title: 'Plan ascending',
+          payload: 'details',
           payload_value: 'asc',
           type: 'text'
         }, {
-          title: 'Title descending',
-          payload: 'title',
+          title: 'Plan descending',
+          payload: 'details',
           payload_value: 'desc',
           type: 'text'
         }, {
-          title: 'Category ascending',
-          payload: 'category',
+          title: 'Start Date ascending',
+          payload: 'start_date',
           payload_value: 'asc',
-          type: 'text'
+          type: 'date'
         }, {
-          title: 'Category descending',
-          payload: 'category',
+          title: 'Start Date descending',
+          payload: 'start_date',
           payload_value: 'desc',
-          type: 'text'
+          type: 'date'
         }, {
-          title: 'Channel ascending',
-          payload: 'channel',
+          title: 'End Date ascending',
+          payload: 'end_date',
           payload_value: 'asc',
-          type: 'text'
+          type: 'date'
         }, {
-          title: 'Channel descending',
-          payload: 'channel',
+          title: 'End Date descending',
+          payload: 'end_date',
           payload_value: 'desc',
-          type: 'text'
-        }, {
-          title: 'Author ascending',
-          payload: 'author',
-          payload_value: 'asc',
-          type: 'text'
-        }, {
-          title: 'Author descending',
-          payload: 'author',
-          payload_value: 'desc',
-          type: 'text'
+          type: 'date'
         }, {
           title: 'Status ascending',
           payload: 'status',

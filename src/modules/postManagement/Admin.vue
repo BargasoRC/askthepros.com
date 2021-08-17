@@ -17,7 +17,7 @@
         :category="category"
         :activeCategoryIndex="0"
         :activeSortingIndex="0"
-        @changeSortEvent="() => {} "
+        @changeSortEvent="retrieve($event.sort, $event.filter)"
         :grid="['list']"
         :sortByStyle="{
           background: '#01004E !important',
@@ -120,16 +120,6 @@ export default {
       category: [{
         title: 'Sort By',
         sorting: [{
-          title: 'Post ascending',
-          payload: 'post',
-          payload_value: 'asc',
-          type: 'date'
-        }, {
-          title: 'Post descending',
-          payload: 'post',
-          payload_value: 'desc',
-          type: 'date'
-        }, {
           title: 'Created ascending',
           payload: 'created_at',
           payload_value: 'asc',
@@ -150,33 +140,23 @@ export default {
           payload_value: 'desc',
           type: 'text'
         }, {
-          title: 'Category ascending',
-          payload: 'category',
-          payload_value: 'asc',
-          type: 'text'
-        }, {
-          title: 'Category descending',
-          payload: 'category',
-          payload_value: 'desc',
-          type: 'text'
-        }, {
           title: 'Channel ascending',
-          payload: 'channel',
+          payload: 'channels',
           payload_value: 'asc',
           type: 'text'
         }, {
           title: 'Channel descending',
-          payload: 'channel',
+          payload: 'channels',
           payload_value: 'desc',
           type: 'text'
         }, {
           title: 'Author ascending',
-          payload: 'author',
+          payload: 'account_id',
           payload_value: 'asc',
           type: 'text'
         }, {
           title: 'Author descending',
-          payload: 'author',
+          payload: 'account_id',
           payload_value: 'desc',
           type: 'text'
         }, {
@@ -282,6 +262,7 @@ export default {
         offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
       $('#loading').css({'display': 'block'})
+      console.log('->>>>>>>>>>>', parameter)
       this.APIRequest('post/retrieve', parameter).then(response => {
         console.log('[response]', response)
         $('#loading').css({'display': 'none'})
