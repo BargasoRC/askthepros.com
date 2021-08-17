@@ -60,7 +60,7 @@ class PostController extends APIController
     public function retrieve(Request $request) {
         $data = $request->all();
         $con = $data['condition'];
-
+        
         $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
         ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
         ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')

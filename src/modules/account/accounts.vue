@@ -142,11 +142,11 @@ export default{
         title: 'Sort by',
         sorting: [{
           title: 'Created ascending',
-          payload: 'created',
+          payload: 'created_at',
           payload_value: 'asc'
         }, {
           title: 'Created descending',
-          payload: 'created',
+          payload: 'created_at',
           payload_value: 'desc'
         }, {
           title: 'Username ascending',
@@ -165,28 +165,12 @@ export default{
           payload: 'email',
           payload_value: 'desc'
         }, {
-          title: 'Name ascending',
-          payload: 'name',
-          payload_value: 'asc'
-        }, {
-          title: 'Name descending',
-          payload: 'name',
-          payload_value: 'desc'
-        }, {
-          title: 'Business Name ascending',
-          payload: 'business_name',
-          payload_value: 'asc'
-        }, {
-          title: 'Business Name descending',
-          payload: 'business_name',
-          payload_value: 'desc'
-        }, {
           title: 'Type ascending',
-          payload: 'type',
+          payload: 'account_type',
           payload_value: 'asc'
         }, {
           title: 'Type descending',
-          payload: 'type',
+          payload: 'account_type',
           payload_value: 'desc'
         }, {
           title: 'Status ascending',
