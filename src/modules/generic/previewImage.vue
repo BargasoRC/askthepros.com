@@ -19,11 +19,29 @@
           @change="setUpFileUpload($event, add)">
       </div>
     </div>
-    <errorModal
-    ref="errorModal"
+    <!-- <confirmError
+    ref="confirmError"
     :title="'Error Message'"
     :message="'Invalid Image'"
-    />
+    /> -->
+    <div v-if="selectedImage != null" class="modal fade" id="incrementAlert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-primary" id="exampleModalLabel">Error Message</h5>
+          <button type="button" class="close" @click="hideModal()" aria-label="Close">
+            <span aria-hidden="true" class="text-primary">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <label>Invalid Image</label>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" @click="hideModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
   </div>
 </template>
 
@@ -32,7 +50,7 @@ import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import axios from 'axios'
 import COMMON from 'src/common.js'
-import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
+// import confirmError from 'src/components/increment/generic/Modal/Alert.vue'
 export default {
   props: ['imagesRetrieve', 'formData', 'edit', 'code'],
   data: () => ({
@@ -69,9 +87,19 @@ export default {
     }
   },
   components: {
-    errorModal
+    // confirmError
   },
   methods: {
+    show(){
+      $('#incrementAlert').modal({
+        show: true,
+        backdrop: 'static',
+        keyboard: false
+      })
+    },
+    hideModal(){
+      $('#incrementAlert').modal('hide')
+    },
     addImage(edit){
       $('#Image')[0].click()
     },
@@ -88,7 +116,8 @@ export default {
         if(filename.substring(filename.lastIndexOf('.')) === '.png' || filename.substring(filename.lastIndexOf('.')) === '.jpg' || filename.substring(filename.lastIndexOf('.')) === '.jpeg' || filename.substring(filename.lastIndexOf('.')) === '.gif' || filename.substring(filename.lastIndexOf('.')) === '.tif' || filename.substring(filename.lastIndexOf('.')) === '.bmp'){
           this.createFile(files[0], add)
         }else{
-          this.$refs.errorModal.show()
+          this.show()
+          // this.$refs.confirmError.show()
           this.file = null
         }
       }
@@ -99,8 +128,9 @@ export default {
       this.upload(add)
     },
     upload(add){
-      if(this.file.size < 10240){
-        this.$refs.errorModal.show()
+      if(this.file.size < 10240 && this.file != null){
+        console.log('[asdfsadf]', this.file)
+        this.show()
         this.file = null
         return
       }
