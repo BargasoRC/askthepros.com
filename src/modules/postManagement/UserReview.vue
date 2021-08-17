@@ -22,7 +22,7 @@
 
     <h5>Post To:</h5>
     <br>
-    <Toggle :text="'Google My Business'" v-model="googleMyBusiness" :isChecked="googleMyBusiness"></Toggle>
+    <Toggle :text="'Google My Business'" v-model="googleMyBusiness" :isChe`cked="googleMyBusiness"></Toggle>
     <br>
     <Toggle :text="'Facebook'" v-model="facebook" :isChecked="facebook"></Toggle>
     <br>

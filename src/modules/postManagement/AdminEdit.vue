@@ -135,7 +135,7 @@
     <errorModal
     ref="errorModal"
     :title="'Error Message'"
-    :message="'Please fill in all of the fields.'"
+    :message="'Please fill in all of the fields and put a valid image.'"
     />
   </div>
 </template>
