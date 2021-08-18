@@ -10,7 +10,7 @@
           <div class="col-sm-12">
             <div class="row">
               <div class="col-md-6 mb-3">
-                <p>Route</p>
+                <p>Street</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your route here'"
                   :class="!isValidAddress && route == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
                             border: !isValidAddress && !route ? '1px solid red !important' : 'none',
