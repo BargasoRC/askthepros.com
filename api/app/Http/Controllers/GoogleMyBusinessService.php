@@ -39,7 +39,7 @@ class GoogleMyBusinessService extends APIController
             "languageCode": "en-US",
             "summary": "'.$message.'",
             "callToAction": {
-            "actionType": "ORDER",
+                "actionType": "ORDER",
                 "url": "https://askthepros.com"
             },
             "media": [
@@ -47,7 +47,8 @@ class GoogleMyBusinessService extends APIController
                   "mediaFormat": "PHOTO",
                   "sourceUrl": "'.$image.'",
                 }
-            ]
+            ],
+            "topicType": "STANDARD'
         }';
         $curl = new CurlController($this->headers);
         $result = $curl->postRequest($this->url, $body);
