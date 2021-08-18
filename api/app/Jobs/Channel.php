@@ -66,6 +66,10 @@ class Channel implements ShouldQueue
             $this->manageLinkedIn($postHistory);
             break;
           case 'google_my_business':
+            if($branding && $branding['details'] !== null){
+              $message = "\n\n".$branding['details']['brand1']."\n\n".$branding['details']['brand2']."\n\n".$branding['details']['brand3'];
+              $postHistory['description'] .= $message;
+            }
             $this->manageGoogle($postHistory);
             break;
         }
