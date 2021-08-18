@@ -199,7 +199,9 @@ export default {
   computed: {
     returnIndustry() {
       return this.industry.map(el => {
-        return el.category
+        if(this.user.merchant.addition_informations.industry === el.category){
+          return this.user.merchant.addition_informations.industry
+        }
       })
     },
     returnImagesList() {

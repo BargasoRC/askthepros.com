@@ -179,7 +179,9 @@ export default {
         }],
         sort: sort,
         limit: this.limit,
-        offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
+        offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage,
+        account_id: false,
+        switch: false
       }
       console.log('[parameter]', parameter)
       $('#loading').css({'display': 'block'})
