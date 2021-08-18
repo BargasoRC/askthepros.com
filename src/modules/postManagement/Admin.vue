@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-end p-0 mb-5 mt-5">
-      <roundedBtn 
+      <!-- <roundedBtn 
         :onClick="createNewPost"
         :icon="'fas fa-plus'"
         :text="'New Post'"
@@ -10,7 +10,7 @@
           backgroundColor: '#01009A',
           color: 'white'
         }"
-      />
+      /> -->
     </div>
     <div class="col-sm-12 col-md-12 col-lg-12 mt-5 mb-5 p-0">
       <Search 

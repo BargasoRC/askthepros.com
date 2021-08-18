@@ -42,9 +42,13 @@ class BillingController extends APIController
     $this->model = new Billing();
     $this->retrieveDB($data);
     $con = $data['condition'];
-    $billing = Billing::where($con[0]['column'], $con[0]['clause'], $con[0]['value'])->limit(isset($data['limit']) ? $data['limit'] : 1)
-      ->offset((isset($data['offset']) ? $data['offset'] : 1))->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
-
+    if($data['switch'] === 'false'){
+      $billing = Billing::where($con[0]['column'], $con[0]['clause'], $con[0]['value'])->limit(isset($data['limit']) ? $data['limit'] : 1)
+        ->offset((isset($data['offset']) ? $data['offset'] : 1))->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+    }else{
+      $billing = Billing::where($con[0]['column'], $con[0]['clause'], $con[0]['value'])->limit(isset($data['limit']) ? $data['limit'] : 1)
+        ->offset((isset($data['offset']) ? $data['offset'] : 1))->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->where($con[1]['column'], $con[1]['clause'], $con[1]['value'])->get();
+    }
     $i = 0;
     foreach ($billing as $key => $value) {
       $details = json_decode($value['details'], true);
