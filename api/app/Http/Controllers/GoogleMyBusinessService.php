@@ -42,13 +42,14 @@ class GoogleMyBusinessService extends APIController
                 "actionType": "ORDER",
                 "url": "https://askthepros.com"
             },
+
+            "topicType": "STANDARD",
             "media": [
                 {
                   "mediaFormat": "PHOTO",
                   "sourceUrl": "'.$image.'",
                 }
             ],
-            "topicType": "STANDARD'
         }';
         $curl = new CurlController($this->headers);
         $result = $curl->postRequest($this->url, $body);
