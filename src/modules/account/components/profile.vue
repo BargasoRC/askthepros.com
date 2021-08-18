@@ -16,7 +16,7 @@
                       }" v-model="firstname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="firstname == '' || firstname == undefined && !isValidProfile">
+                    v-if="firstname == '' && !isValidProfile">
                     {{
                     'Required Field'
                     }}</p>
@@ -30,7 +30,7 @@
                     }" v-model="lastname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="lastname == '' || lastname == undefined  && !isValidProfile">
+                    v-if="lastname == ''  && !isValidProfile">
                     {{
                     'Required Field'
                     }}</p>
@@ -47,7 +47,7 @@
                     }" v-model="businessname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="businessname == '' || businessname == undefined && !isValidProfile">
+                    v-if="businessname == '' && !isValidProfile">
                     {{
                     'Required Field'
                     }}</p>
@@ -61,7 +61,7 @@
                     }" v-model="contactnumber" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="contactnumber == '' || contactnumber == undefined && !isValidProfile">
+                    v-if="contactnumber == '' && !isValidProfile">
                     {{
                     'Required Field'
                     }}</p>
