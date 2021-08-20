@@ -3,7 +3,7 @@
     <h3>Hello, Admin!</h3>
     <p>Here are the latest update of activities as of today.</p>
     <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-end p-0 mt-0">
-        <!-- <roundedBtn
+        <roundedBtn
             :onClick="newPost"
             :icon="'fas fa-plus'"
             :text="'New Post'"
@@ -12,7 +12,7 @@
                 backgroundColor: '#01004E',
                 color: 'white'
             }"
-        /> -->
+        />
     </div>
     <div class="row">
       <div class="col-lg-9 latest_posts">
