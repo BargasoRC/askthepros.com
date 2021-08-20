@@ -178,7 +178,6 @@ export default {
   },
   mounted() {
     this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
-    console.log('[]', this.user)
   },
   computed: {
     returnTableData() {
