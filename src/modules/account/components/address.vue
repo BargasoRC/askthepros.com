@@ -134,6 +134,9 @@ export default {
     roundedInput,
     roundedBtn
   },
+  mounted(){
+    this.retrieveInformation()
+  },
   computed: {
     returnProfile() {
       return this.user.profile
