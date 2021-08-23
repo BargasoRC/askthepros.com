@@ -99,7 +99,7 @@ import Pager from 'src/components/increment/generic/pager/Pager.vue'
 import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
 import ROUTER from 'src/router'
 import CONFIG from 'src/config.js'
-import Search from 'src/components/increment/generic/filter/Basic'
+import Search from 'src/components/increment/generic/filter/FilterWithCalendar.vue'
 import preview from './UserPreview.vue'
 export default {
   data() {

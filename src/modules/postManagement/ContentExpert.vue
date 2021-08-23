@@ -53,7 +53,7 @@
           <label for="category"><b>Category</b></label>
           <searchField
             :placeholder="'Select Industry'"
-            :items="industry"
+            :items="item"
             :styles="{
               background: 'none',
               color: '#84868B !important',
@@ -184,7 +184,8 @@ export default {
       character: 0,
       selectedIndex: null,
       selectedItem: null,
-      render: false
+      render: false,
+      item: []
     }
   },
   components: {
@@ -200,7 +201,8 @@ export default {
     returnIndustry() {
       return this.industry.map(el => {
         if(this.user.merchant.addition_informations.industry === el.category){
-          return this.user.merchant.addition_informations.industry
+          this.item.push(el)
+          return this.item
         }
       })
     },
@@ -236,6 +238,12 @@ export default {
         $('#loading').css({'display': 'none'})
         if(response.data.length > 0) {
           this.industry = response.data
+          this.industry.map(el => {
+            if(this.user.merchant.addition_informations.industry === el.category){
+              this.item.push(el)
+              return this.item
+            }
+          })
         }else{
           this.industry = []
         }

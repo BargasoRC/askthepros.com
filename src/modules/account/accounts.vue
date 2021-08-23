@@ -143,43 +143,53 @@ export default{
         sorting: [{
           title: 'Created ascending',
           payload: 'created_at',
-          payload_value: 'asc'
+          payload_value: 'asc',
+          type: 'date'
         }, {
           title: 'Created descending',
           payload: 'created_at',
-          payload_value: 'desc'
+          payload_value: 'desc',
+          type: 'date'
         }, {
           title: 'Username ascending',
           payload: 'username',
-          payload_value: 'asc'
+          payload_value: 'asc',
+          type: 'text'
         }, {
           title: 'Username descending',
           payload: 'username',
-          payload_value: 'desc'
+          payload_value: 'desc',
+          type: 'text'
         }, {
           title: 'Email ascending',
           payload: 'email',
-          payload_value: 'asc'
+          payload_value: 'asc',
+          type: 'text'
         }, {
           title: 'Email descending',
           payload: 'email',
-          payload_value: 'desc'
+          payload_value: 'desc',
+          type: 'text'
         }, {
           title: 'Type ascending',
           payload: 'account_type',
-          payload_value: 'asc'
+          payload_value: 'asc',
+          type: 'text'
         }, {
           title: 'Type descending',
           payload: 'account_type',
-          payload_value: 'desc'
+          payload_value: 'desc',
+          type: 'text'
         }, {
           title: 'Status ascending',
           payload: 'status',
-          payload_value: 'asc'
+          payload_value: 'asc',
+          type: 'text'
         }, {
           title: 'Status descending',
           payload: 'status',
-          payload_value: 'desc'
+          payload_value: 'desc',
+          type: 'text'
         }]
       }],
       filter: null,
@@ -193,7 +203,7 @@ export default{
   },
   components: {
     'empty': require('components/increment/generic/empty/Empty.vue'),
-    'basic-filter': require('components/increment/generic/filter/Basic.vue'),
+    'basic-filter': require('src/components/increment/generic/filter/FilterWithCalendar.vue'),
     Pager
 
   },
