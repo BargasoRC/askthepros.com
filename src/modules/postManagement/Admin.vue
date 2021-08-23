@@ -7,7 +7,7 @@
         :text="'New Post'"
         :icon_position="'right'"
         :styles="{
-          backgroundColor: '#01009A',
+          backgroundColor: '#01004E',
           color: 'white'
         }"
       />
