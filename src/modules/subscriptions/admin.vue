@@ -56,7 +56,7 @@
 
 <script>
 import DataTable from 'src/modules/generic/table'
-import Search from 'src/components/increment/generic/filter/Basic'
+import Search from 'src/components/increment/generic/filter/FilterWithCalendar.vue'
 import Pager from 'src/components/increment/generic/pager/Pager.vue'
 import AUTH from 'src/services/auth'
 export default {
@@ -179,7 +179,9 @@ export default {
         }],
         sort: sort,
         limit: this.limit,
-        offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
+        offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage,
+        account_id: false,
+        switch: false
       }
       console.log('[parameter]', parameter)
       $('#loading').css({'display': 'block'})

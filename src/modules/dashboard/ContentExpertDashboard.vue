@@ -118,7 +118,7 @@ p {
 }
 </style>
 <script>
-import Search from 'src/components/increment/generic/filter/BasicVersion3.vue'
+import Search from 'src/components/increment/generic/filter/FilterWithCalendar.vue'
 import DataTable from 'src/modules/generic/table'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
@@ -152,8 +152,8 @@ export default {
       category: [{
         title: 'Sort By',
         sorting: [
-          {title: 'Created Ascending', payload: 'created_at', payload_value: 'asc', type: 'text'},
-          {title: 'Created Descending', payload: 'created_at', payload_value: 'desc', type: 'text'},
+          {title: 'Created Ascending', payload: 'created_at', payload_value: 'asc', type: 'date'},
+          {title: 'Created Descending', payload: 'created_at', payload_value: 'desc', type: 'date'},
           {title: 'Title Ascending', payload: 'title', payload_value: 'asc', type: 'text'},
           {title: 'Title Descending', payload: 'title', payload_value: 'desc', type: 'text'},
           {title: 'Channel Ascending', payload: 'channel', payload_value: 'asc', type: 'text'},
