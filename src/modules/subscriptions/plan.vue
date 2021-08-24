@@ -309,6 +309,7 @@ hr {
   float: left;
   padding: 15px;
   border-radius: 5px;
+  margin-bottom: 25px;
   border: solid 1px #ddd;
 }
 
