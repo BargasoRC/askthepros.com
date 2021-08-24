@@ -51,8 +51,12 @@
       <i id="stripe" class="far fa-circle"  v-if="!payment" @click="choose"></i>
       <label for="stripe" class="stripe_label">Stripe</label>
     </div> -->
-    <div class="mt-3">
-      <img class="payment" :src="require('src/assets/img/pay_methods.png')" alt="Payment Methods">
+    <div class="mt-3 icons-fontawesome">
+      <i class="fa fa-cc-visa"></i>
+      <i class="fa fa-cc-discover"></i>
+      <i class="fa fa-cc-mastercard"></i>
+      <i class="fa fa-cc-amex"></i>
+      <i class="fa fa-cc-jcb"></i>
     </div>
     <div class="col-sm-6 p-0 mt-3" v-if="selected !== null">
       <div class="mt-3 d-flex justify-content-start">
@@ -196,5 +200,10 @@ export default {
 .form-control{
   height: 50px !important;
   border-radius: 25px !important;
+}
+
+.icons-fontawesome{
+  font-size: 32px;
+  color: $primary;
 }
 </style>

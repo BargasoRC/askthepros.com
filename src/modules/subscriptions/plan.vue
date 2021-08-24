@@ -116,6 +116,9 @@ import Confirmation from 'src/components/increment/generic/modal/Confirmation.vu
 export default {
   mounted(){
     this.retrieve()
+    if((this.user && this.user.information === null) || (this.user && this.user.information && this.user.information.first_name === null) || (this.user && this.user.information && this.user.information.last_name === null)){
+      this.redirect('/settings')
+    }
   },
   data() {
     return {

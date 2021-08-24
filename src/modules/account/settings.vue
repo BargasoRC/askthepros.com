@@ -78,7 +78,8 @@ export default {
       data: null,
       file: null,
       copiedIndex: null,
-      passwordVerified: false
+      passwordVerified: false,
+      username: null
     }
   },
   components: {
