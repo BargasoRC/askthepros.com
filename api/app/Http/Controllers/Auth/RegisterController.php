@@ -11,6 +11,7 @@ use Increment\Account\Models\Account;
 use Increment\Account\Models\AccountInformation;
 use Increment\Account\Models\BillingInformation;
 use Increment\Imarket\Merchant\Models\Merchant;
+use Increment\Common\Payload\Models\Payload;
 
 class RegisterController extends APIController
 {
@@ -57,6 +58,16 @@ class RegisterController extends APIController
             $merchant->addition_informations = $request['industry'];
             $merchant->save();
 
+            if($account && $account->id){
+              Payload::insert(array(
+                'account_id' => $account->id,
+                'payload'   => 'automation_settings',
+                'payload_value' => 'OFF',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+              ));
+            }
+
 
             \DB::commit();
             $this->response['data'] = 'account_successfully_created';
@@ -87,7 +98,7 @@ class RegisterController extends APIController
     }
 
     public function generateCode($db){
-      $code = substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 32);
+      $code = 'acc_' . substr(str_shuffle($this->codeSource), 0, 60);
       $codeExist = $db::where('code', '=', $code)->get();
       if(sizeof($codeExist) > 0){
         $this->generateCode();

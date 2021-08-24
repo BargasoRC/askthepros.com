@@ -7,6 +7,7 @@ use Increment\Account\Models\Account;
 use Increment\Account\Models\AccountProfile;
 use Increment\Account\Models\AccountInformation;
 use App\SocialAuths;
+use Increment\Common\Payload\Models\Payload;
 use Socialite;
 use Carbon\Carbon;
 class SocialController extends APIController
@@ -99,6 +100,14 @@ class SocialController extends APIController
             'first_name' => $firstName,
             'last_name' => $lastName,
             'created_at' => Carbon::now()
+          ));
+
+          Payload::insert(array(
+            'account_id' => $acc->id,
+            'payload'   => 'automation_settings',
+            'payload_value' => 'OFF',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
           ));
         }
       }
