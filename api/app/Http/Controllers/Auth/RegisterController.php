@@ -59,13 +59,14 @@ class RegisterController extends APIController
             $merchant->save();
 
             if($account && $account->id){
-              Payload::insert(array(
-                'account_id' => $account->id,
-                'payload'   => 'automation_settings',
-                'payload_value' => 'OFF',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-              ));
+                Payload::insert(array(
+                    'account_id' => $account->id,
+                    'payload'   => 'automation_settings',
+                    'payload_value' => 'OFF',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ));
+                app('App\Http\Controllers\EmailController')->verification($account->id);
             }
 
 
