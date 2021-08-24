@@ -16,7 +16,7 @@
                       }" v-model="firstname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="firstname == '' && !isValidProfile">
+                    v-if="firstname == undefined && !isValidProfile">
                     {{
                     'Required Field'
                     }}</p>
@@ -30,7 +30,7 @@
                     }" v-model="lastname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="lastname == ''  && !isValidProfile">
+                    v-if="lastname == undefined  && !isValidProfile">
                     {{
                     'Required Field'
                     }}</p>
@@ -61,7 +61,7 @@
                     }" v-model="contactnumber" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="contactnumber == '' && !isValidProfile">
+                    v-if="contactnumber == undefined && !isValidProfile">
                     {{
                     'Required Field'
                     }}</p>
@@ -121,6 +121,9 @@ export default {
     returnProfile() {
       return this.user.profile
     }
+  },
+  mounted(){
+    this.retrieveInformation()
   },
   watch: {
     username: function(val) {
