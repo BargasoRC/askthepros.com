@@ -129,6 +129,7 @@ export default {
       canUpdateAddress: false
     }
   },
+  props: ['longitude', 'latitude'],
   components: {
     dialogueBtn,
     roundedInput,
@@ -203,7 +204,9 @@ export default {
             city: this.city,
             region: this.region,
             country: this.country,
-            postalZipCode: this.postalZipCode
+            postalZipCode: this.postalZipCode,
+            latitude: this.latitude,
+            longitude: this.longitude
           })
         }
         let info = AUTH.user.information
