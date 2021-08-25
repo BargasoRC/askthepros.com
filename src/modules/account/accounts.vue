@@ -198,7 +198,8 @@ export default{
       newAccountType: null,
       selectedAccount: null,
       activeItem: 'home',
-      activePage: 1
+      activePage: 1,
+      location: null
     }
   },
   components: {
