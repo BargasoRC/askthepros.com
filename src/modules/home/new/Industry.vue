@@ -1,6 +1,6 @@
 <template>
     <div id="container">
-        <div><img class="image_format" :src="require('assets/img/board.jpg')"/></div>
+        <div><img class="image_format" :src="require('assets/img/boardd.jpg')"/></div>
         <div><img class="image_format2" :src="require('assets/img/woman.png')"/></div> 
         <div class="button_list">
             <div class="button_styling">
