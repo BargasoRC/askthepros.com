@@ -36,7 +36,19 @@
                 class="mb-0 pb-0 invalidEmail"
                 v-if="!this.isValid && username == ''"
               >Required Field</p>
-              <roundedInput 
+
+              <div class="roudedInput">
+                <div class="input-group">
+                  <input class="form-control roudedInput !this.isValid && password == ''? 'mb-0 ' : ' LoginField'" :type="visibility" placeholder="Password" styles="border: !this.isValid && password == '' ? '1px solid red !important' : 'none'; background-color: none, border-color: white; border: white" v-model="password" @keyup.enter="login()">
+                  <span style="background: white; margin-top: 3%; margin-right: 3%" class="roundedInput">
+                    <i v-if="visibility == 'password'" @click="showPassword()" class="fa fa-eye" aria-hidden="true"></i>
+                    <i v-if="visibility == 'text'" @click="hidePassword()" class="fa fa-eye-slash" aria-hidden="true"></i>
+                  </span>
+                </div>
+              </div>
+              <br>
+
+              <!-- <roundedInput 
                 :type="'password'"
                 :placeholder="'Password'"
                 :class="!this.isValid && password == ''? 'mb-0 ' : ' LoginField'"
@@ -45,7 +57,7 @@
                 }"
                 v-model="password"
                 :onEnter="login"
-              />
+              /> -->
               <p
                 class="mb-0 pb-0 invalidEmail"
                 v-if="!this.isValid && password == ''"
@@ -160,7 +172,8 @@ export default {
       errorMessage: '',
       isValid: true,
       colors: COLORS,
-      user: AUTH.user
+      user: AUTH.user,
+      visibility: 'password'
     }
   },
   components: {
@@ -170,6 +183,12 @@ export default {
   },
   mounted() {},
   methods: {
+    showPassword() {
+      this.visibility = 'text'
+    },
+    hidePassword() {
+      this.visibility = 'password'
+    },
     login(event) {
       if(this.username !== '' && this.password !== '') {
         this.isValid = true
@@ -248,6 +267,13 @@ export default {
 
 <style lang="scss" scoped>
 @import "~assets/style/colors.scss";
+.roudedInput {
+  outline: none !important;
+  box-shadow: none !important;
+  height: 45px !important;
+  border-radius: 40px !important;
+  border: 1px solid $gray !important;
+}
 .errorMessage {
   margin-top: -14px;
   color: $danger;
