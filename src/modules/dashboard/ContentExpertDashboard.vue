@@ -154,8 +154,8 @@ export default {
           {title: 'Created Descending', payload: 'created_at', payload_value: 'desc', type: 'date'},
           {title: 'Title Ascending', payload: 'title', payload_value: 'asc', type: 'text'},
           {title: 'Title Descending', payload: 'title', payload_value: 'desc', type: 'text'},
-          {title: 'Channel Ascending', payload: 'channel', payload_value: 'asc', type: 'text'},
-          {title: 'Channel Descending', payload: 'channel', payload_value: 'desc', type: 'text'},
+          {title: 'Channel Ascending', payload: 'channels', payload_value: 'asc', type: 'text'},
+          {title: 'Channel Descending', payload: 'channels', payload_value: 'desc', type: 'text'},
           {title: 'Status Ascending', payload: 'status', payload_value: 'asc', type: 'text'},
           {title: 'Status Descending', payload: 'status', payload_value: 'desc', type: 'text'}
         ]
@@ -232,6 +232,7 @@ export default {
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve_by_user', parameter).then(response => {
+        console.log('[cre]', response.data)
         $('#loading').css({'display': 'none'})
         if(response.data.length > 0) {
           this.tableData = response.data
