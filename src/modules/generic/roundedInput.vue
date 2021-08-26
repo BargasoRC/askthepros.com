@@ -10,15 +10,11 @@
         return res
       }): () => {}"
     />
-    <span style="background: white;" class="input-group-addon password" v-if="visible">
-      <i v-if="type == 'password'" @click="showPassword()" class="fa fa-eye" aria-hidden="true"></i>
-      <i v-if="type == 'text'" @click="hidePassword()" class="fa fa-eye-slash" aria-hidden="true"></i>
-    </span>
   </div>
 </template>
 <script>
 export default {
-  props: ['type', 'styles', 'placeholder', 'classes', 'onEnter', 'visible'],
+  props: ['type', 'styles', 'placeholder', 'classes', 'onEnter'],
   methods: {
     onChange(event) {
       this.$emit('input', event.target.value)
