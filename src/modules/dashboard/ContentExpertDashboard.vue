@@ -19,7 +19,7 @@
         :category="category"
         :activeCategoryIndex="0"
         :activeSortingIndex="0"
-        @changeSortEvent="() => {} "  
+        @changeSortEvent="retrieve($event.sort, $event.filter)"
         :grid="['list']"
       />
     </div>
@@ -67,9 +67,7 @@
       ref="confirm"
       :message="'Are you sure do you want to delete this post?'"
       :title="'Confirmation'"
-      @onConfirm="e => {
-        remove(e)
-      }"
+      @onConfirm="e => remove(e)"
       v-if="deleteId"
     ></Confirmation>
   </div>
@@ -277,13 +275,14 @@ export default {
       }, 100)
     },
     remove(e){
+      console.log('[sadfsdf]', e)
       let parameter = {
         id: e.id
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/delete', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        this.retrieve()
+        this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
       })
     }
   }
