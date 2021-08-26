@@ -1,7 +1,8 @@
 <template>
-    <div>
+    <div id="container">
         <div><img class="image_format" :src="require('assets/img/boardd.jpg')"/></div>
-         <div class="button_list">
+        <div><img class="image_format2" :src="require('assets/img/woman.png')"/></div> 
+        <div class="button_list">
             <div class="button_styling">
                 <a class="s_button" href="">Veterinarian's</a>
             </div>
@@ -11,21 +12,38 @@
             <div class="button_styling">
                 <a class="s_button" href="">Real Estate Agents</a>
             </div>
-        </div> 
+        </div>
     </div>
 </template>
 <style scoped lang="scss">
-.image_format{
-    height: 400px;
-    width: 500px;
+#container{
     position: relative;
-    top: 3.438rem;
-    left: 5rem;
-    z-index: -1;
+    height: 400px;
 }
 
+.image_format{
+    height: 290px;
+    width: 500px;
+    position: absolute;
+    top: 11rem;
+    left: 5.5rem;
+    z-index: -3;
+}
+
+.image_format2{
+    position: absolute;
+    height: 550px;
+    width: 600px;
+    top: 1rem;
+    left: 2rem;
+    z-index: 2;
+}
 .button_list{
-    margin-top: -15rem;
+    //margin-top: 11rem;
+    position: relative;
+    top: 13.5rem;
+    left: 0rem;
+
 
     @media only screen and (max-width: 600px) {
         body {
@@ -39,7 +57,7 @@
     //background-color: lightblue;
     text-align: center;
     justify-content: center;
-    width: 70%;
+    width: 48rem;
 }
 
 .button_styling .s_button{
