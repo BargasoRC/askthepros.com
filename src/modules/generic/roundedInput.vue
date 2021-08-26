@@ -1,16 +1,14 @@
 <template>
-  <div>
-    <input 
-      :type="type ? type : 'text'"
-      :style="styles"
-      :placeholder="placeholder"
-      :class="'form-control roudedInput ' + classes"
-      @input="onChange"
-      v-on:keyup.enter="onEnter !== undefined ? enter(onEnter($event)).then((res) => {
-        return res
-      }): () => {}"
-    />
-  </div>
+  <input 
+    :type="type ? type : 'text'"
+    :style="styles"
+    :placeholder="placeholder"
+    :class="'form-control roudedInput ' + classes"
+    @input="onChange"
+    v-on:keyup.enter="onEnter !== undefined ? enter(onEnter($event)).then((res) => {
+      return res
+    }): () => {}"
+  />
 </template>
 <script>
 export default {
