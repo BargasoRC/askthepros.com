@@ -5,16 +5,15 @@
         <div class="my-title mb-5">
           <h3>Address</h3>
         </div>
-
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <p>Street</p>
-                <roundedInput :type="'text'" :placeholder="'Enter your route here'"
-                  :class="!isValidAddress && route == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                            border: !isValidAddress && !route ? '1px solid red !important' : 'none',
-                          }" v-model="route" class="input-style" />
+        <!-- <div class="row"> -->
+          <!-- <div class="col-sm-12"> -->
+            <!-- <div class="row"> -->
+              <!-- <div class="col-md-6 mb-3">
+                <p>Address</p>
+                <roundedBtn :onClick="selectedLocation" :icon="'fas fa-sign-in-alt'" :text="'Update'" :styles="{
+                  backgroundColor: '#01004E',
+                  color: 'white'
+                }" style="margin-bottom: 5%;"  />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
                     v-if="route == '' || route == undefined  && !isValidAddress">
@@ -22,9 +21,9 @@
                     'Required Field'
                     }}</p>
                 </div>
-              </div>
+              </div> -->
 
-              <div class="col-md-6 mb-3">
+              <!-- <div class="col-md-6 mb-3">
                 <p>City</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your city here'"
                   :class="!isValidAddress && city == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
@@ -86,8 +85,18 @@
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </div> -->
+        <!-- </div>
+
+        <roundedBtn :onClick="update_account" :icon="'fas fa-sign-in-alt'" :text="'Update'" :styles="{
+          backgroundColor: '#01004E',
+          color: 'white'
+        }" style="margin-bottom: 5%;" /> -->
+        <googleMap
+        ref="mapa"
+        @onSelect="setLocation"
+        ></googleMap>
+        <br>
 
         <roundedBtn :onClick="update_account" :icon="'fas fa-sign-in-alt'" :text="'Update'" :styles="{
           backgroundColor: '#01004E',
@@ -99,13 +108,13 @@
   </div>
 </template>
 <script>
+import googleMap from 'src/components/increment/generic/map/PinLocation.vue'
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import roundedInput from 'src/modules/generic/roundedInput'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
-import axios from 'axios'
 import $ from 'jquery'
 import global from 'src/helpers/global'
 import ROUTER from 'src/router'
@@ -126,14 +135,15 @@ export default {
       postalZipCode: '',
       isValid: true,
       isValidAddress: true,
-      canUpdateAddress: false
+      canUpdateAddress: false,
+      selectedLocation: null
     }
   },
-  props: ['longitude', 'latitude'],
   components: {
     dialogueBtn,
     roundedInput,
-    roundedBtn
+    roundedBtn,
+    googleMap
   },
   mounted(){
     this.retrieveInformation()
@@ -164,6 +174,9 @@ export default {
     this.retrieveInformation()
   },
   methods: {
+    setLocation(value){
+      this.selectedLocation = value
+    },
     retrieveInformation() {
       let parameter = {
         account_id: this.user.userID
@@ -182,16 +195,17 @@ export default {
           this.lastname = data.last_name
           this.contactnumber = data.cellular_number
           let address = data.address ? JSON.parse(data.address) : {}
+          // if(address !== null || address !== ''){
+          //   this.$refs.mapa.setMarker(address)
+          // }
           this.route = address ? address.route : ''
-          this.city = address ? address.city : ''
           this.region = address ? address.region : ''
           this.country = address ? address.country : ''
-          this.postalZipCode = address ? address.postalZipCode : ''
         }
       })
     },
     update_account(event){
-      console.log('...updating', this.canUpdateAddress, 'validated: ', this.validate())
+      console.log('...updating', this.$refs.mapa.geocodePosition())
       if(!this.validate()) {
         console.log('Validation Failed')
         // return
@@ -200,13 +214,12 @@ export default {
         let parameter = {
           account_id: this.user.userID,
           address: JSON.stringify({
-            route: this.route,
-            city: this.city,
-            region: this.region,
-            country: this.country,
-            postalZipCode: this.postalZipCode,
-            latitude: this.latitude,
-            longitude: this.longitude
+            route: this.selectedLocation.route,
+            locality: this.selectedLocation.locality,
+            region: this.selectedLocation.region,
+            country: this.selectedLocation.country,
+            latitude: this.selectedLocation.latitude,
+            longitude: this.selectedLocation.longitude
           })
         }
         let info = AUTH.user.information
@@ -235,8 +248,8 @@ export default {
       }
     },
     validate() {
-      if(this.route !== '' || this.region !== '' || this.city !== '' || this.postalZipCode !== '' || this.city !== '' || this.country !== '') {
-        if(!this.route || !this.region || !this.city || !this.postalZipCode || !this.city || !this.country) {
+      if(this.route !== '' || this.region !== '' || this.country !== '') {
+        if(!this.route || !this.region || !this.country) {
           this.canUpdateAddress = false
           this.isValidAddress = false
         }else{
@@ -254,6 +267,25 @@ export default {
       }else {
         return true
       }
+      // if(this.route !== '' || this.region !== '' || this.city !== '' || this.postalZipCode !== '' || this.city !== '' || this.country !== '') {
+      //   if(!this.route || !this.region || !this.city || !this.postalZipCode || !this.city || !this.country) {
+      //     this.canUpdateAddress = false
+      //     this.isValidAddress = false
+      //   }else{
+      //     this.canUpdateAddress = true
+      //     this.isValidAddress = true
+      //   }
+      // }else {
+      //   this.canUpdateAddress = false
+      //   this.isValidAddress = false
+      // }
+      // console.log('Can update profile ', this.canUpdateAddress, 'Is valid address', this.isValidAddress)
+      // console.log('Route', this.route)
+      // if(!this.isValidAddress) {
+      //   return false
+      // }else {
+      //   return true
+      // }
     }
   }
 }
