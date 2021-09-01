@@ -195,9 +195,9 @@ export default {
           this.lastname = data.last_name
           this.contactnumber = data.cellular_number
           let address = data.address ? JSON.parse(data.address) : {}
-          // if(address !== null || address !== ''){
-          //   this.$refs.mapa.setMarker(address)
-          // }
+          if(address !== null || address !== ''){
+            this.$refs.mapa.setMarker(address)
+          }
           this.route = address ? address.route : ''
           this.region = address ? address.region : ''
           this.country = address ? address.country : ''

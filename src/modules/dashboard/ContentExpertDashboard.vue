@@ -234,9 +234,11 @@ export default {
       this.APIRequest('post/retrieve_by_user', parameter).then(response => {
         console.log('[cre]', response.data)
         $('#loading').css({'display': 'none'})
-        if(response.data.length > 0) {
+        if(!response.error) {
           this.tableData = response.data
           this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
+        }else{
+          this.tableData = []
         }
       })
     },

@@ -150,8 +150,8 @@ export default {
           email: this.email
         }
         this.APIRequest('accounts/request_reset', parameter).then(response => {
+          console.log('ACCOUNTS RESPONSE: ', response)
           if(response.data === true){
-            console.log('ACCOUNTS RESPONSE: ', response)
             this.showResponse = true
             this.showError = false
           }else{
