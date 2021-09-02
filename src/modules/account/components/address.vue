@@ -5,23 +5,44 @@
         <div class="my-title mb-5">
           <h3>Address</h3>
         </div>
-        <!-- <div class="row"> -->
+        <div class="row">
           <!-- <div class="col-sm-12"> -->
             <!-- <div class="row"> -->
-              <!-- <div class="col-md-6 mb-3">
-                <p>Address</p>
-                <roundedBtn :onClick="selectedLocation" :icon="'fas fa-sign-in-alt'" :text="'Update'" :styles="{
+              <!-- <div class="col-md-6 mb-3"> -->
+                <div class="col-md-5 mb-3">
+                  <!-- <roundedInput :type="'text'" :placeholder="'Enter your city here'"
+                  :class="!isValidAddress && city == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
+                          border: !isValidAddress && !city ? '1px solid red !important' : 'none',
+                        }" v-model="city" class="input-style" />
+                  <div>
+                    <p class="mb-0 pb-0 requiredFieldError"
+                      v-if="city == '' || city == undefined && !isValidAddress">
+                      {{
+                      'Required Field'
+                      }}</p>
+                  </div> -->
+                  <vue-google-autocomplete
+                      ref="address"
+                      id="map"
+                      classname="form-control roudedInput"
+                      :placeholder="selectedLocation == null ? 'Please type your address' : selectedLocation"
+                      v-on:placechanged="getAddressData"
+                      country="sg"
+                  >
+                  </vue-google-autocomplete>
+                </div>
+                <!-- <roundedBtn :onClick="setLocation" :icon="'fas fa-sign-in-alt'" :text="'Select Location'" :styles="{
                   backgroundColor: '#01004E',
                   color: 'white'
-                }" style="margin-bottom: 5%;"  />
-                <div>
+                }" /> -->
+                <!-- <div>
                   <p class="mb-0 pb-0 requiredFieldError"
                     v-if="route == '' || route == undefined  && !isValidAddress">
                     {{
                     'Required Field'
                     }}</p>
-                </div>
-              </div> -->
+                </div> -->
+              <!-- </div> -->
 
               <!-- <div class="col-md-6 mb-3">
                 <p>City</p>
@@ -86,17 +107,13 @@
               </div>
             </div>
           </div> -->
-        <!-- </div>
-
-        <roundedBtn :onClick="update_account" :icon="'fas fa-sign-in-alt'" :text="'Update'" :styles="{
-          backgroundColor: '#01004E',
-          color: 'white'
-        }" style="margin-bottom: 5%;" /> -->
-        <googleMap
-        ref="mapa"
-        @onSelect="setLocation"
-        ></googleMap>
-        <br>
+        </div>
+        
+        <p class="mb-1 pb-0 requiredFieldError"
+        v-if="selectedLocation == '' || selectedLocation == null && !isValidAddress">
+        {{
+        'Required Field'
+        }}</p>
 
         <roundedBtn :onClick="update_account" :icon="'fas fa-sign-in-alt'" :text="'Update'" :styles="{
           backgroundColor: '#01004E',
@@ -108,7 +125,7 @@
   </div>
 </template>
 <script>
-import googleMap from 'src/components/increment/generic/map/PinLocation.vue'
+import VueGoogleAutocomplete from 'vue-google-autocomplete'
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import roundedInput from 'src/modules/generic/roundedInput'
 import roundedBtn from 'src/modules/generic/roundedBtn'
@@ -117,7 +134,6 @@ import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import $ from 'jquery'
 import global from 'src/helpers/global'
-import ROUTER from 'src/router'
 export default {
   data() {
     return {
@@ -128,7 +144,7 @@ export default {
       global: global,
       errorMessage: null,
       data: null,
-      route: '',
+      address: '',
       city: '',
       region: '',
       country: '',
@@ -143,7 +159,7 @@ export default {
     dialogueBtn,
     roundedInput,
     roundedBtn,
-    googleMap
+    VueGoogleAutocomplete
   },
   mounted(){
     this.retrieveInformation()
@@ -174,8 +190,8 @@ export default {
     this.retrieveInformation()
   },
   methods: {
-    setLocation(value){
-      this.selectedLocation = value
+    getAddressData(addressData, placeResultData, id) {
+      this.selectedLocation = addressData
     },
     retrieveInformation() {
       let parameter = {
@@ -194,18 +210,13 @@ export default {
           this.firstname = data.first_name
           this.lastname = data.last_name
           this.contactnumber = data.cellular_number
-          let address = data.address ? JSON.parse(data.address) : {}
-          if(address !== null || address !== ''){
-            this.$refs.mapa.setMarker(address)
-          }
-          this.route = address ? address.route : ''
-          this.region = address ? address.region : ''
-          this.country = address ? address.country : ''
+          let address = data.address ? JSON.parse(data.address) : ''
+          this.selectedLocation = Object.keys(address).length > 0 ? address.route + ', ' + address.locality + ', ' + address.country : null
+          this.getAddressData(this.selectedLocation)
         }
       })
     },
     update_account(event){
-      console.log('...updating', this.$refs.mapa.geocodePosition())
       if(!this.validate()) {
         console.log('Validation Failed')
         // return
@@ -216,7 +227,6 @@ export default {
           address: JSON.stringify({
             route: this.selectedLocation.route,
             locality: this.selectedLocation.locality,
-            region: this.selectedLocation.region,
             country: this.selectedLocation.country,
             latitude: this.selectedLocation.latitude,
             longitude: this.selectedLocation.longitude
@@ -248,15 +258,10 @@ export default {
       }
     },
     validate() {
-      if(this.route !== '' || this.region !== '' || this.country !== '') {
-        if(!this.route || !this.region || !this.country) {
-          this.canUpdateAddress = false
-          this.isValidAddress = false
-        }else{
-          this.canUpdateAddress = true
-          this.isValidAddress = true
-        }
-      }else {
+      if(this.selectedLocation) {
+        this.canUpdateAddress = true
+        this.isValidAddress = true
+      }else{
         this.canUpdateAddress = false
         this.isValidAddress = false
       }
@@ -293,6 +298,13 @@ export default {
 
 <style scoped lang="scss" scoped>
 @import "~assets/style/colors.scss";
+.roudedInput {
+  outline: none !important;
+  box-shadow: none !important;
+  height: 45px !important;
+  border-radius: 40px !important;
+  border: 1px solid $gray !important;
+}
 .invalidEmail {
   color: $danger;
   font-size: 10px;
