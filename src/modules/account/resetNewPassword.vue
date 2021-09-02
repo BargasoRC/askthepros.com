@@ -16,24 +16,30 @@
         <div class="card LoginCard">
           <div class="card-body LoginCardBody">
             <div class="d-flex justify-content-center pt-5 pb-5 mb-3">
-              <b>Request to Reset Password with AskThePros</b>
+              <b>Reset Password with AskThePros</b>
             </div>
-            <div class="roudedInput">
+            <div class="login-message-holder login-spacer" v-if="errorMessage != '' && updateFlag === false">
+            <span class="text-danger text-center" v-if="errorMessage !== null"><b>Oops!</b> {{errorMessage}}</span>
+            </div>
+            <div class="login-message-holder login-spacer" v-if="updateFlag === true">
+                <span class="text-center">Your password was successully updated! To login click the login button below.</span>
+            </div>
+            <div class="roudedInput" v-if="updateFlag === false">
                 <div class="input-group">
-                    <input class="form-control roudedInput !this.isValid && password == ''? 'mb-0 ' : ' LoginField'" style="border: none !important; background: none !important" :type="visibility" placeholder="Password" v-model="password" @keyup.enter="login()">
+                    <input class="form-control roudedInput !this.isValid && password == ''? 'mb-0 ' : ' LoginField'" style="border: none !important; background: none !important" :type="visibility" placeholder="New Password" v-model="password" @keyup.enter="login()">
                     <span style="background: none; margin-top: 2.5%; margin-right: 3%">
-                    <i v-if="visibility == 'password'" @click="showPassword()" class="fa fa-eye" aria-hidden="true"></i>
-                    <i v-if="visibility == 'text'" @click="hidePassword()" class="fa fa-eye-slash" aria-hidden="true"></i>
+                    <i v-if="visibility == 'password'" @click="showPassword('password')" class="fa fa-eye" aria-hidden="true"></i>
+                    <i v-if="visibility == 'text'" @click="hidePassword('password')" class="fa fa-eye-slash" aria-hidden="true"></i>
                   </span>
                 </div>
             </div>
             <br>
-            <div class="roudedInput">
+            <div class="roudedInput" v-if="updateFlag === false">
                 <div class="input-group">
-                    <input class="form-control roudedInput !this.isValid && password == ''? 'mb-0 ' : ' LoginField'" style="border: none !important; background: none !important" :type="visibility" placeholder="Password" v-model="password" @keyup.enter="login()">
+                    <input class="form-control roudedInput !this.isValid && password == ''? 'mb-0 ' : ' LoginField'" style="border: none !important; background: none !important" :type="visibilityC" placeholder="Confirm New Password" v-model="c_password" @keyup.enter="login()">
                     <span style="background: none; margin-top: 2.5%; margin-right: 3%">
-                    <i v-if="visibility == 'password'" @click="showPassword()" class="fa fa-eye" aria-hidden="true"></i>
-                    <i v-if="visibility == 'text'" @click="hidePassword()" class="fa fa-eye-slash" aria-hidden="true"></i>
+                    <i v-if="visibilityC == 'password'" @click="showPassword('cpassword')" class="fa fa-eye" aria-hidden="true"></i>
+                    <i v-if="visibilityC == 'text'" @click="hidePassword('cpassword')" class="fa fa-eye-slash" aria-hidden="true"></i>
                   </span>
                 </div>
             </div>
@@ -41,11 +47,11 @@
               <i v-if="showResponse" class="resetPasswordMessage">We send recovery email to your email address at <u>{{email}}</u>. Please give us a moment, it may take few minutes. Please check your email address to continue.</i>
               <i v-if="showError" class="resetPasswordMessage" style="color:red">Something went wrong.</i>
             </div>
-            <div class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center" v-if="updateFlag === false">
               <dialogueBtn 
                 :onClick="reset"
                 :icon="'fas fa-sign-in-alt'"
-                :text="'Send Request'"
+                :text="'Continue'"
                 :styles="{
                   backgroundColor: '#01009A',
                   color: 'white'
@@ -132,16 +138,27 @@ import roundedBtn from 'src/modules/generic/roundedBtn'
 import AUTH from 'src/services/auth'
 import global from 'src/helpers/global'
 export default {
+  name: '',
+  mounted(){
+    this.code = this.$route.params.code
+    this.username = this.$route.params.username
+  },
   data() {
     return {
-      email: '',
       showResponse: false,
       isEmailError: true,
       showError: false,
       visibility: 'password',
-      password: '',
-      errorMessage: '',
-      isValid: true
+      visibilityC: 'password',
+      isValid: true,
+      email: null,
+      flag: false,
+      errorMessage: null,
+      password: null,
+      c_password: null,
+      code: this.$route.params.code,
+      username: this.$route.params.username,
+      updateFlag: false
     }
   },
   components: {
@@ -150,31 +167,55 @@ export default {
     roundedBtn
   },
   methods: {
-    showPassword() {
-      this.visibility = 'text'
+    showPassword(pass) {
+      if(pass === 'password'){
+        this.visibility = 'text'
+      } else {
+        this.visibilityC = 'text'
+      }
     },
-    hidePassword() {
-      this.visibility = 'password'
+    hidePassword(pass) {
+      if(pass === 'cpassword'){
+        this.visibilityC = 'password'
+      } else {
+        this.visibility = 'password'
+      }
     },
-    reset(event) {
-      console.log('Reset password:::', global.validateEmail(this.email))
-      if(global.validateEmail(this.email)){
-        this.isEmailError = true
+    reset(){
+      this.validate()
+      if(this.flag === true){
         let parameter = {
-          email: this.email
+          'username': this.username,
+          'code': this.code,
+          'password': this.password
         }
-        this.APIRequest('accounts/request_reset', parameter).then(response => {
-          console.log('ACCOUNTS RESPONSE: ', response)
+        $('#loading').css({display: 'block'})
+        this.APIRequest('accounts/update', parameter).then(response => {
+          $('#loading').css({display: 'none'})
           if(response.data === true){
-            this.showResponse = true
-            this.showError = false
+            this.updateFlag = true
           }else{
-            this.showError = true
-            this.showResponse = false
+            this.updateFlag = false
           }
         })
+      }
+    },
+    validate(){
+      if(this.password === null || this.password === '' || this.cPassword === null || this.cPassword === ''){
+        this.flag = false
+        this.errorMessage = 'Please fill in all required fields.'
+      }else if(this.password !== this.cPassword){
+        this.flag = false
+        this.errorMessage = 'Please confirm your new password.'
+      }else if(this.password.length < 8){
+        this.flag = false
+        this.errorMessage = 'Password length must be greater than 8 digit characters.'
+      }else if(/^[a-zA-Z0-9]+$/.test(this.password)){
+        this.flag = false
+        this.errorMessage = 'Password must be alphanumeric characters. It should contain 1 number, 1 special character and letters.'
       }else{
-        this.isEmailError = false
+        this.flag = true
+        this.errorMessage = null
       }
     },
     redirect(event){
