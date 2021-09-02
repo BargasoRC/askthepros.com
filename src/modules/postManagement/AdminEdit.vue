@@ -34,7 +34,7 @@
           <textarea 
             :class="!this.isValid && description == '' ? 'form-control mb-0' : 'form-control'" 
             placeholder="Add description here" 
-            rows="10" 
+            rows="10"
             :style="{
               ...!this.isValid && description == '' ? {border: '1px solid red !important'} : '',
             }"

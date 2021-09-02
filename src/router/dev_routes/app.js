@@ -24,7 +24,7 @@ export default{
   }, {
     path: '/login_verification/:username/:code',
     name: 'loginVerification',
-    component: resolve => require(['components/increment/basic/LoginByVerification.vue'], resolve),
+    component: resolve => require(['modules/account/verification.vue'], resolve),
     meta: {
       tokenRequired: false
     }
@@ -45,7 +45,7 @@ export default{
   }, {
     path: '/reset_password/:username/:code',
     name: 'resetPassword',
-    component: resolve => require(['components/increment/basic/ResetPassword.vue'], resolve),
+    component: resolve => require(['modules/account/resetNewPassword.vue'], resolve),
     meta: {
       tokenRequired: false
     }
