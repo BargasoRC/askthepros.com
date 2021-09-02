@@ -190,9 +190,6 @@ export default {
     Search,
     preview
   },
-  created() {
-    this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
-  },
   mounted(){
     this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
   },
@@ -266,11 +263,12 @@ export default {
       this.APIRequest('post/retrieve', parameter).then(response => {
         console.log('[response]', response)
         $('#loading').css({'display': 'none'})
-        if(!response.error) {
+        if(response.data.length > 0) {
           this.data = response.data
           this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
         }else{
           this.data = []
+          this.numPages = null
         }
       })
     },
