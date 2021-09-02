@@ -19,7 +19,7 @@
               <b>Request to Reset Password with AskThePros</b>
             </div>
             <div>
-              <roundedInput 
+              <roundedInput
                 :type="'text'"
                 :styles="{
                   border: !this.isEmailError ? '.2px solid red !important' : 'none'
