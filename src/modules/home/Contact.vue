@@ -134,7 +134,6 @@ export default {
         }
         $('#loading').css({'display': 'block'})
         this.APIRequest('emails/send_message', parameter).then(response => {
-          console.log('df', response)
           $('#loading').css({'display': 'none'})
           if(response.data.length > 0) {
             this.industry = response.data

@@ -94,9 +94,9 @@ Route::post($route. '/retrieve ', $controller.'retrieve');
 
 
 // Google Place
-$route = env('PACKAGE_ROUTE', '').'/google_places/';
+$route = env('PACKAGE_ROUTE', '').'/google_places';
 $controller = 'GooglePlaceController@';
-Route::post($route.'search', $controller."search");
+Route::post($route.'/search', $controller."search");
 
 //Emails Controller
 $route = env('PACKAGE_ROUTE', '').'/emails';

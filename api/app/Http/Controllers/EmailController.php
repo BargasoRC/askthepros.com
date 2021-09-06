@@ -106,10 +106,9 @@ class EmailController extends APIController
 
     public function sendMessage(Request $request){
         $data = $request->all();
-        $user = 'herreracherrymae@gmail.com';
         $subject = $data['subject'];
         $content = $data['content'];
-        Mail::to($user)->send(new ContactUs($data, $this->response['timezone'], $subject, $content));
+        Mail::to(env('COMPANY_EMAIL'))->send(new ContactUs($data, $this->response['timezone'], $subject, $content));
         $this->response['data'] = true;
         return $this->response();
     }
