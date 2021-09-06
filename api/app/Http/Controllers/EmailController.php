@@ -7,6 +7,7 @@ use App\Mail\ResetPassword;
 use App\Mail\Verification;
 use App\Mail\ChangedPassword;
 use App\Mail\LoginEmail;
+use App\Mail\ContactUs;
 use App\Mail\OtpEmail;
 use App\Mail\Receipt;
 use App\Mail\Billing;
@@ -99,6 +100,17 @@ class EmailController extends APIController
             Mail::to($user['email'])->send(new LoginEmail($user, $this->response['timezone']));
             $this->response['data'] = true;
         }
+        return $this->response();
+    }
+
+
+    public function sendMessage(Request $request){
+        $data = $request->all();
+        $user = 'herreracherrymae@gmail.com';
+        $subject = $data['subject'];
+        $content = $data['content'];
+        Mail::to($user)->send(new ContactUs($data, $this->response['timezone'], $subject, $content));
+        $this->response['data'] = true;
         return $this->response();
     }
 

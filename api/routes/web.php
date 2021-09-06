@@ -103,6 +103,7 @@ $route = env('PACKAGE_ROUTE', '').'/emails';
 Route::post($route.'/reset_password', 'EmailController@resetPassword');
 Route::post($route.'/verification', 'EmailController@verification');
 Route::post($route.'/changed_password', 'EmailController@changedPassword');
+Route::post($route.'/send_message', 'EmailController@sendMessage');
 Route::post($route.'/trial', 'EmailController@trial');
 Route::get($route.'/test', 'EmailController@test');
 
