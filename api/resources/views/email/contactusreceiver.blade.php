@@ -1,7 +1,7 @@
 @component('email.header')
 @endcomponent
 <span class="text">
-  Hello Cherry,
+  Hello Support,
   <br>
   <br>
 </span>
