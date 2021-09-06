@@ -126,7 +126,25 @@ export default {
       if(this.validate() && this.name !== '' && this.subject !== '' && this.content !== ''){
         this.isValid = true
         this.isEmailValid = true
-        // Send Message Method Here
+        let parameter = {
+          name: this.name,
+          email: this.email,
+          subject: this.subject,
+          content: this.content
+        }
+        $('#loading').css({'display': 'block'})
+        this.APIRequest('emails/send_message', parameter).then(response => {
+          console.log('df', response)
+          $('#loading').css({'display': 'none'})
+          if(response.data.length > 0) {
+            this.industry = response.data
+          }else{
+            this.industry = []
+          }
+        }).catch(error => {
+          $('#loading').css({'display': 'none'})
+          error
+        })
       }else {
         this.isValid = false
         // Another method here
