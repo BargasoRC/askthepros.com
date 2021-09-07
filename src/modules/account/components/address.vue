@@ -21,15 +21,18 @@
                       'Required Field'
                       }}</p>
                   </div> -->
-                  <vue-google-autocomplete
-                      ref="address"
+                  <!-- // last implementation -->
+                      <!-- ref="address"
                       id="map"
                       classname="form-control roudedInput"
                       :placeholder="selectedLocation == null ? 'Please type your address' : selectedLocation"
                       v-on:placechanged="getAddressData"
-                      country="sg"
+                      country="sg" -->
+                  <GooglePlacesAutoComplete
+                  :property="property"
+                  @onFinish="getAddressData($event)"
                   >
-                  </vue-google-autocomplete>
+                  </GooglePlacesAutoComplete>
                 </div>
                 <!-- <roundedBtn :onClick="setLocation" :icon="'fas fa-sign-in-alt'" :text="'Select Location'" :styles="{
                   backgroundColor: '#01004E',
@@ -126,6 +129,7 @@
 </template>
 <script>
 import VueGoogleAutocomplete from 'vue-google-autocomplete'
+import GooglePlacesAutoComplete from 'src/components/increment/generic/location/GooglePlacesAutoComplete'
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import roundedInput from 'src/modules/generic/roundedInput'
 import roundedBtn from 'src/modules/generic/roundedBtn'
@@ -152,14 +156,31 @@ export default {
       isValid: true,
       isValidAddress: true,
       canUpdateAddress: false,
-      selectedLocation: null
+      selectedLocation: null,
+      property: {
+        style: {
+          outline: 'none !important',
+          boxShadow: 'none !important',
+          height: '45px !important',
+          borderRadius: '40px !important',
+          border: '1px solid $gray !important'
+        },
+        placeholder: null,
+        GOOGLE_API_KEY: CONFIG.GOOGLE.API_KEY,
+        results: {
+          style: {
+            zIndex: '99999999px'
+          }
+        }
+      }
     }
   },
   components: {
     dialogueBtn,
     roundedInput,
     roundedBtn,
-    VueGoogleAutocomplete
+    VueGoogleAutocomplete,
+    GooglePlacesAutoComplete
   },
   mounted(){
     this.retrieveInformation()
@@ -190,8 +211,9 @@ export default {
     this.retrieveInformation()
   },
   methods: {
-    getAddressData(addressData, placeResultData, id) {
-      this.selectedLocation = addressData
+    getAddressData(e) {
+      this.selectedLocation = e
+      this.property.placeholder = e
     },
     retrieveInformation() {
       let parameter = {
@@ -227,22 +249,19 @@ export default {
           address: JSON.stringify({
             route: this.selectedLocation.route,
             locality: this.selectedLocation.locality,
+            region: this.selectedLocation.region,
             country: this.selectedLocation.country,
             latitude: this.selectedLocation.latitude,
             longitude: this.selectedLocation.longitude
           })
         }
         let info = AUTH.user.information
-        console.log('INFO: ', info)
-        console.log('Parameters: ', parameter)
         if(Object.keys(info).length > 1){
           this.APIRequest('accounts_info/update_account', parameter).then(response => {
             $('#loading').css({'display': 'none'})
             if(response.error.length === 0){
               this.retrieveInformation()
-              console.log('Update profile response: ', response)
               this.canUpdateProfile = false
-              console.log('Submitted')
             }
           })
         }else{
@@ -265,8 +284,6 @@ export default {
         this.canUpdateAddress = false
         this.isValidAddress = false
       }
-      console.log('Can update profile ', this.canUpdateAddress, 'Is valid address', this.isValidAddress)
-      console.log('Route', this.route)
       if(!this.isValidAddress) {
         return false
       }else {
@@ -298,13 +315,6 @@ export default {
 
 <style scoped lang="scss" scoped>
 @import "~assets/style/colors.scss";
-.roudedInput {
-  outline: none !important;
-  box-shadow: none !important;
-  height: 45px !important;
-  border-radius: 40px !important;
-  border: 1px solid $gray !important;
-}
 .invalidEmail {
   color: $danger;
   font-size: 10px;

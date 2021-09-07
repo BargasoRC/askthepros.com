@@ -53,10 +53,8 @@ import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
-import axios from 'axios'
 import $ from 'jquery'
 import global from 'src/helpers/global'
-import ROUTER from 'src/router'
 export default {
   data() {
     return {

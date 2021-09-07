@@ -34,6 +34,7 @@
           <th scope="col">Business Name</th>
           <th scope="col">Contact Number</th>
           <th scope="col">Type</th>
+          <th scope="col">Industry</th>
           <th scope="col">Status</th>
         </tr>
       </thead>
@@ -57,6 +58,18 @@
               <select class="form-control" v-model="newAccountType" style="float: left; width: 70%;">
                 <option v-if="user.type === 'ADMIN'" v-for="(typeItem, typeIndex) in ['USER', 'EXPERT', 'ADMIN']" :key="typeIndex">{{typeItem}}</option>
                 <option v-else v-for="(typeItem, typeIndex) in ['USER', 'EXPERT', 'ADMIN']" :key="typeIndex">{{typeItem}}</option>
+              </select>
+              <i class="fa fa-check text-primary" style="margin-left: 5px; float: left;" @click="updateType(item, index)"></i>
+              <i class="fa fa-times text-danger" style="margin-left: 5px; float: left;" @click="setEditTypeIndex(index, item)"></i>
+            </span>
+          </td>
+          <td>
+            <label v-if="editTypeIndex !== index">{{item.account_type}}</label>
+            <i class="fa fa-pencil text-primary" style="margin-left: 10px;" @click="setEditTypeIndex(index, item)" v-if="editTypeIndex !== index"></i>
+            <span v-if="editTypeIndex === index">
+              <select class="form-control" v-model="newAccountType" style="float: left; width: 70%;">
+                <option v-if="user.type === 'ADMIN'" v-for="(typeItem, typeIndex) in industry" :key="typeIndex">{{typeItem}}</option>
+                <option v-else v-for="(typeItem, typeIndex) in industry" :key="typeIndex">{{typeItem}}</option>
               </select>
               <i class="fa fa-check text-primary" style="margin-left: 5px; float: left;" @click="updateType(item, index)"></i>
               <i class="fa fa-times text-danger" style="margin-left: 5px; float: left;" @click="setEditTypeIndex(index, item)"></i>
@@ -120,6 +133,7 @@ export default{
   mounted(){
     $('#loading').css({display: 'block'})
     this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+    this.retrievePayloads()
   },
   computed: {
     returnData(){
@@ -199,7 +213,8 @@ export default{
       selectedAccount: null,
       activeItem: 'home',
       activePage: 1,
-      location: null
+      location: null,
+      industry: []
     }
   },
   components: {
@@ -272,6 +287,7 @@ export default{
       }
       $('#loading').css({display: 'block'})
       this.APIRequest('users/retrieve', parameter).then(response => {
+        console.log('[ffff]', response)
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data
@@ -280,6 +296,33 @@ export default{
           this.data = []
           this.numPages = null
         }
+      })
+    },
+    retrievePayloads(){
+      let conditions = [{
+        value: 'subscriptions',
+        clause: '=',
+        column: 'payload'
+      }]
+      let parameter = {
+        condition: conditions
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('payloads/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data.length > 0) {
+          // this.industry = response.data
+          response.data.map(el => {
+            this.industry.push(el.category)
+            return el.category
+          })
+          console.log('[u]', this.industry)
+        }else{
+          this.industry = []
+        }
+      }).catch(error => {
+        $('#loading').css({'display': 'none'})
+        error
       })
     },
     updateUserStatus(item){
