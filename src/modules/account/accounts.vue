@@ -64,15 +64,17 @@
             </span>
           </td>
           <td>
-            <label v-if="editTypeIndex !== index">{{item.account_type}}</label>
-            <i class="fa fa-pencil text-primary" style="margin-left: 10px;" @click="setEditTypeIndex(index, item)" v-if="editTypeIndex !== index"></i>
-            <span v-if="editTypeIndex === index">
-              <select class="form-control" v-model="newAccountType" style="float: left; width: 70%;">
+            <label v-if="editIndustryIndex !== index && item.account_type !== 'EXPERT'">{{JSON.parse(item.industry) ? JSON.parse(item.industry).industry : ''}}</label>
+            <!-- <label v-if="editIndustryIndex !== index && item.account_type !== 'EXPERT'">{{Object.values(JSON.parse(item.industry))[0]}}</label> -->
+            <label v-if="editIndustryIndex !== index && item.account_type === 'EXPERT'">{{expertIndustry.length >= 1 ? expertIndustry : 'No Industry'}}</label>
+            <i class="fa fa-pencil text-primary" style="margin-left: 10px;" @click="setEditIndustryIndex(index, item)" v-if="editIndustryIndex !== index && item.account_type === 'EXPERT'"></i>
+            <span v-if="editIndustryIndex === index">
+              <select class="form-control" v-model="newIndustry" style="float: left; width: 70%;">
                 <option v-if="user.type === 'ADMIN'" v-for="(typeItem, typeIndex) in industry" :key="typeIndex">{{typeItem}}</option>
                 <option v-else v-for="(typeItem, typeIndex) in industry" :key="typeIndex">{{typeItem}}</option>
               </select>
-              <i class="fa fa-check text-primary" style="margin-left: 5px; float: left;" @click="updateType(item, index)"></i>
-              <i class="fa fa-times text-danger" style="margin-left: 5px; float: left;" @click="setEditTypeIndex(index, item)"></i>
+              <i class="fa fa-check text-primary" style="margin-left: 5px; float: left;" @click="updateIndustry(item, index)"></i>
+              <i class="fa fa-times text-danger" style="margin-left: 5px; float: left;" @click="setEditIndustryIndex(index, item)"></i>
             </span>
           </td>
           <td>{{item.status}}</td>
@@ -134,6 +136,7 @@ export default{
     $('#loading').css({display: 'block'})
     this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
     this.retrievePayloads()
+    this.retrieveExpertPayloads()
   },
   computed: {
     returnData(){
@@ -209,12 +212,16 @@ export default{
       filter: null,
       sort: null,
       editTypeIndex: null,
+      editIndustryIndex: null,
       newAccountType: null,
+      newIndustry: null,
       selectedAccount: null,
+      selectedIndustry: null,
       activeItem: 'home',
       activePage: 1,
       location: null,
-      industry: []
+      industry: [],
+      expertIndustry: []
     }
   },
   components: {
@@ -234,6 +241,16 @@ export default{
         this.newAccountType = item.account_type
       }
     },
+    setEditIndustryIndex(index, item){
+      if(index === this.editIndustryIndex){
+        this.editIndustryIndex = null
+        this.newIndustry = null
+      }else{
+        this.selectedIndustry = item
+        this.editIndustryIndex = index
+        this.newIndustry = item.account_type
+      }
+    },
     updateType(item, index){
       if(this.newAccountType === null || this.newAccountType === item.account_type){
         this.setEditTypeIndex(index, item)
@@ -247,6 +264,23 @@ export default{
       this.APIRequest('accounts/update_account_type', parameter).then(response => {
         $('#loading').css({display: 'none'})
         this.setEditTypeIndex(index, item)
+        this.retrieve(null, null)
+      })
+    },
+    updateIndustry(item, index){
+      if(this.newIndustry === null){
+        this.setEditIndustryIndex(index, item)
+        return
+      }
+      let parameter = {
+        account_id: item.id,
+        payload: 'assigned_industry',
+        payload_value: this.newIndustry
+      }
+      $('#loading').css({display: 'block'})
+      this.APIRequest('payloads/create', parameter).then(response => {
+        $('#loading').css({display: 'none'})
+        this.setEditIndustryIndex(index, item)
         this.retrieve(null, null)
       })
     },
@@ -287,9 +321,9 @@ export default{
       }
       $('#loading').css({display: 'block'})
       this.APIRequest('users/retrieve', parameter).then(response => {
-        console.log('[ffff]', response)
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
+          this.retrieveExpertPayloads()
           this.data = response.data
           this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
         }else{
@@ -311,14 +345,44 @@ export default{
       this.APIRequest('payloads/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data.length > 0) {
-          // this.industry = response.data
           response.data.map(el => {
             this.industry.push(el.category)
             return el.category
           })
-          console.log('[u]', this.industry)
         }else{
           this.industry = []
+        }
+      }).catch(error => {
+        $('#loading').css({'display': 'none'})
+        error
+      })
+    },
+    retrieveExpertPayloads(){
+      let conditions = [{
+        value: 'assigned_industry',
+        clause: '=',
+        column: 'payload'
+      }]
+      let parameter = {
+        condition: conditions
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('payloads/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data.length > 0) {
+          response.data.map(elI => {
+            this.data.map(el => {
+              if(el.id === elI.account_id){
+                this.expertIndustry = elI.payload_value
+              }
+            })
+          })
+          // response.data.map(el => {
+          //   this.expertIndustry.push(el.expertIndustry)
+          //   return el.expertIndustry
+          // })
+        }else{
+          this.expertIndustry = []
         }
       }).catch(error => {
         $('#loading').css({'display': 'none'})
