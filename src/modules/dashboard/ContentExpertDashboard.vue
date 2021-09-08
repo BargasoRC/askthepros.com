@@ -12,6 +12,7 @@
                 backgroundColor: '#01004E',
                 color: 'white'
             }"
+            v-if="con === true"
         />
     </div>
     <div class="col-sm-12 col-md-12 col-lg-12 mt-5 mb-5 p-0">
@@ -139,6 +140,7 @@ export default {
       selectedItem: null,
       deleteId: null,
       file: null,
+      con: false,
       tableHeaders: [
         {title: 'Date'},
         {title: 'Post Title'},
@@ -186,6 +188,33 @@ export default {
     }
   },
   methods: {
+    retrieveIndustryPayloads(){
+      let conditions = [{
+        value: 'assigned_industry',
+        clause: '=',
+        column: 'payload'
+      }, {
+        value: this.user.userID,
+        clause: '=',
+        column: 'account_id'
+      }
+      ]
+      let parameter = {
+        condition: conditions
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('payloads/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data.length > 0) {
+          this.con = true
+        }else{
+          this.con = false
+        }
+      }).catch(error => {
+        $('#loading').css({'display': 'none'})
+        error
+      })
+    },
     displayArray(channels){
       if(channels){
         let parsedChannels = JSON.parse(channels)
@@ -232,7 +261,7 @@ export default {
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve_by_user', parameter).then(response => {
-        console.log('[cre]', response.data)
+        this.retrieveIndustryPayloads()
         $('#loading').css({'display': 'none'})
         if(!response.error) {
           this.tableData = response.data
