@@ -16,7 +16,7 @@
                       }" v-model="firstname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="firstname == undefined && !isValidProfile">
+                    v-if="firstname == undefined || firstname == '' && !isValidProfile">
                     {{
                     'Required Field'
                     }}</p>
@@ -30,7 +30,7 @@
                     }" v-model="lastname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="lastname == undefined  && !isValidProfile">
+                    v-if="lastname == undefined || lastname == ''  && !isValidProfile">
                     {{
                     'Required Field'
                     }}</p>
@@ -47,7 +47,7 @@
                     }" v-model="businessname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="businessname == '' && !isValidProfile">
+                    v-if="businessname == '' || businessname == null && !isValidProfile">
                     {{
                     'Required Field'
                     }}</p>
@@ -61,7 +61,7 @@
                     }" v-model="contactnumber" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="contactnumber == undefined && !isValidProfile">
+                    v-if="contactnumber == undefined || contactnumber== '' && !isValidProfile">
                     {{
                     'Required Field'
                     }}</p>
@@ -100,7 +100,7 @@ export default {
       firstname: '',
       middlename: '',
       lastname: '',
-      businessname: '',
+      businessname: null,
       contactnumber: '',
       user: AUTH.user,
       config: CONFIG,
@@ -108,7 +108,7 @@ export default {
       errorMessage: null,
       data: null,
       isValid: true,
-      isValidProfile: true,
+      isValidProfile: false,
       canUpdateProfile: false
     }
   },
@@ -124,6 +124,9 @@ export default {
   },
   mounted(){
     this.retrieveInformation()
+  },
+  updated(){
+    // this.onUpdate()
   },
   watch: {
     username: function(val) {
@@ -160,7 +163,7 @@ export default {
         let data = response.data[0]
         this.username = this.user.username
         this.email = this.user.email
-        this.businessname = this.user.merchant ? this.user.merchant[0].name : ''
+        this.businessname = this.user.merchant ? this.user.merchant[0].name : null
         AUTH.user.information = response.data[0]
         if(response.data.length > 0) {
           AUTH.user.merchant = [data.merchant]
@@ -233,9 +236,12 @@ export default {
             error
           })
         }
+        alert('Profile Updated')
       }else{
         console.log('Cant update')
       }
+    },
+    onUpdate(){
       let newinfo = {
         ...AUTH.user.information,
         first_name: this.firstname,
@@ -252,7 +258,7 @@ export default {
       }, 100)
     },
     validate() {
-      if(this.firstname !== '' || this.lastname !== '' || this.businessname !== '' || this.contactnumber !== '') {
+      if(this.firstname !== '' && this.lastname !== '' && this.businessname !== '' && this.contactnumber !== '') {
         if(!global.validateField(this.firstname) && !global.validateField(this.lastname) && !global.validateField(this.businessname) && !global.validateNumber(this.contactnumber)) {
           this.isValidProfile = false
           this.canUpdateProfile = false
