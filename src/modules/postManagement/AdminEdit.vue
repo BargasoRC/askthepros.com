@@ -147,7 +147,7 @@
     <errorModal
     ref="errorModal"
     :title="'Error Message'"
-    :message="val === true ? 'You have reached the maximum number(1500) of characters in description.' : 'Please fill in all of the fields and put a valid image.'"
+    :message="val === true ? 'Your description is invalid or you have reached the maximum number(1500) of characters.' : 'Please fill in all of the fields and put a valid image.'"
     />
   </div>
 </template>
