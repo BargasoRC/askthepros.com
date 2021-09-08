@@ -7,6 +7,18 @@
             <p>Hi {{user.username}}! You can fill up contents of your post by using the field editor
               or directly on the preview section. For other channel, just click the next and previous action.
             </p>
+            <div style="text-align: left; font-size: 13px">
+              <i>Note:</i>
+              <p style="text-align: left; margin-left: 5%">
+                <i> No HTML tags allowed.</i>
+                <br>
+                <i> No Dates that Expire.</i>
+                <br>
+                <i> No Phone Numbers.</i>
+                <br>
+                <i> You may encourage a phone call but a phone number is not allowed.</i>
+              </p>
+            </div>
           </div>
         </div>
 
@@ -135,7 +147,7 @@
     <errorModal
     ref="errorModal"
     :title="'Error Message'"
-    :message="'Please fill in all of the fields and put a valid image.'"
+    :message="val === true ? 'You have reached the maximum number(1500) of characters in description.' : 'Please fill in all of the fields and put a valid image.'"
     />
   </div>
 </template>
@@ -196,7 +208,8 @@ export default {
       render: false,
       addImage: [],
       isAdd: false,
-      isEmpty: true
+      isEmpty: true,
+      val: false
     }
   },
   components: {
@@ -409,23 +422,43 @@ export default {
     validate() {
       if(this.selectedIndustry.length <= 0 && this.title === '' && this.title === null && this.title === undefined && this.description === '' && this.description === null && this.description === undefined){
         this.$refs.errorModal.show()
+        this.val = false
         return false
       }
       if(this.facebook === false && this.linkedin === false && this.googleMyBusiness === false){
         this.isValid = false
+        this.val = false
         this.$refs.errorModal.show()
         return false
       }
       if(this.selectedIndustry.length <= 0) {
         this.isValid = false
+        this.val = false
         this.$refs.errorModal.show()
         return false
       }if(this.title === '' && this.title === null && this.title === undefined) {
         this.isValid = false
+        this.val = false
         this.$refs.errorModal.show()
         return false
       }if(this.description === '' && this.description === null && this.description === undefined) {
         this.isValid = false
+        this.val = false
+        this.$refs.errorModal.show()
+        return false
+      }if(this.googleMyBusiness === true && this.character >= 1500){
+        this.isValid = false
+        this.val = true
+        this.$refs.errorModal.show()
+        return false
+      }if(global.validateHTML(this.description) === true){
+        this.isValid = false
+        this.val = true
+        this.$refs.errorModal.show()
+        return false
+      }if(global.validatePhoneNumber(this.description)){
+        this.isValid = false
+        this.val = true
         this.$refs.errorModal.show()
         return false
       }

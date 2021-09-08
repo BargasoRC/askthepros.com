@@ -278,10 +278,12 @@ export default{
         payload_value: this.newIndustry
       }
       $('#loading').css({display: 'block'})
-      this.APIRequest('payloads/create', parameter).then(response => {
+      this.APIRequest('payloads/create_industry', parameter).then(response => {
         $('#loading').css({display: 'none'})
-        this.setEditIndustryIndex(index, item)
-        this.retrieve(null, null)
+        if(response.data >= 1){
+          this.setEditIndustryIndex(index, item)
+          this.retrieve(null, null)
+        }
       })
     },
     showProfileModal(item){
