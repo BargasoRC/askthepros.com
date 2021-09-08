@@ -140,7 +140,7 @@ export default {
     if(AUTH.hash('show', localStorage.getItem('login_with')) === 'social_lite') {
       this.passwordVerified = true
     }
-    this.retrieveInformation()
+    // this.retrieveInformation()
   },
   methods: {
     setInitialView(location){
