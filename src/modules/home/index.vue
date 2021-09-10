@@ -1,6 +1,7 @@
 <template>
   <div>
     <NewBanner ref="ThisBanner"></NewBanner>
+    <Trademark></Trademark>
     <!-- <HomeBanner></HomeBanner> -->
     <!-- <CallToAction></CallToAction>
     <Subscription></Subscription>
@@ -11,6 +12,7 @@
 <script>
 import ROUTER from 'src/router'
 import Jquery from 'jquery'
+import Trademark from 'src/modules/home/new/Trademark.vue'
 import NewBanner from 'src/modules/home/new/newBanner.vue'
 import HomeBanner from 'src/modules/home/Banner.vue'
 import CallToAction from 'src/modules/home/CallToAction.vue'
@@ -24,7 +26,8 @@ export default {
     Subscription,
     Testimonials,
     NewBanner,
-    newTestimonials
+    newTestimonials,
+    Trademark
   },
   data() {
     return {}
