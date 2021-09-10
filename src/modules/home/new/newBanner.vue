@@ -1,12 +1,18 @@
 <template>
-  <div class="container-fluid p-0">
+  <div class="container-fluid p-0 mainContainer">
     <div class="bgImg">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
   <path fill="#0099ff" fill-opacity="1" d="M0,160L60,138.7C120,117,240,75,360,96C480,117,600,203,720,234.7C840,267,960,245,1080,218.7C1200,192,1320,160,1380,144L1440,128L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path>
-</svg>
+</svg> -->
+<div class="cloudLeft">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#ffffff" fill-opacity="1" d="M0,320L16,304C32,288,64,256,96,218.7C128,181,160,139,192,144C224,149,256,203,288,234.7C320,267,352,277,384,266.7C416,256,448,224,480,181.3C512,139,544,85,576,74.7C608,64,640,96,672,138.7C704,181,736,235,768,261.3C800,288,832,288,864,266.7C896,245,928,203,960,170.7C992,139,1024,117,1056,128C1088,139,1120,181,1152,218.7C1184,256,1216,288,1248,266.7C1280,245,1312,171,1344,133.3C1376,96,1408,96,1424,96L1440,96L1440,320L1424,320C1408,320,1376,320,1344,320C1312,320,1280,320,1248,320C1216,320,1184,320,1152,320C1120,320,1088,320,1056,320C1024,320,992,320,960,320C928,320,896,320,864,320C832,320,800,320,768,320C736,320,704,320,672,320C640,320,608,320,576,320C544,320,512,320,480,320C448,320,416,320,384,320C352,320,320,320,288,320C256,320,224,320,192,320C160,320,128,320,96,320C64,320,32,320,16,320L0,320Z"></path></svg>
+</div>
+<div class="cloudRight">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#ffffff" fill-opacity="1" d="M0,320L16,304C32,288,64,256,96,218.7C128,181,160,139,192,144C224,149,256,203,288,234.7C320,267,352,277,384,266.7C416,256,448,224,480,181.3C512,139,544,85,576,74.7C608,64,640,96,672,138.7C704,181,736,235,768,261.3C800,288,832,288,864,266.7C896,245,928,203,960,170.7C992,139,1024,117,1056,128C1088,139,1120,181,1152,218.7C1184,256,1216,288,1248,266.7C1280,245,1312,171,1344,133.3C1376,96,1408,96,1424,96L1440,96L1440,320L1424,320C1408,320,1376,320,1344,320C1312,320,1280,320,1248,320C1216,320,1184,320,1152,320C1120,320,1088,320,1056,320C1024,320,992,320,960,320C928,320,896,320,864,320C832,320,800,320,768,320C736,320,704,320,672,320C640,320,608,320,576,320C544,320,512,320,480,320C448,320,416,320,384,320C352,320,320,320,288,320C256,320,224,320,192,320C160,320,128,320,96,320C64,320,32,320,16,320L0,320Z"></path></svg>
+</div>
     </div>
     <section>
-      <div class="row ">
+      <div class="row">
         <div class="col d-flex flex-column align-items-center myheader1">
         <div class="col-6 d-flex align-items-center justify-content-center ">
           <p class="header-text-1">Manage Social Media Posting Written by Industry Experts in your Field</p>    
@@ -16,14 +22,14 @@
         </div>
         <div class="col-4">
           <roundedSelectBtn 
-                :placeholder="'Select Industry'"
+                :placeholder="'Choose your Industry'"
                 :items="returnIndustry"
                 :class="''"
                 :styles="{width: '600px'
                 }"
                 @onSelect="onSelect"
             />
-            <button type="button" class="btn btn-warning btn-lg" style="font-size:20px" @click="redirect('/signup')">Search <i class="fas fa-angle-double-right"></i></button>
+            <button type="button" class="btn btn-warning btn-lg" style="font-size:15px" @click="redirect('/signup')">Try it Now! <i class="fas fa-angle-double-right"></i></button>
         </div>
         </div>
 
@@ -62,15 +68,34 @@
 </template>
 <style scoped lang="scss">
 @import "~assets/style/colors.scss";
+.mainContainer{
+  height: 50vh;
+  background: linear-gradient(to right,#5c99ed,#5c99ed);
+  z-index: -999;
+}
+.cloudRight{
+  width: 50%;
+  margin-top: 170px;
+  position: absolute;
+  right: 0px;
+}
+.cloudLeft{
+  transform: scaleX(-1);
+  width: 55%;
+  margin-top: 150px;
+  position: absolute;
+  left: 0px;
+}
 .bgImg {
   width: 100%;
-  z-index: -9999;
+  z-index: 100;
   position: absolute;
 }
 .subHeader{
   font-size:20px;
   font-weight: bold;
-  color: rgb(241, 184, 20);
+  color: white;
+  z-index: 200;
 }
 .btn-warning{
   height: 45px!important;
@@ -83,8 +108,7 @@
   height: 50vh;
   // background: linear-gradient(to right,#5c99ed,#5c99ed);
   background-color: transparent;
-  // background-image: url('http://www.w3.org/2000/svg');
-  // <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#0099ff" fill-opacity="1" d="M0,256L60,266.7C120,277,240,299,360,288C480,277,600,235,720,202.7C840,171,960,149,1080,165.3C1200,181,1320,235,1380,261.3L1440,288L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path></svg>
+  z-index: 1000;
 }
 .myheader2 {
   height: 30vh;
@@ -98,6 +122,7 @@
   font-family: "Work Sans", Sans-serif;
   height: 10vh;
   text-align: center;
+  z-index: 200;
 }
 .header-text-2 {
   color: #01009A;
@@ -172,17 +197,17 @@ export default {
       ],
       index: null,
       imageIndex1: null,
-      industry: global.industry,
+      industry: [],
       global: global,
       selected: 2
     }
   },
   computed: {
-    returnIndustry() {
-      return this.industry.map(el => {
-        return el.category
-      })
-    }
+    // returnIndustry() {
+    //   return this.industry.map(el => {
+    //     return el.category
+    //   })
+    // }
   },
   mounted(){
     this.$root.$on('openVideo', () => {
@@ -190,6 +215,28 @@ export default {
     })
   },
   methods: {
+    retrievePayloads(){
+      let conditions = [{
+        value: 'subscriptions',
+        clause: '=',
+        column: 'payload'
+      }]
+      let parameter = {
+        condition: conditions
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('payloads/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data.length > 0) {
+          this.industry = response.data
+        }else{
+          this.industry = []
+        }
+      }).catch(error => {
+        $('#loading').css({'display': 'none'})
+        error
+      })
+    },
     onSelect(data) {
       console.log('SELECTED INDUSTRY: ', data)
       this.selected = data.index
