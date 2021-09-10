@@ -239,16 +239,17 @@ export default {
     }
   },
   computed: {
-    // returnIndustry() {
-    //   return this.industry.map(el => {
-    //     return el.category
-    //   })
-    // }
+    returnIndustry() {
+      return this.industry.map(el => {
+        return el.category
+      })
+    }
   },
   mounted(){
     this.$root.$on('openVideo', () => {
       this.index = 0
     })
+    this.retrievePayloads()
   },
   methods: {
     retrievePayloads(){
@@ -264,6 +265,7 @@ export default {
       this.APIRequest('payloads/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data.length > 0) {
+          console.log('Log', response)
           this.industry = response.data
         }else{
           this.industry = []
