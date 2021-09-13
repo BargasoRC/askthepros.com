@@ -6,14 +6,14 @@
       <div class="scrolling-wrapper custom_scroll d-flex" style="height: 130px">
         <div v-for="(item, index) in returnImageList" :key="index" :group="item" style="height:100px;width:100px"
           :class="'imageContainer p-10'">
-          <img :src="config.BACKEND_URL + item" class="image">
+          <img :src="config.BACKEND_URL + item" class="image" v-on:dblclick="doubleClick(config.BACKEND_URL + item)">
           <label class="middle">
             <i class="fa fa-times-circle text"  @click="deleteImage(index)"></i>
           </label>
         </div>
       </div>
 
-      <div class="d-flex justify-content-start mt-5">
+      <div class="d-flex justify-content-start mt-5 mb-5">
         <button id="imageCont" type="button" class="btn add_file" @click="addImage(edit)">Add File</button>
         <input type="file" id="Image" accept="image/*"
           @change="setUpFileUpload($event, add)">
@@ -42,6 +42,7 @@
       </div>
     </div>
   </div>
+  <tui-image-editor ref="tuiImageEditor" :include-ui="useDefaultUI" :options="options"></tui-image-editor>
   </div>
 </template>
 
@@ -51,6 +52,9 @@ import CONFIG from 'src/config.js'
 import axios from 'axios'
 import COMMON from 'src/common.js'
 // import confirmError from 'src/components/increment/generic/Modal/Alert.vue'
+import 'tui-color-picker/dist/tui-color-picker.css'
+import 'tui-image-editor/dist/tui-image-editor.css'
+import { ImageEditor } from '@toast-ui/vue-image-editor'
 export default {
   props: ['imagesRetrieve', 'formData', 'edit', 'code'],
   data: () => ({
@@ -66,7 +70,13 @@ export default {
     hasError: false,
     files: [],
     fileUrls: [],
-    add: true
+    add: true,
+    useDefaultUI: true,
+    options: {
+      // for tui-image-editor component's "options" prop
+      cssMaxWidth: 700,
+      cssMaxHeight: 500
+    }
   }),
   mounted(){
     if(this.user.type === 'USER'){
@@ -88,8 +98,12 @@ export default {
   },
   components: {
     // confirmError
+    'tui-image-editor': ImageEditor
   },
   methods: {
+    doubleClick(image) {
+      console.log('hi', image)
+    },
     show(){
       $('#incrementAlert').modal({
         show: true,

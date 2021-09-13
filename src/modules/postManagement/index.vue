@@ -1,6 +1,6 @@
 <template>
   <div>
-    <User v-if="user.type === 'USER'" />
+    <Admin v-if="user.type === 'USER'" />
     <Admin v-if="user.type === 'ADMIN'"/>
     <Expert v-if="user.type === 'EXPERT'"/>
   </div>
