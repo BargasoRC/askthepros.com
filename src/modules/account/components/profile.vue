@@ -196,7 +196,7 @@ export default {
         let info = AUTH.user.information
         console.log('INFO: ', info)
         console.log('Parameters: ', parameter)
-        if(Object.keys(info).length > 1){
+        if(info !== null && Object.keys(info).length > 1){
           this.APIRequest('accounts_info/update_account', parameter).then(response => {
             $('#loading').css({'display': 'none'})
             if(response.error.length === 0){
@@ -264,21 +264,21 @@ export default {
           this.isNotValidProfile = true
           this.canUpdateProfile = false
         }else{
-          console.log('[!glb]', global.validateField(this.firstname))
           this.isNotValidProfile = false
           this.canUpdateProfile = true
+          console.log('[!glb]', this.canUpdateProfile)
         }
       }else {
         console.log('[!glc]', this.firstname)
         this.canUpdateProfile = false
         this.isNotValidProfile = true
       }
-      console.log('Valid: ', this.isNotValidProfile, 'Can update:" ', this.canUpdateProfile)
-      // if(this.isNotValidProfile ) {
-      //   return false
-      // }else {
-      //   return true
-      // }
+      // console.log('Valid: ', this.isNotValidProfile, 'Can update:" ', this.canUpdateProfile)
+      if(this.isNotValidProfile === true) {
+        return false
+      }else {
+        return true
+      }
     }
   }
 }

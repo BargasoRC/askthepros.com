@@ -13,7 +13,7 @@
                     <span class="circle"></span>
                     <div class="cir-search"><i class="fas fa-search cir-search-position"></i></div>
                 </div>
-                <div class="card-title"><h4>Search</h4></div>
+                <!-- <div class="card-title"><h4>Search</h4></div> -->
                 <div class="card-content"><p>Create a brief profile with your industry</p></div>
             </div>
             <div class="ellipsis"><i class="fas fa-ellipsis-h fa-2x e-1"></i></div>
@@ -22,7 +22,7 @@
                     <span class="circle"></span>
                     <div class="cir-search"><i class="far fa-file cir-file-position"></i></div>
                 </div>
-                <div class="card-title"><h4>File</h4></div>
+                <!-- <div class="card-title"><h4>File</h4></div> -->
                 <div class="card-content"><p>We Match you with an Subject Matter Expert in your Industry</p></div>
             </div>
             <div class="ellipsis"><i class="fas fa-ellipsis-h fa-2x e-2"></i></div>
@@ -31,7 +31,7 @@
                     <span class="circle"></span>
                     <div class="cir-search"><i class="fas fa-user-shield cir-search-position"></i></div>
                 </div>
-                <div class="card-title"><h4>Done!</h4></div>
+                <!-- <div class="card-title"><h4>Done!</h4></div> -->
                 <div class="card-content"><p>We post to your Google My Business, Facebook and Linked in 3 times per week</p></div>
             </div>
         </div>

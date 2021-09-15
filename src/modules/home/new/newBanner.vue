@@ -29,7 +29,7 @@
                 }"
                 @onSelect="onSelect"
             />
-            <button type="button" class="btn btn-warning btn-lg" style="font-size:15px" @click="redirect('/signup')">Try it Now! <i class="fas fa-angle-double-right"></i></button>
+            <button type="button" class="btn btn-warning btn-lg" style="font-size:15px" @click="redirect('/signup')">Try it Now!</button>
         </div>
         </div>
 
