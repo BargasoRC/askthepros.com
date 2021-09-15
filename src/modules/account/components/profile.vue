@@ -159,7 +159,6 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('accounts_info/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('Data1: ', response)
         let data = response.data[0]
         this.username = this.user.username
         this.email = this.user.email
@@ -194,16 +193,12 @@ export default {
           cellular_number: this.contactnumber
         }
         let info = AUTH.user.information
-        console.log('INFO: ', info)
-        console.log('Parameters: ', parameter)
         if(info !== null && Object.keys(info).length > 1){
           this.APIRequest('accounts_info/update_account', parameter).then(response => {
             $('#loading').css({'display': 'none'})
             if(response.error.length === 0){
               this.retrieveInformation()
-              console.log('Update profile response: ', response)
               this.canUpdateProfile = false
-              console.log('Submitted')
             }
           })
         }else{
@@ -216,7 +211,6 @@ export default {
             }
           })
         }
-        console.log('Business name: ', this.businessname)
         let merchant = {
           name: this.businessname,
           account_id: this.user.userID,
@@ -229,7 +223,6 @@ export default {
             $('#loading').css({'display': 'none'})
             this.canUpdateProfile = false
             this.retrieveInformation()
-            console.log('Updated business')
           }, error => {
             $('#loading').css({'display': 'none'})
             this.canUpdateProfile = false
@@ -260,24 +253,21 @@ export default {
     validate() {
       if(this.firstname !== '' && this.lastname !== '' && this.businessname !== '' && this.contactnumber !== '' && this.firstname !== undefined && this.lastname !== undefined && this.businessname !== undefined && this.contactnumber !== undefined) {
         if(!global.validateField(this.firstname) && !global.validateField(this.lastname) && !global.validateField(this.businessname) && !global.validateNumber(this.contactnumber)) {
-          console.log('[!gla]', global.validateField(this.firstname))
-          this.isNotValidProfile = true
-          this.canUpdateProfile = false
-        }else{
           this.isNotValidProfile = false
           this.canUpdateProfile = true
-          console.log('[!glb]', this.canUpdateProfile)
+        }else{
+          this.isNotValidProfile = true
+          this.canUpdateProfile = false
         }
       }else {
-        console.log('[!glc]', this.firstname)
         this.canUpdateProfile = false
         this.isNotValidProfile = true
       }
       // console.log('Valid: ', this.isNotValidProfile, 'Can update:" ', this.canUpdateProfile)
-      if(this.isNotValidProfile === true) {
-        return false
-      }else {
+      if(this.isNotValidProfile === false) {
         return true
+      }else {
+        return false
       }
     }
   }
