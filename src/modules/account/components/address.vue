@@ -216,6 +216,7 @@ export default {
       this.property.placeholder = e
     },
     retrieveInformation() {
+      console.log('user response............', this.user)
       let parameter = {
         account_id: this.user.userID
       }
