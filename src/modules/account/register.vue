@@ -359,8 +359,10 @@ export default {
           status: 'ADMIN',
           industry: JSON.stringify({industry: this.industry[this.selectedIndustry].category})
         }
+        console.log('[parameter]', parameter)
         $('#loading').css({'display': 'block'})
         this.APIRequest('account/create', parameter).then(response => {
+          console.log('[paramresponse]', response)
           $('#loading').css({'display': 'none'})
           if(response.data !== null) {
             this.login()

@@ -7,7 +7,7 @@
 </div>
     </div>
     <section>
-      <div class="row">
+      <div class="row banner-content">
         <div class="col d-flex flex-column align-items-center myheader1">
         <div class="col-6 d-flex align-items-center justify-content-center ">
           <p class="header-text-1">Manage Social Media Posting Written by Industry Experts in your Field</p>    
@@ -67,31 +67,64 @@
 .mainContainer{
   height: 50vh;
   background: linear-gradient(to right,#5c99ed,#5c99ed);
-  z-index: -999;
+  //z-index: -999;
+}
+.background-blue{
+  color: red;
+  height: 50vh;
+  width: 500px;
+  justify-content: center;
+  text-align: center;
+  position: absolute;
+  z-index: 250;
 }
 .cloudRight{
-  width: 50%;
-  margin-top: 170px;
+  width: 33%;
+  height: 100%;
+  margin-top: 275px;
   position: absolute;
   right: 0px;
+  z-index: 100;
+  text-shadow: 2px 2px 5px red;
 }
 .cloudLeft{
   transform: scaleX(-1);
-  width: 55%;
-  margin-top: 150px;
+  width: 33%;
+  margin-top: 275px;
+  position: absolute;
+  left: 0px;
+  z-index: 100;
+  text-shadow: 2px 2px 5px red;
+}
+.cloud3{
+  transform: scaleX(-1);
+  color: grey;
+  width: 100%;
+  margin-top: 53px;
   position: absolute;
   left: 0px;
 }
+.cloud4-1{
+  color: #dadada;
+  width: 100%;
+  margin-top: 53px;
+  position: absolute;
+  left: 0px;
+  z-index: 20;
+}
+
 .bgImg {
   width: 100%;
-  z-index: 100;
   position: absolute;
+}
+.banner-content{
+  z-index: 200;
 }
 .subHeader{
   font-size:20px;
   font-weight: bold;
   color: white;
-  z-index: 200;
+  //z-index: 200;
 }
 .btn-warning{
   height: 45px!important;
@@ -104,7 +137,7 @@
   height: 50vh;
   // background: linear-gradient(to right,#5c99ed,#5c99ed);
   background-color: transparent;
-  z-index: 1000;
+  //z-index: 1000;
 }
 .myheader2 {
   height: 30vh;
@@ -118,7 +151,7 @@
   font-family: "Work Sans", Sans-serif;
   height: 10vh;
   text-align: center;
-  z-index: 200;
+  //z-index: 200;
 }
 .header-text-2 {
   color: #01009A;
@@ -153,7 +186,7 @@
 }
 @keyframes animate{
   0%{
-    box-shadow: 0 0 0 0 lightgrey;
+    box-shadow: 0 0 0 0 rgb(209, 209, 209);
   }
   40%{
     box-shadow: 0 0 0 50px rgba(255,193,7,0);

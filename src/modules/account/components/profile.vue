@@ -11,12 +11,12 @@
               <div class="col-md-6" >
                 <p>First Name</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your first name here'"
-                  :class="!isValidProfile && firstname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                        border: !isValidProfile && !firstname ? '1px solid red !important' : 'none',
+                  :class="isNotValidProfile == true && firstname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
+                        border: (isNotValidProfile == true && !firstname) ? '1px solid red !important' : 'none',
                       }" v-model="firstname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="firstname == undefined || firstname == '' && !isValidProfile">
+                    v-if="isNotValidProfile == true && (firstname == undefined || firstname == '')">
                     {{
                     'Required Field'
                     }}</p>
@@ -25,12 +25,12 @@
               <div class="col-md-6" >
                 <p>Last Name</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your last name here'"
-                  :class="!isValidProfile && lastname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                      border: !isValidProfile && !lastname ? '1px solid red !important' : 'none',
+                  :class="isNotValidProfile == true && lastname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
+                      border: isNotValidProfile == true && !lastname ? '1px solid red !important' : 'none',
                     }" v-model="lastname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="lastname == undefined || lastname == ''  && !isValidProfile">
+                    v-if="isNotValidProfile == true && (lastname == undefined || lastname == '')">
                     {{
                     'Required Field'
                     }}</p>
@@ -42,12 +42,12 @@
               <div class="col-md-6" >
                 <p>Business Name</p>
                 <roundedInput :type="'text'" :placeholder="'Enter business name here'"
-                  :class="!isValidProfile && businessname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                      border: !isValidProfile && !businessname ? '1px solid red !important' : 'none',
+                  :class="isNotValidProfile == true && businessname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
+                      border: isNotValidProfile == true && !businessname ? '1px solid red !important' : 'none',
                     }" v-model="businessname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="businessname == '' || businessname == null && !isValidProfile">
+                    v-if="isNotValidProfile == true && (businessname == '' || businessname == null)">
                     {{
                     'Required Field'
                     }}</p>
@@ -56,12 +56,12 @@
               <div class="col-md-6" >
                 <p>Contact Number</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your contact number here'"
-                  :class="!isValidProfile && contactnumber == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                      border: !isValidProfile && !contactnumber ? '1px solid red !important' : 'none',
+                  :class="isNotValidProfile == true && contactnumber == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
+                      border: isNotValidProfile == true && !contactnumber ? '1px solid red !important' : 'none',
                     }" v-model="contactnumber" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="contactnumber == undefined || contactnumber== '' && !isValidProfile">
+                    v-if="isNotValidProfile == true && (contactnumber == undefined || contactnumber== '')">
                     {{
                     'Required Field'
                     }}</p>
@@ -108,7 +108,7 @@ export default {
       errorMessage: null,
       data: null,
       isValid: true,
-      isValidProfile: false,
+      isNotValidProfile: false,
       canUpdateProfile: false
     }
   },
@@ -159,7 +159,6 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('accounts_info/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('Data1: ', response)
         let data = response.data[0]
         this.username = this.user.username
         this.email = this.user.email
@@ -194,16 +193,12 @@ export default {
           cellular_number: this.contactnumber
         }
         let info = AUTH.user.information
-        console.log('INFO: ', info)
-        console.log('Parameters: ', parameter)
-        if(Object.keys(info).length > 1){
+        if(info !== null && Object.keys(info).length > 1){
           this.APIRequest('accounts_info/update_account', parameter).then(response => {
             $('#loading').css({'display': 'none'})
             if(response.error.length === 0){
               this.retrieveInformation()
-              console.log('Update profile response: ', response)
               this.canUpdateProfile = false
-              console.log('Submitted')
             }
           })
         }else{
@@ -216,7 +211,6 @@ export default {
             }
           })
         }
-        console.log('Business name: ', this.businessname)
         let merchant = {
           name: this.businessname,
           account_id: this.user.userID,
@@ -229,7 +223,6 @@ export default {
             $('#loading').css({'display': 'none'})
             this.canUpdateProfile = false
             this.retrieveInformation()
-            console.log('Updated business')
           }, error => {
             $('#loading').css({'display': 'none'})
             this.canUpdateProfile = false
@@ -258,23 +251,23 @@ export default {
       }, 100)
     },
     validate() {
-      if(this.firstname !== '' && this.lastname !== '' && this.businessname !== '' && this.contactnumber !== '') {
+      if(this.firstname !== '' && this.lastname !== '' && this.businessname !== '' && this.contactnumber !== '' && this.firstname !== undefined && this.lastname !== undefined && this.businessname !== undefined && this.contactnumber !== undefined) {
         if(!global.validateField(this.firstname) && !global.validateField(this.lastname) && !global.validateField(this.businessname) && !global.validateNumber(this.contactnumber)) {
-          this.isValidProfile = false
-          this.canUpdateProfile = false
-        }else{
-          this.isValidProfile = true
+          this.isNotValidProfile = false
           this.canUpdateProfile = true
+        }else{
+          this.isNotValidProfile = true
+          this.canUpdateProfile = false
         }
       }else {
         this.canUpdateProfile = false
-        this.isValidProfile = false
+        this.isNotValidProfile = true
       }
-      console.log('Valid: ', this.isValidProfile, 'Can update:" ', this.canUpdateProfile)
-      if(!this.isValidProfile) {
-        return false
-      }else {
+      // console.log('Valid: ', this.isNotValidProfile, 'Can update:" ', this.canUpdateProfile)
+      if(this.isNotValidProfile === false) {
         return true
+      }else {
+        return false
       }
     }
   }
