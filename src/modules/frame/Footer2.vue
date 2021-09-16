@@ -46,9 +46,7 @@
 </footer>
 </template>
 <style type="text/css">
-.page-footer {
-  border-top: solid #01009A 5px;
-}
+
 .ft-title {
   font-size:18px;
   font-weight:700;

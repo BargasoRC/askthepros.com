@@ -1,17 +1,16 @@
 <template>
 <div class="container">
     <div class="header-top">
-        <h2>Trademark Registration in <a href="">180+ Countries</a>: One-Stop Platform</h2>
-    </div>    
+        <h2>Content Expert in <a href="">180+ Industries</a>: One-Post Platform</h2>
+    </div>                                                                              
     <div class="subheader-top">
-        <p>Just 3 Online Steps, Never Been Easier.‎</p>
+        <p>Three Easy Steps To Manage Your Social Media Content‎</p>
     </div>
     <div>
         <div class="row">
             <div class="col-md-4 card">
                 <div class="card-circle">
-                    <span class="circle"></span>
-                    <div class="cir-search"><i class="fas fa-search cir-search-position"></i></div>
+                    <span class="circle"><div class="cir-search"><i class="fas fa-search cir-search-position"></i></div></span>
                 </div>
                 <!-- <div class="card-title"><h4>Search</h4></div> -->
                 <div class="card-content"><p>Create a brief profile with your industry</p></div>
@@ -19,8 +18,8 @@
             <div class="ellipsis"><i class="fas fa-ellipsis-h fa-2x e-1"></i></div>
             <div class="col-md-4 card">
                 <div class="card-circle">
-                    <span class="circle"></span>
-                    <div class="cir-search"><i class="far fa-file cir-file-position"></i></div>
+                    <span class="circle"> <div class="cir-search"><i class="far fa-file cir-file-position"></i></div></span>
+                   
                 </div>
                 <!-- <div class="card-title"><h4>File</h4></div> -->
                 <div class="card-content"><p>We Match you with an Subject Matter Expert in your Industry</p></div>
@@ -28,8 +27,8 @@
             <div class="ellipsis"><i class="fas fa-ellipsis-h fa-2x e-2"></i></div>
             <div class="col-md-4 card">
                 <div class="card-circle">
-                    <span class="circle"></span>
-                    <div class="cir-search"><i class="fas fa-user-shield cir-search-position"></i></div>
+                    <span class="circle"><div class="cir-search"><i class="fas fa-user-shield cir-search-position"></i></div></span>
+                    
                 </div>
                 <!-- <div class="card-title"><h4>Done!</h4></div> -->
                 <div class="card-content"><p>We post to your Google My Business, Facebook and Linked in 3 times per week</p></div>
@@ -44,6 +43,7 @@
     margin-bottom: 50px;
 }
 .header-top{
+    margin-top: 5vh;
     font-size: 22px;
     padding: 0.2%;
     width: 100%;
@@ -57,7 +57,7 @@
     justify-content: center;
     text-align: center;
     font-size: 17px;
-    font-weight: 500;
+    font-weight: 400;
     
 }
 .row{
@@ -75,12 +75,12 @@
     margin-bottom: 20px;
 }
 .circle{
-  height: 125px;
-  width: 125px;
-  background-color: rgb(204, 204, 204);
+  height: 100px;
+  width: 100px;
+  background-color: #ffffff;
   border-radius: 50%;
   display: inline-block;
-  text-shadow: -12px 12px 4px rgb(201, 201, 201);
+  box-shadow: -10px 15px 20px #e9e9e9,  10px 15px 20px #e9e9e9;
 }
 .cir-search{
     position: absolute;
@@ -88,20 +88,20 @@
 .cir-search-position{
     position: relative;
     z-index: 4;
-    font-size: 70px;
-    color: lightblue;
-    left: 119px;
-    bottom: 109px;
-    text-shadow: -12px 12px 4px rgb(124, 154, 165);
+    font-size: 40px;
+    color: #0399ef;
+    left: 29px;
+    bottom: -25px;
+    text-shadow: -5px 10px 2px rgb(210, 237, 250);
 }
 .cir-file-position{
     position: relative;
     z-index: 4;
-    font-size: 75px;
-    color: lightblue;
-    left: 130px;
-    bottom: 109px;
-    text-shadow: -12px 12px 4px rgb(124, 154, 165);
+    font-size: 40px;
+    color: #0399ef;
+    left: 35px;
+    bottom: -25px;
+    text-shadow: -5px 10px 2px rgb(210, 237, 250);
 }
 .card-title{
     margin-top: 15px;
@@ -124,14 +124,14 @@
     position: relative;
     right: 175px;
     top: 75px;
-    color: grey;
+    color: gray;
     z-index: 3;
 }
 .e-2{
     position: relative;
     left: 175px;
     top: 75px;
-    color: grey;
+    color: gray;
     z-index: 3;
 }
 </style>
