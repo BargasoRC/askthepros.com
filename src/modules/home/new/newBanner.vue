@@ -1,10 +1,12 @@
 <template>
   <div class="container-fluid p-0 mainContainer">
     <div class="bgImg">
-<div class="cloudLeft">
-</div>
-<div class="cloudRight">
-</div>
+      <div class="cloudLeft">
+        <img :src="require('assets/img/leftcloud.png')">
+      </div>
+      <div class="cloudRight">
+        <img :src="require('assets/img/rightcloud.png')">
+      </div>
     </div>
     <section>
       <div class="row banner-content">
@@ -79,42 +81,26 @@
   z-index: 250;
 }
 .cloudRight{
-  width: 33%;
   height: 100%;
-  margin-top: 275px;
   position: absolute;
   right: 0px;
   z-index: 100;
-  text-shadow: 2px 2px 5px red;
+  float: right;
+  top: 24vh;
 }
 .cloudLeft{
-  transform: scaleX(-1);
-  width: 33%;
-  margin-top: 275px;
+ height: 100%;
   position: absolute;
   left: 0px;
   z-index: 100;
-  text-shadow: 2px 2px 5px red;
+  float: left;
+  top: 25vh;
 }
-.cloud3{
-  transform: scaleX(-1);
-  color: grey;
-  width: 100%;
-  margin-top: 53px;
-  position: absolute;
-  left: 0px;
-}
-.cloud4-1{
-  color: #dadada;
-  width: 100%;
-  margin-top: 53px;
-  position: absolute;
-  left: 0px;
-  z-index: 20;
-}
+
 
 .bgImg {
   width: 100%;
+  height: 100%;
   position: absolute;
 }
 .banner-content{
