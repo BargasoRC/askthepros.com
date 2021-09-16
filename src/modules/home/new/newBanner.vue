@@ -65,7 +65,7 @@
 <style scoped lang="scss">
 @import "~assets/style/colors.scss";
 .mainContainer{
-  height: 50vh;
+  height: 45vh;
   background: linear-gradient(to right,#5c99ed,#5c99ed);
   //z-index: -999;
 }
