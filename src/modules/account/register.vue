@@ -266,7 +266,6 @@ export default {
   computed: {
     returnIndustry() {
       return this.industry.map((el, ndx) => {
-        console.log('[sadf]', el, ndx)
         return el.category
       })
     }
@@ -348,7 +347,6 @@ export default {
       this.$router.push('/login')
     },
     register(event) {
-      console.log('register:::')
       if(this.validate()) {
         this.isValid = true
         let parameter = {
@@ -361,10 +359,9 @@ export default {
           status: 'ADMIN',
           industry: JSON.stringify({industry: this.industry[this.selectedIndustry].category})
         }
-        console.log('[parameter]', parameter)
         $('#loading').css({'display': 'block'})
         this.APIRequest('account/create', parameter).then(response => {
-          console.log('[paramresponse]', response)
+          console.log('[logf]', response)
           $('#loading').css({'display': 'none'})
           if(response.data !== null) {
             this.login()
@@ -408,7 +405,6 @@ export default {
       await this.login()
     },
     validate() {
-      console.log('[select]', this.global.selectedIndustryIndex)
       this.errorMessage = null
       let email = this.email
       let username = this.username
