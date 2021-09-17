@@ -69,7 +69,10 @@ export default{
     return re.test(email);
   },
   validatePassword(password) {
-    const re = /^(?=.*[0-9])(?=.*[- ?!@#$%^&*\/\\])(?=.*[A-Z])(?=.*[a-z])[a-zA-Z0-9- ?!@#$%^&*\/\\]{8,16}$/
+    // Validates only the length of Characters
+    const re = /^[\w!@#$%^&*?~()-]{8,16}$/
+    // Complex Validation for Password
+    // const re = /^(?=.*[0-9])(?=.*[- ?!@#$%^&*\/\\])(?=.*[A-Z])(?=.*[a-z])[a-zA-Z0-9- ?!@#$%^&*\/\\]{8,16}$/
     return re.test(password)
   },
   validateField(input){
