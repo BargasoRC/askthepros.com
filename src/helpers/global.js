@@ -80,7 +80,9 @@ export default{
     return re.test(input)
   },
   validateNumber(number){
+    console.log('[f]', number)
     const re = /^[0-9+]{11,13}/
+    console.log('[f]', re.test(number))
     return re.test(number)
   },
   validateHTML(html){
