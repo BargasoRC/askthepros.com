@@ -151,7 +151,7 @@ export default {
       }
       let parameter = {
         condition: [{
-          value: filter.value + '%',
+          value: filter.value !== null ? '%' + filter.value + '%' : '%%',
           column: filter.column,
           clause: 'like'
         }],
