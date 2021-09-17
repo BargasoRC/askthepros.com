@@ -234,6 +234,7 @@ import global from 'src/helpers/global'
 export default {
   mounted(){
     this.retrievePayloads()
+    this.onSelect(this.global.selectedIndustryIndex)
   },
   data() {
     return {
@@ -264,7 +265,8 @@ export default {
   },
   computed: {
     returnIndustry() {
-      return this.industry.map(el => {
+      return this.industry.map((el, ndx) => {
+        console.log('[sadf]', el, ndx)
         return el.category
       })
     }
@@ -338,8 +340,8 @@ export default {
       })
     },
     onSelect(data) {
-      console.log('On Select:::')
-      this.selectedIndustry = data.index
+      console.log('On Select:::', data)
+      this.selectedIndustry = data.index != null ? data.index : data
     },
     login(event) {
       // console.log('login:::')
@@ -406,6 +408,7 @@ export default {
       await this.login()
     },
     validate() {
+      console.log('[select]', this.global.selectedIndustryIndex)
       this.errorMessage = null
       let email = this.email
       let username = this.username
