@@ -221,7 +221,8 @@ export default{
       activePage: 1,
       location: null,
       industry: [],
-      expertIndustry: []
+      expertIndustry: [],
+      selectIndust: false
     }
   },
   components: {
@@ -263,14 +264,27 @@ export default{
       $('#loading').css({display: 'block'})
       this.APIRequest('accounts/update_account_type', parameter).then(response => {
         $('#loading').css({display: 'none'})
+        if(this.newAccountType === 'EXPERT'){
+          this.updateIndustry(item, index)
+          this.selectIndust = true
+        }
         this.setEditTypeIndex(index, item)
         this.retrieve(null, null)
       })
     },
     updateIndustry(item, index){
-      if(this.newIndustry === null){
-        this.setEditIndustryIndex(index, item)
-        return
+      if(this.newIndustry === null && this.selectIndust === true){
+        this.industry.map(ndx => {
+          if(ndx === JSON.parse(item.industry).industry){
+            this.editIndustryIndex = index
+            this.newIndustry = ndx
+          }
+        })
+      }else if(this.selectIndust === false){
+        if(this.newIndustry === null){
+          this.setEditIndustryIndex(index, item)
+          return
+        }
       }
       let parameter = {
         account_id: item.id,
@@ -374,7 +388,7 @@ export default{
         if(response.data.length > 0) {
           response.data.map(elI => {
             this.data.map(el => {
-              if(el.id === elI.account_id){
+              if(elI.account_id === el.id){
                 this.expertIndustry = elI.payload_value
               }
             })

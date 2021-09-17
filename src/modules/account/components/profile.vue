@@ -253,18 +253,22 @@ export default {
     validate() {
       if(this.firstname !== '' && this.lastname !== '' && this.businessname !== '' && this.contactnumber !== '' && this.firstname !== undefined && this.lastname !== undefined && this.businessname !== undefined && this.contactnumber !== undefined) {
         if(!global.validateField(this.firstname) && !global.validateField(this.lastname) && !global.validateField(this.businessname) && !global.validateNumber(this.contactnumber)) {
+          console.log('a')
           this.isNotValidProfile = false
           this.canUpdateProfile = true
         }else{
+          console.log('d', global.validateField(this.firstname), global.validateField(this.lastname), global.validateField(this.businessname), global.validateNumber(this.contactnumber))
           this.isNotValidProfile = true
           this.canUpdateProfile = false
         }
       }else {
+        console.log('c')
         this.canUpdateProfile = false
         this.isNotValidProfile = true
       }
       // console.log('Valid: ', this.isNotValidProfile, 'Can update:" ', this.canUpdateProfile)
       if(this.isNotValidProfile === false) {
+        console.log('B')
         return true
       }else {
         return false
