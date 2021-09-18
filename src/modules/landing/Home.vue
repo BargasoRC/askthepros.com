@@ -2,19 +2,19 @@
   <div>
     <login-header></login-header>
     <NewBanner ref="ThisBanner"></NewBanner>
-    <!-- <Trademark></Trademark> -->
+    <Trademark></Trademark>
     <!-- <HomeBanner></HomeBanner> -->
     <!-- <CallToAction></CallToAction>
     <Subscription></Subscription>
     <Testimonials></Testimonials> -->
-    <!-- <newTestimonials></newTestimonials> -->
+    <newTestimonials></newTestimonials>
     <landing-footer></landing-footer>
   </div>
 </template>
 <script>
 import ROUTER from 'src/router'
 import Jquery from 'jquery'
-import Trademark from 'src/modules/landing/new/Trademark.vue'
+import Trademark from 'src/modules/landing/new/Trademarkv2.vue'
 import NewBanner from 'src/modules/landing/new/newBanner.vue'
 import HomeBanner from 'src/modules/landing/Banner.vue'
 import CallToAction from 'src/modules/landing/CallToAction.vue'

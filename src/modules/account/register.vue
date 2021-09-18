@@ -107,7 +107,10 @@
                   'Required Field'
               }}</p>
               <p class="mt-2"><b>Industry</b></p>
-              <roundedSelectBtn 
+              <select class="form-control" v-model="selectedIndustry" style="margin-bottom: 25px;">
+                <option v-for="(item, index) in industry" :value="item.category">{{item.category}}</option>
+              </select>
+              <!-- <roundedSelectBtn 
                 :placeholder="'Select Industry'"
                 :items="returnIndustry"
                 :class="''"
@@ -121,7 +124,7 @@
                 }"
                 :selectedIndex="global.selectedIndustryIndex"
                 @onSelect="onSelect"
-              />
+              /> -->
               <p
                 class="mb-0 pb-0 requiredFieldError"
                 v-if="!this.isValid && selectedIndustry == null"
@@ -233,6 +236,10 @@ import COMMON from 'src/common'
 import global from 'src/helpers/global'
 export default {
   mounted(){
+    let params = this.$route.params
+    if(params.category){
+      this.selectedIndustry = params.category
+    }
     this.retrievePayloads()
     this.onSelect(this.global.selectedIndustryIndex)
   },
@@ -383,7 +390,7 @@ export default {
         account_id: id,
         name: this.username,
         email: this.email,
-        addition_informations: JSON.stringify({industry: this.industry[this.selectedIndustry].category})
+        addition_informations: JSON.stringify({industry: this.selectedIndustry})
       }
       let payload = {
         account_id: id,
@@ -509,6 +516,14 @@ export default {
 }
 .LoginCardContainer {
   background-color: transparent !important;
+}
+
+.form-control{
+  border-radius: 25px !important;
+  height: 50px !important;
+  width: 100%;
+  margin: auto;
+  display: flex;
 }
 
 @media (max-width: 500px) {

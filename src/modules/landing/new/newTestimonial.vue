@@ -68,6 +68,7 @@ export default {
 //   background-color: #01004E;
   min-height: 80vh;
   width: 100%;
+  float: left;
 }
 
 center {

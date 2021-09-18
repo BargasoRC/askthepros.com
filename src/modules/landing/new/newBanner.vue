@@ -4,10 +4,10 @@
       <h1 class="text-white">Manage Social Media Posting Written by Industry Experts in your Field</h1>    
       <p class="text-white">You - Save time and Money - Concentrate on Sales</p>
       <span class="text-center category-selection" v-if="industry && industry.length > 0">
-        <select class="form-control">
-          <option v-for="(item, index) in industry">{{item.category}}</option>
+        <select class="form-control" v-model="selected">
+          <option v-for="(item, index) in industry" :value="item.category">{{item.category}}</option>
         </select>
-        <button class="btn redirect-btn">Try It Now!</button>
+        <button class="btn redirect-btn" @click="register()">Try It Now!</button>
       </span>
     </div>
 
@@ -25,7 +25,7 @@
   width: 100%;
   float: left;
   background: $primary;
-  min-height: 50vh;
+  min-height: 30vh;
   overflow-y: hidden;
 }
 
@@ -41,7 +41,7 @@
   float: left;
   margin-left: 30%;
   margin-right: 30%;
-  margin-top: 10vh;
+  margin-top: 2vh;
 }
 
 .form-control{
@@ -84,15 +84,40 @@
 }
 
 .left img, .right img{
-  height: 20vh;
+  height: 15vh;
 }
 
 .right img{
   float: right;
 }
 
+p{
+  font-size: 24px;
+}
+
 
 @media (max-width: 991px){
+  .category-selection{
+    width: 100%;
+    margin: unset;
+  }
+
+  h1{
+    font-size: 150%;
+  }
+
+  p{
+    font-size: 120%;
+  }
+
+  .form-control{
+    width: 60%;
+  }
+
+  .redirect-btn{
+    width: 40%;
+  }
+
 }
 </style>
 
@@ -124,7 +149,7 @@ export default {
       imageIndex1: null,
       industry: [],
       global: global,
-      selected: 2
+      selected: null
     }
   },
   mounted(){
@@ -149,6 +174,7 @@ export default {
         if(response.data.length > 0) {
           console.log('Log', response)
           this.industry = response.data
+          this.selected = response.data[0].category
         }else{
           this.industry = []
         }
@@ -167,7 +193,11 @@ export default {
       window.scrollTo(0, 0)
     },
     register(){
-      this.redirect('signup')
+      if(this.selected){
+        this.redirect('signup/' + this.selected)
+      }else{
+        this.redirect('signup')
+      }
       window.scrollTo(0, 0)
     },
     redirect(parameter){
