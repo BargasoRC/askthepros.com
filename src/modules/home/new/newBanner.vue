@@ -19,12 +19,12 @@
         </div>
         <div class="col-4">
           <roundedSelectBtn 
-                :placeholder="'Choose your Industry'"
-                :items="returnIndustry"
-                :class="''"
-                :styles="{width: '600px'
-                }"
-                @onSelect="onSelect"
+            :placeholder="'Choose your Industry'"
+            :items="returnIndustry"
+            :class="''"
+            :styles="{width: '600px'
+            }"
+            @onSelect="onSelect"
             />
             <button type="button" class="btn btn-warning btn-lg" style="font-size:15px" @click="redirect('/signup')">Try it Now!</button>
         </div>
@@ -182,6 +182,12 @@
   }
   100%{
     box-shadow: 0 0 0 rgba(255,193,7,0);
+  }
+}
+
+@media (max-width: 991px){
+  .bgImg{
+    display: none;
   }
 }
 </style>
