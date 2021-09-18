@@ -46,6 +46,10 @@
 </footer>
 </template>
 <style type="text/css">
+.page-footer{
+  float: left;
+  width: 100%;
+}
 
 .ft-title {
   font-size:18px;

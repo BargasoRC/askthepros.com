@@ -52,7 +52,7 @@ export default{
   }, {
     path: '/',
     name: 'home',
-    component: resolve => require(['src/modules/home/index.vue'], resolve),
+    component: resolve => require(['src/modules/landing/Home.vue'], resolve),
     meta: {
       tokenRequired: false
     }
@@ -122,7 +122,7 @@ export default{
   }, {
     path: '/contact',
     name: 'contactPage',
-    component: resolve => require(['src/modules/home/Contact.vue'], resolve),
+    component: resolve => require(['src/modules/landing/Contact.vue'], resolve),
     meta: {
       tokenRequired: false
     }

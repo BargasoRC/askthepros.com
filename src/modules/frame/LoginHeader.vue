@@ -1,260 +1,337 @@
- <template>
-  <div v-if="!tokenData.verifyingToken && !tokenData.token">
-    <div class="login-content-holder">
-      <transition>
-          <router-view ></router-view>
-      </transition> 
-    </div> 
-  </div> 
+<template>
+  <div class="header" id="header">
+    <div class="header-section">
+      <span class="logo">
+        <a class="navbar-brand" v-on:click="redirect('/')">
+          <img
+            src="../../assets/img/logo.png"
+            style="margin-bottom: 5px; margin-right: 5px"
+          />
+          <span>
+            <label class="headerName">{{common.APP_NAME}}
+              <p>Your Transfer Of Choice</p>
+            </label>
+          </span>
+        </a>
+      </span>
+      <span class="menu">
+        <span class="navbar-menu-toggler-md">
+          <i
+            class="fa fa-bars"
+            data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          ></i>
+        </span>
+        <ul class="header-primary-menu">
+          <li class="nav-item">
+            <a class="nav-link" @click="redirect('/locations')">Locations</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" @click="redirect('/charges')">Charges</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" @click="redirect('/user-guide')">Guides</a>
+          </li>
+        </ul>
+      </span>
+    </div>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item" v-on:click="redirect('/locations')">
+          <a
+            data-toggle="collapse"
+            data-target=".navbar-collapse.show"
+            class="nav-link"
+            >Locations</a
+          >
+        </li>
+        <li class="nav-item" v-on:click="redirect('/charges')">
+          <a
+            data-toggle="collapse"
+            data-target=".navbar-collapse.show"
+            class="nav-link"
+            >Charges</a
+          >
+        </li>
+        <li class="nav-item" v-on:click="redirect('/user-guide')">
+          <a
+            data-toggle="collapse"
+            data-target=".navbar-collapse.show"
+            class="nav-link"
+            >Guides</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
-<style type="text/css">
-
-
-/*
-        BODY
-*/
-body{
-  font-size: 13px;
-  font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
-  font-weight: 400;
+<style scoped lang="scss">
+@import "~assets/style/colors.scss";
+@font-face {
+  font-family: Open Sans;
+  src: url("../../assets/fonts/OpenSans-Regular.ttf");
 }
-
-/*
-        BUTTONS
-*/
-
-.btn{
-  font-size: 12px;
+@font-face {
+  font-family: Open Sans Bold;
+  src: url("../../assets/fonts/OpenSans-Bold.ttf");
 }
-.btn:hover{
-  cursor: pointer;
-}
-
-
-/*------------------------------------
-
-          TABLES
-
---------------------------------------*/
-
-.table{
-  font-size: 12px;
-}
-
-
-/*----------------------------------------
-
-            Forms
-
-------------------------------------------*/
-.form-control{
-  height: 35px;
-  font-size: 12px;
-}
-
-/*----------------------------------------
-
-            Contents
-
-------------------------------------------*/
-
-
-  .login-system-header{
-    float: left;
-    height: 50px;
-    font-size: 24px;
-    width: 18%;
-    background: #fff;
-    text-align: center;
-    border-bottom: solid 1px #eee;
-  }
-  .login-header-navbar{
-    background: #fff;
-    height: 50px;
-    float: left;
-    width: 82%;
-    border-bottom: solid 1px #eee;
-  }/*-- navbar --*/
-  .login-system-header .navbar-brand{
-    color: #009900;
-  }
-
-  .navbar-brand:hover{
-    cursor: pointer;
-  }
-  
-
-  .login-content-holder{
-    width: 100%;
-    float: left;
-    min-height: 400px;
-    overflow: hidden;
-  }
-/*---------------------------------------------
- 
-
-        HEADER ACCOUNT PROFILE
-
-
------------------------------------------------*/
-  .login-header-navbar-nav{
-      height: 50px;
-      float: right;
-      color: #fff;
-      width: 20%;
-  }
-  .login-header-navbar-nav label{
-    font-size: 13px;
-    font-weight: 500;
-    vertical-align: middle;
-    padding-left: 10px;
-  }
-  .login-header-navbar-nav i{
-    font-size: 24px;
-     padding: 10px 0 0 5%;
-  }
-
-  .login-header-navbar-nav:hover{
-    cursor: pointer;
-    background: #009900;
-  }
-
-
-/*---------------------------------------------
- 
- 
-        ICONS
-
-
------------------------------------------------*/
-
-#messagesHeader{
-  margin-left: 70%;
-}
-.login-nav-item{
-  width: 15%;
-  height: 50px;
-  text-align: center;
+.header {
+  width: 100%;
   float: left;
-  color: #009900;
-  display: inline;
+  min-height: 70px;
+  // background: #4f0862;
+  overflow-y: hidden;
+  position: fixed;
+  z-index: 10000;
 }
-.login-header-margin{
-  height: 50px;
-  float: left;
-  width: 70%;
-}
-
-.login-nav-item span i{
-  padding: 12px 0 15px 0;
-  font-size: 16px;
-}
-
-.login-nav-item .label{
-  z-index: 1000;
-  background: #ff0000;
-  padding: 5px;
-  font-size: 8px;
-  margin: -10px 0 0 -10px;
-  border-radius: 2px;
-  border-color: solid 1px #009900;
-}
-
-.login-nav-item:hover{
-  background: #009900;
-  cursor: pointer;
+.header-section {
+  min-height: 60px;
+  overflow-y: hidden;
+  width: 90%;
+  font-size: 12px;
   color: #fff;
+  margin: 5px auto 5px auto;
+}
+.header-section .logo {
+  width: 20%;
+  float: left;
+  height: 100%;
+}
+.header-section .menu {
+  width: 80%;
+  float: left;
+  height: 100%;
+  margin-top: 10px;
 }
 
-#book-now{
-  border-right: solid 1px #eee;
-  border-left: solid 1px #eee;
+.navbar-menu-toggler-md {
+  width: 100%;
+  text-align: right;
+  float: left;
+  display: none;
 }
 
+.menu .header-primary-menu {
+  width: 100%;
+  float: left;
+  min-height: 30px;
+  list-style: none;
+  overflow-y: hidden;
+  padding: 0px;
+  margin-bottom: 0px !important;
+}
+.btn-white {
+  background: #fff;
+  color: $primary !important;
+}
+.fa-bars {
+  border: solid 1px #fff;
+  font-size: 20px !important;
+  padding: 10px 8px 10px 8px !important;
+  color: $primary !important;
+}
 
-/*---------------------------------------------------------          
+.fa-bars:hover {
+  cursor: pointer;
+}
 
-                  RESPONSIVE HANDLER
+.menu .header-primary-menu .nav-item {
+  float: right;
+  font-size: 15px;
+  margin-left: 5px;
+}
 
------------------------------------------------------------*/
-/*-------------- Medium and Large Screens for Tablets and Desktop --------------*/
+.header-primary-menu .nav-item .nav-link {
+  padding: 0.5rem;
+}
 
- @media screen (min-width: 1200px){
-    .login-system-header{
-      width: 23%;
-    }
-    .login-header-navbar{
-      width: 77%;
-    }
-    .login-header-margin{
-      width: 70%;
-    }
-    .login-nav-item{
-      width: 15%;
-    }
+.header-primary-menu .nav-item a {
+  color: $primary !important;
+  font-weight: bold;
+  font-family: MuseoRounded700, sans-serif;
+}
+.header-primary-menu .nav-item .nav-link:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.navbar-toggler {
+  background: inherit !important;
+  border-radius: 0px !important;
+  border: solid 1px #fff;
+  font-size: 20px !important;
+  padding: 10px 8px 10px 8px !important;
+  color: #fff !important;
+}
+.navbar-toggler:hover {
+  color: $primary !important;
+  background: #fff !important;
+}
+
+.navbar-collapse .show {
+  display: none !important;
+}
+
+.header-section .logo a img {
+  width: 50px;
+}
+.header-section .logo a label {
+  font-size: 18px;
+  letter-spacing: 1px;
+  font-weight: bold;
+  margin-bottom: 0px;
+  color: white;
+}
+
+@media screen and (min-width: 0px) {
+  .headerName {
   }
 
- @media screen (min-width: 992px), screen and (max-width: 1199px){
-    .login-system-header{
-      width: 23%;
-    }
-    .login-header-navbar{
-      width: 77%;
-    }
-    .login-header-margin{
-      width: 60%;
-    }
-    .login-nav-item{
-      width: 20%;
-    }
+  .headerName p{
+    font-size: 11px;
+    margin: 0px;
+    padding: 0px;
+    margin-top: -5px;
+    font-style: italic;
+    color: $secondary;
   }
 
-@media screen (min-width: 768px), screen and (max-width: 991px){
-   .login-system-header{
-      width: 100%;
-    }
-    .login-header-navbar{
-      width: 100%;
-    }
-    .login-header-margin{
-      width: 40%;
-    }
-    .login-nav-item{
-      width: 30%;
-    }
- }
+  .navbar-brand img{
+    margin-top: -10px;
+  }
+}
 
-/*-------------- Small Screen for Mobile Phones --------------*/
- @media (max-width: 767px){
-    .login-header-margin{
-     width: 0%;
-    }
-    .login-system-header{
-      width: 100%;
-    }
-    .login-header-navbar{
-      width: 100%;
-    }
-    .login-nav-item{
-      width: 50%;
-    }
-  } 
+@media screen and (max-width: 992px) {
+  .header-section {
+    width: 90% !important;
+    margin: 0 5% 0 5% !important;
+  }
+  .header-section .logo {
+    width: 80%;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+  .header-section .menu {
+    width: 20%;
+    margin-top: 15px;
+  }
+  .menu .top-menu,
+  .menu .header-primary-menu {
+    display: none;
+  }
 
+  .navbar {
+    width: 90% !important;
+    margin: 0 5% 0 5% !important;
+    padding: 0 !important;
+  }
+  .navbar-collapse {
+    width: 100% !important;
+    position: absolute !important;
+    z-index: 100000 !important;
+    float: left;
+    border-bottom: solid 1px $primary;
+  }
+  .navbar-nav {
+    background: #fff !important;
+    margin: 0 !important;
+  }
+  .navbar-nav .nav-link {
+    width: 100% !important;
+    padding: 17px 30px 17px 30px !important;
+  }
+
+  .navbar-nav .nav-link:hover {
+    background: $primary;
+    color: #fff;
+  }
+
+  .navbar-nav .nav-link {
+    color: $primary;
+  }
+  .navbar-menu-toggler-md {
+    width: 100%;
+    text-align: right;
+    float: left;
+    display: block;
+  }
+}
 </style>
 <script>
-import ROUTER from '../../router'
-import AUTH from '../../services/auth'
+import ROUTER from "src/router";
+import Jquery from "jquery";
+import COMMON from 'src/common.js'
 export default {
-  data(){
-    return {
-      user: AUTH.user,
-      tokenData: AUTH.tokenData
+  mounted() {
+    console.log("READING", this.$route);
+    if(this.$route.path !== '/'){
+      Jquery('.header').css({
+        backgroundImage: 'linear-gradient(90deg, #8f00b4, #00c4cc)'
+      })
     }
   },
+  data() {
+    return {
+      routePath: this.$route.path,
+      common: COMMON
+    };
+  },
   methods: {
-    redirect(parameter){
-      ROUTER.push(parameter)
+    redirect(parameter) {
+      ROUTER.push(parameter);
+      if(parameter === '/'){
+        this.scrollToTop()
+      }
+    },
+    scrollToTop () {
+      Jquery('html, body').animate({
+        scrollTop: 0
+      }, 500)
+    },
+    scrollTo(div) {
+      Jquery("html, body").animate(
+        {
+          scrollTop: Jquery(div).offset().top,
+        },
+        500
+      );
+    },
+    headerScrollTo(id) {
+      let height = Jquery(window).height();
+      this.redirect("/" + id);
+      window.scrollTo(0, 0);
+      window.location.reload();
+      Jquery("html, body").animate(
+        {
+          scrollTop: Jquery(id).offset().top - parseInt(height * 0.0),
+        },
+        500
+      );
+    },
+  },
+};
+window.addEventListener("load", function () {
+  Jquery(document).ready(function () {
+    if (window.location.hash == "#partner") {
+      let height = Jquery(window).height();
+      Jquery("html, body").animate(
+        {
+          scrollTop: Jquery("#partner").offset().top - parseInt(height * 0.0),
+        },
+        500
+      );
+    } else if (window.location.hash == "#services") {
+      let height = Jquery(window).height();
+      Jquery("html, body").animate(
+        {
+          scrollTop: Jquery("#services").offset().top - parseInt(height * 0.0),
+        },
+        500
+      );
     }
-  }
-}
+  });
+});
 </script>
