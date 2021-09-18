@@ -503,6 +503,7 @@ export default {
 .LoginContainer {
   min-height: 85vh;
   background-color: transparent !important;
+  margin-top: 100px;
 }
 .RowContainer {
   background-color: white !important;

@@ -30,28 +30,28 @@
             >
           </li> -->
           <li class="nav-item">
-            <a class="nav-link" @click="redirect('/user-guide')">Register</a>
+            <a class="nav-link" @click="redirect('/signup')">Register</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" @click="redirect('/user-guide')">Login</a>
+            <a class="nav-link" @click="redirect('/login')">Login</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" @click="redirect('/charges')">Contact Us</a>
+            <a class="nav-link" @click="redirect('/contact')">Contact Us</a>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link" @click="redirect('/locations')">How it works</a>
-          </li>
+          </li> -->
         </ul>
       </span>
     </div>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item" v-on:click="redirect('/stories')">
+        <li class="nav-item" v-on:click="redirect('/signup')">
           <a
             data-toggle="collapse"
             data-target=".navbar-collapse.show"
             class="nav-link"
-            >Stories</a
+            >Register</a
           >
         </li>
         <li class="nav-item">
@@ -60,8 +60,8 @@
             data-target=".navbar-collapse.show"
             class="nav-link"
             href="/#partner"
-            @click="headerScrollTo('#partner')"
-            >Be Our Partner</a
+            v-on:click="redirect('/login')"
+            >Login</a
           >
         </li>
       </ul>
@@ -256,13 +256,14 @@
 import ROUTER from 'src/router'
 import Jquery from 'jquery'
 import COMMON from 'src/common.js'
+import ColorJS from 'src/assets/style/colors.js'
 export default {
   mounted() {
-    // if(this.$route.path !== '/'){
-    //   Jquery('.header').css({
-    //     backgroundImage: 'linear-gradient(90deg, #8f00b4, #00c4cc)'
-    //   })
-    // }
+    if(this.$route.path !== '/'){
+      Jquery('.header').css({
+        background: ColorJS.primary
+      })
+    }
   },
   data() {
     return {

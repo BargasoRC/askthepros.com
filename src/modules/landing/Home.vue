@@ -1,6 +1,5 @@
 <template>
   <div>
-    <login-header></login-header>
     <NewBanner ref="ThisBanner"></NewBanner>
     <Trademark></Trademark>
     <!-- <HomeBanner></HomeBanner> -->
@@ -30,7 +29,6 @@ export default {
     NewBanner,
     newTestimonials,
     Trademark,
-    'login-header': () => import('modules/frame/Header2.vue'),
     'landing-footer': () => import('modules/frame/Footer2.vue')
   },
   data() {
