@@ -5,7 +5,7 @@
         <a class="navbar-brand" v-on:click="redirect('/')">
           <img
             src="../../assets/img/logo_white.png"
-            style="margin-top: 10px; height: 60px; width: auto;"
+            style="height: 60px; width: auto;"
           />
         </a>
       </span>
@@ -82,7 +82,7 @@
 .header-section {
   min-height: 60px;
   overflow-y: hidden;
-  width: 90%;
+  width: 60%;
   font-size: 12px;
   color: #fff;
   margin: 5px auto 5px auto;
@@ -264,6 +264,7 @@ export default {
         background: ColorJS.primary
       })
     }
+    window.addEventListener('scroll', this.onScroll)
   },
   data() {
     return {
@@ -271,6 +272,20 @@ export default {
     }
   },
   methods: {
+    onScroll(){
+      var height = Jquery(window).height()
+      var scrollTop = Jquery(window).scrollTop()
+      var vScroll = parseInt((scrollTop / height) * 100)
+      if(vScroll >= 7){
+        Jquery('.header').css({
+          background: ColorJS.primary
+        })
+      }else{
+        Jquery('.header').css({
+          background: ColorJS.primary
+        })
+      }
+    },
     redirect(parameter) {
       ROUTER.push(parameter)
       if(parameter === '/'){

@@ -2,7 +2,7 @@
   <div class="cloud-image">
     <div class="text-center banner-content">
       <h1 class="text-white">Manage Social Media Posting Written by Industry Experts in your Field</h1>    
-      <p class="text-white">You - Save time and Money - Concentrate on Sales</p>
+      <p class="text-white"><b>1.</b> Create & Import Profile <b>2.</b> Just Relax <b>3.</b> Grow your Sales</p>
       <span class="text-center category-selection" v-if="industry && industry.length > 0">
         <select class="form-control" v-model="selected">
           <option v-for="(item, index) in industry" :value="item.category">{{item.category}}</option>
@@ -91,8 +91,19 @@
   float: right;
 }
 
+h1{
+  width: 50%;
+  margin-left: 25%;
+  margin-right: 25%;
+}
+
 p{
   font-size: 24px;
+  margin-top: 25px;
+}
+
+b{
+  color: $warning;
 }
 
 
@@ -104,6 +115,8 @@ p{
 
   h1{
     font-size: 150%;
+    width: 100%;
+    margin: unset;
   }
 
   p{
