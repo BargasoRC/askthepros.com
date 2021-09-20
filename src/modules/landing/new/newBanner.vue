@@ -187,7 +187,6 @@ export default {
       this.APIRequest('payloads/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data.length > 0) {
-          console.log('Log', response)
           this.industry = response.data
           this.selected = response.data[0].category
         }else{
@@ -197,11 +196,6 @@ export default {
         $('#loading').css({'display': 'none'})
         error
       })
-    },
-    onSelect(data) {
-      console.log('SELECTED INDUSTRY: ', data)
-      this.selected = data.index
-      this.global.selectedIndustryIndex = data.index
     },
     login(){
       this.redirect('login')

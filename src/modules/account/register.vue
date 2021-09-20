@@ -239,10 +239,8 @@ export default {
     let params = this.$route.params
     if(params.category){
       this.selectedIndustry = params.category
-      console.log('[selectedIndustry]', this.selectedIndustry)
     }
     this.retrievePayloads()
-    this.onSelect(this.global.selectedIndustryIndex)
   },
   data() {
     return {
@@ -346,10 +344,6 @@ export default {
         console.log('Authentication with linkedin error! ', error)
       })
     },
-    onSelect(data) {
-      console.log('On Select:::', data)
-      this.selectedIndustry = data.index != null ? data.index : data
-    },
     login(event) {
       // console.log('login:::')
       this.$router.push('/login')
@@ -365,7 +359,7 @@ export default {
           account_type: this.type,
           referral_code: null,
           status: 'ADMIN',
-          industry: JSON.stringify({industry: this.industry[this.selectedIndustry].category})
+          industry: JSON.stringify({industry: this.selectedIndustry})
         }
         $('#loading').css({'display': 'block'})
         this.APIRequest('account/create', parameter).then(response => {
