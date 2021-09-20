@@ -461,6 +461,11 @@ export default {
         this.val = true
         this.$refs.errorModal.show()
         return false
+      }if(global.validateDate(this.description) === true){
+        this.isValid = false
+        this.val = true
+        this.$refs.errorModal.show()
+        return false
       }
       return true
     },
