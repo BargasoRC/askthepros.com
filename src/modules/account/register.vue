@@ -212,7 +212,7 @@
                 :text="'Login'"
                 :icon_position="'right'"
                 :styles="{
-                  backgroundColor: colors.warning,
+                  backgroundColor: colors.secondary,
                   color: 'white'
                 }"
               />
@@ -239,6 +239,7 @@ export default {
     let params = this.$route.params
     if(params.category){
       this.selectedIndustry = params.category
+      console.log('[selectedIndustry]', this.selectedIndustry)
     }
     this.retrievePayloads()
     this.onSelect(this.global.selectedIndustryIndex)

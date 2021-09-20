@@ -145,7 +145,7 @@
                 :text="'Register Now'"
                 :icon_position="'right'"
                 :styles="{
-                  backgroundColor: colors.warning,
+                  backgroundColor: colors.secondary,
                   color: 'white'
                 }"
               />
