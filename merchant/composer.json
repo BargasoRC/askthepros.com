@@ -1,6 +1,6 @@
 {
-    "name": "increment/account",
-    "description": "Account Backend",
+    "name": "increment/merchant",
+    "description": "Increment Core Marketplace Backend",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -13,13 +13,13 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "Increment\\Account\\": "src/"
+            "Increment\\Account\\Merchant": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Increment\\Account\\AccountServiceProvider"
+                "Increment\\Account\\Merchant\\MerchantServiceProvider"
             ]
         }
     }
