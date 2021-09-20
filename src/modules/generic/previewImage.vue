@@ -465,10 +465,6 @@ label{
 	background: rgb(217, 217, 235);
   width: 10em;
 }
-
-.tui-image-editor-container .tui-image-editor-controls{
-  background: $primary !important;
-}
 @media (max-width: 992px){
   .product-image{
     width: 100%;
