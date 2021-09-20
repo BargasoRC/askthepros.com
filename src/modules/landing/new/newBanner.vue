@@ -2,7 +2,7 @@
   <div class="cloud-image">
     <div class="text-center banner-content">
       <h1 class="text-white">Manage Social Media Posting Written by Industry Experts in your Field</h1>    
-      <p class="text-white"><b>1.</b> Create & Import Profile <b>2.</b> Just Relax <b>3.</b> Grow your Sales</p>
+      <p class="text-white"><b>1.</b> Create & Import Profile &nbsp;&nbsp;<b>2.</b> Just Relax &nbsp;&nbsp;<b>3.</b> Grow your Sales</p>
       <span class="text-center category-selection" v-if="industry && industry.length > 0">
         <select class="form-control" v-model="selected">
           <option v-for="(item, index) in industry" :value="item.category">{{item.category}}</option>
