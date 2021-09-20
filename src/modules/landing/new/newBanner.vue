@@ -54,10 +54,12 @@
   margin: auto;
   border: none !important;
   float: left !important;
+  font-size: 16px;
 }
 
 .btn{
   float: left;
+  font-size: 16px;
 }
 
 .redirect-btn{
