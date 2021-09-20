@@ -45,10 +45,24 @@
 
     <div class="modal fade bd-example-modal-lg" role="dialog" id="editImage">
       <div class="modal-dialog modal-lg">
-        <div class="modal-content" style="height: 75vh; width: 100%; margin-right: 20px;">
+        <div class="modal-content" style="height: 75vh; width: 70%; margin-right: 15%; margin-left: 15%;">
           <div id="tui-image-editor"></div>
           <div style="text-align: right;">
             <!--  background-color: #151515; 1px solid white -->
+            <roundedBtn
+              :onClick="close"
+              :icon="null"
+              :text="'Close'"
+              :styles="{
+                background: '#FF0000',
+                color: 'white',
+                width: '150px !important',
+                minWidth: '150px !important',
+                border: 'none',
+                margin: '5px'
+              }"
+              :icon_position="'left'"
+            />
             <roundedBtn
               :onClick="saveImage"
               :icon="null"
@@ -56,10 +70,10 @@
               :styles="{
                 background: '#01009A',
                 color: 'white',
-                width: '130px !important',
-                minWidth: '130px !important',
+                width: '150px !important',
+                minWidth: '150px !important',
                 border: 'none',
-                margin: '10px 150px 10px 10px'
+                margin: '10px'
               }"
               :icon_position="'left'"
             />
@@ -122,6 +136,9 @@ export default {
     }
   },
   methods: {
+    close(){
+      $('#editImage').modal('hide')
+    },
     saveImage() {
       let imageName = this.instance.getImageName()
       let base = this.instance.toDataURL()
@@ -165,15 +182,16 @@ export default {
               'submenu.normalLabel.color': '#8c8c8c',
               'submenu.activeIcon.color': 'black',
               'submenu.activeLabel.color': 'black',
-              'menu.backgroundColor': '#01009A',
+              'submenu.partition.color': '#01009A',
               'submenu.backgroundColor': 'white',
               'common.bisize.height': '0px',
               'downloadButton.display': 'none'
             },
-            menuBarPosition: 'top'
+            menuBarPosition: 'bottom'
           }
         }
       )
+      $('#editImage').modal({backdrop: 'static', keyboard: false})
       $('#editImage').modal('show')
     },
     selectImage(url){
