@@ -107,7 +107,10 @@
                   'Required Field'
               }}</p>
               <p class="mt-2"><b>Industry</b></p>
-              <roundedSelectBtn 
+              <select class="form-control" v-model="selectedIndustry" style="margin-bottom: 25px;">
+                <option v-for="(item, index) in industry" :value="item.category">{{item.category}}</option>
+              </select>
+              <!-- <roundedSelectBtn 
                 :placeholder="'Select Industry'"
                 :items="returnIndustry"
                 :class="''"
@@ -121,7 +124,7 @@
                 }"
                 :selectedIndex="global.selectedIndustryIndex"
                 @onSelect="onSelect"
-              />
+              /> -->
               <p
                 class="mb-0 pb-0 requiredFieldError"
                 v-if="!this.isValid && selectedIndustry == null"
@@ -233,7 +236,12 @@ import COMMON from 'src/common'
 import global from 'src/helpers/global'
 export default {
   mounted(){
+    let params = this.$route.params
+    if(params.category){
+      this.selectedIndustry = params.category
+    }
     this.retrievePayloads()
+    this.onSelect(this.global.selectedIndustryIndex)
   },
   data() {
     return {
@@ -264,7 +272,7 @@ export default {
   },
   computed: {
     returnIndustry() {
-      return this.industry.map(el => {
+      return this.industry.map((el, ndx) => {
         return el.category
       })
     }
@@ -338,15 +346,14 @@ export default {
       })
     },
     onSelect(data) {
-      console.log('On Select:::')
-      this.selectedIndustry = data.index
+      console.log('On Select:::', data)
+      this.selectedIndustry = data.index != null ? data.index : data
     },
     login(event) {
       // console.log('login:::')
       this.$router.push('/login')
     },
     register(event) {
-      console.log('register:::')
       if(this.validate()) {
         this.isValid = true
         let parameter = {
@@ -383,7 +390,7 @@ export default {
         account_id: id,
         name: this.username,
         email: this.email,
-        addition_informations: JSON.stringify({industry: this.industry[this.selectedIndustry].category})
+        addition_informations: JSON.stringify({industry: this.selectedIndustry})
       }
       let payload = {
         account_id: id,
@@ -432,7 +439,8 @@ export default {
           this.isEmailValid = true
         }
         this.isValid = false
-        this.passwordRequirements = 'Password should be minimum of 8 and maximum of 16 and should contain at least one digit, lower case, upper case and special character.'
+        this.passwordRequirements = 'Password should be minimum of 8 and maximum of 16.'
+        // this.passwordRequirements = 'Password should be minimum of 8 and maximum of 16 and should contain at least one digit, lower case, upper case and special character.'
         return false
       }
       this.passwordRequirements = ''
@@ -495,6 +503,7 @@ export default {
 .LoginContainer {
   min-height: 85vh;
   background-color: transparent !important;
+  margin-top: 100px;
 }
 .RowContainer {
   background-color: white !important;
@@ -508,6 +517,14 @@ export default {
 }
 .LoginCardContainer {
   background-color: transparent !important;
+}
+
+.form-control{
+  border-radius: 25px !important;
+  height: 50px !important;
+  width: 100%;
+  margin: auto;
+  display: flex;
 }
 
 @media (max-width: 500px) {

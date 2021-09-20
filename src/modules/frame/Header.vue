@@ -17,6 +17,9 @@
       <span class="left-menu-icons" v-if="user.type === 'USER'">
         <label class="account-type  hide-on-mobile bg-warning" v-if="user !== null && user.merchant">{{user.merchant.addition_informations.industry}}</label>
       </span>
+      <span class="left-menu-icons left-menu-icon" v-if="user.type === 'EXPERT'">
+        <label class="account-type  hide-on-mobile bg-warning" v-if="user !== null && user.merchant && industry === true">{{user.merchant.addition_informations.industry}}</label>
+      </span>
       <span class="right-menu-icons">
         <div class="dropdown"> 
           <span class="nav-item" v-bind:class="{'active-menu': settingFlag === true}" data-toggle="dropdown" id="settings" aria-haspopup="true" aria-expanded="false" v-on:click="makeActive('dropdown')" v-bind:onkeypress="makeActive('')">
@@ -209,6 +212,14 @@ body{
   float: left;
   width: 50%;
   position: fixed;
+  z-index: 100;
+}
+.left-menu-icon, right-menu-icons{
+  height: 50px;
+  float: left;
+  margin-left: 3.5%;
+  width: 50%;
+  // position: fixed;
   z-index: 100;
 }
 
@@ -674,10 +685,12 @@ import Echo from 'laravel-echo'
 import Vue from 'vue'
 export default {
   mounted(){
+    this.retrieveIndustryPayloads()
   },
   data(){
     return{
       user: AUTH.user,
+      industry: false,
       data: null,
       tokenData: AUTH.tokenData,
       settingFlag: false,
@@ -697,6 +710,33 @@ export default {
     }
   },
   methods: {
+    retrieveIndustryPayloads(){
+      let conditions = [{
+        value: 'assigned_industry',
+        clause: '=',
+        column: 'payload'
+      }, {
+        value: this.user.userID,
+        clause: '=',
+        column: 'account_id'
+      }
+      ]
+      let parameter = {
+        condition: conditions
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('payloads/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data.length > 0) {
+          this.industry = true
+        }else{
+          this.industry = false
+        }
+      }).catch(error => {
+        $('#loading').css({'display': 'none'})
+        error
+      })
+    },
     makeActive(icon){
       if(icon === 'dropdown'){
         this.settingFlag = true

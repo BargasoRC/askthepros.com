@@ -1,7 +1,7 @@
 
 export default{
   routes: [{
-    path: '/signup',
+    path: '/signup/:category?',
     name: 'signup',
     component: resolve => require(['modules/account/register.vue'], resolve),
     meta: {
@@ -24,7 +24,7 @@ export default{
   }, {
     path: '/login_verification/:username/:code',
     name: 'loginVerification',
-    component: resolve => require(['components/increment/basic/LoginByVerification.vue'], resolve),
+    component: resolve => require(['modules/account/verification.vue'], resolve),
     meta: {
       tokenRequired: false
     }
@@ -45,14 +45,14 @@ export default{
   }, {
     path: '/reset_password/:username/:code',
     name: 'resetPassword',
-    component: resolve => require(['components/increment/basic/ResetPassword.vue'], resolve),
+    component: resolve => require(['modules/account/resetNewPassword.vue'], resolve),
     meta: {
       tokenRequired: false
     }
   }, {
     path: '/',
     name: 'home',
-    component: resolve => require(['src/modules/home/index.vue'], resolve),
+    component: resolve => require(['src/modules/landing/Home.vue'], resolve),
     meta: {
       tokenRequired: false
     }
@@ -122,7 +122,7 @@ export default{
   }, {
     path: '/contact',
     name: 'contactPage',
-    component: resolve => require(['src/modules/home/Contact.vue'], resolve),
+    component: resolve => require(['src/modules/landing/Contact.vue'], resolve),
     meta: {
       tokenRequired: false
     }

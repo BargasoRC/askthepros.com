@@ -94,15 +94,16 @@ Route::post($route. '/retrieve ', $controller.'retrieve');
 
 
 // Google Place
-$route = env('PACKAGE_ROUTE', '').'/google_places/';
+$route = env('PACKAGE_ROUTE', '').'/google_places';
 $controller = 'GooglePlaceController@';
-Route::post($route.'search', $controller."search");
+Route::post($route.'/search', $controller."search");
 
 //Emails Controller
 $route = env('PACKAGE_ROUTE', '').'/emails';
 Route::post($route.'/reset_password', 'EmailController@resetPassword');
 Route::post($route.'/verification', 'EmailController@verification');
 Route::post($route.'/changed_password', 'EmailController@changedPassword');
+Route::post($route.'/send_message', 'EmailController@sendMessage');
 Route::post($route.'/trial', 'EmailController@trial');
 Route::get($route.'/test', 'EmailController@test');
 

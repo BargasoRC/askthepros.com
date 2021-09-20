@@ -3,7 +3,7 @@
     <div class="row flex-column-reverse flex-md-row mb-3">
       <div class="col-sm-8 col-sm-pull-4">
         <Profile/>
-        <Address/>
+        <Address :latitude="latitude" :longitude="longitude"/>
         <Account/>
         <div  v-if="passwordVerified === false">
         <CPass/>
@@ -66,6 +66,9 @@ import Profile from 'src/modules/account/components/profile.vue'
 import Address from 'src/modules/account/components/address.vue'
 import Account from 'src/modules/account/components/account.vue'
 import CPass from 'src/modules/account/components/cpass.vue'
+import VueGeolocation from 'vue-browser-geolocation'
+import Vue from 'vue'
+Vue.use(VueGeolocation)
 export default {
   data() {
     return {
@@ -78,7 +81,10 @@ export default {
       data: null,
       file: null,
       copiedIndex: null,
-      passwordVerified: false
+      passwordVerified: false,
+      username: null,
+      latitude: null,
+      longitude: null
     }
   },
   components: {
@@ -128,12 +134,20 @@ export default {
     }
   },
   mounted() {
+    this.$getLocation({}).then(coordinates => {
+      this.setInitialView(coordinates)
+    })
     if(AUTH.hash('show', localStorage.getItem('login_with')) === 'social_lite') {
       this.passwordVerified = true
     }
-    this.retrieveInformation()
+    // this.retrieveInformation()
   },
   methods: {
+    setInitialView(location){
+      this.longitude = location.lng
+      this.latitude = location.lat
+      console.log('[this]', this.longitude, this.latitude)
+    },
     checkPassword(evet){
       if(this.oPassword === '') {
         this.isValidPassword = false
@@ -239,6 +253,7 @@ export default {
                     }
                   })
                   if(Object.keys(address).length > 0) {
+                    console.log('[fdfdfdf]', JSON.stringify(address))
                     parameter['address'] = JSON.stringify(address)
                   }
                   break
@@ -255,7 +270,9 @@ export default {
             city: this.city,
             region: this.region,
             country: this.country,
-            postalZipCode: this.postalZipCode
+            postalZipCode: this.postalZipCode,
+            longitude: this.longitude,
+            latitude: this.latitude
           })
         }
         console.log('Parameters: ', parameter)

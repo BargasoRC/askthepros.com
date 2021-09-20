@@ -7,7 +7,7 @@
         :text="'New Post'"
         :icon_position="'right'"
         :styles="{
-          backgroundColor: '#01009A',
+          backgroundColor: '#01004E',
           color: 'white'
         }"
       />
@@ -99,7 +99,7 @@ import Pager from 'src/components/increment/generic/pager/Pager.vue'
 import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
 import ROUTER from 'src/router'
 import CONFIG from 'src/config.js'
-import Search from 'src/components/increment/generic/filter/Basic'
+import Search from 'src/components/increment/generic/filter/FilterWithCalendar.vue'
 import preview from './UserPreview.vue'
 export default {
   data() {
@@ -190,9 +190,6 @@ export default {
     Search,
     preview
   },
-  created() {
-    this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
-  },
   mounted(){
     this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
   },
@@ -253,7 +250,7 @@ export default {
       let parameter = {
         condition: [{
           column: filter.column,
-          value: filter.value + '%',
+          value: filter.value !== null ? '%' + filter.value + '%' : '%%',
           clause: 'like'
         }],
         sort: sort,
@@ -266,11 +263,12 @@ export default {
       this.APIRequest('post/retrieve', parameter).then(response => {
         console.log('[response]', response)
         $('#loading').css({'display': 'none'})
-        if(!response.error) {
+        if(response.data.length > 0) {
           this.data = response.data
           this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
         }else{
           this.data = []
+          this.numPages = null
         }
       })
     },

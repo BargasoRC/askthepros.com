@@ -12,6 +12,7 @@
                 backgroundColor: '#01004E',
                 color: 'white'
             }"
+            v-if="con === true"
         />
     </div>
     <div class="col-sm-12 col-md-12 col-lg-12 mt-5 mb-5 p-0">
@@ -19,7 +20,7 @@
         :category="category"
         :activeCategoryIndex="0"
         :activeSortingIndex="0"
-        @changeSortEvent="() => {} "  
+        @changeSortEvent="retrieve($event.sort, $event.filter)"
         :grid="['list']"
       />
     </div>
@@ -67,9 +68,7 @@
       ref="confirm"
       :message="'Are you sure do you want to delete this post?'"
       :title="'Confirmation'"
-      @onConfirm="e => {
-        remove(e)
-      }"
+      @onConfirm="e => remove(e)"
       v-if="deleteId"
     ></Confirmation>
   </div>
@@ -118,7 +117,7 @@ p {
 }
 </style>
 <script>
-import Search from 'src/components/increment/generic/filter/BasicVersion3.vue'
+import Search from 'src/components/increment/generic/filter/FilterWithCalendar.vue'
 import DataTable from 'src/modules/generic/table'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
@@ -141,6 +140,7 @@ export default {
       selectedItem: null,
       deleteId: null,
       file: null,
+      con: false,
       tableHeaders: [
         {title: 'Date'},
         {title: 'Post Title'},
@@ -152,12 +152,12 @@ export default {
       category: [{
         title: 'Sort By',
         sorting: [
-          {title: 'Created Ascending', payload: 'created_at', payload_value: 'asc', type: 'text'},
-          {title: 'Created Descending', payload: 'created_at', payload_value: 'desc', type: 'text'},
+          {title: 'Created Ascending', payload: 'created_at', payload_value: 'asc', type: 'date'},
+          {title: 'Created Descending', payload: 'created_at', payload_value: 'desc', type: 'date'},
           {title: 'Title Ascending', payload: 'title', payload_value: 'asc', type: 'text'},
           {title: 'Title Descending', payload: 'title', payload_value: 'desc', type: 'text'},
-          {title: 'Channel Ascending', payload: 'channel', payload_value: 'asc', type: 'text'},
-          {title: 'Channel Descending', payload: 'channel', payload_value: 'desc', type: 'text'},
+          {title: 'Channel Ascending', payload: 'channels', payload_value: 'asc', type: 'text'},
+          {title: 'Channel Descending', payload: 'channels', payload_value: 'desc', type: 'text'},
           {title: 'Status Ascending', payload: 'status', payload_value: 'asc', type: 'text'},
           {title: 'Status Descending', payload: 'status', payload_value: 'desc', type: 'text'}
         ]
@@ -188,6 +188,33 @@ export default {
     }
   },
   methods: {
+    retrieveIndustryPayloads(){
+      let conditions = [{
+        value: 'assigned_industry',
+        clause: '=',
+        column: 'payload'
+      }, {
+        value: this.user.userID,
+        clause: '=',
+        column: 'account_id'
+      }
+      ]
+      let parameter = {
+        condition: conditions
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('payloads/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data.length > 0) {
+          this.con = true
+        }else{
+          this.con = false
+        }
+      }).catch(error => {
+        $('#loading').css({'display': 'none'})
+        error
+      })
+    },
     displayArray(channels){
       if(channels){
         let parsedChannels = JSON.parse(channels)
@@ -234,10 +261,13 @@ export default {
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve_by_user', parameter).then(response => {
+        this.retrieveIndustryPayloads()
         $('#loading').css({'display': 'none'})
-        if(response.data.length > 0) {
+        if(!response.error) {
           this.tableData = response.data
           this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
+        }else{
+          this.tableData = []
         }
       })
     },
@@ -277,13 +307,14 @@ export default {
       }, 100)
     },
     remove(e){
+      console.log('[sadfsdf]', e)
       let parameter = {
         id: e.id
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/delete', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        this.retrieve()
+        this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
       })
     }
   }

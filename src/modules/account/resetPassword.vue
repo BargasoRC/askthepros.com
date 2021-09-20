@@ -19,7 +19,7 @@
               <b>Request to Reset Password with AskThePros</b>
             </div>
             <div>
-              <roundedInput 
+              <roundedInput
                 :type="'text'"
                 :styles="{
                   border: !this.isEmailError ? '.2px solid red !important' : 'none'
@@ -34,7 +34,7 @@
               >{{email == '' ? 'Required Field' :'Invalid email'}}</p>
             </div>
             <div class="message mt-2 mb-2">
-              <i v-if="showResponse" class="resetPasswordMessage">We send recory email to yor email address at <u>{{email}}</u>. Please give us a moment, it may take few minutes. Please check your email address to continue.</i>
+              <i v-if="showResponse" class="resetPasswordMessage">We send recovery email to your email address at <u>{{email}}</u>. Please give us a moment, it may take few minutes. Please check your email address to continue.</i>
               <i v-if="showError" class="resetPasswordMessage" style="color:red">Something went wrong.</i>
             </div>
             <div class="d-flex justify-content-center">
@@ -150,8 +150,8 @@ export default {
           email: this.email
         }
         this.APIRequest('accounts/request_reset', parameter).then(response => {
+          console.log('ACCOUNTS RESPONSE: ', response)
           if(response.data === true){
-            console.log('ACCOUNTS RESPONSE: ', response)
             this.showResponse = true
             this.showError = false
           }else{

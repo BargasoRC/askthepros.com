@@ -45,6 +45,7 @@
     "style-resources-loader": "^1.4.1",
     "tether": "^1.4.4",
     "tooltip.js": "^1.2.0",
+    "vue-browser-geolocation": "^1.8.0",
     "vue-chartjs": "^3.5.1",
     "vue-clip": "^1.0.0",
     "vue-cool-lightbox": "^2.7.4",

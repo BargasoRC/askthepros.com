@@ -1,5 +1,5 @@
 <template>
-  <div class="LoginContainer col-sm-12">
+  <div class="LoginContainer">
     <div class="row RowContainer">
       <div class="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xs-7 QouteCardContainer mb-5">
         <div class="QouteCard">
@@ -36,7 +36,19 @@
                 class="mb-0 pb-0 invalidEmail"
                 v-if="!this.isValid && username == ''"
               >Required Field</p>
-              <roundedInput 
+
+              <div class="roudedInput">
+                <div class="input-group">
+                    <input class="form-control roudedInput !this.isValid && password == ''? 'mb-0 ' : ' LoginField'" style="border: none !important; background: none !important" :type="visibility" placeholder="Password" v-model="password" @keyup.enter="login()">
+                    <span style="background: none; margin-top: 2.5%; margin-right: 3%">
+                    <i v-if="visibility == 'password'" @click="showPassword()" class="fa fa-eye" aria-hidden="true"></i>
+                    <i v-if="visibility == 'text'" @click="hidePassword()" class="fa fa-eye-slash" aria-hidden="true"></i>
+                  </span>
+                </div>
+              </div>
+              <br>
+
+              <!-- <roundedInput 
                 :type="'password'"
                 :placeholder="'Password'"
                 :class="!this.isValid && password == ''? 'mb-0 ' : ' LoginField'"
@@ -45,7 +57,7 @@
                 }"
                 v-model="password"
                 :onEnter="login"
-              />
+              /> -->
               <p
                 class="mb-0 pb-0 invalidEmail"
                 v-if="!this.isValid && password == ''"
@@ -160,7 +172,8 @@ export default {
       errorMessage: '',
       isValid: true,
       colors: COLORS,
-      user: AUTH.user
+      user: AUTH.user,
+      visibility: 'password'
     }
   },
   components: {
@@ -170,6 +183,12 @@ export default {
   },
   mounted() {},
   methods: {
+    showPassword() {
+      this.visibility = 'text'
+    },
+    hidePassword() {
+      this.visibility = 'password'
+    },
     login(event) {
       if(this.username !== '' && this.password !== '') {
         this.isValid = true
@@ -248,6 +267,13 @@ export default {
 
 <style lang="scss" scoped>
 @import "~assets/style/colors.scss";
+.roudedInput {
+  outline: none !important;
+  box-shadow: none !important;
+  height: 45px !important;
+  border-radius: 40px !important;
+  border: 1px solid $gray !important;
+}
 .errorMessage {
   margin-top: -14px;
   color: $danger;
@@ -298,6 +324,7 @@ export default {
 }
 .LoginContainer {
   min-height: 85vh;
+  margin-top: 100px;
 }
 .RowContainer {
   background: white;
