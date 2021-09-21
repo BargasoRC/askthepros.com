@@ -52,7 +52,7 @@
 
         <div v-if="user.type == 'USER' && user.merchant && user.merchant.name !== null && user.merchant.name !== ''">
           <!-- <button type="button" class="btn btn-warning header-button-type"><p>INDUSTRY NAME</p></button> -->
-          <button type="button" class="btn btn-warning header-button-type text-white" style="float: right;">{{user.merchant.name.toUpperCase()}}</button>
+          <button type="button" class="btn btn-secondary header-button-type text-white" style="float: right;">{{user.merchant.name.toUpperCase()}}</button>
         </div>
         
       </span>
