@@ -43,31 +43,33 @@ class Channel implements ShouldQueue
             ->where('post_histories.status', '=', 'for posting')
             ->select('post_histories.*', 'posts.url', 'posts.description')
             ->get();
-
+    $rand = [];
     if($posts && sizeof($posts) > 0){
       foreach ($posts as $key => $postHistory) {
         $branding = app($this->brandingController)->getActiveByParams($postHistory['account_id']);
-
-        
+        $keys = array_rand($branding['details'], 1);
 
         switch(strtolower($postHistory['channel'])){
           case 'facebook':
             if($branding && $branding['details'] !== null){
-              $message = "\n\n".$branding['details']['brand1']."\n\n".$branding['details']['brand2']."\n\n".$branding['details']['brand3'];
+              $message = "\n\n".$branding['details'][$keys];
+              // $message = "\n\n".$branding['details']['brand1']."\n\n".$branding['details']['brand2']."\n\n".$branding['details']['brand3'];
               $postHistory['description'] .= $message;
             }
             $this->manageFacebook($postHistory);
             break;
           case 'linkedin':
             if($branding && $branding['details'] !== null){
-              $message = "//n//n".$branding['details']['brand1']."//n//n".$branding['details']['brand2']."//n//n".$branding['details']['brand3'];
+              $message = "//n//n".$branding['details'][$keys];
+              // $message = "//n//n".$branding['details']['brand1']."//n//n".$branding['details']['brand2']."//n//n".$branding['details']['brand3'];
               $postHistory['description'] .= $message;
             }
             $this->manageLinkedIn($postHistory);
             break;
           case 'google_my_business':
             if($branding && $branding['details'] !== null){
-              $message = "\n\n".$branding['details']['brand1']."\n\n".$branding['details']['brand2']."\n\n".$branding['details']['brand3'];
+              $message = "\n\n".$branding['details'][$keys];
+              // $message = "\n\n".$branding['details']['brand1']."\n\n".$branding['details']['brand2']."\n\n".$branding['details']['brand3'];
               $postHistory['description'] .= $message;
             }
             $this->manageGoogle($postHistory);
@@ -90,14 +92,14 @@ class Channel implements ShouldQueue
     }
 
     $token = $page['details']['access_token'];
-    // $media = env('BACKEND_URL').'/storage/image/2_2021-08-03_02_00_17_robot.png';
-    if(isset($postHistory['url'])) {
-      if(json_decode($postHistory['url'])) {
-        $url = $postHistory['url'];
-        $media = json_decode($url);
-        $media = env('BACKEND_URL', ''). $media[0];
-      }
-    }
+    $media = env('BACKEND_URL').'/storage/image/2_2021-08-03_02_00_17_robot.png';
+    // if(isset($postHistory['url'])) {
+    //   if(json_decode($postHistory['url'])) {
+    //     $url = $postHistory['url'];
+    //     $media = json_decode($url);
+    //     $media = env('BACKEND_URL', ''). $media[0];
+    //   }
+    // }
 
 
     $params = null;
@@ -132,11 +134,11 @@ class Channel implements ShouldQueue
   public function manageLinkedIn($postHistory){
     $media = '';
     $result = null;
-    // $media = env('BACKEND_URL').'/storage/image/2_2021-08-03_02_00_17_robot.png';
-    if($postHistory['url']) {
-      $url = $postHistory['url'];
-      $media = json_decode($url)[0];
-    }
+    $media = env('BACKEND_URL').'/storage/image/2_2021-08-03_02_00_17_robot.png';
+    // if($postHistory['url']) {
+    //   $url = $postHistory['url'];
+    //   $media = json_decode($url)[0];
+    // }
     $postHistory['url'] = null;
     if($postHistory['url']) {
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinRegisterUpload($postHistory['account_id'], $postHistory['description'], substr($media, 15));

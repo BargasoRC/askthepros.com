@@ -170,6 +170,7 @@ export default {
       $('#loading').css({'display': 'block'})
       this.errorMessage = null
       Stripe.createSource().then(data => {
+        console.log('[userrrrr>>>>]', this.user)
         if(data.error !== undefined && this.user.information === undefined){
           $('#loading').css({'display': 'none'})
           this.errorMessage = data.error.message

@@ -80,7 +80,7 @@ export default{
     return re.test(input)
   },
   validateNumber(number){
-    const re = /^[0-9+]{11,13}/
+    const re = /^[0-9]{11,13}$/
     return re.test(number)
   },
   validateHTML(html){
