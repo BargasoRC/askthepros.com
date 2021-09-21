@@ -76,9 +76,9 @@
           backgroundColor: '#01004E',
           color: 'white'
         }" style="margin-bottom: 5%;" />
-
       </div>
     </div>
+    
   </div>
 </template>
 <script>
