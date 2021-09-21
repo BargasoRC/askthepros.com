@@ -74,7 +74,7 @@
   width: 100%;
   float: left;
   min-height: 70px;
-  // background: #4f0862;
+  background: $primary;
   overflow-y: hidden;
   position: fixed;
   z-index: 10000;
