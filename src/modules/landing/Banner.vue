@@ -1,5 +1,4 @@
 <template>
-  
     <div class="jumbotron jumbotron-fluid banner">
       <div class="container-fluid banner-container" style="">
         <div class="row d-flex justify-content-center banner-container-row">
