@@ -135,10 +135,11 @@ export default {
         $('#loading').css({'display': 'block'})
         this.APIRequest('emails/send_message', parameter).then(response => {
           $('#loading').css({'display': 'none'})
-          if(response.data.length > 0) {
-            this.industry = response.data
-          }else{
-            this.industry = []
+          if(response.data === true) {
+            this.name = ''
+            this.email = ''
+            this.subject = ''
+            this.content = ''
           }
         }).catch(error => {
           $('#loading').css({'display': 'none'})
