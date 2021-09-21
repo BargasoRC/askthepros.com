@@ -192,7 +192,8 @@ b:hover {
   
 }
 .navbar-brand .logo-brand {
-  margin-top: 5%;
+  margin-top: 4%;
+  width: 200px;
 }
 .nav-link .navbar-brand {
   font-size: 30px;

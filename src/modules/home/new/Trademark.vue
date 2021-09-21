@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+<div class="container" id="learn-how">
     <div class="header-top">
         <h2>Content Expert in <a href="">180+ Industries</a>: One-Post Platform</h2>
     </div>                                                                              
@@ -89,7 +89,7 @@
     position: relative;
     z-index: 4;
     font-size: 40px;
-    color: #0399ef;
+    color: #01009A;
     left: 29px;
     bottom: -25px;
     text-shadow: -5px 10px 2px rgb(210, 237, 250);
@@ -98,7 +98,7 @@
     position: relative;
     z-index: 4;
     font-size: 40px;
-    color: #0399ef;
+    color: #01009A;
     left: 35px;
     bottom: -25px;
     text-shadow: -5px 10px 2px rgb(210, 237, 250);

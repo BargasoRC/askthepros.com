@@ -68,7 +68,7 @@
 @import "~assets/style/colors.scss";
 .mainContainer{
   height: 45vh;
-  background: linear-gradient(to right,#5c99ed,#5c99ed);
+  background: linear-gradient(to right,#01009A,#01009A);
   //z-index: -999;
 }
 .background-blue{
