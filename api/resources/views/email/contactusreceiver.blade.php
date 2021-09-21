@@ -13,6 +13,9 @@
   <br>
   <br>
 </span>
+<span class="text" style="text-align: center;">
+  This is a system-generated email. Please do not reply.
+</span>
 @component('email.footer')
 @endcomponent
 <style>
