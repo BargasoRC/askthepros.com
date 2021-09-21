@@ -203,7 +203,9 @@ export default {
   align-items: center !important;
   background: none;
   background: white;
-  
+}
+.LoginContainer {
+  margin-top: 100px;
 }
 
 @media (max-width: 500px) {
