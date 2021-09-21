@@ -114,10 +114,10 @@
             :onClick="() => (status != 'PUBLISH' && status != undefined) ? update('DRAFT') : save('DRAFT')"
             :text="'Save as Draft'"
             :styles="{
-              backgroundColor: colors.warning,
+              backgroundColor: colors.secondary,
               color: 'white',
               width: '15%',
-              outlineColor: colors.warning
+              outlineColor: colors.secondary
             }"
           />
           <roundedBtn
@@ -461,6 +461,11 @@ export default {
         this.val = true
         this.$refs.errorModal.show()
         return false
+      }if(global.validateDate(this.description) === true){
+        this.isValid = false
+        this.val = true
+        this.$refs.errorModal.show()
+        return false
       }
       return true
     },
@@ -502,9 +507,9 @@ export default {
 }
 .container {
   padding: 20px 16px;
-  border: 1px solid $warning;
+  border: 1px solid $secondary;
   border-radius: 25px;
-  background-color: $warning;
+  background-color: $secondary;
   text-align: center;
   word-break: break-word;
   color: white;

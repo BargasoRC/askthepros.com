@@ -1,5 +1,5 @@
 <template>
-  <div class="LoginContainer col-sm-12">
+  <div class="LoginContainer">
     <div class="row RowContainer">
       <div class="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xs-7 QouteCardContainer mb-5">
         <div class="QouteCard">
@@ -145,7 +145,7 @@
                 :text="'Register Now'"
                 :icon_position="'right'"
                 :styles="{
-                  backgroundColor: colors.warning,
+                  backgroundColor: colors.secondary,
                   color: 'white'
                 }"
               />
@@ -324,6 +324,7 @@ export default {
 }
 .LoginContainer {
   min-height: 85vh;
+  margin-top: 100px;
 }
 .RowContainer {
   background: white;
