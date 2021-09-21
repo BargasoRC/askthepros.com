@@ -1,21 +1,23 @@
 <template>
   <div class="content-holder">
-    <span class="text-center trademark-text">
-      <h2>Content Expert in <b>180+ Industries</b>: One-Post Platform</h2>
-      <p>Three Easy Steps To Manage Your Social Media Content‎</p>
-    </span>
-    <span class="cards">
-      <span class="card-item text-center" v-for="(item, index) in data">
-        <span class="icon-container">
-          <span class="icon-holder">
-            <i :class="item.icon"></i>
+    <div class="container text-center">
+      <span class="trademark-text">
+        <h2>Content Expert in <b>180+ Industries</b>: One-Post Platform</h2>
+        <p>Three Easy Steps To Manage Your Social Media Content‎</p>
+      </span>
+      <span class="cards">
+        <span class="card-item" v-for="(item, index) in data">
+          <span class="icon-container">
+            <span class="icon-holder">
+              <i :class="item.icon"></i>
+            </span>
+          </span>
+          <span class="item-content">
+            <p>{{item.description}}</p>
           </span>
         </span>
-        <span class="item-content">
-          <p>{{item.description}}</p>
-        </span>
-      </span>
     </span>
+    </div>
   </div>
 </template>
 <script>
@@ -49,27 +51,31 @@ export default {
     background: $white;
     overflow-y: hidden;
   }
-  .trademark-text{
+
+   .container{
     margin-top: 2vh;
-    width: 100%;
-    float: left;
+  }
+
+  b{
+    color: $primary;
+  }
+
+  p{
+    font-size: 16px;
   }
 
   .cards{
-    width: 50%;
     float: left;
-    margin-left: 25%;
-    margin-right: 25%;
     display: flex;
     justify-content: space-between;
-    margin-top: 50px;
+    margin-top: 4vh;
   }
 
   .card-item{
-    width: 25%;
     float: left;
-    padding-left: 20px;
-    padding-right: 20px;
+    width: 32%;
+    padding-left: 3%;
+    padding-right: 3%;
   }
 
   .icon-container{
@@ -83,19 +89,16 @@ export default {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    box-shadow: 0px 20px 30px $gray;
+    box-shadow: -10px 15px 20px #e9e9e9,  10px 15px 20px #e9e9e9;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  b{
+  .icon-holder i{
+    font-size: 35px;
     color: $primary;
-  }
-
-  .card-item i{
-    font-size: 50px;
-    color: $primary;
+    text-shadow: -5px 8px 2px rgb(219, 240, 250);
   }
 
   .item-content{
@@ -103,36 +106,32 @@ export default {
     float: left;
     margin-top: 25px;
   }
-
-  p{
-    font-size: 16px;
+  
+  * {
+    box-sizing: border-box;
   }
 
   @media (max-width: 991px){
-  .cards{
-    width: 100%;
-    margin: unset;
+    h2{
+      font-size: 140%;
+    }
+
+    p{
+      font-size: 14.5px;
+    }
+
   }
 
-  .trademark-text{
-    margin-bottom: 25px;
+  @media (max-width: 548px){
+    .cards{
+      margin-bottom: 5vh;
+      margin-top: 5vh;
+      display: block;
+    }
+
+    .card-item{
+      width: 100% !important;
+      padding: 5% !important;
+    }
   }
-
-  .card-item{
-    width: 100%;
-    margin: unset;
-    margin-bottom: 25px;
-  }
-
-  h2{
-    font-size: 140%;
-  }
-
-  p{
-    font-size: 120%;
-  }
-
-}
-
 </style>
-
