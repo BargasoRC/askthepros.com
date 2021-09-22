@@ -162,7 +162,7 @@ h6 {
 }
 
 hr {
-  background-color: rgb(219, 240, 250);
+  background-color: $primary;
   margin-top: 20px;
   margin-bottom: 20px;
 }
