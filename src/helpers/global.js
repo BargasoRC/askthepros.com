@@ -158,12 +158,11 @@ export default{
       }else if(reee.test(a[element])){
         var given2 = new Date(a[element])
         if(given2.setHours(0,0,0,0) < now.setHours(0,0,0,0)){
+          console.log('[C]')
           return true
         }else{
           return false
         }
-      }else{
-        return false
       }
     }
   }

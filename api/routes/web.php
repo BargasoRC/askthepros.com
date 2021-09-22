@@ -90,6 +90,7 @@ Route::post($route.'/auth', function () {
 $route = env('PACKAGE_ROUTE', '').'/users';
 $controller = 'AccountsController@';
 Route::post($route. '/retrieve ', $controller.'retrieve');
+Route::post($route. '/update_verification ', $controller.'updateByVerification');
 
 
 

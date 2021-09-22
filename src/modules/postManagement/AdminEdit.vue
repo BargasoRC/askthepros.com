@@ -386,6 +386,7 @@ export default {
       this.selectedIndustry.forEach(element => {
         selectIndustry.push({category: element.category, id: element.id})
       })
+      console.log('[this.validate]', this.validate(), global.validateDate(this.description))
       if(this.validate()) {
         $('#loading').css({'display': 'block'})
         let channels = []
@@ -420,6 +421,7 @@ export default {
       }
     },
     validate() {
+      console.log('[this.validate]', global.validateDate(this.description))
       if(this.selectedIndustry.length <= 0 && this.title === '' && this.title === null && this.title === undefined && this.description === '' && this.description === null && this.description === undefined){
         this.$refs.errorModal.show()
         this.val = false
@@ -461,7 +463,8 @@ export default {
         this.val = true
         this.$refs.errorModal.show()
         return false
-      }if(global.validateDate(this.description) === true){
+      }if(global.validateDate(this.description)){
+        console.log('[here]')
         this.isValid = false
         this.val = true
         this.$refs.errorModal.show()

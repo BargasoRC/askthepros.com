@@ -6,7 +6,7 @@
           <h1>We offer affordable prices per industry</h1>
           <p>Select the industry you belong to know pricing.</p>
           <div class="selectBtn">
-            <dialogueSelectBtn 
+            <dialogueSelectBtn
             :items="returnIndustry"
             :placeholder="'Industry'"
             :styles="{}"
