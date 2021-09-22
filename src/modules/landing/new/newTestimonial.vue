@@ -1,8 +1,9 @@
 <template>
   <div id="testimonials" class="sectionn">
     <center>
+       <img id="top-img" :src="require('assets/img/top.png')"/>
       <h1>Spend your valuable time making sales</h1>
-      <img id="btm-img" :src="require('assets/img/top.png')"/>
+      <img id="btm-img" :src="require('assets/img/bottom.png')"/>
     </center>
     <div class="container">
       <div class="row holder" id="tcard">
@@ -69,11 +70,13 @@ export default {
   min-height: 80vh;
   width: 100%;
   float: left;
+  padding-top: 5vh;
+  padding-bottom: 5vh;
 }
 
 center {
-  padding-top: 6vh;
   background-color: #01009a;
+  margin-bottom: 5vh;
 }
 
 center img{
@@ -106,7 +109,8 @@ h1 {
   font-weight: 650;
   color: white;
   font-size: 32px;
-  margin-bottom: 4vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 }
 
 p {
