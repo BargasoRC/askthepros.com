@@ -159,7 +159,6 @@ export default {
         this.APIRequest('plans/cancel_plan', parameter).then(response => {
           $('#loading').css({'display': 'none'})
           this.$parent.retrieve()
-          // this.$parent.$children.retrieve()
         }).catch(error => {
           $('#loading').css({'display': 'none'})
           error

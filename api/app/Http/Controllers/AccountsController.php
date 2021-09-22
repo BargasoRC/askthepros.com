@@ -11,31 +11,49 @@ class AccountsController extends APIController
 {
     //
     public function retrieve(Request $request){
-        $data = $request->all();
-        $this->model = new Account();
-        $result = $this->retrieveDB($data);
-        
-        $con = $data['condition'];
-        $result = Account::where($con[0]['column'], $con[0]['clause'], $con[0]['value'])->limit($data['limit'])
-          ->offset($data['offset'])->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+      $data = $request->all();
+      $this->model = new Account();
+      $result = $this->retrieveDB($data);
+      
+      $con = $data['condition'];
+      $result = Account::where($con[0]['column'], $con[0]['clause'], $con[0]['value'])->limit($data['limit'])
+        ->offset($data['offset'])->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
 
-        if(sizeof($result) > 0){
+      if(sizeof($result) > 0){
 
-          $i = 0;
-          foreach ($result as $key) {
-            $result[$i] = Account::leftJoin('account_informations', 'accounts.id', '=', 'account_informations.account_id')
-                      ->leftJoin('merchants', 'accounts.id', '=', 'merchants.account_id')
-                      ->select('accounts.id', 'accounts.created_at', 'accounts.username', 'accounts.email', 'account_informations.first_name', 'account_informations.last_name', 'merchants.name as business_name', 'merchants.addition_informations as industry', 'account_informations.cellular_number', 'accounts.account_type', 'accounts.status')
-                      ->where('accounts.id', $result[$i]['id'])
-                      ->first();
-            $i++;
-          }
-          return response()->json(array(
-            'data' => $result,
-            'size' => Account::where('deleted_at', '=', null)->count()
-          ));
-        }else{
-          return $this->response();
+        $i = 0;
+        foreach ($result as $key) {
+          $result[$i] = Account::leftJoin('account_informations', 'accounts.id', '=', 'account_informations.account_id')
+                    ->leftJoin('merchants', 'accounts.id', '=', 'merchants.account_id')
+                    ->select('accounts.id', 'accounts.created_at', 'accounts.username', 'accounts.email', 'account_informations.first_name', 'account_informations.last_name', 'merchants.name as business_name', 'merchants.addition_informations as industry', 'account_informations.cellular_number', 'accounts.account_type', 'accounts.status')
+                    ->where('accounts.id', $result[$i]['id'])
+                    ->first();
+          $i++;
         }
+        return response()->json(array(
+          'data' => $result,
+          'size' => Account::where('deleted_at', '=', null)->count()
+        ));
+      }else{
+        return $this->response();
       }
+    }
+
+    public function updateByVerification(Request $request){
+      if($this->checkAuthenticatedUser(true) == false){
+        return $this->response();
+      }
+      $data = $request->all();
+      $result = Account::where('id', '=', $data['id'])->update(array(
+        'status' => $data['status']
+      ));
+      $this->response['data'] = $result ? true : false;
+      if($this->response['data'] == true){
+        if($data['status'] == 'VERIFIED'){
+          $details = 'you have successfully verified you account.';
+        }
+        app('App\Http\Controllers\EmailController')->verification_status($data['id'], $details);
+      }
+      return $this->response();
+    }
 }

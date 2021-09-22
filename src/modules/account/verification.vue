@@ -171,10 +171,10 @@ export default {
           'status': 'VERIFIED'
         }
         $('#loading').css({display: 'block'})
-        this.APIRequest('accounts/update_verification', parameter).then(response => {
+        this.APIRequest('users/update_verification', parameter).then(response => {
           $('#loading').css({display: 'none'})
           if(response.data === true){
-            this.message = 'Congratulations! You\'ve have successfully verified your account. Kindly click Continue Button to login.'
+            this.message = 'Congratulations! You\'ve have successfully verified your account. Kindly click the login button to proceed.'
             this.flag = true
             this.verified = true
           }else{
