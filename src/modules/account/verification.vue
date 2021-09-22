@@ -165,6 +165,7 @@ export default {
     },
     update(){
       this.retrieveAccount()
+      console.log('hoy', this.account)
       if(this.validate() === true && this.account !== null){
         let parameter = {
           'id': this.account.id,
@@ -172,6 +173,7 @@ export default {
         }
         $('#loading').css({display: 'block'})
         this.APIRequest('accounts/update_verification', parameter).then(response => {
+          console.log('response >>>>>>', response.data)
           $('#loading').css({display: 'none'})
           if(response.data === true){
             this.message = 'Congratulations! You\'ve have successfully verified your account. Kindly click Continue Button to login.'
@@ -269,6 +271,7 @@ export default {
 .LoginCardBody {}
 .LoginContainer {
   min-height: 85vh;
+  margin-top: 100px;
 }
 .RowContainer {
   background: white;
