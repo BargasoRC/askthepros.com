@@ -1,7 +1,8 @@
 <template>
   <div id="testimonials" class="sectionn">
     <center>
-        <h1>Spend your valuable time making sales</h1>
+      <h1>Spend your valuable time making sales</h1>
+      <img id="btm-img" :src="require('assets/img/top.png')"/>
     </center>
     <div class="container">
       <div class="row holder" id="tcard">
@@ -65,17 +66,28 @@ export default {
 <style scoped lang='scss'>
 @import '~assets/style/colors.scss';
 .sectionn {
-//   background-color: #01004E;
   min-height: 80vh;
   width: 100%;
   float: left;
 }
 
 center {
-  padding-top: 2vh;
+  padding-top: 6vh;
   background-color: #01009a;
-  padding-bottom: 2vh;
 }
+
+center img{
+  width: 100%;
+}
+
+#top-img {
+  margin-top: -3vh;
+}
+
+#btm-img {
+  margin-bottom: -3vh;
+}
+
 #tcard{
   padding-bottom: 15vh;
 }
@@ -94,6 +106,7 @@ h1 {
   font-weight: 650;
   color: white;
   font-size: 32px;
+  margin-bottom: 4vh;
 }
 
 p {
@@ -103,7 +116,7 @@ p {
 
 .single-card {
   background-color: $white;
-  border: 1px solid #e0e0e0;
+  box-shadow: -4px 8px 15px #e9e9e9;
   padding: 30px;
   margin: 0.5%;
   min-height: 500px;
@@ -131,7 +144,7 @@ p {
 }
 
 p .fas {
-  color: $warning;
+  color: $primary;
   font-size: 24px;
   margin-top: 60px;
   text-align: left;
@@ -145,7 +158,7 @@ h6 {
 }
 
 hr {
-  background-color: $primary;
+  background-color: rgb(219, 240, 250);
   margin-top: 20px;
   margin-bottom: 20px;
 }

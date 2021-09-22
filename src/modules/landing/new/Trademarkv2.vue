@@ -89,7 +89,7 @@ export default {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    box-shadow: -10px 15px 20px #e9e9e9,  10px 15px 20px #e9e9e9;
+    box-shadow: -7px 12px 17px #e9e9e9,  5px 12px 17px #e9e9e9;
     display: flex;
     align-items: center;
     justify-content: center;
