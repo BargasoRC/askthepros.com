@@ -165,6 +165,7 @@ export default {
     },
     update(){
       this.retrieveAccount()
+      console.log('hoy', this.account)
       if(this.validate() === true && this.account !== null){
         let parameter = {
           'id': this.account.id,
@@ -269,6 +270,7 @@ export default {
 .LoginCardBody {}
 .LoginContainer {
   min-height: 85vh;
+  margin-top: 100px;
 }
 .RowContainer {
   background: white;
