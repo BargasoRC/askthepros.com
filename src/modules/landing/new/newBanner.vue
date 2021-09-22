@@ -1,6 +1,6 @@
 <template>
   <div class="cloud-image">
-    <div class="text-center banner-content">
+    <div class="text-center container">
       <h1 class="text-white">Manage Social Media Posting Written by Industry Experts in your Field</h1>    
       <p class="text-white"><b>1.</b> Create & Import Profile &nbsp;&nbsp;<b>2.</b> Just Relax &nbsp;&nbsp;<b>3.</b> Grow your Sales</p>
       <span class="text-center category-selection" v-if="industry && industry.length > 0">
@@ -23,24 +23,21 @@
 @import "~assets/style/colors.scss";
 .cloud-image{
   width: 100%;
-  float: left;
   background: $primary;
   min-height: 30vh;
   overflow-y: hidden;
 }
 
-.banner-content{
-  width: 100%;
-  float: left;
+.container{
   margin-top: 20vh;
 }
 
 
 .category-selection{
-  width: 40%;
+  width: 70%;
   float: left;
-  margin-left: 30%;
-  margin-right: 30%;
+  margin-left: 15%;
+  margin-right: 15%;
   margin-top: 2vh;
 }
 
@@ -94,9 +91,9 @@
 }
 
 h1{
-  width: 50%;
-  margin-left: 25%;
-  margin-right: 25%;
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
 }
 
 p{
@@ -111,8 +108,10 @@ b{
 
 @media (max-width: 991px){
   .category-selection{
-    width: 100%;
-    margin: unset;
+    width: 80% !important;
+    margin-left: 10% !important;
+    margin-right: 10% !important;
+    margin-bottom: 2vh;
   }
 
   h1{
@@ -132,7 +131,16 @@ b{
   .redirect-btn{
     width: 40%;
   }
+}
 
+
+@media (max-width: 548px){
+  .category-selection{
+    width: 90% !important;
+    margin-left: 5% !important;
+    margin-right: 5% !important;
+    margin-bottom: 2vh;
+  }
 }
 </style>
 
