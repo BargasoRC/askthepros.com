@@ -321,7 +321,7 @@ export default {
       this.APIRequest('social_lite/authenticate/facebook/redirect', {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
-          console.log('Authentication with facebook response: ', response)
+          console.log('Authentication with facebook response register page: ', response)
           window.location.href = response.data.url
         }
       }, error => {
@@ -365,8 +365,8 @@ export default {
         this.APIRequest('account/create', parameter).then(response => {
           $('#loading').css({'display': 'none'})
           if(response.data !== null) {
-            this.login()
-            // this.createMerchantAndPayload(response.data)
+            this.createMerchantAndPayload(response.data.data)
+            // this.login()
           }else if(response.error !== null){
             if(response.error.status === 100){
               let message = response.error.message
@@ -392,6 +392,7 @@ export default {
         payload: 'automation_settings',
         payload_value: 'ON'
       }
+      console.log('[merchant]')
       this.APIRequest('merchants/create', merchant).then(response => {
         console.log('MERCHANT RESPONSE: ', response)
       }).catch(error => {

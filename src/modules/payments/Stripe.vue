@@ -170,12 +170,12 @@ export default {
       $('#loading').css({'display': 'block'})
       this.errorMessage = null
       Stripe.createSource().then(data => {
-        console.log('[userrrrr>>>>]', this.user)
         if(data.error !== undefined && this.user.information === undefined){
           $('#loading').css({'display': 'none'})
           this.errorMessage = data.error.message
         }else{
-          if(this.user.information !== undefined && this.user.information.first_name !== undefined){
+          console.log('[userrrrr>>>>]', this.user, this.user.information.first_name, this.user.information.last_name)
+          if(this.user.information.first_name !== undefined && this.user.information.last_name !== undefined){
             let parameter = {
               source: data.source,
               account_id: this.user.userID,
@@ -189,8 +189,9 @@ export default {
                 this.redirect('/thankyou')
               }
             })
-          }else{
+          }else if(this.user.information.first_name === undefined && this.user.information.last_name === undefined){
             $('#loading').css({'display': 'none'})
+            console.log('[dfasfdfaf>>>>]', this.user.information.first_name === undefined && this.user.information.last_name === undefined)
             this.redirect('/settings')
           }
         }

@@ -179,12 +179,12 @@ export default {
       })
     },
     update_account(event){
-      console.log('Can Update: ', this.canUpdateProfile, 'Validated: ', this.validate())
+      console.log('Can Update: ', this.user, 'Validated: ', this.canUpdateProfile === true)
       if(!this.validate()) {
         console.log('Not valid')
         return
       }
-      if(this.canUpdateProfile === true) {
+      if(this.canUpdateProfile === true && this.user.merchant[0] !== undefined) {
         let parameter = {
           account_id: this.user.userID,
           first_name: this.firstname,
@@ -230,6 +230,29 @@ export default {
           })
         }
         alert('Profile Updated')
+      }else if((this.canUpdateProfile === true && this.user.merchant[0] === undefined)){
+        console.log('Profile Updated Char', this.user)
+        // let merchant = {
+        //   account_id: this.user.userID,
+        //   code: this.user.code,
+        //   name: this.businessname,
+        //   email: this.user.email
+        // }
+        // let payload = {
+        //   account_id: this.user.userID,
+        //   payload: 'automation_settings',
+        //   payload_value: 'ON'
+        // }
+        // this.APIRequest('merchants/create', merchant).then(response => {
+        //   console.log('MERCHANT RESPONSE: ', response)
+        // }).catch(error => {
+        //   console.log('MERCHANT ERROR', error)
+        // })
+        // this.APIRequest('payloads/create', payload).then(response => {
+        //   console.log('PAYLOAD RESPONSE: ', response)
+        // }).catch(error => {
+        //   console.log('PAYLOAD ERROR', error)
+        // })
       }else{
         console.log('Cant update')
       }
@@ -264,8 +287,10 @@ export default {
         this.isNotValidProfile = true
       }
       if(this.isNotValidProfile === false) {
+        console.log('[a]', this.canUpdateProfile)
         return true
       }else {
+        console.log('[b]]', this.canUpdateProfile)
         return false
       }
     }

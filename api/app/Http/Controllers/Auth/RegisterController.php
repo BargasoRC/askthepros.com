@@ -71,7 +71,7 @@ class RegisterController extends APIController
 
 
             \DB::commit();
-            $this->response['data'] = 'account_successfully_created';
+            $this->response['data'] = array('message' => 'account_successfully_created', 'data' => $account->id);
             $this->response['error'] = null;
         } catch (\Exception $e) {
             \DB::rollback();
