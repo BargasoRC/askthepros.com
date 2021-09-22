@@ -1,9 +1,7 @@
 <template>
   <div id="testimonials" class="sectionn">
     <center>
-       <img id="top-img" :src="require('assets/img/top.png')"/>
       <h1>Spend your valuable time making sales</h1>
-      <img id="btm-img" :src="require('assets/img/bottom.png')"/>
     </center>
     <div class="container">
       <div class="row holder" id="tcard">
@@ -33,21 +31,21 @@ export default {
       testimonials: [
         {
           company: require('assets/img/temp-comp.png'),
-          comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna sed do eiusmod tempor incig didunt ut labore et dolore magna sd gsgr gg   gdgdfg   aliqua. ',
+          comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.  ',
           photo: require('assets/img/temp-image.jpg'),
           name: 'Juan Dela Cruz',
           job: 'Founder, SOS Company'
         },
         {
           company: require('assets/img/temp-comp1.png'),
-          comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna sed do eiusmod tempor incig didunt ut labore et dolore magna sd gsgr gg   gdgdfg   aliqua. ',
+          comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
           photo: require('assets/img/temp-image2.jpg'),
           name: 'Jane Millers',
           job: 'CMO, Company.com'
         },
         {
           company: require('assets/img/temp-comp2.png'),
-          comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna sed do eiusmod tempor incig didunt ut labore et dolore magna sd gsgr gg   gdgdfg   aliqua. ',
+          comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
           photo: require('assets/img/temp-image1.jpg'),
           name: 'John Doe',
           job: 'CEO, ABC Company'
@@ -70,25 +68,17 @@ export default {
   min-height: 80vh;
   width: 100%;
   float: left;
-  padding-top: 5vh;
-  padding-bottom: 5vh;
+  margin-top: 5vh;
+}
+
+.container{
+  margin-top: 5vh;
 }
 
 center {
   background-color: #01009a;
-  margin-bottom: 5vh;
-}
-
-center img{
-  width: 100%;
-}
-
-#top-img {
-  margin-top: -3vh;
-}
-
-#btm-img {
-  margin-bottom: -3vh;
+  padding-bottom: 2vh;
+  padding-top: 2vh;
 }
 
 #tcard{
@@ -106,16 +96,14 @@ center img{
 }
 
 h1 {
-  font-weight: 650;
   color: white;
-  font-size: 32px;
   margin-top: 5vh;
   margin-bottom: 5vh;
+  font-weight: bold;
 }
 
 p {
-  font-size: 15px;
-  color: $title;
+  font-size: 16px;
 }
 
 .single-card {
@@ -123,7 +111,7 @@ p {
   box-shadow: -4px 8px 15px #e9e9e9;
   padding: 30px;
   margin: 0.5%;
-  min-height: 500px;
+  min-height: 50vh;
   border-radius: 5px;
   float: left;
   width: 32%;
@@ -134,11 +122,27 @@ p {
     width: 90%;
     margin: 5%;
   }
-  h1 {
-  font-size: 30px;
-  }
 }
 
+@media screen and (max-width: 991px) {
+  h1{
+    font-size: 150% !important;
+  }
+
+  h6{
+    font-size: 14.5px !important;
+  }
+
+  p{
+      font-size: 14px !important;
+  }
+
+  center {
+    padding-bottom: 1.5vh !important;
+    padding-top: 1.5vh !important;
+  }
+
+}
 #company {
   height: 70px;
 }
@@ -150,7 +154,7 @@ p {
 p .fas {
   color: $primary;
   font-size: 24px;
-  margin-top: 60px;
+  margin-top: 2vh;
   text-align: left;
 }
 
@@ -158,7 +162,7 @@ h6 {
   font-weight: normal;
   text-align: justify;
   font-size: 16px;
-  min-height: 170px;
+  min-height: 15vh;
 }
 
 hr {
@@ -175,12 +179,10 @@ hr {
 
 #name{
   margin-top: 10px ;
-  font-size: 15px;
   font-weight: bold;
 }
 
 #job{
-  font-size: 15px;
   margin-top: -20px ;
   font-weight: 400;
 }

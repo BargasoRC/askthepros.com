@@ -94,6 +94,7 @@ h1{
   width: 90%;
   margin-left: 5%;
   margin-right: 5%;
+  font-weight: bold;
 }
 
 p{
@@ -126,10 +127,14 @@ b{
 
   .form-control{
     width: 60%;
+    height: 40px !important;
+    font-size: 14.5px !important;
   }
 
   .redirect-btn{
     width: 40%;
+    height: 40px !important;
+    font-size: 14.5px !important;
   }
 }
 
