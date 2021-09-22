@@ -136,7 +136,7 @@ body{
     width: 18%;
     background: $primary;
     text-align: center;
-    position: fixed;
+    position: absolute;
   }
   
   .header-navbar{
@@ -144,7 +144,7 @@ body{
     height: 50px;
     float: left;
     width: 82%;
-    position: fixed;
+    position: absolute;
     margin-left: 18%;
     z-index: 5000;
   }
@@ -211,7 +211,7 @@ body{
   height: 50px;
   float: left;
   width: 50%;
-  position: fixed;
+  position: absolute;
   z-index: 100;
 }
 .left-menu-icon, right-menu-icons{
@@ -250,7 +250,7 @@ body{
   margin: -10px 0 0 -10px;
   border-radius: 2px;
   border-color: solid 1px #ff0000;
-  position: fixed;
+  position: absolute;
   z-index: 1;
 }
 

@@ -70,7 +70,7 @@
   overflow-y: hidden;
   z-index: 10000;
   height: calc(100vh - 60px);
-  position: fixed;
+  position: absolute;
 }
 
 .sidebar-menu{
