@@ -57,7 +57,6 @@ class RegisterController extends APIController
             $merchant->email = $account->email;
             $merchant->addition_informations = $request['industry'];
             $merchant->save();
-
             if($account && $account->id){
                 Payload::insert(array(
                     'account_id' => $account->id,

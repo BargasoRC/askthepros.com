@@ -99,29 +99,64 @@ export default{
     // mm/dd/yyyy
     const re = /^(0[1-9]|1[012])[\/](0[1-9]|[12][0-9]|3[01])[\/](19|20)\d\d$/
     // dd/mm/yyyy
-    const ree = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/](19|20)\d\d$/
+    // const ree = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/](19|20)\d\d$/
     // yyyy/mm/dd
     const reee = /^(19|20)\d\d[\/](0?[1-9]|1[012])[\/](0?[1-9]|[12][0-9]|3[01])$/
 
-    a.forEach(element => {
-      if(re.test(element)){
-        var given = new Date(element)
-        console.log('[a]', given.setHours(0,0,0,0) < now.setHours(0,0,0,0))
+    // a.forEach(element => {
+    //   if(re.test(element)){
+    //     var given = new Date(element)
+    //     if(given.setHours(0,0,0,0) < now.setHours(0,0,0,0)){
+    //       // console.log('aba')
+    //       return true
+    //     }else{
+    //       console.log('kaba')
+    //       return false
+    //     }
+    //   }else if(ree.test(element)){
+    //     var given1 = new Date(element)
+    //     if(given1.setHours(0,0,0,0) < now.setHours(0,0,0,0)){
+    //       console.log('aca')
+    //       return true
+    //     }else{
+    //       console.log('kaca')
+    //       return false
+    //     }
+    //   }else if(reee.test(element)){
+    //     var given2 = new Date(element)
+    //     if(given2.setHours(0,0,0,0) < now.setHours(0,0,0,0)){
+    //       console.log('ada')
+    //       return true
+    //     }else{
+    //       console.log('kada')
+    //       return false
+    //     }
+    //   }else{
+    //     console.log('last')
+    //     return false
+    //   }
+    // })
+    for (let element = 0; element < a.length; element++) {
+      if(re.test(a[element])){
+        var given = new Date(a[element])
         if(given.setHours(0,0,0,0) < now.setHours(0,0,0,0)){
-          return true
+          // console.log('aba')
+          return true 
         }else{
           return false
         }
-      }else if(ree.test(element)){
-        var given1 = new Date(element)
-        if(given1.setHours(0,0,0,0) < now.setHours(0,0,0,0)){
-          console.log('[B]')
-          return true
-        }else{
-          return false
-        }
-      }else if(reee.test(element)){
-        var given2 = new Date(element)
+      // }else if(ree.test(a[element])){
+      //   var given1 = new Date(a[element])
+      //   console.log('[second]', given1, '[asdfasdf]', now.setHours(0,0,0,0), 'asdfasdf', given1.setHours(0,0,0,0) < now.setHours(0,0,0,0))
+      //   if(given1.setHours(0,0,0,0) < now.setHours(0,0,0,0)){
+      //     console.log('aca')
+      //     return true
+      //   }else{
+      //     console.log('kaca')
+      //     return false
+      //   }
+      }else if(reee.test(a[element])){
+        var given2 = new Date(a[element])
         if(given2.setHours(0,0,0,0) < now.setHours(0,0,0,0)){
           console.log('[C]')
           return true
@@ -129,6 +164,6 @@ export default{
           return false
         }
       }
-    })
+    }
   }
 }
