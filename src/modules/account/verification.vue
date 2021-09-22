@@ -165,7 +165,6 @@ export default {
     },
     update(){
       this.retrieveAccount()
-      console.log('hoy', this.account)
       if(this.validate() === true && this.account !== null){
         let parameter = {
           'id': this.account.id,

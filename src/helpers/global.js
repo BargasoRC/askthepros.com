@@ -106,6 +106,7 @@ export default{
     a.forEach(element => {
       if(re.test(element)){
         var given = new Date(element)
+        console.log('[a]', given.setHours(0,0,0,0) < now.setHours(0,0,0,0))
         if(given.setHours(0,0,0,0) < now.setHours(0,0,0,0)){
           return true
         }else{
@@ -114,6 +115,7 @@ export default{
       }else if(ree.test(element)){
         var given1 = new Date(element)
         if(given1.setHours(0,0,0,0) < now.setHours(0,0,0,0)){
+          console.log('[B]')
           return true
         }else{
           return false
@@ -121,12 +123,11 @@ export default{
       }else if(reee.test(element)){
         var given2 = new Date(element)
         if(given2.setHours(0,0,0,0) < now.setHours(0,0,0,0)){
+          console.log('[C]')
           return true
         }else{
           return false
         }
-      }else{
-        return false
       }
     })
   }
