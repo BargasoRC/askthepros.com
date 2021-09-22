@@ -366,6 +366,7 @@ export default {
           $('#loading').css({'display': 'none'})
           if(response.data !== null) {
             this.login()
+            console.log('[res]', response)
             // this.createMerchantAndPayload(response.data)
           }else if(response.error !== null){
             if(response.error.status === 100){
