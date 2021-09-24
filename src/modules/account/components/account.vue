@@ -69,7 +69,8 @@ export default {
       isValid: true,
       isValidAccount: true,
       canUpdateAccount: false,
-      emailValidation: ''
+      emailValidation: '',
+      username: ''
     }
   },
   components: {

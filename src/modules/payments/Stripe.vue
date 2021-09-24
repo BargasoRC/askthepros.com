@@ -172,10 +172,15 @@ export default {
       Stripe.createSource().then(data => {
         if(data.error !== undefined && this.user.information === undefined){
           $('#loading').css({'display': 'none'})
+          console.log('[here]', data)
           this.errorMessage = data.error.message
+        }else if(data.error === undefined && this.user.information === undefined){
+          console.log('[there]', data)
+          this.redirect('/settings')
         }else{
-          console.log('[userrrrr>>>>]', this.user, this.user.information.first_name, this.user.information.last_name)
-          if(this.user.information.first_name !== undefined && this.user.information.last_name !== undefined){
+          console.log('[ahay]', this.user.information)
+          if(this.user.information !== undefined && this.user.information.first_name !== undefined && this.user.information.last_name !== undefined){
+            console.log('[ahay]')
             let parameter = {
               source: data.source,
               account_id: this.user.userID,
@@ -189,10 +194,13 @@ export default {
                 this.redirect('/thankyou')
               }
             })
-          }else if(this.user.information.first_name === undefined && this.user.information.last_name === undefined){
+          }else if(this.user.information === undefined && this.user.information.first_name === undefined && this.user.information.last_name === undefined){
+            console.log('[ambot]', this.user.information)
             $('#loading').css({'display': 'none'})
             console.log('[dfasfdfaf>>>>]', this.user.information.first_name === undefined && this.user.information.last_name === undefined)
             this.redirect('/settings')
+          }else{
+            console.log('[ambot nimo]')
           }
         }
       })

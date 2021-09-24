@@ -180,12 +180,11 @@ export default {
       })
     },
     update_account(event){
-      console.log('Can Update: ', this.user, 'Validated: ', this.canUpdateProfile === true)
       if(!this.validate()) {
         console.log('Not valid')
         return
       }
-      if(this.canUpdateProfile === true && this.user.merchant[0] !== undefined) {
+      if(this.canUpdateProfile === true) {
         let parameter = {
           account_id: this.user.userID,
           first_name: this.firstname,
@@ -202,6 +201,7 @@ export default {
               this.canUpdateProfile = false
             }
           })
+          alert('Profile Updated')
         }else{
           $('#loading').css({'display': 'block'})
           this.APIRequest('account_informations/create', parameter).then(response => {
@@ -211,6 +211,7 @@ export default {
               this.canUpdateProfile = false
             }
           })
+          alert('Profile Created')
         }
         let merchant = {
           name: this.businessname,
@@ -230,7 +231,6 @@ export default {
             error
           })
         }
-        alert('Profile Updated')
       }else if((this.canUpdateProfile === true && this.user.merchant[0] === undefined)){
         console.log('Profile Updated Char', this.user)
         // let merchant = {
@@ -288,7 +288,7 @@ export default {
         this.isNotValidProfile = true
       }
       if(this.isNotValidProfile === false) {
-        console.log('[a]', this.canUpdateProfile)
+        console.log('[a]', this.canUpdateProfile, '[]', this.isNotValidProfile)
         return true
       }else {
         console.log('[b]]', this.canUpdateProfile)
