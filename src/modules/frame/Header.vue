@@ -106,7 +106,7 @@ body{
 
 .arrow::before{
   border-right-color: #ed2a2a !important;
-  position: relative;
+  position: fixed;
   border-top-color: #ed2a2a !important;
 }
 /*------------------------------------
@@ -136,7 +136,7 @@ body{
     width: 18%;
     background: $primary;
     text-align: center;
-    position: absolute;
+    position: fixed;
   }
   
   .header-navbar{
@@ -144,7 +144,7 @@ body{
     height: 50px;
     float: left;
     width: 82%;
-    position: absolute;
+    position: fixed;
     margin-left: 18%;
     z-index: 5000;
   }
@@ -211,7 +211,7 @@ body{
   height: 50px;
   float: left;
   width: 50%;
-  position: absolute;
+  position: fixed;
   z-index: 100;
 }
 .left-menu-icon, right-menu-icons{
@@ -250,7 +250,7 @@ body{
   margin: -10px 0 0 -10px;
   border-radius: 2px;
   border-color: solid 1px #ff0000;
-  position: absolute;
+  position: fixed;
   z-index: 1;
 }
 
@@ -868,4 +868,5 @@ export default {
     }
   }
 }
+
 </script>
