@@ -78,7 +78,11 @@
         }" style="margin-bottom: 5%;" />
       </div>
     </div>
-    
+    <errorModal
+    ref="errorModal"
+    :title="'Error Message'"
+    :message="val === true ? 'Profile Successfully Updated' : 'Please subscribe and fill in all of the fields.'"
+    />
   </div>
 </template>
 <script>
@@ -88,13 +92,14 @@ import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
-import axios from 'axios'
+import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 import $ from 'jquery'
 import global from 'src/helpers/global'
 import ROUTER from 'src/router'
 export default {
   data() {
     return {
+      val: false,
       eyeToggle: false,
       colors: COLORS,
       firstname: '',
@@ -115,7 +120,8 @@ export default {
   components: {
     dialogueBtn,
     roundedInput,
-    roundedBtn
+    roundedBtn,
+    errorModal
   },
   computed: {
     returnProfile() {
@@ -158,7 +164,7 @@ export default {
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('accounts_info/retrieve', parameter).then(response => {
-        console.log('[response]', response.data, '[', this.user)
+        console.log('[response]', response.data, '[user]', this.user)
         $('#loading').css({'display': 'none'})
         let data = response.data[0]
         this.username = this.user.username
@@ -212,27 +218,31 @@ export default {
             }
           })
         }
-        let merchant = {
-          name: this.businessname,
-          account_id: this.user.userID,
-          id: this.user.merchant[0].id
+        if(this.user.merchant !== undefined || this.user.merchant !== null){
+          let merchant = {
+            name: this.businessname,
+            account_id: this.user.userID,
+            id: this.user.merchant[0].id
+          }
+          let url = 'merchants/update'
+          if(this.user.merchant.name !== this.businessname){
+            $('#loading').css({'display': 'block'})
+            this.APIRequest(url, merchant, response => {
+              $('#loading').css({'display': 'none'})
+              this.canUpdateProfile = false
+              this.retrieveInformation()
+            }, error => {
+              $('#loading').css({'display': 'none'})
+              this.canUpdateProfile = false
+              error
+            })
+          }
         }
-        let url = 'merchants/update'
-        if(this.user.merchant.name !== this.businessname){
-          $('#loading').css({'display': 'block'})
-          this.APIRequest(url, merchant, response => {
-            $('#loading').css({'display': 'none'})
-            this.canUpdateProfile = false
-            this.retrieveInformation()
-          }, error => {
-            $('#loading').css({'display': 'none'})
-            this.canUpdateProfile = false
-            error
-          })
-        }
-        alert('Profile Updated')
+        this.val = true
+        this.$refs.errorModal.show()
       }else if((this.canUpdateProfile === true && this.user.merchant[0] === undefined)){
-        console.log('Profile Updated Char', this.user)
+        this.val = false
+        this.$refs.errorModal.show()
         // let merchant = {
         //   account_id: this.user.userID,
         //   code: this.user.code,
@@ -255,7 +265,8 @@ export default {
         //   console.log('PAYLOAD ERROR', error)
         // })
       }else{
-        console.log('Cant update')
+        this.val = false
+        this.$refs.errorModal.show()
       }
     },
     onUpdate(){
