@@ -82,6 +82,11 @@
         </div>
       </div>
     </div>
+    <errorModal
+    ref="errorModal"
+    :title="'Error Message'"
+    :message="val === true ? 'We successfully received your message. Please check your email from time to time for our response. Thank you!' : 'Please fill in all of the fields.'"
+    />
   </div>
 </template>
 
@@ -89,6 +94,7 @@
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import roundedInput from 'src/modules/generic/roundedInput'
 import roundedBtn from 'src/modules/generic/roundedBtn'
+import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 import AUTH from 'src/services/auth'
 import global from 'src/helpers/global'
 export default {
@@ -99,13 +105,15 @@ export default {
       subject: '',
       content: '',
       isValid: true, // made this as the controller to control whether the form gets passed. Gets passed as long as true
-      isEmailValid: true
+      isEmailValid: true,
+      val: false
     }
   },
   components: {
     dialogueBtn,
     roundedInput,
-    roundedBtn
+    roundedBtn,
+    errorModal
   },
   created() {
   },
@@ -136,6 +144,8 @@ export default {
         this.APIRequest('emails/send_message', parameter).then(response => {
           $('#loading').css({'display': 'none'})
           if(response.data === true) {
+            this.val = true
+            this.$refs.errorModal.show()
             this.name = ''
             this.email = ''
             this.subject = ''
@@ -143,7 +153,9 @@ export default {
           }
         }).catch(error => {
           $('#loading').css({'display': 'none'})
-          error
+          console.log('[error]', error)
+          this.val = false
+          this.$refs.errorModal.sho()
         })
       }else {
         this.isValid = false
