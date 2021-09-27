@@ -49,6 +49,7 @@
 .page-footer{
   float: left;
   width: 100%;
+  display: block;
 }
 
 .ft-title {

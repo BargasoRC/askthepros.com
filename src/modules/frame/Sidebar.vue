@@ -1,6 +1,6 @@
 <template>
   <div class="system-body"> 
-     <div class="main-sidebar sidebar-collapse navbar-collapse collapse" v-bind:class="hide" id="idfactory" >
+     <div class="main-sidebar sidebar-collapse navbar-collapse collapse" v-bind:class="hide"  id="idfactory" >
       <div class="sidebar">
         <ul class="sidebar-menu">
             <li class="header">
@@ -9,13 +9,14 @@
                     <img v-bind:src="config.BACKEND_URL + user.profile.url" v-if="user.login_type === 'local'">
                     <img v-bind:src="user.profile.url" v-else>
                   </span>
-                  <i class="fa fa-user-circle profile-icon" v-else></i>
+                  <i class="fa fa-user-circle profile-icon" id="icon" v-else></i>
                   <i class="fas fa-check text-primary profile-status" v-if="user.status === 'VERIFIED'"></i>
                   Hi {{user.username}}!
                 </span>
                 <!-- <i v-bind:class="toggleSidebar + ' pull-right'" aria-hidden="true" v-on:click="changeToggleSidebarIcon()" id="toggleIcon"></i> -->
             </li>
-            <li v-for="item, index in menu" v-bind:class="{ 'active-menu': item.flag === true }" v-on:click="setActive(index)" v-if="((item.accountType === user.type || (user.type === 'ADMIN' && item.showOnAdmin === true)))" class="menu-holder">
+            <div class="menuH-space">
+              <li v-for="item, index in menu" v-bind:class="{ 'active-menu': item.flag === true }" v-on:click="setActive(index)" v-if="((item.accountType === user.type || (user.type === 'ADMIN' && item.showOnAdmin === true)))" class="menu-holder">
               <i v-bind:class="item.icon" class=" visible"></i> 
               <label>{{item.description}}</label>
               <ul class="sub-menu" v-if="item.subMenu !== null">
@@ -25,9 +26,11 @@
                 </li>
               </ul>
             </li>
+            </div>
 <!--             <li v-for="item, index in menuOff" v-bind:class="{ 'active-menu': item.flag === true }" v-on:click="setActiveOff(index)" v-if="(item.accountType === user.type || item.accountType === 'ALL')" class="menu-holder-hidden">
               <i v-bind:class="item.icon"></i>
             </li> -->
+        <div id="scrolldiv"></div>
           </ul>
         </div>
       </div>
@@ -60,7 +63,7 @@
 <style lang="scss">
 @import "~assets/style/colors.scss";
 .main-sidebar, .content-holder{  
-  min-height: 200px;
+  min-height: 90px;
   overflow: hidden;
   transition: all 1s ease 0s;
   z-index: 1;
@@ -68,9 +71,10 @@
 }
 .main-sidebar{
   overflow-y: hidden;
-  z-index: 10000;
+  z-index: -9999;
   height: calc(100vh - 60px);
-  position: absolute;
+  position: fixed;
+  
 }
 
 .sidebar-menu{
@@ -78,6 +82,7 @@
   padding: 0px;
   margin: 0px;
   height: calc(100vh - 60px);
+  
 }
 
 .sidebar-menu .header{
@@ -85,6 +90,10 @@
   padding: 15px 2% 15px 2%;
   color: #000;
   text-align: center;
+}
+
+#scrolldiv{
+  margin-top: 900px;
 }
 
 .header .switch{
@@ -107,6 +116,7 @@
   width: 100%;
   height: 100px;
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .profile-image-holder{
@@ -183,7 +193,9 @@
 .active-menu{
   color: white !important;
 }
-
+.menuH-space{
+  margin-top: 11.375rem;
+}
 .menu-holder-hidden{
   width: 100%;
   float: left;
@@ -304,7 +316,7 @@
 @media (max-width: 991px){
   .main-sidebar{
     width: 100%;
-    position: absolute;
+    position: fixed;
     top:0;
     left: 0;
     z-index: 30;
@@ -366,7 +378,7 @@
   }
   .main-sidebar{
     width: 90%;
-    position: absolute;
+    position: fixed;
     top:0;
     left: 0;
     z-index: 10;
@@ -537,4 +549,15 @@ export default {
     }
   }
 }
+
+window.addEventListener('scroll', () => {
+  if (window.scrollY < 830) {
+    document.getElementById('idfactory').style.height = 'calc(100vh - 60px)'
+    document.getElementById('scrolldiv').style.marginTop = '0px'
+  } else {
+    document.getElementById('idfactory').style.height = 'calc(50vh - 60px)'
+    document.getElementById('scrolldiv').style.marginTop = '900px'
+  }
+})
+
 </script>
