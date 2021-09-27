@@ -30,7 +30,7 @@
                   <p
                     class="mb-0 pb-0 invalidEmail"
                     v-if="!this.isValidAccount && email == ''"
-                  >{{ email == '' ? 'Required Field' : emailValidation }}</p>
+                  >{{ email == '' && emailValidation == '' ? 'Required Field' : emailValidation }}</p>
                 </div>
               </div>
             </div>
@@ -140,8 +140,14 @@ export default {
               this.email = ''
               this.emailValidation = response.error
               // console.log('UPDATE RESPONSE: ', response)
+            }else{
+              alert('Account updated')
+              setTimeout(() => {
+                AUTH.user.email = this.user.email
+                this.email = AUTH.user.email
+                console.log('Data', AUTH.user.email)
+              }, 100)
             }
-            window.location.reload()
           })
         }
       }
