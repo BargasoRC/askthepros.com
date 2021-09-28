@@ -96,6 +96,7 @@ export default{
   validateDate(date){
     var now = new Date()
     var a = date.split(' ')
+    const ree = /^\d{2}([./-])\d{2}\1\d{4}$/
     // mm/dd/yyyy
     const re = /^(0[1-9]|1[012])[\/](0[1-9]|[12][0-9]|3[01])[\/](19|20)\d\d$/
     // dd/mm/yyyy
@@ -140,7 +141,6 @@ export default{
       if(re.test(a[element])){
         var given = new Date(a[element])
         if(given.setHours(0,0,0,0) < now.setHours(0,0,0,0)){
-          // console.log('aba')
           return true 
         }else{
           return false
@@ -158,7 +158,6 @@ export default{
       }else if(reee.test(a[element])){
         var given2 = new Date(a[element])
         if(given2.setHours(0,0,0,0) < now.setHours(0,0,0,0)){
-          console.log('[C]')
           return true
         }else{
           return false

@@ -421,7 +421,11 @@ export default {
       }
     },
     validate() {
-      console.log('[this.validate]', global.validateDate(this.description))
+      var checkString = this.description.split(/\r?\n/).map(el => {
+        if(el === ''){
+          return true
+        }
+      })
       if(this.selectedIndustry.length <= 0 && this.title === '' && this.title === null && this.title === undefined && this.description === '' && this.description === null && this.description === undefined){
         this.$refs.errorModal.show()
         this.val = false
@@ -453,6 +457,11 @@ export default {
         this.val = true
         this.$refs.errorModal.show()
         return false
+      }if(this.linkedin === true && checkString.includes(true)){
+        this.isValid = false
+        this.val = true
+        this.$refs.errorModal.show()
+        return false
       }if(global.validateHTML(this.description) === true){
         this.isValid = false
         this.val = true
@@ -464,7 +473,6 @@ export default {
         this.$refs.errorModal.show()
         return false
       }if(global.validateDate(this.description)){
-        console.log('[here]')
         this.isValid = false
         this.val = true
         this.$refs.errorModal.show()

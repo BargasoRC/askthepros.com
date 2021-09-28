@@ -202,10 +202,11 @@ export default {
       ROUTER.push(route)
     },
     connect(item) {
-      if(this.user && (this.user.plan === null || this.user.plan === undefined)){
-        this.redirect('/subscriptions')
-        return
-      }
+      console.log('[user]', this.user)
+      // if(this.user && (this.user.plan === null || this.user.plan === undefined)){
+      //   this.redirect('/subscriptions')
+      //   return
+      // }
       $('#loading').css({'display': 'block'})
       let condition = {
         condition: [
