@@ -80,7 +80,7 @@
     </div>
     <errorModal
     ref="errorModal"
-    :title="'Error Message'"
+    :title="val === true ? 'Success Message' : 'Error Message'"
     :message="val === true ? 'Profile Successfully Updated' : 'Please subscribe and fill in all of the fields.'"
     />
   </div>
@@ -207,7 +207,7 @@ export default {
               this.canUpdateProfile = false
             }
           })
-          alert('Profile Updated')
+          // alert('Profile Updated')
         }else{
           $('#loading').css({'display': 'block'})
           this.APIRequest('account_informations/create', parameter).then(response => {
@@ -217,7 +217,7 @@ export default {
               this.canUpdateProfile = false
             }
           })
-          alert('Profile Created')
+          // alert('Profile Created')
         }
         if(this.user.merchant !== undefined || this.user.merchant !== null){
           let merchant = {

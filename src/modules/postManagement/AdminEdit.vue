@@ -16,6 +16,8 @@
                 <br>
                 <i> No Phone Numbers.</i>
                 <br>
+                <i> No new line allowed between paragraphs or sentence for LinkedIn.</i>
+                <br>
                 <i> You may encourage a phone call but a phone number is not allowed.</i>
               </p>
             </div>

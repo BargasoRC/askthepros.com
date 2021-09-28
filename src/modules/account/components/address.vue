@@ -127,7 +127,7 @@
     </div>
     <errorModal
     ref="errorModal"
-    :title="'Error Message'"
+    :title="val === true ? 'Success Message' : 'Error Message'"
     :message="val === true ? 'Address is successfully updated!' : 'Please fill in all of the fields.'"
     />
   </div>
