@@ -125,6 +125,11 @@
 
       </div>
     </div>
+    <errorModal
+    ref="errorModal"
+    :title="'Error Message'"
+    :message="val === true ? 'Address is successfully updated!' : 'Please fill in all of the fields.'"
+    />
   </div>
 </template>
 <script>
@@ -136,6 +141,7 @@ import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
+import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 import $ from 'jquery'
 import global from 'src/helpers/global'
 export default {
@@ -157,6 +163,7 @@ export default {
       isValidAddress: true,
       canUpdateAddress: false,
       selectedLocation: null,
+      val: false,
       property: {
         style: {
           outline: 'none !important',
@@ -180,7 +187,8 @@ export default {
     roundedInput,
     roundedBtn,
     VueGoogleAutocomplete,
-    GooglePlacesAutoComplete
+    GooglePlacesAutoComplete,
+    errorModal
   },
   mounted(){
     this.retrieveInformation()
@@ -241,7 +249,8 @@ export default {
     },
     update_account(event){
       if(!this.validate()) {
-        console.log('Validation Failed')
+        this.val = false
+        this.$refs.errorModal.show()
         // return
       }
       if(this.canUpdateAddress) {
@@ -261,6 +270,8 @@ export default {
           this.APIRequest('accounts_info/update_account', parameter).then(response => {
             $('#loading').css({'display': 'none'})
             if(response.error.length === 0){
+              this.val = true
+              this.$refs.errorModal.show()
               this.retrieveInformation()
               this.canUpdateProfile = false
             }
@@ -270,6 +281,8 @@ export default {
           this.APIRequest('account_informations/create', parameter).then(response => {
             $('#loading').css({'display': 'none'})
             if(response.error === 0) {
+              this.val = true
+              this.$refs.errorModal.show()
               this.retrieveInformation()
               this.canUpdateProfile = false
             }

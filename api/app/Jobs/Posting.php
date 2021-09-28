@@ -44,7 +44,6 @@ class Posting implements ShouldQueue
    */
   public function handle()
   {
-    
     // Get channels credentials
     // Send to curl of the channel
     $schedule = 'MondayTuesdayWednesdayThursdayFriday';
@@ -55,41 +54,51 @@ class Posting implements ShouldQueue
       // Get current merchant
       $plans = Plan::where('end_date', '=', null)->orWhere('end_date', '>=', Carbon::now())->get();
       if(sizeof($plans) > 0){
+        $i = 0;
         foreach ($plans as $key => $plan) {
           // Get published posting using the same category as plan
           $posts = $size = DB::table('post_targets as T1')
           ->leftJoin('posts as T2', 'T2.id', '=', 'T1.post_id')
           ->where('T1.payload_value', 'like', '%'.$plan['plan'].'%')
-          ->get(['T2.*']);
+          ->get(['T2.*', 'T1.payload_value']);
           $posts = json_decode($posts, true);
-          // echo  "\n\t" . $posts;
-          if($posts && sizeof($posts) > 0){
-            foreach ($posts as $pKey => $post) {
-              //location ni sa nag post
-              $postAddress = AccountInformation::where('account_id', '=', $post['account_id'])->get('address');
-              // dd(json_decode($postAddress[0]['address']));
-              //location sa makadawat
-              $receiverAccount = Account::leftJoin('plans as T1', 'T1.account_id', '=', 'accounts.id')->where('account_type', '=', 'USER')->where('plan', '=', $plan['plan'])->first();
-              $receiverAddress = AccountInformation::where('account_id', '=', $receiverAccount['account_id'])->get('address');
-              // dd(json_decode($receiverAddress[0]['address']));
-
-              $postsAddress = json_decode($postAddress[0]['address']);
-              $receiversAddress = json_decode($receiverAddress[0]['address']);
-
-              $distance = app('Increment\Imarket\Location\Http\LocationController')->getLocationDistanceOnly($receiversAddress, $postsAddress);
-              if($distance <= 30){
+          // groupBy plan and location
+          if($posts && (sizeof($posts) > 0)){
+            foreach ($posts as $pKey => $post) { 
+              $location = $this->postByLocation($post, $plan);
+              $plans[$i]['planAndLocation'] = $location;
+              if(sizeof($location) > 0){
                 $this->manageChannels($post, $plan);
               }
             }
           }else{
             echo "\n\t [POSTING] No post(s) related to the category.";
           }
+          $i++;
         }
       }else{
         echo "\n\t [POSTING] No active customer with active plans.";
       }
     }else{
       echo "\n\t [POSTING] Not on schedule..";
+    }
+  }
+
+  public function postByLocation($post, $plan){
+    //location ni sa nag post
+    $postAddress = AccountInformation::where('account_id', '=', $post['account_id'])->get();
+    //location sa makadawat
+    $receiverAccount = Account::leftJoin('plans as T1', 'T1.account_id', '=', 'accounts.id')->where('account_type', '=', 'USER')->where('plan', '=', $plan['plan'])->first();
+    $receiverAddress = AccountInformation::where('account_id', '=', $receiverAccount['account_id'])->get('address');
+    
+    // dd($postAddress);
+    $postsAddress = json_decode($postAddress[0]['address']);
+    $receiversAddress = json_decode($receiverAddress[0]['address']);
+    $distance = app('Increment\Imarket\Location\Http\LocationController')->getLocationDistanceOnly($receiversAddress, $postsAddress);
+    if($distance <= 30){
+      return $post;
+    }else{
+      return [];
     }
   }
 

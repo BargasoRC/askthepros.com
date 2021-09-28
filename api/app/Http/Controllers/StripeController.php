@@ -125,7 +125,6 @@ class StripeController extends APIController
 
       if($plan && $charge && $paymentMethod){
         // create billing
-
         $startDate = $lastDate ? $lastDate->copy() : Carbon::now();
         $billingEndDate = $lastDate ? $lastDate->addMonths($data['plan']['months']) : Carbon::now()->addMonths($data['plan']['months']);
 
