@@ -209,6 +209,8 @@ export default {
 }
 .RowContainer {
   background: white;
+  padding-top: 15vh;
+
 }
 .QouteCardContainer {
   display: flex !important;
@@ -218,7 +220,7 @@ export default {
   background: white;
 }
 .LoginContainer {
-  margin-top: 100px;
+   min-height: 85vh;
 }
 
 @media (max-width: 500px) {

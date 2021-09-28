@@ -11,59 +11,20 @@
       </span>
       <span class="menu">
         <span class="navbar-menu-toggler-md">
-          <i
-            class="fa fa-bars"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          ></i>
+          <i class="fa fa-bars" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" onclick="void(0)"></i>
         </span>
         <ul class="header-primary-menu">
-<!--           <li class="nav-item">
-            <a
-              class="nav-link"
-              href="/#services"
-              @click="headerScrollTo('#services')"
-              >Services</a
-            >
-          </li> -->
-          <li class="nav-item">
-            <a class="nav-link" @click="redirect('/signup')">Register</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" @click="redirect('/login')">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" @click="redirect('/contact')">Contact Us</a>
-          </li>
-          <!-- <li class="nav-item">
-            <a class="nav-link" @click="redirect('/locations')">How it works</a>
-          </li> -->
+          <li class="nav-item"><a class="nav-link" @click="redirect('/signup')">Register</a></li>
+          <li class="nav-item"><a class="nav-link" @click="redirect('/login')">Login</a></li>
+          <li class="nav-item"><a class="nav-link" @click="redirect('/contact')">Contact Us</a></li>
         </ul>
       </span>
     </div>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item" v-on:click="redirect('/signup')">
-          <a
-            data-toggle="collapse"
-            data-target=".navbar-collapse.show"
-            class="nav-link"
-            >Register</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            data-toggle="collapse"
-            data-target=".navbar-collapse.show"
-            class="nav-link"
-            href="/#partner"
-            v-on:click="redirect('/login')"
-            >Login</a
-          >
-        </li>
+        <li class="nav-item" v-on:click="redirect('/signup')" data-toggle="collapse" data-target="#navbarSupportedContent"><a class="nav-link">Register</a></li>
+        <li class="nav-item" v-on:click="redirect('/login')" data-toggle="collapse" data-target="#navbarSupportedContent"><a class="nav-link">Login</a></li>
+        <li class="nav-item" v-on:click="redirect('/contact')" data-toggle="collapse" data-target="#navbarSupportedContent"><a class="nav-link">Contact Us</a></li>
       </ul>
     </div>
   </div>
@@ -123,7 +84,7 @@
   border: solid 1px #fff;
   font-size: 20px !important;
   padding: 10px 8px 10px 8px !important;
-  color: $primary !important;
+  color: #fff !important;
 }
 
 .fa-bars:hover {
@@ -179,9 +140,6 @@
 }
 
 @media screen and (min-width: 0px) {
-  .headerName {
-  }
-
   .headerName p{
     font-size: 11px;
     margin: 0px;
@@ -196,23 +154,29 @@
   }
 }
 
+@media screen and (min-width: 993px) {
+  .navbar-collapse {
+    display: none !important;
+  }
+}
+
 @media screen and (max-width: 992px) {
   .header-section {
     width: 90% !important;
     margin: 0 5% 0 5% !important;
   }
   .header-section .logo {
-    width: 80%;
-    margin-top: 10px;
-    cursor: pointer;
+    width: 80% !important;
+    margin-top: 10px !important;
+    cursor: pointer !important;
   }
   .header-section .menu {
-    width: 20%;
-    margin-top: 15px;
+    width: 20% !important;
+    margin-top: 15px !important;
   }
   .menu .top-menu,
   .menu .header-primary-menu {
-    display: none;
+    display: none !important;
   }
 
   .navbar {
@@ -222,10 +186,10 @@
   }
   .navbar-collapse {
     width: 100% !important;
-    position: absolute !important;
     z-index: 100000 !important;
     float: left;
     border-bottom: solid 1px $primary;
+    text-align: center !important;
   }
   .navbar-nav {
     background: #fff !important;
@@ -237,12 +201,13 @@
   }
 
   .navbar-nav .nav-link:hover {
-    background: $primary;
+    background-color: $primary;
     color: #fff;
   }
 
   .navbar-nav .nav-link {
     color: $primary;
+    background-color: white;
   }
   .navbar-menu-toggler-md {
     width: 100%;
