@@ -47,6 +47,7 @@ class Channel implements ShouldQueue
     $dates = [];
     if($posts && sizeof($posts) > 0){
       foreach ($posts as $key => $postHistory) {
+        $branding = app($this->brandingController)->getActiveByParams($postHistory['account_id']);
         if($branding != null){
           array_push($dates, $postHistory['created_at']);
         }else{
@@ -60,7 +61,12 @@ class Channel implements ShouldQueue
       foreach ($posts as $key){
         $branding = app($this->brandingController)->getActiveByParams($key['account_id']);
         if(strtotime($key['created_at']) == strtotime($oldest)){
-            $this->manageSocialPosting($key, $branding);
+          $isPosted = PostHistory::where('account_id', '=', $key['account_id'])->whereBetween('created_at', array(Carbon::now()->startOfDay(), Carbon::now()->endOfDay()))->first();
+            if($isPosted != null){
+              $this->manageSocialPosting($key, $branding);
+            }else{
+              echo 'You already post something today.';
+            }
         }
         $i++;
       }
@@ -82,10 +88,10 @@ class Channel implements ShouldQueue
         break;
       case 'linkedin':
         if($branding && $branding['details'] !== null){
-          $message = "//n".$branding['details'][$keys];
+          $message = "  ".$branding['details'][$keys];
           // $message = "//n//n".$branding['details']['brand1']."//n//n".$branding['details']['brand2']."//n//n".$branding['details']['brand3'];
-          $postHistory['description'];
-          // $postHistory['description'] .= $message;
+          // $postHistory['description'];
+          $postHistory['description'] .= $message;
           // dd($postHistory['description']);
         }
         $this->manageLinkedIn($postHistory);

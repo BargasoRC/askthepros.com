@@ -84,7 +84,7 @@
     </div>
     <errorModal
     ref="errorModal"
-    :title="'Error Message'"
+    :title="val === true ? 'Success Message' : 'Error Message'"
     :message="val === true ? 'We successfully received your message. Please check your email from time to time for our response. Thank you!' : 'Please fill in all of the fields.'"
     />
   </div>
