@@ -30,7 +30,7 @@
                   <p
                     class="mb-0 pb-0 invalidEmail"
                     v-if="!this.isValidAccount && email == ''"
-                  >{{ email == '' && emailValidation == '' ? 'Required Field' : emailValidation }}</p>
+                  >{{ (!isValidAccount && emailValidation == '') ? 'Required Field' : emailValidation }}</p>
                 </div>
               </div>
             </div>
@@ -69,7 +69,8 @@ export default {
       isValid: true,
       isValidAccount: true,
       canUpdateAccount: false,
-      emailValidation: ''
+      emailValidation: '',
+      username: ''
     }
   },
   components: {
@@ -123,8 +124,6 @@ export default {
         return
       }
       if(this.canUpdateAccount) {
-        let info = AUTH.user.information
-        console.log('INFO: ', info)
         if(this.canUpdateAccount) {
           let acc = {
             id: this.user.userID,
@@ -135,14 +134,19 @@ export default {
           this.APIRequest('accounts/update_email', acc).then(response => {
             $('#loading').css({'display': 'none'})
             console.log('UPDATE RESPONSE: ', response)
-            if(response.error.length > 0) {
+            if(response.error != null) {
               this.isValidAccount = false
               this.email = ''
               this.emailValidation = response.error
               // console.log('UPDATE RESPONSE: ', response)
+            }else{
+              this.emailValidation = ''
+              this.email = ''
+              this.isValidAccount = true
+              window.location.reload()
             }
           })
-        }
+      }
       }
     },
     validate() {
