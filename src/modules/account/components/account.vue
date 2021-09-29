@@ -140,13 +140,6 @@ export default {
               this.email = ''
               this.emailValidation = response.error
               // console.log('UPDATE RESPONSE: ', response)
-            }else{
-              alert('Account updated')
-              setTimeout(() => {
-                AUTH.user.email = this.user.email
-                this.email = AUTH.user.email
-                console.log('Data', AUTH.user.email)
-              }, 100)
             }
           })
         }
