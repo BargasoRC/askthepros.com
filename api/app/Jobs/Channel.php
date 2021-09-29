@@ -44,41 +44,79 @@ class Channel implements ShouldQueue
             ->select('post_histories.*', 'posts.url', 'posts.description')
             ->get();
     $rand = [];
+    $dates = [];
     if($posts && sizeof($posts) > 0){
       foreach ($posts as $key => $postHistory) {
         $branding = app($this->brandingController)->getActiveByParams($postHistory['account_id']);
-        $keys = array_rand($branding['details'], 1);
-
-        switch(strtolower($postHistory['channel'])){
-          case 'facebook':
-            if($branding && $branding['details'] !== null){
-              $message = "\n\n".$branding['details'][$keys];
-              // $message = "\n\n".$branding['details']['brand1']."\n\n".$branding['details']['brand2']."\n\n".$branding['details']['brand3'];
-              $postHistory['description'] .= $message;
-            }
-            $this->manageFacebook($postHistory);
-            break;
-          case 'linkedin':
-            if($branding && $branding['details'] !== null){
-              $message = "//n//n".$branding['details'][$keys];
-              // $message = "//n//n".$branding['details']['brand1']."//n//n".$branding['details']['brand2']."//n//n".$branding['details']['brand3'];
-              $postHistory['description'] .= $message;
-            }
-            $this->manageLinkedIn($postHistory);
-            break;
-          case 'google_my_business':
-            if($branding && $branding['details'] !== null){
-              $message = "\n\n".$branding['details'][$keys];
-              // $message = "\n\n".$branding['details']['brand1']."\n\n".$branding['details']['brand2']."\n\n".$branding['details']['brand3'];
-              $postHistory['description'] .= $message;
-            }
-            $this->manageGoogle($postHistory);
-            break;
+        if($branding != null){
+          array_push($dates, $postHistory['created_at']);
+        }else{
+          echo "\n\t\t[No Branding Added]";
         }
+      }
+      $this->getOldestPost($dates);
+      // dd($dates[count($dates) -1]);
+      $oldest = $dates[count($dates) -1];
+      $i=0;
+      foreach ($posts as $key){
+        $branding = app($this->brandingController)->getActiveByParams($key['account_id']);
+        if(strtotime($key['created_at']) == strtotime($oldest)){
+          $isPosted = PostHistory::where('account_id', '=', $key['account_id'])->whereBetween('created_at', array(Carbon::now()->startOfDay(), Carbon::now()->endOfDay()))->first();
+            if($isPosted != null){
+              $this->manageSocialPosting($key, $branding);
+            }else{
+              echo 'You already post something today.';
+            }
+        }
+        $i++;
       }
     }else{
       echo "\n\t\t[CHANNEL] No post available for posting.";
     }
+  }
+
+  public function manageSocialPosting($postHistory, $branding){
+    $keys = array_rand($branding['details'], 1);
+    switch(strtolower($postHistory['channel'])){
+      case 'facebook':
+        if($branding && $branding['details'] !== null){
+          $message = "\n\n".$branding['details'][$keys];
+          // $message = "\n\n".$branding['details']['brand1']."\n\n".$branding['details']['brand2']."\n\n".$branding['details']['brand3'];
+          $postHistory['description'] .= $message;
+        }
+        $this->manageFacebook($postHistory);
+        break;
+      case 'linkedin':
+        if($branding && $branding['details'] !== null){
+          $message = "  ".$branding['details'][$keys];
+          // $message = "//n//n".$branding['details']['brand1']."//n//n".$branding['details']['brand2']."//n//n".$branding['details']['brand3'];
+          // $postHistory['description'];
+          $postHistory['description'] .= $message;
+          // dd($postHistory['description']);
+        }
+        $this->manageLinkedIn($postHistory);
+        break;
+      case 'google_my_business':
+        if($branding && $branding['details'] !== null){
+          $message = "\n\n".$branding['details'][$keys];
+          // $message = "\n\n".$branding['details']['brand1']."\n\n".$branding['details']['brand2']."\n\n".$branding['details']['brand3'];
+          $postHistory['description'] .= $message;
+        }
+        $this->manageGoogle($postHistory);
+        break;
+    }
+  }
+
+  
+  public function getOldestPost($date){
+    $now = Carbon::now();
+    $temp = usort($date, function($a, $b) {
+      $date1 = strtotime($a);
+      $date2 = strtotime($b);
+      return $date1 < $date2 ? -1: 1;
+      // dd($date1 < $date2 ? -1: 1);
+    });
+    // dd($temp);
   }
 
   public function manageFacebook($postHistory){
@@ -145,7 +183,8 @@ class Channel implements ShouldQueue
     }else {
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinPost($postHistory['account_id'], $postHistory['description']);
     }
-   
+    
+    // dd($result);
     if($result && isset($result['id'])){
       $link = '';
       if(strpos($result['id'], 'li') > -1){

@@ -78,7 +78,11 @@
         }" style="margin-bottom: 5%;" />
       </div>
     </div>
-    
+    <errorModal
+    ref="errorModal"
+    :title="val === true ? 'Success Message' : 'Error Message'"
+    :message="val === true ? 'Profile Successfully Updated' : 'Please subscribe and fill in all of the fields.'"
+    />
   </div>
 </template>
 <script>
@@ -88,13 +92,14 @@ import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
-import axios from 'axios'
+import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 import $ from 'jquery'
 import global from 'src/helpers/global'
 import ROUTER from 'src/router'
 export default {
   data() {
     return {
+      val: false,
       eyeToggle: false,
       colors: COLORS,
       firstname: '',
@@ -115,7 +120,8 @@ export default {
   components: {
     dialogueBtn,
     roundedInput,
-    roundedBtn
+    roundedBtn,
+    errorModal
   },
   computed: {
     returnProfile() {
@@ -158,6 +164,7 @@ export default {
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('accounts_info/retrieve', parameter).then(response => {
+        console.log('[response]', response.data, '[user]', this.user)
         $('#loading').css({'display': 'none'})
         let data = response.data[0]
         this.username = this.user.username
@@ -179,7 +186,6 @@ export default {
       })
     },
     update_account(event){
-      console.log('Can Update: ', this.canUpdateProfile, 'Validated: ', this.validate())
       if(!this.validate()) {
         console.log('Not valid')
         return
@@ -201,6 +207,7 @@ export default {
               this.canUpdateProfile = false
             }
           })
+          // alert('Profile Updated')
         }else{
           $('#loading').css({'display': 'block'})
           this.APIRequest('account_informations/create', parameter).then(response => {
@@ -210,28 +217,57 @@ export default {
               this.canUpdateProfile = false
             }
           })
+          // alert('Profile Created')
         }
-        let merchant = {
-          name: this.businessname,
-          account_id: this.user.userID,
-          id: this.user.merchant[0].id
+        if(this.user.merchant !== undefined || this.user.merchant !== null){
+          let merchant = {
+            name: this.businessname,
+            account_id: this.user.userID,
+            id: this.user.merchant[0].id
+          }
+          let url = 'merchants/update'
+          if(this.user.merchant.name !== this.businessname){
+            $('#loading').css({'display': 'block'})
+            this.APIRequest(url, merchant, response => {
+              $('#loading').css({'display': 'none'})
+              this.canUpdateProfile = false
+              this.retrieveInformation()
+            }, error => {
+              $('#loading').css({'display': 'none'})
+              this.canUpdateProfile = false
+              error
+            })
+          }
         }
-        let url = 'merchants/update'
-        if(this.user.merchant.name !== this.businessname){
-          $('#loading').css({'display': 'block'})
-          this.APIRequest(url, merchant, response => {
-            $('#loading').css({'display': 'none'})
-            this.canUpdateProfile = false
-            this.retrieveInformation()
-          }, error => {
-            $('#loading').css({'display': 'none'})
-            this.canUpdateProfile = false
-            error
-          })
-        }
-        alert('Profile Updated')
+        this.val = true
+        this.$refs.errorModal.show()
+      }else if((this.canUpdateProfile === true && this.user.merchant[0] === undefined)){
+        this.val = false
+        this.$refs.errorModal.show()
+        // let merchant = {
+        //   account_id: this.user.userID,
+        //   code: this.user.code,
+        //   name: this.businessname,
+        //   email: this.user.email
+        // }
+        // let payload = {
+        //   account_id: this.user.userID,
+        //   payload: 'automation_settings',
+        //   payload_value: 'ON'
+        // }
+        // this.APIRequest('merchants/create', merchant).then(response => {
+        //   console.log('MERCHANT RESPONSE: ', response)
+        // }).catch(error => {
+        //   console.log('MERCHANT ERROR', error)
+        // })
+        // this.APIRequest('payloads/create', payload).then(response => {
+        //   console.log('PAYLOAD RESPONSE: ', response)
+        // }).catch(error => {
+        //   console.log('PAYLOAD ERROR', error)
+        // })
       }else{
-        console.log('Cant update')
+        this.val = false
+        this.$refs.errorModal.show()
       }
     },
     onUpdate(){
@@ -264,8 +300,10 @@ export default {
         this.isNotValidProfile = true
       }
       if(this.isNotValidProfile === false) {
+        console.log('[a]', this.canUpdateProfile, '[]', this.isNotValidProfile)
         return true
       }else {
+        console.log('[b]]', this.canUpdateProfile)
         return false
       }
     }

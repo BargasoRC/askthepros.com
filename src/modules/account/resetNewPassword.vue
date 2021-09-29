@@ -293,12 +293,13 @@ export default {
   -webkit-box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
   -moz-box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
 }
-.LoginCardBody {}
+
 .LoginContainer {
   min-height: 85vh;
 }
 .RowContainer {
   background: white;
+  padding-top: 15vh;
 }
 .QouteCardContainer {
   display: flex !important;

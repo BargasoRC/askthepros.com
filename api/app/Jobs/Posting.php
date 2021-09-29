@@ -15,6 +15,8 @@ use App\Post;
 use App\PostHistory;
 use App\Page;
 use Increment\Common\Payload\Models\Payload;
+use Increment\Account\Models\AccountInformation;
+use Increment\Account\Models\Account;
 
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -42,7 +44,6 @@ class Posting implements ShouldQueue
    */
   public function handle()
   {
-    
     // Get channels credentials
     // Send to curl of the channel
     $schedule = 'MondayTuesdayWednesdayThursdayFriday';
@@ -52,23 +53,29 @@ class Posting implements ShouldQueue
       echo "\n\t [POSTING] Running on day => ".$currentDate;
       // Get current merchant
       $plans = Plan::where('end_date', '=', null)->orWhere('end_date', '>=', Carbon::now())->get();
-
       if(sizeof($plans) > 0){
+        $i = 0;
         foreach ($plans as $key => $plan) {
           // Get published posting using the same category as plan
           $posts = $size = DB::table('post_targets as T1')
           ->leftJoin('posts as T2', 'T2.id', '=', 'T1.post_id')
           ->where('T1.payload_value', 'like', '%'.$plan['plan'].'%')
-          ->get(['T2.*']);
+          ->get(['T2.*', 'T1.payload_value']);
           $posts = json_decode($posts, true);
-          // echo  "\n\t" . $posts;
-          if($posts && sizeof($posts) > 0){
+          // groupBy plan and location
+          if($posts && (sizeof($posts) > 0)){
             foreach ($posts as $pKey => $post) {
-              $this->manageChannels($post, $plan);
+              $location = $this->postByLocation($post, $plan);
+              // $plans[$i]['planAndLocation'] = $location;
+              // dd($location);
+              if($location && sizeof($location) > 0){
+                $this->manageChannels($post, $plan);
+              }
             }
           }else{
             echo "\n\t [POSTING] No post(s) related to the category.";
           }
+          $i++;
         }
       }else{
         echo "\n\t [POSTING] No active customer with active plans.";
@@ -78,18 +85,41 @@ class Posting implements ShouldQueue
     }
   }
 
+  public function postByLocation($post, $plan){
+    //location ni sa nag post
+    $postAddress = AccountInformation::where('account_id', '=', $post['account_id'])->get();
+    // dd('here', $postAddress);
+    if(count($postAddress) > 0){
+      //location sa makadawat
+      $receiverAccount = Account::leftJoin('plans as T1', 'T1.account_id', '=', 'accounts.id')->where('account_type', '=', 'USER')->where('plan', '=', $plan['plan'])->first();
+      $receiverAddress = AccountInformation::where('account_id', '=', $receiverAccount['account_id'])->get('address');
+      
+      // dd($postAddress);
+      $postsAddress = json_decode($postAddress[0]['address']);
+      $receiversAddress = json_decode($receiverAddress[0]['address']);
+      $distance = app('Increment\Imarket\Location\Http\LocationController')->getLocationDistanceOnly($receiversAddress, $postsAddress);
+      if($distance <= 30){
+        return $post;
+      }else{
+        return [];
+      }
+    }else{
+      echo "\n\t [INFORMATION PROBLEM] Please setup your personal information.";
+    }
+  }
+
   public function manageChannels($post, $plan){
     echo "\n\t\t Manage channels";
     $channels = $post && $post['channels'] ? json_decode($post['channels']) : null;
     if($channels){
       foreach ($channels as $key => $channel) {
         $postHistory = PostHistory::where(array(
-          array('post_id', '=', $post['id']),
+          // array('post_id', '=', $post['id']),
           array('account_id', '=', $plan['account_id']),
           array('channel', '=', $channel),
           array('created_at', '>=', Carbon::now()->subDays(7))
-        ))->get();
-
+        ))->whereBetween('created_at', array(Carbon::now()->startOfDay(), Carbon::now()->endOfDay()))->get();
+        
         if($postHistory && sizeof($postHistory) > 0){
           echo "\n\t\t Post id => ".$post['id']." for ".$channel." already existed";
         }else{

@@ -1,44 +1,43 @@
 <template>
-    <div class="payment-accounts">
-      <div class="text-danger" v-if="errorMessage !== null" style="padding-top: 10px; padding-bottom: 10px;">Opps! {{errorMessage}}</div>
-      <div :class="{complete}">
-        <div class="row">
-          <div class="form-group login-spacer col-lg-12 col-md-12 col-sm-12">
-            <label for="address">Card Number</label>
-            <card-number class="stripe-element card-number"
-              ref="cardNumber"
-              :stripe="stripeSK"
-              @change="number = $event.complete"
-              :options="options"
-            />
-          </div>
+  <div class="payment-accounts">
+    <div class="text-danger" v-if="errorMessage !== null" style="padding-top: 10px; padding-bottom: 10px;">Opps! {{errorMessage}}</div>
+    <div :class="{complete}">
+      <div class="row">
+        <div class="form-group login-spacer col-lg-12 col-md-12 col-sm-12">
+          <label for="address">Card Number</label>
+          <card-number class="stripe-element card-number"
+            ref="cardNumber"
+            :stripe="stripeSK"
+            @change="number = $event.complete"
+            :options="options"
+          />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group login-spacer col-lg-6 col-md-6 col-sm-12">
+          <label for="address">Expiration</label>
+          <card-expiry class="stripe-element card-expiry"
+            ref="cardExpiry" 
+            :stripe="stripeSK" 
+            @change="expiry = $event.complete"
+            :options="options"
+          />
         </div>
 
-        <div class="row">
-          <div class="form-group login-spacer col-lg-6 col-md-6 col-sm-12">
-            <label for="address">Expiration</label>
-            <card-expiry class="stripe-element card-expiry"
-              ref="cardExpiry" 
+        <div class="form-group login-spacer col-lg-6 col-md-6 col-sm-12">
+          <label for="address">CVC</label>
+          <div id="signup-card-number">
+            <card-cvc class='stripe-element card-cvc'
+              ref='cardCvc'
               :stripe="stripeSK" 
-              @change="expiry = $event.complete"
+              @change="expiry = $event.complete" 
               :options="options"
             />
-          </div>
-
-          <div class="form-group login-spacer col-lg-6 col-md-6 col-sm-12">
-            <label for="address">CVC</label>
-            <div id="signup-card-number">
-              <card-cvc class='stripe-element card-cvc'
-                ref='cardCvc'
-                :stripe="stripeSK" 
-                @change="expiry = $event.complete" 
-                :options="options"
-              />
-            </div>
           </div>
         </div>
       </div>
-  </div>
+    </div>
   </div>
 </template>
 <style>
@@ -170,12 +169,13 @@ export default {
       $('#loading').css({'display': 'block'})
       this.errorMessage = null
       Stripe.createSource().then(data => {
-        console.log('[userrrrr>>>>]', this.user)
         if(data.error !== undefined && this.user.information === undefined){
           $('#loading').css({'display': 'none'})
           this.errorMessage = data.error.message
+        }else if(data.error === undefined && this.user.information === undefined){
+          this.redirect('/settings')
         }else{
-          if(this.user.information !== undefined && this.user.information.first_name !== undefined){
+          if(this.user.information !== undefined && this.user.information.first_name !== undefined && this.user.information.last_name !== undefined){
             let parameter = {
               source: data.source,
               account_id: this.user.userID,
@@ -189,9 +189,11 @@ export default {
                 this.redirect('/thankyou')
               }
             })
-          }else{
+          }else if(this.user.information === undefined && this.user.information.first_name === undefined && this.user.information.last_name === undefined){
             $('#loading').css({'display': 'none'})
             this.redirect('/settings')
+          }else{
+            console.log('[ambot nimo]')
           }
         }
       })

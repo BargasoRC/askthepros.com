@@ -16,7 +16,7 @@
             <th>Due Date</th> 
         </tr>
         <tr>
-            <td>Monthly Subscription Plan</td>
+            <td>Monthly {{$data['plan']}} Subscription Plan</td>
             <td align="center">{{$data['currency']}} {{$data['amount']}}</td>
             <td align="center">{{$data['start_date']}}</td> 
         </tr>

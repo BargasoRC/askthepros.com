@@ -16,6 +16,8 @@
                 <br>
                 <i> No Phone Numbers.</i>
                 <br>
+                <i> No new line allowed between paragraphs or sentence for LinkedIn.</i>
+                <br>
                 <i> You may encourage a phone call but a phone number is not allowed.</i>
               </p>
             </div>
@@ -386,6 +388,7 @@ export default {
       this.selectedIndustry.forEach(element => {
         selectIndustry.push({category: element.category, id: element.id})
       })
+      console.log('[this.validate]', this.validate(), global.validateDate(this.description))
       if(this.validate()) {
         $('#loading').css({'display': 'block'})
         let channels = []
@@ -420,6 +423,11 @@ export default {
       }
     },
     validate() {
+      var checkString = this.description.split(/\r?\n/).map(el => {
+        if(el === ''){
+          return true
+        }
+      })
       if(this.selectedIndustry.length <= 0 && this.title === '' && this.title === null && this.title === undefined && this.description === '' && this.description === null && this.description === undefined){
         this.$refs.errorModal.show()
         this.val = false
@@ -451,6 +459,11 @@ export default {
         this.val = true
         this.$refs.errorModal.show()
         return false
+      }if(this.linkedin === true && checkString.includes(true)){
+        this.isValid = false
+        this.val = true
+        this.$refs.errorModal.show()
+        return false
       }if(global.validateHTML(this.description) === true){
         this.isValid = false
         this.val = true
@@ -461,7 +474,7 @@ export default {
         this.val = true
         this.$refs.errorModal.show()
         return false
-      }if(global.validateDate(this.description) === true){
+      }if(global.validateDate(this.description)){
         this.isValid = false
         this.val = true
         this.$refs.errorModal.show()

@@ -106,7 +106,7 @@ body{
 
 .arrow::before{
   border-right-color: #ed2a2a !important;
-  position: relative;
+  position: fixed;
   border-top-color: #ed2a2a !important;
 }
 /*------------------------------------
@@ -868,4 +868,5 @@ export default {
     }
   }
 }
+
 </script>
