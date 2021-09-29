@@ -87,7 +87,7 @@
 
 .sidebar-menu .header{
   font-weight: 700; 
-  padding: 15px 2% 15px 2%;
+  // padding: 15px 2% 15px 2%;
   color: #000;
   text-align: center;
 }
