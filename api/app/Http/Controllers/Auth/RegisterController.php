@@ -97,10 +97,10 @@ class RegisterController extends APIController
     }
 
     public function customValidate($text){
-        $validation = array('email' => 'required|email|unique:accounts', 'username' => 'required|username|unique:accounts'); 
+        $validation = array('email' => 'required|email|unique:accounts');
         return $this->validateReply($text, $validation);
     }
-
+    
     public function validateReply($text, $validation){
         $validator = Validator::make($text, $validation);
         if($validator->fails()){
@@ -109,6 +109,28 @@ class RegisterController extends APIController
         else
           return true;
     }
+    // public function validateUsername($username){
+    //     $text = array('username' => $username);
+    //     if($this->customValidateUsername($text) == true){
+    //         return true;
+    //     }else{
+    //         return false;
+    //     }
+    // }
+
+    // public function customValidateUsername($text){
+    //     $validation = array('username' => 'required|username|unique:accounts');
+    //     return $this->validateReplyUsername($text, $validation);
+    // }
+    
+    // public function validateReplyUsername($text, $validation){
+    //     $validator = Validator::make($text, $validation);
+    //     if($validator->fails()){
+    //       return false;
+    //     }
+    //     else
+    //       return true;
+    // }
 
     public function createDetails($accountId, $type)
     {

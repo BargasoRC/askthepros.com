@@ -184,7 +184,9 @@ export default {
     this.$root.$on('openVideo', () => {
       this.index = 0
     })
-    this.retrievePayloads()
+    setTimeout(() => {
+      this.retrievePayloads()
+    }, 1000)
   },
   methods: {
     retrievePayloads(){
@@ -196,6 +198,7 @@ export default {
       let parameter = {
         condition: conditions
       }
+      console.log('[parameter]', parameter)
       $('#loading').css({'display': 'block'})
       this.APIRequest('payloads/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})

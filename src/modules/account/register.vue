@@ -240,7 +240,9 @@ export default {
     if(params.category){
       this.selectedIndustry = params.category
     }
-    this.retrievePayloads()
+    setTimeout(() => {
+      this.retrievePayloads()
+    }, 1000)
   },
   data() {
     return {

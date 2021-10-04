@@ -68,7 +68,9 @@ class Posting implements ShouldQueue
               ->where('account_type', '=', 'USER')
               ->where('plan', '=', $plan['plan'])
               ->get(['T1.*']);
-              
+
+          $x = 0;
+          $userLocal = array();
           if(sizeof($users) > 0){
             foreach($users as $key => $user) {
               if(json_decode($user['address'])->locality){
@@ -81,17 +83,19 @@ class Posting implements ShouldQueue
                 ->groupBy('T1.address')
                 ->having('T1.address', 'like', '%'.json_decode($user['address'])->locality.'%')
                 ->orderBy('accounts.created_at')->get();
-                dd($userLocation);
+                // dd($userLocation);
                 // if(sizeof($userLocation) > 0){
                 //   return $post;
                 // }else{
                 //   return [];
                 // }
-
+                array_push($userLocal, $userLocation);
               }else{
                 echo "\n\t\t [LOCALITY PROBLEM] Invalid Location";
               }
+              $x++;
             }
+            dd($userLocal);
           }else{
             echo "\n\t [INFORMATION PROBLEM] Please setup your personal information.";
           }
