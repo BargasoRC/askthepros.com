@@ -364,6 +364,7 @@ export default {
         $('#loading').css({'display': 'block'})
         this.APIRequest('account/create', parameter).then(response => {
           $('#loading').css({'display': 'none'})
+          console.log('[register]', response)
           if(response.data !== null) {
             this.createMerchantAndPayload(response.data.data)
             // this.login()
@@ -375,6 +376,10 @@ export default {
               }else if(typeof message.email !== undefined && typeof message.email !== 'undefined'){
                 this.errorMessage = message.email[0]
               }
+            }else{
+              let message = response.error.message
+              console.log('[message]', message)
+              this.errorMessage = message
             }
           }
         })
