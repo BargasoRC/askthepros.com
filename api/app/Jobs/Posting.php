@@ -54,20 +54,86 @@ class Posting implements ShouldQueue
       // Get current merchant
       $plans = Plan::where('end_date', '=', null)->orWhere('end_date', '>=', Carbon::now())->get();
       if(sizeof($plans) > 0){
-        $i = 0;
         foreach ($plans as $key => $plan) {
           // Get published posting using the same category as plan
-          $posts = $size = DB::table('post_targets as T1')
+          
+          // user 1 => finance
+          // user 2 => real estate
+          // user 3 => finance
+          // user 4 => Technology
+          // user 5 => finance
+          $users = Account::leftJoin('account_informations as T1', 'T1.account_id', '=', 'accounts.id')
+              ->where('account_type', '=', 'USER')
+              ->leftJoin('plans as P1', 'P1.account_id', '=', 'accounts.id')
+              ->where('account_type', '=', 'USER')
+              ->where('plan', '=', $plan['plan'])
+              ->get(['T1.*']);
+
+          $x = 0;
+          $userLocal = array();
+          if(sizeof($users) > 0){
+            foreach($users as $key => $user) {
+              if(json_decode($user['address'])->locality){
+
+                $userLocation = $size = Account::leftJoin('account_informations as T1', 'T1.account_id', '=', 'accounts.id')
+                ->where('account_type', '=', 'USER')
+                ->leftJoin('plans as P1', 'P1.account_id', '=', 'accounts.id')
+                ->where('account_type', '=', 'USER')
+                ->where('plan', '=', $plan['plan'])
+                ->groupBy('T1.address')
+                ->having('T1.address', 'like', '%'.json_decode($user['address'])->locality.'%')
+                ->orderBy('accounts.created_at')->get();
+                // dd($userLocation);
+                // if(sizeof($userLocation) > 0){
+                //   return $post;
+                // }else{
+                //   return [];
+                // }
+                array_push($userLocal, $userLocation);
+              }else{
+                echo "\n\t\t [LOCALITY PROBLEM] Invalid Location";
+              }
+              $x++;
+            }
+            dd($userLocal);
+          }else{
+            echo "\n\t [INFORMATION PROBLEM] Please setup your personal information.";
+          }
+          // user 1 => 
+            // count the size of the plans with the same industry of the selected plan of the same location
+            // 3 array(user 1, user 3, user 5) or you can use filter
+            // get the order or get the index of the user
+                // for example, user 1 => 0
+                // for exsample, user 3 => 1
+                // for example, user 5 => 2
+          // get the all all post of the selected industry
+          // get and count previous posted post of the selected user
+                //  for eq., 10 post, so that can select the next id of the post
+              // If previous existed, get the last post id
+                  // else, post directly using the index position of the user
+          // post to the post histories
+            // check if the post already existed
+          
+        $i = 0;
+        $posts = array();
+          $onePost = $size = DB::table('post_targets as T1')
           ->leftJoin('posts as T2', 'T2.id', '=', 'T1.post_id')
           ->where('T1.payload_value', 'like', '%'.$plan['plan'].'%')
+          ->groupBy('T1.payload_value')
+          ->having('T1.payload_value', 'like', '%'.$plan['plan'].'%')
           ->get(['T2.*', 'T1.payload_value']);
-          $posts = json_decode($posts, true);
+          array_push($posts, $onePost);
+          $i++;
+        }
+        dd($posts);
           // groupBy plan and location
-          if($posts && (sizeof($posts) > 0)){
+          
+          // $postsa = array();
+          // if(sizeof(array_unique($posts)) > 0){
+          if(sizeof($posts) > 0){
             foreach ($posts as $pKey => $post) {
+              // dd($post);
               $location = $this->postByLocation($post, $plan);
-              // $plans[$i]['planAndLocation'] = $location;
-              // dd($location);
               if($location && sizeof($location) > 0){
                 $this->manageChannels($post, $plan);
               }
@@ -75,8 +141,6 @@ class Posting implements ShouldQueue
           }else{
             echo "\n\t [POSTING] No post(s) related to the category.";
           }
-          $i++;
-        }
       }else{
         echo "\n\t [POSTING] No active customer with active plans.";
       }
@@ -86,22 +150,22 @@ class Posting implements ShouldQueue
   }
 
   public function postByLocation($post, $plan){
-    //location ni sa nag post
-    $postAddress = AccountInformation::where('account_id', '=', $post['account_id'])->get();
-    // dd('here', $postAddress);
-    if(count($postAddress) > 0){
-      //location sa makadawat
-      $receiverAccount = Account::leftJoin('plans as T1', 'T1.account_id', '=', 'accounts.id')->where('account_type', '=', 'USER')->where('plan', '=', $plan['plan'])->first();
-      $receiverAddress = AccountInformation::where('account_id', '=', $receiverAccount['account_id'])->get('address');
-      
-      // dd($postAddress);
-      $postsAddress = json_decode($postAddress[0]['address']);
-      $receiversAddress = json_decode($receiverAddress[0]['address']);
-      $distance = app('Increment\Imarket\Location\Http\LocationController')->getLocationDistanceOnly($receiversAddress, $postsAddress);
-      if($distance <= 30){
-        return $post;
-      }else{
-        return [];
+    $users = Account::leftJoin('account_informations as T1', 'T1.account_id', '=', 'accounts.id')->where('account_type', '=', 'USER')->leftJoin('plans as P1', 'P1.account_id', '=', 'accounts.id')->where('account_type', '=', 'USER')->where('plan', '=', $plan['plan'])->get(['T1.*']);
+    // dd($users);
+    if(sizeof($users) > 0){
+      foreach($users as $key => $user) {
+        // if(json_decode($user[0]->address)->locality != null){
+        // dd(json_decode($user['address'])->locality);
+        if(json_decode($user['address'])->locality){
+          $userLocation = Account::leftJoin('account_informations as T1', 'T1.account_id', '=', 'accounts.id')->where('account_type', '=', 'USER')->leftJoin('plans as P1', 'P1.account_id', '=', 'accounts.id')->where('account_type', '=', 'USER')->where('plan', '=', $plan['plan'])->groupBy('T1.address')->having('T1.address', 'like', '%'.json_decode($user['address'])->locality.'%')->orderBy('accounts.created_at')->get();
+          if(sizeof($userLocation) > 0){
+            return $post;
+          }else{
+            return [];
+          }
+        }else{
+          echo "\n\t\t [LOCALITY PROBLEM] Invalid Location";
+        }
       }
     }else{
       echo "\n\t [INFORMATION PROBLEM] Please setup your personal information.";
@@ -110,18 +174,20 @@ class Posting implements ShouldQueue
 
   public function manageChannels($post, $plan){
     echo "\n\t\t Manage channels";
-    $channels = $post && $post['channels'] ? json_decode($post['channels']) : null;
-    if($channels){
+    $channels = $post && $post[0]->channels ? json_decode($post[0]->channels) : null;
+    if(sizeOf($channels) > 0){
       foreach ($channels as $key => $channel) {
+        // dd($post[0]);
         $postHistory = PostHistory::where(array(
-          // array('post_id', '=', $post['id']),
+          array('post_id', '=', $post[0]->id),
           array('account_id', '=', $plan['account_id']),
           array('channel', '=', $channel),
           array('created_at', '>=', Carbon::now()->subDays(7))
-        ))->whereBetween('created_at', array(Carbon::now()->startOfDay(), Carbon::now()->endOfDay()))->get();
-        
+          ))->get();
+          // ))->whereBetween('created_at', array(Carbon::now()->startOfDay(), Carbon::now()->endOfDay()))->get();
+          // dd($postHistory);
         if($postHistory && sizeof($postHistory) > 0){
-          echo "\n\t\t Post id => ".$post['id']." for ".$channel." already existed";
+          echo "\n\t\t Post id => ".$post[0]->id." for ".$channel." already existed";
         }else{
           $this->managePostHistory($post, $plan, $channel);
         }
@@ -138,26 +204,27 @@ class Posting implements ShouldQueue
       array('payload', '=', 'automation_settings'),
       array('account_id', '=', $plan['account_id'])
     ))->get();
-
+    
     if($postSetting && sizeof($postSetting) > 0){
       $page = Page::where(array(
         array('account_id', '=', $plan['account_id']),
         array('type', '=', $channel === 'GOOGLE_MY_BUSINESS' ? 'google' : strtolower($channel))
-      ))->orderBy('created_at', 'desc')
-      ->limit(1)
-      ->get();
-
+        ))->orderBy('created_at', 'desc')
+        // ->limit(1)
+        ->get();
+      // dd($page);
       if($page && sizeof($page) > 0){
         $result = app($this->postHistoryController)->createByParams(array(
-          'post_id' => $post['id'],
+          'post_id' => $post[0]->id,
           'page_id' => $page[0]['id'],
           'link'    => null,
           'channel' => $channel,
           'account_id'  => $plan['account_id'],
           'status'  => $postSetting[0]['payload_value'] == 'ON' ? 'for posting' : 'for review'
         ));
+        // dd($result);
 
-        echo "\n\t\t Post id => ".$post['id']." for ".$channel." successfully created";        
+        echo "\n\t\t Post id => ".$post[0]->id." for ".$channel." successfully created";        
       }else{
         echo "\n\t\t Account don't have existing page for channel ".$channel;
       }

@@ -57,7 +57,7 @@ class Channel implements ShouldQueue
       $this->getOldestPost($dates);
       // dd($dates[count($dates) -1]);
       $oldest = $dates[count($dates) -1];
-      $i=0;
+      $i = 0;
       foreach ($posts as $key){
         $branding = app($this->brandingController)->getActiveByParams($key['account_id']);
         if(strtotime($key['created_at']) == strtotime($oldest)){
@@ -116,7 +116,6 @@ class Channel implements ShouldQueue
       return $date1 < $date2 ? -1: 1;
       // dd($date1 < $date2 ? -1: 1);
     });
-    // dd($temp);
   }
 
   public function manageFacebook($postHistory){
@@ -130,7 +129,8 @@ class Channel implements ShouldQueue
     }
 
     $token = $page['details']['access_token'];
-    $media = env('BACKEND_URL').'/storage/image/2_2021-08-03_02_00_17_robot.png';
+    // $media = env('BACKEND_URL').'/storage/image/2_2021-08-03_02_00_17_robot.png';
+    $media = 'https://api.staging.askthepros.com/server.php/increment/v1/storage/image/2_2021-08-03_02_00_17_robot.png';
     // if(isset($postHistory['url'])) {
     //   if(json_decode($postHistory['url'])) {
     //     $url = $postHistory['url'];
