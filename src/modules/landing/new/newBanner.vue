@@ -5,6 +5,7 @@
       <p class="text-white"><b>1.</b> Create & Import Profile &nbsp;&nbsp;<b>2.</b> Just Relax &nbsp;&nbsp;<b>3.</b> Grow your Sales</p>
       <span class="text-center category-selection" v-if="industry && industry.length > 0">
         <select class="form-control" v-model="selected">
+          <option :value="null" disabled selected>Select Your Industry</option>
           <option v-for="(item, index) in industry" :value="item.category">{{item.category}}</option>
         </select>
         <button class="btn redirect-btn" @click="register()">Try It Now!</button>
@@ -54,6 +55,8 @@
   border: none !important;
   float: left !important;
   font-size: 24px;
+  font-weight: bold;
+  color: #A4AEBF;
 }
 
 option {
@@ -250,7 +253,7 @@ export default {
         $('#loading').css({'display': 'none'})
         if(response.data.length > 0) {
           this.industry = response.data
-          this.selected = response.data[0].category
+          // this.selected = response.data[0].category
         }else{
           this.industry = []
         }
