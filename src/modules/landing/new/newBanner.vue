@@ -46,18 +46,27 @@
   border-bottom-left-radius: 25px !important;
   border-top-right-radius: 0px !important;
   border-bottom-right-radius: 0px !important;
-  height: 50px !important;
-  width: 80%;
+  height: 55px !important;
+  width: 78%;
   padding-left: 5%;
+  padding-right: 5%;
   margin: auto;
   border: none !important;
   float: left !important;
-  font-size: 16px;
+  font-size: 24px;
+}
+
+option {
+  border-top-left-radius: 25px !important;
+  border-bottom-left-radius: 25px !important;
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
 }
 
 .btn{
   float: left;
-  font-size: 16px;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .redirect-btn{
@@ -65,8 +74,8 @@
   border-bottom-right-radius: 25px !important;
   border-top-left-radius: 0px !important;
   border-bottom-left-radius: 0px !important;
-  height: 50px !important;
-  width: 20%;
+  height: 55px !important;
+  width: 22%;
   border: none !important;
   background: $warning;
 }
