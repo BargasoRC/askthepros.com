@@ -78,11 +78,6 @@
         }" style="margin-bottom: 5%;" />
       </div>
     </div>
-    <errorModal
-    ref="errorModal"
-    :title="val === true ? 'Success Message' : 'Error Message'"
-    :message="val === true ? 'Profile Successfully Updated' : 'Please fill in all of the fields.'"
-    />
   </div>
 </template>
 <script>
@@ -164,6 +159,7 @@ export default {
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('accounts_info/retrieve', parameter).then(response => {
+        console.log('[response]', response.data, '[user]', this.user)
         $('#loading').css({'display': 'none'})
         let data = response.data[0]
         this.username = this.user.username
@@ -185,8 +181,8 @@ export default {
       })
     },
     update_account(event){
+      console.log('account update')
       if(!this.validate()) {
-        this.contactnumber = 'Invalid number!'
         console.log('Not valid')
         return
       }
@@ -240,10 +236,10 @@ export default {
           }
         }
         this.val = true
-        this.$refs.errorModal.show()
+        this.$emit('Profile', this.val)
       }else if((this.canUpdateProfile === true && this.user.merchant[0] === undefined)){
         this.val = false
-        this.$refs.errorModal.show()
+        this.$emit('Profile', this.val)
         // let merchant = {
         //   account_id: this.user.userID,
         //   code: this.user.code,
@@ -267,8 +263,9 @@ export default {
         // })
       }else{
         this.val = false
-        this.$refs.errorModal.show()
+        this.$emit('Profile', this.val)
       }
+      console.log('val', this.val)
     },
     onUpdate(){
       let newinfo = {
@@ -287,7 +284,7 @@ export default {
       }, 100)
     },
     validate() {
-      if(this.firstname !== '' && this.lastname !== '' && (this.user.merchant === null ? this.businessname !== '' : this.user.merchant[0].name !== null) && this.contactnumber !== '' && this.firstname !== undefined && this.lastname !== undefined && this.businessname !== undefined && this.contactnumber !== undefined) {
+      if(this.firstname !== '' && this.lastname !== '' && this.businessname !== '' && this.contactnumber !== '' && this.firstname !== undefined && this.lastname !== undefined && this.businessname !== undefined && this.contactnumber !== undefined) {
         if(!global.validateField(this.firstname) && !global.validateField(this.lastname) && !global.validateField(this.businessname) && global.validateNumber(this.contactnumber) === true) {
           this.isNotValidProfile = false
           this.canUpdateProfile = true
@@ -300,8 +297,10 @@ export default {
         this.isNotValidProfile = true
       }
       if(this.isNotValidProfile === false) {
+        console.log('[a]', this.canUpdateProfile, '[]', this.isNotValidProfile)
         return true
       }else {
+        console.log('[b]]', this.canUpdateProfile)
         return false
       }
     }

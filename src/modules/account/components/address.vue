@@ -118,18 +118,13 @@
         'Required Field'
         }}</p>
 
-        <roundedBtn :onClick="update_account" :icon="'fas fa-sign-in-alt'" :text="'Update'" :styles="{
+        <roundedBtn :onClick="update_address" :icon="'fas fa-sign-in-alt'" :text="'Update'" :styles="{
           backgroundColor: '#01004E',
           color: 'white'
         }" style="margin-bottom: 5%;" />
 
       </div>
     </div>
-    <errorModal
-    ref="errorModal"
-    :title="val === true ? 'Success Message' : 'Error Message'"
-    :message="val === true ? 'Address is successfully updated!' : 'Please subscribe and fill in all of the fields'"
-    />
   </div>
 </template>
 <script>
@@ -247,11 +242,12 @@ export default {
         }
       })
     },
-    update_account(event){
+    update_address(event){
+      console.log('update address')
       if(!this.validate()) {
         console.log('[......not validated]')
         this.val = false
-        this.$refs.errorModal.show()
+        this.$emit('Address', this.val)
         // return
       }
       if(this.canUpdateAddress) {
@@ -272,7 +268,7 @@ export default {
             $('#loading').css({'display': 'none'})
             if(response.error.length === 0){
               this.val = true
-              this.$refs.errorModal.show()
+              this.$emit('Address', this.val)
               this.retrieveInformation()
               this.canUpdateProfile = false
             }
@@ -283,13 +279,14 @@ export default {
             $('#loading').css({'display': 'none'})
             if(response.error === 0) {
               this.val = true
-              this.$refs.errorModal.show()
+              this.$emit('Address', this.val)
               this.retrieveInformation()
               this.canUpdateProfile = false
             }
           })
         }
       }
+      console.log('val', this.val)
     },
     validate() {
       if(this.selectedLocation) {
