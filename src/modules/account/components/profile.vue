@@ -78,11 +78,6 @@
         }" style="margin-bottom: 5%;" />
       </div>
     </div>
-    <errorModal
-    ref="errorModal"
-    :title="val === true ? 'Success Message' : 'Error Message'"
-    :message="val === true ? 'Successfully Updated' : 'Please subscribe and fill in all of the required fields.'"
-    />
   </div>
 </template>
 <script>
@@ -186,6 +181,7 @@ export default {
       })
     },
     update_account(event){
+      console.log('account update')
       if(!this.validate()) {
         console.log('Not valid')
         return
@@ -240,10 +236,10 @@ export default {
           }
         }
         this.val = true
-        this.$refs.errorModal.show()
+        this.$emit('Profile', this.val)
       }else if((this.canUpdateProfile === true && this.user.merchant[0] === undefined)){
         this.val = false
-        this.$refs.errorModal.show()
+        this.$emit('Profile', this.val)
         // let merchant = {
         //   account_id: this.user.userID,
         //   code: this.user.code,
@@ -267,8 +263,9 @@ export default {
         // })
       }else{
         this.val = false
-        this.$refs.errorModal.show()
+        this.$emit('Profile', this.val)
       }
+      console.log('val', this.val)
     },
     onUpdate(){
       let newinfo = {
