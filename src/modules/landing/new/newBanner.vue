@@ -77,7 +77,7 @@ option {
   height: 55px !important;
   width: 22%;
   border: none !important;
-  background: $warning;
+  background: $secondary;
 }
 
 .left{
