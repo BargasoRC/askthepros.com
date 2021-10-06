@@ -457,10 +457,10 @@ export default {
         }
       }
       if(index !== null){
-        this.setActiveOnWatch(index, to.path)
+        // this.setActiveOnWatch(index, to.path)
       }else{
         if(this.prevMenu !== null){
-          this.menu[this.prevMenu].flag = false
+          // this.menu[this.prevMenu].flag = false
         }
       }
     }
