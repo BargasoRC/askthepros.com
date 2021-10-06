@@ -80,8 +80,8 @@
     </div>
     <errorModal
     ref="errorModal"
-    :title="val === true ? 'Success Message' : 'Error Message'"
-    :message="val === true ? 'Profile Successfully Updated' : 'Please subscribe and fill in all of the fields.'"
+    :title="val1 === true ? 'Success Message' : 'Error Message'"
+    :message="val1 === true ? 'Successfully Updated' : 'Please subscribe and fill in all of the required fields.'"
     />
   </div>
 </template>
@@ -99,7 +99,7 @@ import ROUTER from 'src/router'
 export default {
   data() {
     return {
-      val: false,
+      val1: false,
       eyeToggle: false,
       colors: COLORS,
       firstname: '',
@@ -239,10 +239,10 @@ export default {
             })
           }
         }
-        this.val = true
+        this.val1 = true
         this.$refs.errorModal.show()
       }else if((this.canUpdateProfile === true && this.user.merchant[0] === undefined)){
-        this.val = false
+        this.val1 = false
         this.$refs.errorModal.show()
         // let merchant = {
         //   account_id: this.user.userID,
@@ -266,7 +266,7 @@ export default {
         //   console.log('PAYLOAD ERROR', error)
         // })
       }else{
-        this.val = false
+        this.val1 = false
         this.$refs.errorModal.show()
       }
     },

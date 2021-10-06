@@ -242,7 +242,7 @@ export default {
           this.lastname = data.last_name
           this.contactnumber = data.cellular_number
           let address = data.address ? JSON.parse(data.address) : ''
-          this.selectedLocation = Object.keys(address).length > 0 ? address.route + ', ' + address.region + ', ' + address.country : null
+          this.selectedLocation = Object.keys(address).length > 0 ? address.route + ', ' + address.locality + ', ' + address.country : null
           this.getAddressData(this.selectedLocation)
         }
       })
