@@ -80,8 +80,13 @@
     </div>
     <errorModal
     ref="errorModal"
+<<<<<<< HEAD
     :title="val1 === true ? 'Success Message' : 'Error Message'"
     :message="val1 === true ? 'Successfully Updated' : 'Please subscribe and fill in all of the required fields.'"
+=======
+    :title="val === true ? 'Success Message' : 'Error Message'"
+    :message="val === true ? 'Profile Successfully Updated' : 'Please fill in all of the fields.'"
+>>>>>>> 84d710ccd83377b733cef97c12e5d41d40762ff6
     />
   </div>
 </template>
@@ -164,7 +169,6 @@ export default {
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('accounts_info/retrieve', parameter).then(response => {
-        console.log('[response]', response.data, '[user]', this.user)
         $('#loading').css({'display': 'none'})
         let data = response.data[0]
         this.username = this.user.username
@@ -187,6 +191,7 @@ export default {
     },
     update_account(event){
       if(!this.validate()) {
+        this.contactnumber = 'Invalid number!'
         console.log('Not valid')
         return
       }
@@ -287,7 +292,7 @@ export default {
       }, 100)
     },
     validate() {
-      if(this.firstname !== '' && this.lastname !== '' && this.businessname !== '' && this.contactnumber !== '' && this.firstname !== undefined && this.lastname !== undefined && this.businessname !== undefined && this.contactnumber !== undefined) {
+      if(this.firstname !== '' && this.lastname !== '' && (this.user.merchant === null ? this.businessname !== '' : this.user.merchant[0].name !== null) && this.contactnumber !== '' && this.firstname !== undefined && this.lastname !== undefined && this.businessname !== undefined && this.contactnumber !== undefined) {
         if(!global.validateField(this.firstname) && !global.validateField(this.lastname) && !global.validateField(this.businessname) && global.validateNumber(this.contactnumber) === true) {
           this.isNotValidProfile = false
           this.canUpdateProfile = true
@@ -300,10 +305,8 @@ export default {
         this.isNotValidProfile = true
       }
       if(this.isNotValidProfile === false) {
-        console.log('[a]', this.canUpdateProfile, '[]', this.isNotValidProfile)
         return true
       }else {
-        console.log('[b]]', this.canUpdateProfile)
         return false
       }
     }

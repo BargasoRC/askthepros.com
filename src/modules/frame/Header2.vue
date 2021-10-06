@@ -93,7 +93,7 @@
 
 .menu .header-primary-menu .nav-item {
   float: right;
-  font-size: 15px;
+  font-size: 16px;
   margin-left: 5px;
 }
 
@@ -172,7 +172,7 @@
   }
   .header-section .menu {
     width: 20% !important;
-    margin-top: 15px !important;
+    margin-top: 16px !important;
   }
   .menu .top-menu,
   .menu .header-primary-menu {

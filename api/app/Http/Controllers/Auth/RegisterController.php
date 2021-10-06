@@ -12,6 +12,7 @@ use Increment\Account\Models\AccountInformation;
 use Increment\Account\Models\BillingInformation;
 use Increment\Imarket\Merchant\Models\Merchant;
 use Increment\Common\Payload\Models\Payload;
+use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends APIController
 {
@@ -40,38 +41,43 @@ class RegisterController extends APIController
             $request = $request->all();
             $referralCode = $request['referral_code'];
             $invitationPassword = $request['password'];
+            if($this->validateEmail($request['email']) === true){
+                $account = new Account();
+                $account->code = $this->generateCode($account);
+                $account->password = Hash::make($request['password']);
+                $account->status = 'NOT_VERIFIED';
+                $account->email = $request['email'];
+                $account->username = $request['username'];
+                $account->account_type = $request['account_type'];
+                $account->created_at = Carbon::now();
+                $account->save();
 
-            $account = new Account();
-            $account->code = $this->generateCode($account);
-            $account->password = Hash::make($request['password']);
-            $account->status = 'NOT_VERIFIED';
-            $account->email = $request['email'];
-            $account->username = $request['username'];
-            $account->account_type = $request['account_type'];
-            $account->created_at = Carbon::now();
-            $account->save();
-
-            $merchant = new Merchant();
-            $merchant->account_id = $account->id;
-            $merchant->code = $this->generateCode($merchant);
-            $merchant->email = $account->email;
-            $merchant->addition_informations = $request['industry'];
-            $merchant->save();
-            if($account && $account->id){
-                Payload::insert(array(
-                    'account_id' => $account->id,
-                    'payload'   => 'automation_settings',
-                    'payload_value' => 'OFF',
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now()
-                ));
-                app('App\Http\Controllers\EmailController')->verification($account->id);
+                $merchant = new Merchant();
+                $merchant->account_id = $account->id;
+                $merchant->code = $this->generateCode($merchant);
+                $merchant->email = $account->email;
+                $merchant->addition_informations = $request['industry'];
+                $merchant->save();
+                if($account && $account->id){
+                    Payload::insert(array(
+                        'account_id' => $account->id,
+                        'payload'   => 'automation_settings',
+                        'payload_value' => 'OFF',
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
+                    ));
+                    app('App\Http\Controllers\EmailController')->verification($account->id);
+                }
+    
+    
+                \DB::commit();
+                $this->response['data'] = array('message' => 'account_successfully_created', 'data' => $account->id);
+                $this->response['error'] = null;
+            }else{
+                $this->response['data'] = null;
+                $this->response['error'] = array('message' => 'Email or Username already exist. Please Try Again.');
             }
 
-
-            \DB::commit();
-            $this->response['data'] = array('message' => 'account_successfully_created', 'data' => $account->id);
-            $this->response['error'] = null;
         } catch (\Exception $e) {
             \DB::rollback();
             $this->response['data'] = null;
@@ -80,6 +86,51 @@ class RegisterController extends APIController
         }
         return $this->response();
     }
+
+    public function validateEmail($email){
+        $text = array('email' => $email);
+        if($this->customValidate($text) == true){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function customValidate($text){
+        $validation = array('email' => 'required|email|unique:accounts');
+        return $this->validateReply($text, $validation);
+    }
+    
+    public function validateReply($text, $validation){
+        $validator = Validator::make($text, $validation);
+        if($validator->fails()){
+          return false;
+        }
+        else
+          return true;
+    }
+    // public function validateUsername($username){
+    //     $text = array('username' => $username);
+    //     if($this->customValidateUsername($text) == true){
+    //         return true;
+    //     }else{
+    //         return false;
+    //     }
+    // }
+
+    // public function customValidateUsername($text){
+    //     $validation = array('username' => 'required|username|unique:accounts');
+    //     return $this->validateReplyUsername($text, $validation);
+    // }
+    
+    // public function validateReplyUsername($text, $validation){
+    //     $validator = Validator::make($text, $validation);
+    //     if($validator->fails()){
+    //       return false;
+    //     }
+    //     else
+    //       return true;
+    // }
 
     public function createDetails($accountId, $type)
     {

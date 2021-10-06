@@ -128,7 +128,7 @@
     <errorModal
     ref="errorModal"
     :title="val === true ? 'Success Message' : 'Error Message'"
-    :message="val === true ? 'Address is successfully updated!' : 'Please fill in all of the fields.'"
+    :message="val === true ? 'Address is successfully updated!' : 'Please subscribe and fill in all of the fields'"
     />
   </div>
 </template>
@@ -242,13 +242,18 @@ export default {
           this.lastname = data.last_name
           this.contactnumber = data.cellular_number
           let address = data.address ? JSON.parse(data.address) : ''
+<<<<<<< HEAD
           this.selectedLocation = Object.keys(address).length > 0 ? address.route + ', ' + address.locality + ', ' + address.country : null
+=======
+          this.selectedLocation = Object.keys(address).length > 0 ? address.route + ', ' + address.locality + ', ' + address.region + ', ' + address.country : null
+>>>>>>> 84d710ccd83377b733cef97c12e5d41d40762ff6
           this.getAddressData(this.selectedLocation)
         }
       })
     },
     update_account(event){
       if(!this.validate()) {
+        console.log('[......not validated]')
         this.val = false
         this.$refs.errorModal.show()
         // return

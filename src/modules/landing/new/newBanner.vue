@@ -1,10 +1,11 @@
 <template>
   <div class="cloud-image">
     <div class="text-center container">
-      <h1 class="text-white">Manage Social Media Posting Written by Industry Experts in your Field</h1>    
+      <h1 class="text-white">MANAGED SOCIAL MEDIA POSTING WRITTEN BY INDUSTRY EXPERTS IN YOUR FIELD</h1>    
       <p class="text-white"><b>1.</b> Create & Import Profile &nbsp;&nbsp;<b>2.</b> Just Relax &nbsp;&nbsp;<b>3.</b> Grow your Sales</p>
       <span class="text-center category-selection" v-if="industry && industry.length > 0">
         <select class="form-control" v-model="selected">
+          <option :value="null" disabled selected>Select Your Industry</option>
           <option v-for="(item, index) in industry" :value="item.category">{{item.category}}</option>
         </select>
         <button class="btn redirect-btn" @click="register()">Try It Now!</button>
@@ -24,12 +25,12 @@
 .cloud-image{
   width: 100%;
   background: $primary;
-  min-height: 30vh;
+  min-height: 20vh;
   overflow-y: hidden;
 }
 
 .container{
-  margin-top: 20vh;
+  margin-top: 15vh;
 }
 
 
@@ -46,17 +47,29 @@
   border-bottom-left-radius: 25px !important;
   border-top-right-radius: 0px !important;
   border-bottom-right-radius: 0px !important;
-  height: 50px !important;
-  width: 80%;
+  height: 55px !important;
+  width: 78%;
+  padding-left: 5%;
+  padding-right: 5%;
   margin: auto;
   border: none !important;
   float: left !important;
-  font-size: 16px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #A4AEBF;
+}
+
+option {
+  border-top-left-radius: 25px !important;
+  border-bottom-left-radius: 25px !important;
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
 }
 
 .btn{
   float: left;
-  font-size: 16px;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .redirect-btn{
@@ -64,8 +77,8 @@
   border-bottom-right-radius: 25px !important;
   border-top-left-radius: 0px !important;
   border-bottom-left-radius: 0px !important;
-  height: 50px !important;
-  width: 20%;
+  height: 55px !important;
+  width: 22%;
   border: none !important;
   background: $warning;
 }
@@ -74,6 +87,7 @@
   width: 50%;
   float: left;
   background: $primary;
+  z-index: 10;
 }
 
 .right{
@@ -83,7 +97,9 @@
 }
 
 .left img, .right img{
-  height: 15vh;
+  height: 18vh;
+  width: auto;
+  margin-top: -10vh;
 }
 
 .right img{
@@ -95,10 +111,11 @@ h1{
   margin-left: 5%;
   margin-right: 5%;
   font-weight: bold;
+  font-size: 36px;
 }
 
 p{
-  font-size: 24px;
+  font-size: 20px;
   margin-top: 25px;
 }
 
@@ -106,6 +123,22 @@ b{
   color: $warning;
 }
 
+
+@media (max-width: 1400px) {
+  .left img, .right img{
+  height: 15vh !important;
+  width: auto;
+  margin-top: -6vh !important;
+} 
+}
+
+@media (max-width: 1060px) {
+  .left img, .right img{
+  height: 12vh !important;
+  width: auto;
+  margin-top: -6vh !important;
+} 
+}
 
 @media (max-width: 991px){
   .category-selection{
@@ -147,6 +180,22 @@ b{
     margin-bottom: 2vh;
   }
 }
+
+@media (max-width: 870px) {
+  .left img, .right img{
+  height: 9vh !important;
+  width: auto;
+  margin-top: -3vh !important;
+} 
+}
+
+@media (max-width: 620px) {
+  .left img, .right img{
+  height: 5vh !important;
+  width: auto;
+  margin-top: 0 !important;
+} 
+}
 </style>
 
 <script>
@@ -184,7 +233,9 @@ export default {
     this.$root.$on('openVideo', () => {
       this.index = 0
     })
-    this.retrievePayloads()
+    setTimeout(() => {
+      this.retrievePayloads()
+    }, 1000)
   },
   methods: {
     retrievePayloads(){
@@ -196,12 +247,13 @@ export default {
       let parameter = {
         condition: conditions
       }
+      console.log('[parameter]', parameter)
       $('#loading').css({'display': 'block'})
       this.APIRequest('payloads/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data.length > 0) {
           this.industry = response.data
-          this.selected = response.data[0].category
+          // this.selected = response.data[0].category
         }else{
           this.industry = []
         }
