@@ -2,8 +2,8 @@
   <div class="container-fluid " >
     <div class="row flex-column-reverse flex-md-row mb-3">
       <div class="col-sm-8 col-sm-pull-4">
-        <Profile/>
-        <Address :latitude="latitude" :longitude="longitude"/>
+        <Profile @Profile="onProfile"/>
+        <Address :latitude="latitude" :longitude="longitude" @Address="onAddress"/>
         <Account/>
         <div  v-if="passwordVerified === false">
         <CPass/>
@@ -49,6 +49,11 @@
         </div>
       </div>
     </div>
+    <errorModal
+    ref="errorModal"
+    :title="val === true ? 'Success Message' : 'Error Message'"
+    :message="val === true ? `${label} has been successfully updated!` : 'Please fill in all of the required fields'"
+    />
   </div>
 </template>
 <script>
@@ -67,6 +72,7 @@ import Address from 'src/modules/account/components/address.vue'
 import Account from 'src/modules/account/components/account.vue'
 import CPass from 'src/modules/account/components/cpass.vue'
 import VueGeolocation from 'vue-browser-geolocation'
+import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 import Vue from 'vue'
 Vue.use(VueGeolocation)
 export default {
@@ -84,7 +90,9 @@ export default {
       passwordVerified: false,
       username: null,
       latitude: null,
-      longitude: null
+      longitude: null,
+      val: false,
+      label: ''
     }
   },
   components: {
@@ -94,7 +102,8 @@ export default {
     Profile,
     Address,
     Account,
-    CPass
+    CPass,
+    errorModal
   },
   computed: {
     returnProfile() {
@@ -143,6 +152,18 @@ export default {
     // this.retrieveInformation()
   },
   methods: {
+    onAddress(e){
+      console.log('Emmitted address val', e)
+      this.val = e
+      this.label = 'Address'
+      this.$refs.errorModal.show()
+    },
+    onProfile(e){
+      console.log('Emmitted profile val', e)
+      this.val = e
+      this.label = 'Profile'
+      this.$refs.errorModal.show()
+    },
     setInitialView(location){
       this.longitude = location.lng
       this.latitude = location.lat
