@@ -1,7 +1,7 @@
  <template>
   <div>
     <div class="system-header">
-      <a class="navbar-brand" v-on:click="redirect('dashboard')">
+      <a class="navbar-brand" v-on:click="redirect('/dashboard')">
         <img :src="require('../../assets/img/logo_white.png')" class="logo-brand">
         <!-- <label class="navbar-brand hide-on-mobile text-white" v-html="common.APP_NAME_HTML"></label> -->
       </a>
@@ -52,7 +52,7 @@
 
         <div v-if="user.type == 'USER' && user.merchant && user.merchant.name !== null && user.merchant.name !== ''">
           <!-- <button type="button" class="btn btn-warning header-button-type"><p>INDUSTRY NAME</p></button> -->
-          <button type="button" class="btn btn-secondary header-button-type text-white" style="float: right;">{{user.merchant.name.toUpperCase()}}</button>
+          <button type="button" class="btn btn-warning header-button-type text-white" style="float: right;">{{user.merchant.name.toUpperCase()}}</button>
         </div>
         
       </span>

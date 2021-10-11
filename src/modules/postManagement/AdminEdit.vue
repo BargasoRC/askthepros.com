@@ -520,9 +520,9 @@ export default {
 }
 .container {
   padding: 20px 16px;
-  border: 1px solid $secondary;
+  border: 1px solid $warning;
   border-radius: 25px;
-  background-color: $secondary;
+  background-color: $warning;
   text-align: center;
   word-break: break-word;
   color: white;
