@@ -107,9 +107,14 @@
                   'Required Field'
               }}</p>
               <p class="mt-2"><b>Industry</b></p>
-              <select class="form-control" aria-placeholder="Select Industry" v-model="selectedIndustry" style="margin-bottom: 25px;">
+              <select class="form-control" v-model="selectedIndustry" style="margin-bottom: 25px;">
+                <option :value="null" disabled selected>Select Your Industry</option>
                 <option v-for="(item, index) in industry" :value="item.category">{{item.category}}</option>
               </select>
+              <!-- <select class="form-control" v-model="selected">
+                <option :value="null" disabled selected>Select Your Industry</option>
+                <option v-for="(item, index) in industry" :value="item.category">{{item.category}}</option>
+              </select> -->
               <!-- <roundedSelectBtn 
                 :placeholder="'Select Industry'"
                 :items="returnIndustry"
