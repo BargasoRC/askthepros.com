@@ -400,6 +400,11 @@ export default {
       }
     },
     validate() {
+      var checkString = this.description.split(/\r?\n/).map(el => {
+        if(el === ''){
+          return true
+        }
+      })
       if(this.selectedIndustry.length <= 0 && this.title === '' && this.title === null && this.title === undefined && this.description === '' && this.description === null && this.description === undefined){
         this.$refs.errorModal.show()
         this.val = false
@@ -427,6 +432,11 @@ export default {
         this.$refs.errorModal.show()
         return false
       }if(this.googleMyBusiness === true && this.character >= 1500){
+        this.isValid = false
+        this.val = true
+        this.$refs.errorModal.show()
+        return false
+      }if(this.linkedin === true && checkString.includes(true)){
         this.isValid = false
         this.val = true
         this.$refs.errorModal.show()
@@ -484,9 +494,9 @@ export default {
 }
 .container {
   padding: 20px 16px;
-  border: 1px solid $secondary;
+  border: 1px solid $warning;
   border-radius: 25px;
-  background-color: $secondary;
+  background-color: $warning;
   text-align: center;
   word-break: break-word;
   color: white;
