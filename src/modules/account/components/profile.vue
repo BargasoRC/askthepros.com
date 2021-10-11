@@ -57,13 +57,18 @@
                 <p>Contact Number</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your contact number here'"
                   :class="isNotValidProfile == true && contactnumber == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                      border: isNotValidProfile == true && !contactnumber ? '1px solid red !important' : 'none',
+                      border: isNotValidProfile == true ? '1px solid red !important' : 'none',
                     }" v-model="contactnumber" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
                     v-if="isNotValidProfile == true && (contactnumber == undefined || contactnumber== '')">
                     {{
                     'Required Field'
+                    }}</p>
+                    <p class="mb-0 pb-0 requiredFieldError"
+                    v-else-if="isNotValidProfile == true && (contactnumber != undefined || contactnumber != '')">
+                    {{
+                    'Invalid Input'
                     }}</p>
                 </div>
               </div>
