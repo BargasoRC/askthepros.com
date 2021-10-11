@@ -1,5 +1,6 @@
 /* eslint-disable */
 export default{
+  sidebarIndex: null,
   hasShownModal: false,
   industry: [
     {
