@@ -426,8 +426,10 @@ import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import ROUTER from 'src/router'
 import COMMON from 'src/common.js'
+import global from 'src/helpers/global'
 export default {
   mounted(){
+    this.setActive(0)
   },
   data(){
     return{
@@ -444,7 +446,8 @@ export default {
       },
       prevMenu: 0,
       subPrevMenu: 0,
-      menuFlag: true
+      menuFlag: true,
+      global: global
     }
   },
   watch: {
@@ -488,6 +491,9 @@ export default {
           this.menu[this.prevMenu].subMenu[this.subPrevMenu].flag = false
         }
         this.prevMenu = index
+        // Save active index location
+        this.global.sidebarIndex = index
+        console.log('global', this.global.sidebarIndex)
       }
       if(this.menu[index].subMenu === null){
         ROUTER.push(`/` + this.menu[this.prevMenu].path)
