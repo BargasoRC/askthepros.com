@@ -263,7 +263,7 @@ img {
 }
 
 .pricing .layer1 h6{
-  color: $warning;
+  color: $secondary;
   font-size: 24px;
 }
 
