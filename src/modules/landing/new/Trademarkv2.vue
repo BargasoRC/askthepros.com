@@ -68,7 +68,7 @@ export default {
     float: left;
     display: flex;
     justify-content: space-between;
-    margin-top: 4vh;
+    margin-top: 6vh;
   }
 
   .card-item{
