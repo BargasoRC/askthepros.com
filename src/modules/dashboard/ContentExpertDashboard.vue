@@ -4,15 +4,15 @@
     <p>Here are the latest update of activities as of today.</p>
     <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-end p-0 mb-5 mt-0">
         <roundedBtn
-            :onClick="newPost"
-            :icon="'fas fa-plus'"
-            :text="'New Post'"
-            :icon_position="'right'"
-            :styles="{
-                backgroundColor: '#01004E',
-                color: 'white'
-            }"
-            v-if="con === true"
+          :onClick="newPost"
+          :icon="'fas fa-plus'"
+          :text="'New Post'"
+          :icon_position="'right'"
+          :styles="{
+              backgroundColor: '#01004E',
+              color: 'white'
+          }"
+          v-if="con === true"
         />
     </div>
     <div class="col-sm-12 col-md-12 col-lg-12 mt-5 mb-5 p-0">
@@ -251,7 +251,7 @@ export default {
       let parameter = {
         condition: [{
           column: filter.column,
-          value: filter.value + '%',
+          value: filter.value !== null ? '%' + filter.value + '%' : '%%',
           clause: 'like'
         }],
         sort: sort,

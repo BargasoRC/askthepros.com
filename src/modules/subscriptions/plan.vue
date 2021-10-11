@@ -14,7 +14,6 @@
             <div class="layer1">
               <h6>{{data.plan.plan}}</h6>
               <p> {{data.plan.amount}} {{data.plan.currency}} / Month</p>
-
               <p v-if="data.plan.end_date !== null">
                 Expire on {{data.plan.end_date}}
               </p>
@@ -158,7 +157,7 @@ export default {
         $('#loading').css({'display': 'block'})
         this.APIRequest('plans/cancel_plan', parameter).then(response => {
           $('#loading').css({'display': 'none'})
-          this.$parent.retrieve()
+          this.$parent.retrieveUser()
         }).catch(error => {
           $('#loading').css({'display': 'none'})
           error
@@ -242,7 +241,7 @@ h1 {
 p {
   margin-top: 20px;
   font-size: 24px;
-  color: $title;
+  // color: $title;
 }
 
 img {
