@@ -1,7 +1,7 @@
 @component('email.header')
 @endcomponent
 <span class="text">
-    <h3>Payment Due Reminder</h3>
+    <h3>Payment Receipt</h3>
     Hello {{$user['username']}}!
     <br>
     <br>
