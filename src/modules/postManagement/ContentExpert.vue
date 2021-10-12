@@ -436,7 +436,7 @@ export default {
         this.val = true
         this.$refs.errorModal.show()
         return false
-      }if(this.linkedin === true && checkString.includes(true)){
+      }if(this.linkedin === true && (checkString.includes(true) || this.description.split(/\r?\n/).length > 1)){
         this.isValid = false
         this.val = true
         this.$refs.errorModal.show()
