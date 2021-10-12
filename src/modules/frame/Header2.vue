@@ -1,6 +1,7 @@
 <template>
   <div class="header" id="header">
-    <div class="header-section">
+    <!-- header for home -->
+    <div class="header-section" v-if="isHome">
       <span class="logo">
         <a class="navbar-brand" v-on:click="redirect('/')">
           <img
@@ -20,6 +21,29 @@
         </ul>
       </span>
     </div>
+    <!-- end code for home header -->
+    <!-- header for other pages -->
+    <div class="header-section2" v-if="!isHome">
+      <span class="logo">
+        <a class="navbar-brand" v-on:click="redirect('/')">
+          <img
+            src="../../assets/img/logo_white.png"
+            style="height: 60px; width: auto;"
+          />
+        </a>
+      </span>
+      <span class="menu">
+        <span class="navbar-menu-toggler-md">
+          <i class="fa fa-bars" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" onclick="void(0)"></i>
+        </span>
+        <ul class="header-primary-menu">
+          <li class="nav-item"><a class="nav-link" @click="redirect('/signup')">Register</a></li>
+          <li class="nav-item"><a class="nav-link" @click="redirect('/login')">Login</a></li>
+          <li class="nav-item"><a class="nav-link" @click="redirect('/contact')">Contact Us</a></li>
+        </ul>
+      </span>
+    </div>
+    <!-- end code for other pages header -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item" v-on:click="redirect('/signup')" data-toggle="collapse" data-target="#navbarSupportedContent"><a class="nav-link">Register</a></li>
@@ -48,6 +72,28 @@
   color: #fff;
   margin: 5px auto 5px auto;
 }
+
+.header-section2 {
+  min-height: 60px;
+  overflow-y: hidden;
+  width: 90%;
+  font-size: 12px;
+  color: #fff;
+  margin: 5px auto 5px auto;
+}
+
+.header-section2 .logo {
+  width: 20%;
+  float: left;
+  height: 100%;
+}
+.header-section2 .menu {
+  width: 80%;
+  float: left;
+  height: 100%;
+  margin-top: 10px;
+}
+
 .header-section .logo {
   width: 20%;
   float: left;
@@ -161,16 +207,16 @@
 }
 
 @media screen and (max-width: 992px) {
-  .header-section {
+  .header-section, .header-section2 {
     width: 90% !important;
     margin: 0 5% 0 5% !important;
   }
-  .header-section .logo {
+  .header-section .logo, .header-section2 .logo {
     width: 80% !important;
     margin-top: 10px !important;
     cursor: pointer !important;
   }
-  .header-section .menu {
+  .header-section .menu, .header-section2 .menu {
     width: 20% !important;
     margin-top: 16px !important;
   }
@@ -223,6 +269,11 @@ import Jquery from 'jquery'
 import COMMON from 'src/common.js'
 import ColorJS from 'src/assets/style/colors.js'
 export default {
+  computed: {
+    isHome() {
+      return this.$route.name === 'home'
+    }
+  },
   mounted() {
     if(this.$route.path !== '/'){
       Jquery('.header').css({
