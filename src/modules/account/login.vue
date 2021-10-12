@@ -265,7 +265,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss" scoped>
 @import "~assets/style/colors.scss";
 .roudedInput {
   outline: none !important;

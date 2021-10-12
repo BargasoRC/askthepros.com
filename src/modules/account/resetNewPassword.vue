@@ -196,15 +196,16 @@ export default {
             this.updateFlag = true
           }else{
             this.updateFlag = false
+            this.errorMessage = response.error
           }
         })
       }
     },
     validate(){
-      if(this.password === null || this.password === '' || this.cPassword === null || this.cPassword === ''){
+      if(this.password === null || this.password === '' || this.c_password === null || this.c_password === ''){
         this.flag = false
         this.errorMessage = 'Please fill in all required fields.'
-      }else if(this.password !== this.cPassword){
+      }else if(this.password !== this.c_password){
         this.flag = false
         this.errorMessage = 'Please confirm your new password.'
       }else if(this.password.length < 8){
