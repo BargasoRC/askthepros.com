@@ -30,8 +30,11 @@ class Posting implements ShouldQueue
    * @return void
    */
 
-  public $postHistoryController = 'App\Http\Controllers\PostHistoryController';
 
+
+  public $postHistoryController = 'App\Http\Controllers\PostHistoryController';
+  public $industries = null;
+  public $industry = null;
   public function __construct()
   {
       //
@@ -42,110 +45,69 @@ class Posting implements ShouldQueue
    *
    * @return void
    */
-  public function handle()
-  {
-    // Get channels credentials
-    // Send to curl of the channel
+  public function handle(){
     $schedule = 'MondayTuesdayWednesdayThursdayFriday';
     $currentDate = Carbon::now()->format('l');
     echo "currentDate = ".$currentDate;
     if(str_contains($schedule, $currentDate)){
-      echo "\n\t [POSTING] Running on day => ".$currentDate;
-      // Get current merchant
-      $plans = Plan::where('end_date', '=', null)->orWhere('end_date', '>=', Carbon::now())->get();
-      if(sizeof($plans) > 0){
-        foreach ($plans as $key => $plan) {
-          // Get published posting using the same category as plan
-          
-          // user 1 => finance
-          // user 2 => real estate
-          // user 3 => finance
-          // user 4 => Technology
-          // user 5 => finance
-          $users = Account::leftJoin('account_informations as T1', 'T1.account_id', '=', 'accounts.id')
-              ->where('account_type', '=', 'USER')
-              ->leftJoin('plans as P1', 'P1.account_id', '=', 'accounts.id')
-              ->where('account_type', '=', 'USER')
-              ->where('plan', '=', $plan['plan'])
-              ->get(['T1.*']);
+      // Get all list of industries
+      $industries = Payload::where(array(
+        array('payload', '=', 'subscriptions')
+      ))->orderBy('category', 'asc')->get();
 
-          $x = 0;
-          $userLocal = array();
-          if(sizeof($users) > 0){
-            foreach($users as $key => $user) {
-              if(json_decode($user['address'])->locality){
+      if($industries && sizeof($industries) > 0){
+        $this->industries = $industries;
+        // get the current industry for posting
+        $currentPayload = Payload::where(array(
+          array('payload', '=', 'current_industry')
+        ))->get();
 
-                $userLocation = $size = Account::leftJoin('account_informations as T1', 'T1.account_id', '=', 'accounts.id')
-                ->where('account_type', '=', 'USER')
-                ->leftJoin('plans as P1', 'P1.account_id', '=', 'accounts.id')
-                ->where('account_type', '=', 'USER')
-                ->where('plan', '=', $plan['plan'])
-                ->groupBy('T1.address')
-                ->having('T1.address', 'like', '%'.json_decode($user['address'])->locality.'%')
-                ->orderBy('accounts.created_at')->get();
-                // dd($userLocation);
-                // if(sizeof($userLocation) > 0){
-                //   return $post;
-                // }else{
-                //   return [];
-                // }
-                array_push($userLocal, $userLocation);
-              }else{
-                echo "\n\t\t [LOCALITY PROBLEM] Invalid Location";
-              }
-              $x++;
-            }
-            dd($userLocal);
-          }else{
-            echo "\n\t [INFORMATION PROBLEM] Please setup your personal information.";
-          }
-          // user 1 => 
-            // count the size of the plans with the same industry of the selected plan of the same location
-            // 3 array(user 1, user 3, user 5) or you can use filter
-            // get the order or get the index of the user
-                // for example, user 1 => 0
-                // for exsample, user 3 => 1
-                // for example, user 5 => 2
-          // get the all all post of the selected industry
-          // get and count previous posted post of the selected user
-                //  for eq., 10 post, so that can select the next id of the post
-              // If previous existed, get the last post id
-                  // else, post directly using the index position of the user
-          // post to the post histories
-            // check if the post already existed
-          
-        $i = 0;
-        $posts = array();
-          $onePost = $size = DB::table('post_targets as T1')
-          ->leftJoin('posts as T2', 'T2.id', '=', 'T1.post_id')
-          ->where('T1.payload_value', 'like', '%'.$plan['plan'].'%')
-          ->groupBy('T1.payload_value')
-          ->having('T1.payload_value', 'like', '%'.$plan['plan'].'%')
-          ->get(['T2.*', 'T1.payload_value']);
-          array_push($posts, $onePost);
-          $i++;
+        if($currentPayload && sizeof($currentPayload) > 0){
+          // continue to the current industry
+          $this->manageIndustry($currentPayload[0]['category']);
+        }else{
+          // continue to first industry
+          $this->manageIndustry($industries[0]['category']);
         }
-        dd($posts);
-          // groupBy plan and location
-          
-          // $postsa = array();
-          // if(sizeof(array_unique($posts)) > 0){
-          if(sizeof($posts) > 0){
-            foreach ($posts as $pKey => $post) {
-              // dd($post);
-              $location = $this->postByLocation($post, $plan);
-              if($location && sizeof($location) > 0){
-                $this->manageChannels($post, $plan);
-              }
-            }
-          }else{
-            echo "\n\t [POSTING] No post(s) related to the category.";
-          }
       }else{
-        echo "\n\t [POSTING] No active customer with active plans.";
+        echo "\n\t [POSTING] No available industries..";
       }
     }else{
       echo "\n\t [POSTING] Not on schedule..";
+    }
+  }
+
+  public function manageIndustry($industry){
+    // get current save plan of the industry
+    $currentPlan = Payload::where(array(
+      array('payload', '=', 'current_plan')
+    ))->get();
+
+    $this->industry = $industry;
+    if($currentPlan && sizeof($currentPlan) > 0){
+      // proceed to next state
+      $currentPlanDetails = json_decode($currentPlan[0]['payload_value'], true);
+      $this->manageNextPlan($currentPlanDetails['id']);
+    }else{
+      // empty plan state
+      $this->manageNextPlan(false);
+    }
+  }
+
+  public function manageNextPlan($planId = null){
+    $conditions = array(
+      array('plan', '=', $this->industry),
+      array('end_date', '>', Carbon::now())
+    );
+    if($planId){
+      $conditions[] = array('id', '>', $planId);
+    }
+    $nextPlan = Plan::where($conditions)->limit(1)->orderBy('created_at', 'desc')->get();
+
+    if($nextPlan && sizeof($nextPlan) > 0){
+
+    }else{
+      // no available plan then proceed to next
     }
   }
 
