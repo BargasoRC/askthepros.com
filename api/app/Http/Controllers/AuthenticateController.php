@@ -10,6 +10,7 @@ use App\UserAuth;
 use Increment\Account\Models\Account;
 use App\LoginLogger;
 use App\Jobs\Email;
+use Carbon\Carbon;
 
 class AuthenticateController extends Controller
 {
@@ -48,10 +49,10 @@ class AuthenticateController extends Controller
   {
     $data = $request->all();
     $text = array('email' => $data['username']);
-
+    
     $credentials = null;
     $result = null;
-    if($this->customValidate($text) == true){        
+    if($this->customValidate($text) == true){    
       $credentials = array("email" => $data['username'], 'password' => $data['password']);
       // $result = Account::where('email', '=', $data['username'])->get();
       $result = Account::whereRaw("BINARY email='".$data["username"]."'")->get();
@@ -60,39 +61,56 @@ class AuthenticateController extends Controller
       // $result = Account::where('username', '=', $data['username'])->get();
       $result = Account::whereRaw("BINARY username='".$data["username"]."'")->get();
     }
-    if(sizeof($result) > 0){
-      // app('App\Http\Controllers\NotificationSettingController')->manageNotification($result[0]['id']);
-    }
+    
     try {
       // verify the credentials and create a token for the user
-      if (! $token = auth()->attempt($credentials)) {
+      if (! $token = JWTAuth::attempt($credentials)) {
           return response()->json(['error' => 'invalid_credentials'], 401);
       }
     } catch (JWTException $e) {
       // something went wrong
       return response()->json(['error' => 'could_not_create_token'], 500);
     }
-    // if no errors are encountered we can return a JWT
+
+    $token = compact('token');
     if(sizeof($result) > 0){
-      // $notifResult = NotificationSetting::where('account_id', '=', $result[0]['id'])->get();
-      // if(sizeof($notifResult) > 0){
-      //   if($notifResult[0]['email'] === "ON"){
-      //     // Notify via email
-      //     dispatch(new Email($result[0], 'login'));
-      //   }else if($notifResult[0]['sms'] === "ON"){
-      //     // Notify via SMS
-      //   }else if($notifResult[0]['fb_messenger'] === "ON"){
-      //     // Notify via FB Messenger
-      //   }
-      // }
-        
-    }else{
-      //
+      // app('App\Http\Controllers\NotificationSettingController')->manageNotification($result[0]['id']);
+      $lastLogin = Carbon::createFromFormat('Y-m-d H:i:s', $result[0]['updated_at']);
+      $currentDate = Carbon::now();
+      $diff = $currentDate->diffInMinutes($lastLogin);
+
+      if($token && isset($token['token']) && $diff > 60 && $result[0]['token']){
+        $accountToken = [];
+        $accountToken = json_decode($result[0]['token'], true);
+        if($accountToken){
+          $accountToken['token'] = $token['token'];
+          Account::where('id', '=', $result[0]['id'])->update(array(
+            'token' => json_encode($accountToken),
+            'updated_at' => Carbon::now()
+          ));
+        }else{
+          Account::where('id', '=', $result[0]['id'])->update(array(
+            'token' => json_encode(array(
+              'token' => $token['token'],
+            'updated_at' => Carbon::now()
+            ))
+          ));
+        }
+      }else{
+        $accountToken = $token['token'];
+        $token['token'] = $accountToken;
+        Account::where('id', '=', $result[0]['id'])->update(array(
+          'token' => json_encode(array(
+            'token' => $accountToken,
+          )),
+          'updated_at' => Carbon::now()
+        ));
+      }
     }
-    $response = [];
-    $response['token'] = $token;
-    $response['login_type'] = 'local';
-    return response()->json($response);
+    
+    return response()->json(array(
+      'token' => $token['token']
+    ));
   }
   public function deauthenticate(){
     JWTAuth::invalidate(JWTAuth::getToken());

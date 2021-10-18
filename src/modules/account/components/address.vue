@@ -262,29 +262,29 @@ export default {
             longitude: this.selectedLocation.longitude
           })
         }
-        let info = AUTH.user.information
-        if(Object.keys(info).length > 1){
-          this.APIRequest('accounts_info/update_account', parameter).then(response => {
-            $('#loading').css({'display': 'none'})
-            if(response.error.length === 0){
-              this.val = true
-              this.$emit('Address', this.val)
-              this.retrieveInformation()
-              this.canUpdateProfile = false
-            }
-          })
-        }else{
-          $('#loading').css({'display': 'block'})
-          this.APIRequest('account_informations/create', parameter).then(response => {
-            $('#loading').css({'display': 'none'})
-            if(response.error === 0) {
-              this.val = true
-              this.$emit('Address', this.val)
-              this.retrieveInformation()
-              this.canUpdateProfile = false
-            }
-          })
-        }
+        // let info = AUTH.user.information
+        // if(info.address != null){
+        //   // this.APIRequest('accounts_info/update_account', parameter).then(response => {
+        //   //   $('#loading').css({'display': 'none'})
+        //   //   if(response.error.length === 0){
+        //   //     this.val = true
+        //   //     this.$emit('Address', this.val)
+        //   //     this.retrieveInformation()
+        //   //     this.canUpdateProfile = false
+        //   //   }
+        //   // })
+        // }else{
+        $('#loading').css({'display': 'block'})
+        this.APIRequest('account_informations/create_with_location', parameter).then(response => {
+          $('#loading').css({'display': 'none'})
+          if(response.error === 0) {
+            this.val = true
+            this.$emit('Address', this.val)
+            this.retrieveInformation()
+            this.canUpdateProfile = false
+          }
+        })
+        // }
       }
       console.log('val', this.val)
     },
