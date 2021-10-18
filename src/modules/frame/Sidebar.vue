@@ -431,6 +431,8 @@ export default {
   mounted(){
     this.setActive(0)
   },
+  updated(){
+  },
   data(){
     return{
       user: AUTH.user,
@@ -451,15 +453,19 @@ export default {
     }
   },
   watch: {
+    // reusing this unused function to keeping track of active sidebar tab- kyle
     '$route' (to, from) {
       let index = null
       for(var i = 0; i < COMMON.sidebarMenu.length && !index; i++) {
         let item = COMMON.sidebarMenu[i]
-        if(to.path === '/' + item.path) {
-          index = i
+        // if(to.path === '/' + item.path) {
+        if(to.path === '/dashboard') {
+          // index = i
+          index = 0
         }
       }
       if(index !== null){
+        this.setActive(index)
         // this.setActiveOnWatch(index, to.path)
       }else{
         if(this.prevMenu !== null){
@@ -493,7 +499,7 @@ export default {
         this.prevMenu = index
         // Save active index location
         this.global.sidebarIndex = index
-        console.log('global', this.global.sidebarIndex)
+        // console.log('global', this.global.sidebarIndex)
       }
       if(this.menu[index].subMenu === null){
         ROUTER.push(`/` + this.menu[this.prevMenu].path)
