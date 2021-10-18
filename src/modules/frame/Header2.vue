@@ -15,7 +15,7 @@
           <i class="fa fa-bars" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" onclick="void(0)"></i>
         </span>
         <ul class="header-primary-menu">
-          <li class="nav-item"><a class="nav-link" @click="redirect('/signup')">Register</a></li>
+          <li v-if="" class="nav-item"><a class="nav-link" @click="redirect('/signup')">Register</a></li>
           <li class="nav-item"><a class="nav-link" @click="redirect('/login')">Login</a></li>
           <li class="nav-item"><a class="nav-link" @click="redirect('/contact')">Contact Us</a></li>
         </ul>
@@ -303,7 +303,15 @@ export default {
       }
     },
     redirect(parameter) {
-      ROUTER.push(parameter)
+      if(parameter === '/signup'){
+        if(localStorage.getItem('selectedIndustry') != null){
+          ROUTER.push(parameter)
+        }else{
+          alert('Please select industry to proceed.')
+        }
+      }else{
+        ROUTER.push(parameter)
+      }
       if(parameter === '/'){
         this.scrollToTop()
       }

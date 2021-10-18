@@ -88,6 +88,7 @@
                 :class="!this.isValid && (password == '' || password != cpassword || passwordRequirements != '') ? 'mb-0 ' : ' registrationField'"
                 :styles="{
                   border: !this.isValid && (password == '' || password != cpassword || passwordRequirements != '') ? '1px solid red !important' : 'none',
+                  marginBottom: '5%'
                 }"
                 v-model="cpassword"
               />
@@ -106,44 +107,28 @@
                   :
                   'Required Field'
               }}</p>
-              <p class="mt-2"><b>Industry</b></p>
+              <!-- <p v-if="this.localStorage.getItem('selectedIndustry') != null">
+                hi there
+              </p> -->
+              <!-- <p class="mt-2"><b>Industry</b></p>
               <select class="form-control" v-model="selectedIndustry" style="margin-bottom: 25px;">
                 <option :value="null" disabled selected>Select Your Industry</option>
                 <option v-for="(item, index) in industry" :value="item.category">{{item.category}}</option>
-              </select>
-              <!-- <select class="form-control" v-model="selected">
-                <option :value="null" disabled selected>Select Your Industry</option>
-                <option v-for="(item, index) in industry" :value="item.category">{{item.category}}</option>
               </select> -->
-              <!-- <roundedSelectBtn 
-                :placeholder="'Select Industry'"
-                :items="returnIndustry"
-                :class="''"
-                :styles="{
-                  background: 'none',
-                  color: '#84868B !important',
-                  width: '100% !important',
-                  minWidth: '100% !important',
-                  border: !this.isValid && selectedIndustry == null ? '1px solid red !important' : 'none',
-                  marginBottom: !this.isValid && selectedIndustry == null ? '0px' : '35px'
-                }"
-                :selectedIndex="global.selectedIndustryIndex"
-                @onSelect="onSelect"
-              /> -->
-              <p
+              <!-- <p
                 class="mb-0 pb-0 requiredFieldError"
                 v-if="!this.isValid && selectedIndustry == null"
-              >Required Field</p>
+              >Required Field</p> -->
+            </div>
+            <div class="row">
+              <p class="col-9" style="margin-left: 3%; font-size: 20px">
+                <b>{{industry.category}}</b>
+              </p>
+              <p class="col-2" style="margin-left: 5%; font-size: 20px">
+                <b>{{industry.payload_value}}</b>
+              </p>
             </div>
             <div class="d-flex justify-content-center">
-              <!-- <roundedBtn
-                :onClick="forgotPassword"
-                :text="'Forgot your password?'"
-                :styles="{
-                  background: 'none',
-                  color: '#272727'
-                }"
-              /> -->
               <dialogueBtn 
                 :onClick="register"
                 :icon="'fas fa-sign-in-alt'"
@@ -289,15 +274,21 @@ export default {
         value: 'subscriptions',
         clause: '=',
         column: 'payload'
+      }, {
+        value: this.selectedIndustry != null ? this.selectedIndustry : localStorage.getItem('selectedIndustry'),
+        clause: '=',
+        column: 'category'
       }]
       let parameter = {
         condition: conditions
       }
+      console.log('[asdfasdf]', parameter)
       $('#loading').css({'display': 'block'})
       this.APIRequest('payloads/retrieve', parameter).then(response => {
+        console.log('[asdfasdf]', response)
         $('#loading').css({'display': 'none'})
         if(response.data.length > 0) {
-          this.industry = response.data
+          this.industry = response.data[0]
         }else{
           this.industry = []
         }

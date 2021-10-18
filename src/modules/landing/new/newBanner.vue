@@ -4,7 +4,7 @@
       <h1 class="text-white">MANAGED SOCIAL MEDIA POSTING WRITTEN BY INDUSTRY EXPERTS IN YOUR FIELD</h1>    
       <p class="text-white"><b>1.</b> Create & Import Profile &nbsp;&nbsp;<b>2.</b> Just Relax &nbsp;&nbsp;<b>3.</b> Grow your Sales</p>
       <span class="text-center category-selection" v-if="industry && industry.length > 0">
-        <select class="form-control" v-model="selected">
+        <select class="form-control" v-model="selected" @change="getSelected(selected)">
           <option :value="null" disabled selected>Select Your Industry</option>
           <option v-for="(item, index) in industry" :value="item.category">{{item.category}}</option>
         </select>
@@ -238,6 +238,9 @@ export default {
     }, 1000)
   },
   methods: {
+    getSelected(e){
+      localStorage.setItem('selectedIndustry', e)
+    },
     retrievePayloads(){
       let conditions = [{
         value: 'subscriptions',
@@ -261,6 +264,9 @@ export default {
         $('#loading').css({'display': 'none'})
         error
       })
+      window.onunload = function () {
+        sessionStorage.removeItem('selectedIndustry')
+      }
     },
     login(){
       this.redirect('login')
