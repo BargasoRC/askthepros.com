@@ -102,35 +102,26 @@ class Posting implements ShouldQueue
     if($planId){
       $conditions[] = array('id', '>', $planId);
     }
-    $nextPlan = Plan::where($conditions)->limit(1)->orderBy('created_at', 'desc')->get();
 
-    if($nextPlan && sizeof($nextPlan) > 0){
+    $currentPlan = Plan::where($conditions)->limit(1)->orderBy('created_at', 'desc')->get();
 
-    }else{
-      // no available plan then proceed to next
-    }
-  }
+    if($currentPlan && sizeof($currentPlan) > 0){
+      // get the status on payloads
+      $currentAccount = $currentPlan[0];
+      $checkCompetition = Payload::where(array(
+        array('payload', '=', 'competitor'),
+        array('account_id', '=', $currentAccount['account_id'])
+      ))->get();
 
-  public function postByLocation($post, $plan){
-    $users = Account::leftJoin('account_informations as T1', 'T1.account_id', '=', 'accounts.id')->where('account_type', '=', 'USER')->leftJoin('plans as P1', 'P1.account_id', '=', 'accounts.id')->where('account_type', '=', 'USER')->where('plan', '=', $plan['plan'])->get(['T1.*']);
-    // dd($users);
-    if(sizeof($users) > 0){
-      foreach($users as $key => $user) {
-        // if(json_decode($user[0]->address)->locality != null){
-        // dd(json_decode($user['address'])->locality);
-        if(json_decode($user['address'])->locality){
-          $userLocation = Account::leftJoin('account_informations as T1', 'T1.account_id', '=', 'accounts.id')->where('account_type', '=', 'USER')->leftJoin('plans as P1', 'P1.account_id', '=', 'accounts.id')->where('account_type', '=', 'USER')->where('plan', '=', $plan['plan'])->groupBy('T1.address')->having('T1.address', 'like', '%'.json_decode($user['address'])->locality.'%')->orderBy('accounts.created_at')->get();
-          if(sizeof($userLocation) > 0){
-            return $post;
-          }else{
-            return [];
-          }
-        }else{
-          echo "\n\t\t [LOCALITY PROBLEM] Invalid Location";
-        }
+      if($checkCompetition && sizeof($checkCompetition) > 0){
+        // with competition
+        // get the order
+        //
+      }else{
+        // no competition, proceed to posting
       }
     }else{
-      echo "\n\t [INFORMATION PROBLEM] Please setup your personal information.";
+      // no available plan then proceed to next
     }
   }
 
