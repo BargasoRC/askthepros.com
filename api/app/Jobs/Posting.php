@@ -143,7 +143,6 @@ class Posting implements ShouldQueue
 
   public function managePosting($plan, $rank, $size){
     // get all post
-    $post = null;
     $posts = DB::table('post_targets as T1')
     ->leftJoin('posts as T2', 'T2.id', '=', 'T1.post_id')
     ->where('T1.payload_value', 'like', '%'.$plan['plan'].'%')
@@ -151,14 +150,39 @@ class Posting implements ShouldQueue
 
     $postSize = sizeof($posts);
 
-    if($rank && $size){
-      // get the first or next posting of the industry based from the rank of the customer
+    // get last post
+
+    $lastPost = PostHistory::where('industry', '=', $this->industry)->where('account_id', '=', $plan['account_id'])->orderBy('created_at', 'desc')->limit(1)->get();
+
+    $nextPost = null;
+
+    if($lastPost){
+      $lastIndex = array_search($lastPost[0]['post_id'], array_column($posts, 'id'));
+      if($rank && $size){
+        // get the last post of the other user which rank before the current user.
+        $lastCompetitor = Payload::where(array(
+          array('payload', '=', 'competitor'),
+          array('category', '=', $this->industry),
+          array('payload_value', 'like', '%"rank":"'.(intval($rank) - 1).'"')
+        ))->get();
+
+        if($lastCompetitor){
+          $lastCompetitorPost = PostHistory::where('industry', '=', $this->industry)->where('account_id', '=', $lastCompetitor[0]['account_id'])->orderBy('created_at', 'desc')->limit(1)->get();
+          $lastCompetitorPostIndex = array_search($lastCompetitorPost[0]['post_id'], array_column($posts, 'id'));
+          $nextPost = $lastCompetitorPostIndex && sizeof($posts) > 0 && $lastCompetitorPostIndex < sizeof($posts) ? $posts[$lastCompetitorPostIndex + 1] : null;
+        }else{
+          $nextPost = $lastIndex && sizeof($posts) > 0 && $lastIndex < sizeof($posts) ? $posts[$lastIndex + 1] : null;
+        }
+      }else{
+        // get the next post
+        $nextPost = $lastIndex && sizeof($posts) > 0 && $lastIndex < sizeof($posts) ? $posts[$lastIndex + 1] : null;
+      }
     }else{
-      // get the first or next posting of the industry
+      $nextPost = sizeof($posts) > 0 ? $posts[0] : null;
     }
 
-    if($post && $plan){
-      $this->manageChannels($post, $plan);
+    if($nextPost && $plan){
+      $this->manageChannels($nextPost, $plan);
     }else{
       echo "\n\t\t No available post on selected industry ==> ".$industry;
     }
