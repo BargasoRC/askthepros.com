@@ -107,21 +107,60 @@ class Posting implements ShouldQueue
 
     if($currentPlan && sizeof($currentPlan) > 0){
       // get the status on payloads
-      $currentAccount = $currentPlan[0];
-      $checkCompetition = Payload::where(array(
+      $plan = $currentPlan[0];
+      $competition = Payload::where(array(
         array('payload', '=', 'competitor'),
-        array('account_id', '=', $currentAccount['account_id'])
+        array('account_id', '=', $plan['account_id'])
       ))->get();
 
-      if($checkCompetition && sizeof($checkCompetition) > 0){
-        // with competition
-        // get the order
-        //
+      if($competition && sizeof($competition) > 0){
+        // get competition size
+        $payloadValue = json_decode($competition[0]['payload_value'], true);
+        $size = Payload::where(array(
+          array('payload', '=', 'competitor'),
+          array('category', '=', $this->industry),
+          array('payload_value', 'like', '%"locality":"'.$payloadValue['locality'].'"')
+        ))->get();
+
+        if($size > 1){
+          // with competition, proceed to posting
+          // the rank
+          $rank = intval($payloadValue['rank']);
+          $this->managePosting($plan, $rank, $size);
+        }else{
+          // no competition, proceed to posting
+          $this->managePosting($plan, null, null);
+        }
       }else{
         // no competition, proceed to posting
+        $this->managePosting($plan, null, null);
       }
     }else{
       // no available plan then proceed to next
+      echo "\n\t\t No available plan on selected industry ==> ".$industry;
+    }
+  }
+
+  public function managePosting($plan, $rank, $size){
+    // get all post
+    $post = null;
+    $posts = DB::table('post_targets as T1')
+    ->leftJoin('posts as T2', 'T2.id', '=', 'T1.post_id')
+    ->where('T1.payload_value', 'like', '%'.$plan['plan'].'%')
+    ->get(['T2.*']);
+
+    $postSize = sizeof($posts);
+
+    if($rank && $size){
+      // get the first or next posting of the industry based from the rank of the customer
+    }else{
+      // get the first or next posting of the industry
+    }
+
+    if($post && $plan){
+      $this->manageChannels($post, $plan);
+    }else{
+      echo "\n\t\t No available post on selected industry ==> ".$industry;
     }
   }
 
