@@ -158,6 +158,7 @@ export default {
       isValidAddress: true,
       canUpdateAddress: false,
       selectedLocation: null,
+      id: null,
       val: false,
       property: {
         style: {
@@ -227,6 +228,7 @@ export default {
       this.APIRequest('accounts_info/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         let data = response.data[0]
+        this.id = data.id
         this.username = this.user.username
         this.email = this.user.email
         this.businessname = this.user.merchant ? this.user.merchant.name : ''
@@ -252,6 +254,7 @@ export default {
       }
       if(this.canUpdateAddress) {
         let parameter = {
+          id: this.id,
           account_id: this.user.userID,
           address: JSON.stringify({
             route: this.selectedLocation.route,
@@ -262,18 +265,6 @@ export default {
             longitude: this.selectedLocation.longitude
           })
         }
-        // let info = AUTH.user.information
-        // if(info.address != null){
-        //   // this.APIRequest('accounts_info/update_account', parameter).then(response => {
-        //   //   $('#loading').css({'display': 'none'})
-        //   //   if(response.error.length === 0){
-        //   //     this.val = true
-        //   //     this.$emit('Address', this.val)
-        //   //     this.retrieveInformation()
-        //   //     this.canUpdateProfile = false
-        //   //   }
-        //   // })
-        // }else{
         $('#loading').css({'display': 'block'})
         this.APIRequest('account_informations/create_with_location', parameter).then(response => {
           $('#loading').css({'display': 'none'})
