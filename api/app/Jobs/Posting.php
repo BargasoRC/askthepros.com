@@ -112,7 +112,6 @@ class Posting implements ShouldQueue
         array('payload', '=', 'competitor'),
         array('account_id', '=', $plan['account_id'])
       ))->get();
-
       if($competition && sizeof($competition) > 0){
         // get competition size
         $payloadValue = json_decode($competition[0]['payload_value'], true);
@@ -121,8 +120,7 @@ class Posting implements ShouldQueue
           array('category', '=', $this->industry),
           array('payload_value', 'like', '%"locality":"'.$payloadValue['locality'].'"')
         ))->get();
-
-        if($size > 1){
+        if(sizeof($size) > 1){
           // with competition, proceed to posting
           // the rank
           $rank = intval($payloadValue['rank']);
