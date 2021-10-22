@@ -15,8 +15,6 @@ use App\Post;
 use App\PostHistory;
 use App\Page;
 use Increment\Common\Payload\Models\Payload;
-use Increment\Account\Models\AccountInformation;
-use Increment\Account\Models\Account;
 
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -44,6 +42,7 @@ class PostingOld implements ShouldQueue
    */
   public function handle()
   {
+    
     // Get channels credentials
     // Send to curl of the channel
     $schedule = 'MondayTuesdayWednesdayThursdayFriday';
@@ -53,6 +52,7 @@ class PostingOld implements ShouldQueue
       echo "\n\t [POSTING] Running on day => ".$currentDate;
       // Get current merchant
       $plans = Plan::where('end_date', '=', null)->orWhere('end_date', '>=', Carbon::now())->get();
+
       if(sizeof($plans) > 0){
         foreach ($plans as $key => $plan) {
           // Get published posting using the same category as plan
@@ -64,21 +64,7 @@ class PostingOld implements ShouldQueue
           // echo  "\n\t" . $posts;
           if($posts && sizeof($posts) > 0){
             foreach ($posts as $pKey => $post) {
-              //location ni sa nag post
-              $postAddress = AccountInformation::where('account_id', '=', $post['account_id'])->get('address');
-              // dd(json_decode($postAddress[0]['address']));
-              //location sa makadawat
-              $receiverAccount = Account::leftJoin('plans as T1', 'T1.account_id', '=', 'accounts.id')->where('account_type', '=', 'USER')->where('plan', '=', $plan['plan'])->first();
-              $receiverAddress = AccountInformation::where('account_id', '=', $receiverAccount['account_id'])->get('address');
-              // dd(json_decode($receiverAddress[0]['address']));
-
-              $postsAddress = json_decode($postAddress[0]['address']);
-              $receiversAddress = json_decode($receiverAddress[0]['address']);
-
-              $distance = app('Increment\Imarket\Location\Http\LocationController')->getLocationDistanceOnly($receiversAddress, $postsAddress);
-              if($distance <= 30){
-                $this->manageChannels($post, $plan);
-              }
+              $this->manageChannels($post, $plan);
             }
           }else{
             echo "\n\t [POSTING] No post(s) related to the category.";
