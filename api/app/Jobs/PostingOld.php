@@ -68,14 +68,15 @@ class PostingOld implements ShouldQueue
           if($posts && sizeof($posts) > 0){
             $lastPost = PostHistory::where('industry', '=', $plan['plan'])->where('account_id', '=', $plan['account_id'])->orderBy('created_at', 'desc')->limit(1)->get();
             if($lastPost && sizeof($lastPost)){
-              $lastIndex = array_search($lastPost[0]['post_id'], array_column($posts, 'id'));
+              
 
               $currentDate = Carbon::now();
               $lastPostDate = Carbon::createFromFormat('Y-m-d H:i:s', $lastPost[0]['created_at']);
 
               $diff = abs($currentDate->diffInDays($lastPostDate));
               if($diff > 1){
-                $nextPost = $lastIndex && sizeof($posts) > 0 && $lastIndex < sizeof($posts) ? $posts[$lastIndex + 1] : null;
+                $lastIndex = array_search($lastPost[0]['post_id'], array_column($posts, 'id'));
+                $nextPost = sizeof($posts) > 0 && $lastIndex < sizeof($posts) ? $posts[$lastIndex + 1] : null;
                 $this->manageChannels($nextPost, $plan);
               }else{
                 echo "\n\t [POSTING] Already have post for today";
@@ -101,6 +102,7 @@ class PostingOld implements ShouldQueue
   public function manageChannels($post, $plan){
     echo "\n\t\t Manage channels";
     $channels = $post && $post['channels'] ? json_decode($post['channels']) : null;
+    echo "\n\npost => id".$post['id'].json_encode($channels);
     if($channels){
       foreach ($channels as $key => $channel) {
         $postHistory = PostHistory::where(array(
