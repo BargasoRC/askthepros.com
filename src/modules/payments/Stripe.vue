@@ -173,6 +173,7 @@ export default {
           $('#loading').css({'display': 'none'})
           this.errorMessage = data.error.message
         }else if(data.error === undefined && this.user.information === undefined){
+          $('#loading').css({'display': 'none'})
           this.redirect('/settings')
         }else{
           if(this.user.information !== undefined && this.user.information.first_name !== undefined && this.user.information.last_name !== undefined){
@@ -193,6 +194,7 @@ export default {
             $('#loading').css({'display': 'none'})
             this.redirect('/settings')
           }else{
+            $('#loading').css({'display': 'none'})
             console.log('[ambot nimo]')
           }
         }
