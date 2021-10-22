@@ -61,11 +61,31 @@ class PostingOld implements ShouldQueue
           ->where('T1.payload_value', 'like', '%'.$plan['plan'].'%')
           ->get(['T2.*']);
           $posts = json_decode($posts, true);
+
+          
+
           // echo  "\n\t" . $posts;
           if($posts && sizeof($posts) > 0){
-            foreach ($posts as $pKey => $post) {
-              $this->manageChannels($post, $plan);
+            $lastPost = PostHistory::where('industry', '=', $plan['plan'])->where('account_id', '=', $plan['account_id'])->orderBy('created_at', 'desc')->limit(1)->get();
+            if($lastPost && sizeof($lastPost)){
+              $lastIndex = array_search($lastPost[0]['post_id'], array_column($posts, 'id'));
+
+              $currentDate = Carbon::now();
+              $lastPostDate = Carbon::createFromFormat('Y-m-d H:i:s', $lastPost[0]['created_at']);
+
+              $diff = abs($currentDate->diffInDays($lastPostDate));
+              if($diff > 1){
+                $nextPost = $lastIndex && sizeof($posts) > 0 && $lastIndex < sizeof($posts) ? $posts[$lastIndex + 1] : null;
+                $this->manageChannels($nextPost, $plan);
+              }else{
+                echo "\n\t [POSTING] Already have post for today";
+              }
+              
+            }else{
+              $nextPost = sizeof($posts) > 0 ? $posts[0] : null;
+              $this->manageChannels($nextPost, $plan);
             }
+            
           }else{
             echo "\n\t [POSTING] No post(s) related to the category.";
           }
@@ -87,6 +107,7 @@ class PostingOld implements ShouldQueue
           array('post_id', '=', $post['id']),
           array('account_id', '=', $plan['account_id']),
           array('channel', '=', $channel),
+          array('industry', '=', $plan['plan']),
           array('created_at', '>=', Carbon::now()->subDays(7))
         ))->get();
 
@@ -124,6 +145,7 @@ class PostingOld implements ShouldQueue
           'link'    => null,
           'channel' => $channel,
           'account_id'  => $plan['account_id'],
+          'industry' => $plan['plan'],
           'status'  => $postSetting[0]['payload_value'] == 'ON' ? 'for posting' : 'for review'
         ));
 
