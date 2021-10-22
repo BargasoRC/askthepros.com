@@ -95,7 +95,6 @@ import CONFIG from 'src/config.js'
 import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 import $ from 'jquery'
 import global from 'src/helpers/global'
-import ROUTER from 'src/router'
 export default {
   data() {
     return {
@@ -117,6 +116,7 @@ export default {
       canUpdateProfile: false
     }
   },
+  props: ['profileData'],
   components: {
     dialogueBtn,
     roundedInput,
@@ -130,9 +130,6 @@ export default {
   },
   mounted(){
     this.retrieveInformation()
-  },
-  updated(){
-    // this.onUpdate()
   },
   watch: {
     username: function(val) {
@@ -155,35 +152,14 @@ export default {
     if(AUTH.hash('show', localStorage.getItem('login_with')) === 'social_lite') {
       this.passwordVerified = true
     }
-    this.retrieveInformation()
+    // this.retrieveInformation()
   },
   methods: {
-    retrieveInformation() {
-      let parameter = {
-        account_id: this.user.userID
-      }
-      $('#loading').css({'display': 'block'})
-      this.APIRequest('accounts_info/retrieve', parameter).then(response => {
-        console.log('[response]', response.data, '[user]', this.user)
-        $('#loading').css({'display': 'none'})
-        let data = response.data[0]
-        this.username = this.user.username
-        this.email = this.user.email
-        this.businessname = this.user.merchant ? this.user.merchant[0].name : null
-        AUTH.user.information = response.data[0]
-        if(response.data.length > 0) {
-          AUTH.user.merchant = [data.merchant]
-          this.firstname = data.first_name
-          this.lastname = data.last_name
-          this.contactnumber = data.cellular_number
-          let address = data.address ? JSON.parse(data.address) : {}
-          this.route = address ? address.route : ''
-          this.city = address ? address.city : ''
-          this.region = address ? address.region : ''
-          this.country = address ? address.country : ''
-          this.postalZipCode = address ? address.postalZipCode : ''
-        }
-      })
+    retrieveInformation(){
+      this.businessname = this.user.merchant ? this.user.merchant[0].name : null
+      this.firstname = this.profileData != null ? this.profileData.first_name : this.user.information.first_name
+      this.lastname = this.profileData != null ? this.profileData.last_name : this.user.information.last_name
+      this.contactnumber = this.profileData != null ? this.profileData.cellular_number : this.user.information.cellular_number
     },
     update_account(event){
       console.log('account update')
@@ -204,7 +180,6 @@ export default {
           this.APIRequest('accounts_info/update_account', parameter).then(response => {
             $('#loading').css({'display': 'none'})
             if(response.error.length === 0){
-              this.retrieveInformation()
               this.canUpdateProfile = false
             }
           })
@@ -214,7 +189,6 @@ export default {
           this.APIRequest('account_informations/create', parameter).then(response => {
             $('#loading').css({'display': 'none'})
             if(response.error === 0) {
-              this.retrieveInformation()
               this.canUpdateProfile = false
             }
           })
@@ -232,7 +206,6 @@ export default {
             this.APIRequest(url, merchant, response => {
               $('#loading').css({'display': 'none'})
               this.canUpdateProfile = false
-              this.retrieveInformation()
             }, error => {
               $('#loading').css({'display': 'none'})
               this.canUpdateProfile = false
@@ -242,6 +215,7 @@ export default {
         }
         this.val = true
         this.$emit('Profile', this.val)
+        this.$parent.retrieveInformation()
       }else if((this.canUpdateProfile === true && this.user.merchant[0] === undefined)){
         this.val = false
         this.$emit('Profile', this.val)
@@ -302,10 +276,8 @@ export default {
         this.isNotValidProfile = true
       }
       if(this.isNotValidProfile === false) {
-        console.log('[a]', this.canUpdateProfile, '[]', this.isNotValidProfile)
         return true
       }else {
-        console.log('[b]]', this.canUpdateProfile)
         return false
       }
     }

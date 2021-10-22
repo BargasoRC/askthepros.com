@@ -2,8 +2,8 @@
   <div class="container-fluid " >
     <div class="row flex-column-reverse flex-md-row mb-3">
       <div class="col-sm-8 col-sm-pull-4">
-        <Profile @Profile="onProfile"/>
-        <Address :latitude="latitude" :longitude="longitude" @Address="onAddress"/>
+        <Profile @Profile="onProfile" :profileData="data"/>
+        <Address :latitude="latitude" :longitude="longitude" @Address="onAddress" :addresData="data"/>
         <Account/>
         <div  v-if="passwordVerified === false">
         <CPass/>
@@ -143,13 +143,10 @@ export default {
     }
   },
   mounted() {
-    this.$getLocation({}).then(coordinates => {
-      this.setInitialView(coordinates)
-    })
+    this.retrieveInformation()
     if(AUTH.hash('show', localStorage.getItem('login_with')) === 'social_lite') {
       this.passwordVerified = true
     }
-    // this.retrieveInformation()
   },
   methods: {
     onAddress(e){
@@ -207,17 +204,17 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('accounts_info/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        let data = response.data[0]
+        this.data = response.data[0]
         this.username = this.user.username
         this.email = this.user.email
         this.businessname = this.user.merchant ? this.user.merchant.name : ''
         AUTH.user.information = response.data[0]
         if(response.data.length > 0) {
-          AUTH.user.merchant = [data.merchant]
-          this.firstname = data.first_name
-          this.lastname = data.last_name
-          this.contactnumber = data.cellular_number
-          let address = data.address ? JSON.parse(data.address) : {}
+          AUTH.user.merchant = [this.data.merchant]
+          this.firstname = this.data.first_name
+          this.lastname = this.data.last_name
+          this.contactnumber = this.data.cellular_number
+          let address = this.data.address ? JSON.parse(this.data.address) : {}
           this.route = address ? address.route : ''
           this.city = address ? address.city : ''
           this.region = address ? address.region : ''

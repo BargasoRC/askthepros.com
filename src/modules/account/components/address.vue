@@ -178,6 +178,7 @@ export default {
       }
     }
   },
+  props: ['addresData'],
   components: {
     dialogueBtn,
     roundedInput,
@@ -187,6 +188,7 @@ export default {
     errorModal
   },
   mounted(){
+    this.$parent.retrieveInformation()
     this.retrieveInformation()
   },
   computed: {
@@ -212,7 +214,7 @@ export default {
     }
   },
   created() {
-    this.retrieveInformation()
+    // this.$parent.retrieveInformation()
   },
   methods: {
     getAddressData(e) {
@@ -220,29 +222,10 @@ export default {
       this.property.placeholder = e
     },
     retrieveInformation() {
-      console.log('user response............', this.user)
-      let parameter = {
-        account_id: this.user.userID
-      }
-      $('#loading').css({'display': 'block'})
-      this.APIRequest('accounts_info/retrieve', parameter).then(response => {
-        $('#loading').css({'display': 'none'})
-        let data = response.data[0]
-        this.id = data.id
-        this.username = this.user.username
-        this.email = this.user.email
-        this.businessname = this.user.merchant ? this.user.merchant.name : ''
-        AUTH.user.information = response.data[0]
-        if(response.data.length > 0) {
-          AUTH.user.merchant = [data.merchant]
-          this.firstname = data.first_name
-          this.lastname = data.last_name
-          this.contactnumber = data.cellular_number
-          let address = data.address ? JSON.parse(data.address) : ''
-          this.selectedLocation = Object.keys(address).length > 0 ? address.route + ', ' + address.locality + ', ' + address.region + ', ' + address.country : null
-          this.getAddressData(this.selectedLocation)
-        }
-      })
+      let address = this.addresData.address ? JSON.parse(this.addresData.address) : ''
+      this.selectedLocation = Object.keys(address).length > 0 ? address.route + ', ' + address.locality + ', ' + address.region + ', ' + address.country : null
+      console.log('[asdfasdf]', this.selectedLocation)
+      this.getAddressData(this.selectedLocation)
     },
     update_address(event){
       console.log('update address')
@@ -269,9 +252,9 @@ export default {
         this.APIRequest('account_informations/create_with_location', parameter).then(response => {
           $('#loading').css({'display': 'none'})
           if(response.error === 0) {
+            this.$parent.retrieveInformation()
             this.val = true
             this.$emit('Address', this.val)
-            this.retrieveInformation()
             this.canUpdateProfile = false
           }
         })
