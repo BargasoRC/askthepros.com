@@ -211,7 +211,8 @@ class SocialController extends APIController
                 $response['deleted_at'] = $result[0]['deleted_at'];
                 $response['token'] = $result[0]['token'];
                 $response['login_type'] = 'social_lite';
-                $response['information'] = app('Increment\Account\Http\AccountProfileController')->getProfileUrlByAccountId($result[0]['id']);
+
+                $response['information'] = app('Increment\Account\Http\AccountInformationController')->getAccountInformation($result['id']);
                 $response['merchant'] = app('Increment\Imarket\Merchant\Http\MerchantController')->getByParams('account_id', $result[0]['id']);
                 $response['profile'] = app('Increment\Account\Http\AccountProfileController')->getProfileUrlByAccountId($result[0]['id']);
                 $response['plan'] = app('App\Http\Controllers\PlanController')->getByParams('account_id', $result[0]['id']);
