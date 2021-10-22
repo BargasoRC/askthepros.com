@@ -115,12 +115,15 @@ class Posting implements ShouldQueue
       if($competition && sizeof($competition) > 0){
         // get competition size
         $payloadValue = json_decode($competition[0]['payload_value'], true);
-        $size = Payload::where(array(
+        $competitors = Payload::where(array(
           array('payload', '=', 'competitor'),
           array('category', '=', $this->industry),
           array('payload_value', 'like', '%"locality":"'.$payloadValue['locality'].'"')
         ))->get();
-        if(sizeof($size) > 1){
+
+        $size = sizeof($size);
+
+        if($size > 1){
           // with competition, proceed to posting
           // the rank
           $rank = intval($payloadValue['rank']);
@@ -133,9 +136,14 @@ class Posting implements ShouldQueue
         // no competition, proceed to posting
         $this->managePosting($plan, null, null);
       }
+      $this->manageState(array(
+        'payload' => 'current_plan',
+        'payload_value' => $plan['id']
+      ));
+
     }else{
       // no available plan then proceed to next
-      echo "\n\t\t No available plan on selected industry ==> ".$industry;
+      echo "\n\t\t No available plan on selected industry ==> ".$this->industry;
     }
   }
 
@@ -156,25 +164,26 @@ class Posting implements ShouldQueue
 
     if($lastPost){
       $lastIndex = array_search($lastPost[0]['post_id'], array_column($posts, 'id'));
-      if($rank && $size){
-        // get the last post of the other user which rank before the current user.
-        $lastCompetitor = Payload::where(array(
-          array('payload', '=', 'competitor'),
-          array('category', '=', $this->industry),
-          array('payload_value', 'like', '%"rank":"'.(intval($rank) - 1).'"')
-        ))->get();
+      // if($rank && $size){
+      //   // get the last post of the other user which rank before the current user.
+      //   $lastCompetitor = Payload::where(array(
+      //     array('payload', '=', 'competitor'),
+      //     array('category', '=', $this->industry),
+      //     array('payload_value', 'like', '%"rank":"'.(intval($rank) - 1).'"')
+      //   ))->get();
 
-        if($lastCompetitor){
-          $lastCompetitorPost = PostHistory::where('industry', '=', $this->industry)->where('account_id', '=', $lastCompetitor[0]['account_id'])->orderBy('created_at', 'desc')->limit(1)->get();
-          $lastCompetitorPostIndex = array_search($lastCompetitorPost[0]['post_id'], array_column($posts, 'id'));
-          $nextPost = $lastCompetitorPostIndex && sizeof($posts) > 0 && $lastCompetitorPostIndex < sizeof($posts) ? $posts[$lastCompetitorPostIndex + 1] : null;
-        }else{
-          $nextPost = $lastIndex && sizeof($posts) > 0 && $lastIndex < sizeof($posts) ? $posts[$lastIndex + 1] : null;
-        }
-      }else{
-        // get the next post
-        $nextPost = $lastIndex && sizeof($posts) > 0 && $lastIndex < sizeof($posts) ? $posts[$lastIndex + 1] : null;
-      }
+      //   if($lastCompetitor){
+      //     $lastCompetitorPost = PostHistory::where('industry', '=', $this->industry)->where('account_id', '=', $lastCompetitor[0]['account_id'])->orderBy('created_at', 'desc')->limit(1)->get();
+      //     $lastCompetitorPostIndex = array_search($lastCompetitorPost[0]['post_id'], array_column($posts, 'id'));
+      //     $nextPost = $lastCompetitorPostIndex && sizeof($posts) > 0 && $lastCompetitorPostIndex < sizeof($posts) ? $posts[$lastCompetitorPostIndex + 1] : null;
+      //   }else{
+      //     $nextPost = $lastIndex && sizeof($posts) > 0 && $lastIndex < sizeof($posts) ? $posts[$lastIndex + 1] : null;
+      //   }
+      // }else{
+      //   // get the next post
+      //   $nextPost = $lastIndex && sizeof($posts) > 0 && $lastIndex < sizeof($posts) ? $posts[$lastIndex + 1] : null;
+      // }
+      $nextPost = $lastIndex && sizeof($posts) > 0 && $lastIndex < sizeof($posts) ? $posts[$lastIndex + 1] : null;
     }else{
       $nextPost = sizeof($posts) > 0 ? $posts[0] : null;
     }
@@ -205,6 +214,8 @@ class Posting implements ShouldQueue
         }else{
           $this->managePostHistory($post, $plan, $channel);
         }
+
+
       }
     }else{
       echo "\n\t\t No channel was added";
@@ -244,6 +255,17 @@ class Posting implements ShouldQueue
       }
     }else{
       echo "\n\t\t No post automation settings";
+    }
+  }
+
+  public function manageState($data){
+    $payload = Payload::where('payload', '=', $data['payload'])->get();
+    if($payload && sizeof($payload)){
+      $data['updated_at'] = Carbon::now();
+      return Payload::where('id', '=', $payload[0]['id'])->update($data);
+    }else{
+      $data['created_at'] = Carbon::now();
+      return Payload::insert($data);
     }
   }
 }
