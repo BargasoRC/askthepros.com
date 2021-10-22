@@ -133,6 +133,7 @@ class SocialController extends APIController
         $userAccount = $userAccount[0];
         $userAccount['merchant'] = app('Increment\Imarket\Merchant\Http\MerchantController')->getByParams('account_id', $userAccount['id']);
         $userAccount['plan'] = app('App\Http\Controllers\PlanController')->getByParams('account_id', $userAccount['id']);
+        $userAccount['information'] = app('Increment\Account\Http\AccountInformationController')->getAccountInformation($accountId);
       }
 
       return response()->json([
