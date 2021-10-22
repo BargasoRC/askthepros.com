@@ -137,6 +137,11 @@ class Posting implements ShouldQueue
         // no competition, proceed to posting
         $this->managePosting($plan, null, null);
       }
+      $this->manageState(array(
+        'payload' => 'current_plan',
+        'payload_value' => $plan['id']
+      ));
+
     }else{
       // no available plan then proceed to next
       echo "\n\t\t No available plan on selected industry ==> ".$this->industry;
@@ -210,6 +215,8 @@ class Posting implements ShouldQueue
         }else{
           $this->managePostHistory($post, $plan, $channel);
         }
+
+
       }
     }else{
       echo "\n\t\t No channel was added";
@@ -253,9 +260,12 @@ class Posting implements ShouldQueue
   }
 
   public function manageState($data){
-    if(isset($data['id'])){
-      return Payload::where('id', '=', $data['id'])->update($data);
+    $payload = Payload::where('payload', '=', $data['payload'])->get();
+    if($payload && sizeof($payload)){
+      $data['updated_at'] = Carbon::now();
+      return Payload::where('id', '=', $payload[0]['id'])->update($data);
     }else{
+      $data['created_at'] = Carbon::now();
       return Payload::insert($data);
     }
   }
