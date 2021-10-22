@@ -112,7 +112,6 @@ class Posting implements ShouldQueue
         array('payload', '=', 'competitor'),
         array('account_id', '=', $plan['account_id'])
       ))->get();
-
       if($competition && sizeof($competition) > 0){
         // get competition size
         $payloadValue = json_decode($competition[0]['payload_value'], true);

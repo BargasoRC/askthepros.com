@@ -220,7 +220,6 @@ export default {
     },
     upload(add){
       if(this.file.size < 10240 && this.file != null){
-        console.log('[asdfsadf]', this.file)
         this.show()
         this.file = null
         return
