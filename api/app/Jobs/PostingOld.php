@@ -20,7 +20,7 @@ use Increment\Account\Models\Account;
 
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-class Posting implements ShouldQueue
+class PostingOld implements ShouldQueue
 {
   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 

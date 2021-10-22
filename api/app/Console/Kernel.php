@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\Posting'
+        'App\Console\Commands\Posting',
+        'App\Console\Commands\PostingOld'
     ];
 
     /**
@@ -26,6 +27,7 @@ class Kernel extends ConsoleKernel
     {
         // syncing data to app
          $schedule->command('posting:run')->everyMinute();
+         $schedule->command('posting_old:run')->everyMinute();
     }
 
     /**
