@@ -121,11 +121,11 @@
               >Required Field</p> -->
             </div>
             <div class="row">
-              <p class="col-9" style="margin-left: 3%; font-size: 20px">
+              <p class="col-7" style="margin-left: 3%; font-size: 20px">
                 <b>{{industry.category}}</b>
               </p>
-              <p class="col-2" style="margin-left: 5%; font-size: 20px">
-                <b>{{industry.payload_value}}</b>
+              <p class="col-4" style="margin-left: 5%; font-size: 20px">
+                <b>${{industry.payload_value}}/Month</b>
               </p>
             </div>
             <div class="d-flex justify-content-center">
