@@ -224,8 +224,8 @@ export default {
     retrieveInformation() {
       let address = this.addresData.address ? JSON.parse(this.addresData.address) : ''
       this.selectedLocation = Object.keys(address).length > 0 ? address.route + ', ' + address.locality + ', ' + address.region + ', ' + address.country : null
-      console.log('[asdfasdf]', this.selectedLocation)
       this.getAddressData(this.selectedLocation)
+      this.id = this.addresData.id
     },
     update_address(event){
       console.log('update address')
