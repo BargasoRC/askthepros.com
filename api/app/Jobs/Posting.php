@@ -121,7 +121,7 @@ class Posting implements ShouldQueue
           array('payload_value', 'like', '%"locality":"'.$payloadValue['locality'].'"')
         ))->get();
 
-        $size = sizeof($size);
+        $size = sizeof($competitors);
 
         if($size > 1){
           // with competition, proceed to posting
