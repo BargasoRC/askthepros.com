@@ -359,6 +359,7 @@ export default {
           status: 'ADMIN',
           industry: JSON.stringify({industry: this.selectedIndustry})
         }
+        console.log('[register]', parameter)
         $('#loading').css({'display': 'block'})
         this.APIRequest('account/create', parameter).then(response => {
           $('#loading').css({'display': 'none'})
