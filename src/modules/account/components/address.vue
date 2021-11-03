@@ -222,10 +222,10 @@ export default {
       this.property.placeholder = e
     },
     retrieveInformation() {
-      let address = this.addresData.address ? JSON.parse(this.addresData.address) : ''
+      let address = this.user.information.address ? JSON.parse(this.user.information.address) : ''
       this.selectedLocation = Object.keys(address).length > 0 ? address.route + ', ' + address.locality + ', ' + address.region + ', ' + address.country : null
       this.getAddressData(this.selectedLocation)
-      this.id = this.addresData.id
+      this.id = this.user.information.id
     },
     update_address(event){
       console.log('update address')
@@ -237,7 +237,7 @@ export default {
       }
       if(this.canUpdateAddress) {
         let parameter = {
-          id: this.id,
+          id: this.user.information.id,
           account_id: this.user.userID,
           address: JSON.stringify({
             route: this.selectedLocation.route,
@@ -248,6 +248,7 @@ export default {
             longitude: this.selectedLocation.longitude
           })
         }
+        console.log('[id]', parameter)
         $('#loading').css({'display': 'block'})
         this.APIRequest('account_informations/create_with_location', parameter).then(response => {
           $('#loading').css({'display': 'none'})

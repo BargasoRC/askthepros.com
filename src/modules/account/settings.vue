@@ -203,6 +203,7 @@ export default {
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('accounts_info/retrieve', parameter).then(response => {
+        console.log('[sdf]', response.data[0], this.user)
         $('#loading').css({'display': 'none'})
         this.data = response.data[0]
         this.username = this.user.username

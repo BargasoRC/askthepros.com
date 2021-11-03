@@ -264,9 +264,9 @@ export default {
         $('#loading').css({'display': 'none'})
         error
       })
-      window.onunload = function () {
-        sessionStorage.removeItem('selectedIndustry')
-      }
+      // window.onunload = function () {
+      //   sessionStorage.removeItem('selectedIndustry')
+      // }
     },
     login(){
       this.redirect('login')
@@ -274,7 +274,7 @@ export default {
     },
     register(){
       if(this.selected){
-        this.redirect('signup/' + this.selected)
+        this.redirect('signup')
       }else{
         this.redirect('signup')
       }
