@@ -130,14 +130,14 @@ class Channel implements ShouldQueue
 
     $token = $page['details']['access_token'];
     // $media = env('BACKEND_URL').'/storage/image/2_2021-08-03_02_00_17_robot.png';
-    $media = 'https://api.staging.askthepros.com/server.php/increment/v1/storage/image/2_2021-08-03_02_00_17_robot.png';
-    // if(isset($postHistory['url'])) {
-    //   if(json_decode($postHistory['url'])) {
-    //     $url = $postHistory['url'];
-    //     $media = json_decode($url);
-    //     $media = env('BACKEND_URL', ''). $media[0];
-    //   }
-    // }
+    // $media = 'https://api.staging.askthepros.com/server.php/increment/v1/storage/image/2_2021-08-03_02_00_17_robot.png';
+    if(isset($postHistory['url'])) {
+      if(json_decode($postHistory['url'])) {
+        $url = $postHistory['url'];
+        $media = json_decode($url);
+        $media = env('BACKEND_URL', ''). $media[0];
+      }
+    }
 
 
     $params = null;
@@ -172,11 +172,11 @@ class Channel implements ShouldQueue
   public function manageLinkedIn($postHistory){
     $media = '';
     $result = null;
-    $media = env('BACKEND_URL').'/storage/image/2_2021-08-03_02_00_17_robot.png';
-    // if($postHistory['url']) {
-    //   $url = $postHistory['url'];
-    //   $media = json_decode($url)[0];
-    // }
+    // $media = env('BACKEND_URL').'/storage/image/2_2021-08-03_02_00_17_robot.png';
+    if($postHistory['url']) {
+      $url = $postHistory['url'];
+      $media = json_decode($url)[0];
+    }
     $postHistory['url'] = null;
     if($postHistory['url']) {
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinRegisterUpload($postHistory['account_id'], $postHistory['description'], substr($media, 15));
@@ -202,6 +202,7 @@ class Channel implements ShouldQueue
   public function manageGoogle($postHistory){
     $media = [];
     $result = null;
+    // $media = 'https://api.staging.askthepros.com/server.php/increment/v1/storage/image/2_2021-08-03_02_00_17_robot.png';
     if(isset($postHistory['url'])) {
       if(json_decode($postHistory['url'])) {
         $url = $postHistory['url'];

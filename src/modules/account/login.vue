@@ -16,7 +16,7 @@
         <div class="card LoginCard">
           <div class="card-body LoginCardBody">
             <div class="d-flex justify-content-center pt-5 pb-5 mb-3">
-              <b>Login with AskThePros</b>
+              <b>Sign in with AskThePros</b>
             </div>
             <div>
               <p
@@ -25,16 +25,16 @@
               >{{errorMessage}}</p>
               <roundedInput 
                 :type="'text'"
-                :placeholder="'Username'"
-                :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                :placeholder="'Email'"
+                :class="!this.isValid && email == '' ? 'mb-0 ' : ' LoginField'"
                 :styles="{
-                  border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                  border: !this.isValid && email == '' ? '1px solid red !important' : 'none',
                 }"
-                v-model="username"
+                v-model="email"
               />
               <p
                 class="mb-0 pb-0 invalidEmail"
-                v-if="!this.isValid && username == ''"
+                v-if="!this.isValid && email == ''"
               >Required Field</p>
 
               <div class="roudedInput">
@@ -75,7 +75,7 @@
               <dialogueBtn 
                 :onClick="login"
                 :icon="'fas fa-sign-in-alt'"
-                :text="'Login'"
+                :text="'Sign in'"
                 :icon_position="'right'"
                 :styles="{
                   backgroundColor: colors.darkPrimary,
@@ -84,7 +84,7 @@
               />
             </div>
             <div class="d-flex justify-content-center orSeparatorA">
-              <b>OR</b>
+              <b>Sign in with Social Media</b>
             </div>
             <div class="col-sm-12">
               <div class="row">
@@ -135,7 +135,7 @@
                 </div>
               </div>
             </div>
-            <div class="d-flex justify-content-center orSeparatorB">
+            <!-- <div class="d-flex justify-content-center orSeparatorB">
               <b>OR</b>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-center">
@@ -149,7 +149,7 @@
                   color: 'white'
                 }"
               />
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -167,7 +167,7 @@ import ROUTER from 'src/router'
 export default {
   data() {
     return {
-      username: '',
+      email: '',
       password: '',
       errorMessage: '',
       isValid: true,
@@ -190,16 +190,16 @@ export default {
       this.visibility = 'password'
     },
     login(event) {
-      if(this.username !== '' && this.password !== '') {
+      if(this.email !== '' && this.password !== '') {
         this.isValid = true
         $('#loading').css({'display': 'block'})
-        AUTH.authenticate(this.username, this.password, (response) => {
+        AUTH.authenticate(this.email, this.password, (response) => {
           $('#loading').css({'display': 'none'})
           ROUTER.push(`/dashboard`)
         }, (response, status) => {
           $('#loading').css({'display': 'none'})
           if(status === 401){
-            this.errorMessage = 'Username and Password did not match.'
+            this.errorMessage = 'Email and Password did not match.'
           }else if(status === 402){
             this.errorMessage = response.error
           }
@@ -209,21 +209,17 @@ export default {
       }
     },
     register(event) {
-      console.log('register:::')
       this.$router.push('/signup')
     },
     forgotPassword(event) {
-      console.log('forgot password:::')
       this.$router.push('/request_reset_password')
     },
     gmailLogin(event) {
-      console.log('gmail login:::')
       $('#loading').css({'display': 'block'})
       localStorage.setItem('login_with', 'google')
       this.APIRequest('social_lite/authenticate/google/redirect', {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
-          console.log('Authentication with google response: ', response)
           window.location.href = response.data.url
         }
       }, error => {
@@ -233,12 +229,10 @@ export default {
     },
     fbLogin(event) {
       $('#loading').css({'display': 'block'})
-      console.log('facebook login:::')
       localStorage.setItem('login_with', 'facebook')
       this.APIRequest('social_lite/authenticate/facebook/redirect', {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
-          console.log('Authentication with facebook response: ', response)
           window.location.href = response.data.url
         }
       }, error => {
@@ -248,12 +242,10 @@ export default {
     },
     linkedInLogin(event) {
       $('#loading').css({'display': 'block'})
-      console.log('linkedin login:::')
       localStorage.setItem('login_with', 'linkedin')
       this.APIRequest('social_lite/authenticate/linkedin/redirect', {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
-          console.log('Authentication with linkedin response: ', response)
           window.location.href = response.data.url
         }
       }, error => {

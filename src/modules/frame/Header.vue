@@ -15,10 +15,10 @@
         <label class="account-type  hide-on-mobile bg-warning" v-if="user !== null && user.type">{{user.type}}</label>
       </span>
       <span class="left-menu-icons" v-if="user.type === 'USER'">
-        <label class="account-type  hide-on-mobile bg-warning" v-if="user !== null && user.merchant">{{user.merchant.addition_informations.industry}}</label>
+        <label class="account-type  hide-on-mobile bg-warning" v-if="user !== null && user.merchant">{{user.merchant.addition_informations.industry.replace(/_/g, ' ')}}</label>
       </span>
       <span class="left-menu-icons left-menu-icon" v-if="user.type === 'EXPERT'">
-        <label class="account-type  hide-on-mobile bg-warning" v-if="user !== null && user.merchant && industry === true">{{user.merchant.addition_informations.industry}}</label>
+        <label class="account-type  hide-on-mobile bg-warning" v-if="user !== null && user.merchant && industry === true">{{user.merchant.addition_informations.industry.replace(/_/g, ' ')}}</label>
       </span>
       <span class="right-menu-icons">
         <div class="dropdown"> 
