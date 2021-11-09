@@ -5,8 +5,8 @@
       <p class="text-white"><b>1.</b> Create & Import Profile &nbsp;&nbsp;<b>2.</b> Just Relax &nbsp;&nbsp;<b>3.</b> Grow your Sales</p>
       <span class="text-center category-selection" v-if="industry && industry.length > 0">
         <select class="form-control" v-model="selected" @change="getSelected(selected)">
-          <option :value="null" disabled selected>Select Your Industry</option>
-          <option v-for="(item, index) in industry" :value="item.category">{{item.category}}</option>
+          <option :value="null" disabled selected hidden>Select Your Industry</option>
+          <option v-for="(item, index) in industry" :value="item.category">{{item.category.replace(/_/g, ' ')}}</option>
         </select>
         <button class="btn redirect-btn" @click="register()">Try It Now!</button>
       </span>
@@ -239,7 +239,8 @@ export default {
   },
   methods: {
     getSelected(e){
-      localStorage.setItem('selectedIndustry', e)
+      this.selected = e
+      this.register()
     },
     retrievePayloads(){
       let conditions = [{
@@ -264,9 +265,6 @@ export default {
         $('#loading').css({'display': 'none'})
         error
       })
-      // window.onunload = function () {
-      //   sessionStorage.removeItem('selectedIndustry')
-      // }
     },
     login(){
       this.redirect('login')
@@ -274,7 +272,7 @@ export default {
     },
     register(){
       if(this.selected){
-        this.redirect('signup')
+        this.redirect('signup/' + this.selected)
       }else{
         this.redirect('signup')
       }

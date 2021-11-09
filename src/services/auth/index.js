@@ -229,7 +229,6 @@ export default {
   deaunthenticate(){
     this.tokenData.loading = true
     localStorage.removeItem('account_id')
-    localStorage.removeItem('selectedIndustry')
     localStorage.removeItem('google_code')
     localStorage.removeItem('google_scope')
     localStorage.removeItem('xyzABCdefPayhiram')

@@ -16,14 +16,14 @@
         <div class="card RegisterCard">
           <div class="card-body RegisterCardBody">
             <div class="d-flex justify-content-center pt-5 pb-5 mb-3">
-              <b>Register with AskThePros</b>
+              <b>Sign up with AskThePros</b>
             </div>
             <p
               class="mb-2 pb-0 errorMessage"
               v-if="errorMessage != null"
             >{{errorMessage}}</p>
             <div>
-              <p class="mt-2"><b>Username</b></p>
+              <!-- <p class="mt-2"><b>Username</b></p>
               <roundedInput 
                 :type="'text'"
                 :placeholder="'Your username here...'"
@@ -32,11 +32,11 @@
                   border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
                 }"
                 v-model="username"
-              />
-              <p
+              /> -->
+              <!-- <p
                 class="mb-0 pb-0 requiredFieldError"
                 v-if="!this.isValid && username == ''"
-              >Required Field</p>
+              >Required Field</p> -->
               <p class="mt-2"><b>Email</b></p>
               <roundedInput 
                 :type="'text'"
@@ -132,7 +132,7 @@
               <dialogueBtn 
                 :onClick="register"
                 :icon="'fas fa-sign-in-alt'"
-                :text="'Register now'"
+                :text="'Sign up'"
                 :icon_position="'right'"
                 :styles="{
                   backgroundColor: colors.darkPrimary,
@@ -141,7 +141,7 @@
               />
             </div>
             <div class="d-flex justify-content-center orSeparatorA">
-              <b>OR</b>
+              <b>Sign up with Social Media</b>
             </div>
             <div class="col-sm-12">
               <div class="row">
@@ -149,7 +149,7 @@
                   <roundedBtn
                     :onClick="gmailLogin"
                     :icon="'fab fa-google'"
-                    :text="'Sign In'"
+                    :text="'Sign up'"
                     :styles="{
                       background: 'none',
                       color: '#272727',
@@ -164,7 +164,7 @@
                   <roundedBtn
                     :onClick="fbLogin"
                     :icon="'fab fa-facebook-f'"
-                    :text="'Sign In'"
+                    :text="'Sign up'"
                     :styles="{
                       background: 'none',
                       color: '#272727',
@@ -179,7 +179,7 @@
                   <roundedBtn
                     :onClick="linkedInLogin"
                     :icon="'fab fa-linkedin-in'"
-                    :text="'Sign In'"
+                    :text="'Sign up'"
                     :styles="{
                       background: 'none',
                       color: '#272727',
@@ -192,7 +192,7 @@
                 </div>
               </div>
             </div>
-            <div class="d-flex justify-content-center orSeparatorB">
+            <!-- <div class="d-flex justify-content-center orSeparatorB">
               <b>OR</b>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-center">
@@ -206,7 +206,7 @@
                   color: 'white'
                 }"
               />
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -228,7 +228,7 @@ export default {
   mounted(){
     let params = this.$route.params
     if(params.category){
-      this.selectedIndustry = params.category
+      this.selectedIndustry = params.category.replace(/_/g, ' ')
     }
     setTimeout(() => {
       this.retrievePayloads()
@@ -275,17 +275,15 @@ export default {
         clause: '=',
         column: 'payload'
       }, {
-        value: this.selectedIndustry != null ? this.selectedIndustry : localStorage.getItem('selectedIndustry'),
+        value: this.selectedIndustry,
         clause: '=',
         column: 'category'
       }]
       let parameter = {
         condition: conditions
       }
-      console.log('[asdfasdf]', parameter)
       $('#loading').css({'display': 'block'})
       this.APIRequest('payloads/retrieve', parameter).then(response => {
-        console.log('[asdfasdf]', response)
         $('#loading').css({'display': 'none'})
         if(response.data.length > 0) {
           this.industry = response.data[0]
@@ -298,13 +296,11 @@ export default {
       })
     },
     gmailLogin(event) {
-      console.log('gmail login:::')
       $('#loading').css({'display': 'block'})
       localStorage.setItem('login_with', 'google')
       this.APIRequest('social_lite/authenticate/google/redirect', {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
-          console.log('Authentication with google response: ', response)
           window.location.href = response.data.url
         }
       }, error => {
@@ -314,12 +310,10 @@ export default {
     },
     fbLogin(event) {
       $('#loading').css({'display': 'block'})
-      console.log('facebook login:::')
       localStorage.setItem('login_with', 'facebook')
       this.APIRequest('social_lite/authenticate/facebook/redirect', {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
-          console.log('Authentication with facebook response register page: ', response)
           window.location.href = response.data.url
         }
       }, error => {
@@ -329,12 +323,10 @@ export default {
     },
     linkedInLogin(event) {
       $('#loading').css({'display': 'block'})
-      console.log('linkedin login:::')
       localStorage.setItem('login_with', 'linkedin')
       this.APIRequest('social_lite/authenticate/linkedin/redirect', {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
-          console.log('Authentication with linkedin response: ', response)
           window.location.href = response.data.url
         }
       }, error => {
@@ -343,14 +335,13 @@ export default {
       })
     },
     login(event) {
-      // console.log('login:::')
       this.$router.push('/login')
     },
     register(event) {
       if(this.validate()) {
         this.isValid = true
         let parameter = {
-          username: this.username,
+          username: this.email,
           email: this.email,
           password: this.password,
           config: CONFIG,
@@ -359,25 +350,22 @@ export default {
           status: 'ADMIN',
           industry: JSON.stringify({industry: this.selectedIndustry})
         }
-        console.log('[register]', parameter)
         $('#loading').css({'display': 'block'})
         this.APIRequest('account/create', parameter).then(response => {
           $('#loading').css({'display': 'none'})
-          console.log('[register]', response)
           if(response.data !== null) {
             this.createMerchantAndPayload(response.data.data)
             // this.login()
           }else if(response.error !== null){
             if(response.error.status === 100){
               let message = response.error.message
-              if(typeof message.username !== undefined && typeof message.username !== 'undefined'){
-                this.errorMessage = message.username[0]
-              }else if(typeof message.email !== undefined && typeof message.email !== 'undefined'){
+              // if(typeof message.username !== undefined && typeof message.username !== 'undefined'){
+              //   this.errorMessage = message.username[0]
+              if(typeof message.email !== undefined && typeof message.email !== 'undefined'){
                 this.errorMessage = message.email[0]
               }
             }else{
               let message = response.error.message
-              console.log('[message]', message)
               this.errorMessage = message
             }
           }
@@ -387,7 +375,7 @@ export default {
     async createMerchantAndPayload(id) {
       let merchant = {
         account_id: id,
-        name: this.username,
+        name: this.email,
         email: this.email,
         addition_informations: JSON.stringify({industry: this.selectedIndustry})
       }
@@ -396,7 +384,6 @@ export default {
         payload: 'automation_settings',
         payload_value: 'ON'
       }
-      console.log('[merchant]')
       this.APIRequest('merchants/create', merchant).then(response => {
         console.log('MERCHANT RESPONSE: ', response)
       }).catch(error => {
@@ -413,7 +400,7 @@ export default {
     validate() {
       this.errorMessage = null
       let email = this.email
-      let username = this.username
+      let username = this.email
       let password = this.password
       let cpassword = this.cpassword
       let selectedIndustry = this.selectedIndustry
@@ -422,7 +409,7 @@ export default {
         return false
       }else if(username.includes(' ')){
         this.isValid = false
-        this.errorMessage = 'Username should not contain spaces.'
+        this.errorMessage = 'Email should not contain spaces.'
         return false
       }else if(!global.validateEmail(email)) {
         this.isValid = false
