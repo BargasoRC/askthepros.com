@@ -38,7 +38,7 @@ class EmailController extends APIController
     public function verification($id){
         $user = $this->retrieveAccountDetails($id);
         if($user != null){
-            Mail::to('herreracherrymae@gmail.com')->send(new Verification($user, $this->response['timezone']));
+            Mail::to($user['email'])->send(new Verification($user, $this->response['timezone']));
             return true;
         }
         return false;
