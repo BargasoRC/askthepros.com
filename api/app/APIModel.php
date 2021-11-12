@@ -29,4 +29,29 @@ class APIModel extends Model
       $modelName = "App\\".str_replace(' ', '', ucwords(str_replace('_', ' ', str_singular($table))));
       return new $modelName($attribute);
     }
+
+    public function getCreatedAtAttribute($value){
+      $value = str_replace('T', ' ', $value);
+      $value = str_replace('Z', '', $value);
+      return substr($value, 0, 19);
+    }
+  
+    public function getUpdatedAtAttribute($value){
+      $value = str_replace('T', ' ', $value);
+      $value = str_replace('Z', '', $value);
+      return substr($value, 0, 19);
+    }
+  
+    public function getDeletedAtAttribute($value){
+      $value = str_replace('T', ' ', $value);
+      $value = str_replace('Z', '', $value);
+      return substr($value, 0, 19);
+    }
+  
+    public function formatDateTime($dateTime){
+      $dateTime = str_replace('T', ' ', $dateTime);
+      $dateTime = str_replace('Z', '', $dateTime);
+      $dateTime = substr($dateTime, 0, 19);
+      return $dateTime;
+    }
 }
