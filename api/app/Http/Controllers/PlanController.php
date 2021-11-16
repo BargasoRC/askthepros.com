@@ -60,7 +60,6 @@ class PlanController extends APIController
       'plan' => $plan,
       'payment_method' => $paymentMethod
     );
-
     return $this->response();
   }
 
@@ -72,7 +71,7 @@ class PlanController extends APIController
       $data['start_date'] = Carbon::now();
       $data['end_date'] = null;
 	    $this->insertDB($data);
-	    return $this->response();    	
+	    return $this->response();
     }else{
     	$this->response['data'] = null;
     	$this->response['error'] = 'Plan already existed';
@@ -94,7 +93,7 @@ class PlanController extends APIController
   }
 
   public function update(Request $request){
-    $data = $request->all();
+    $data = $request->all(); 
     $result = Plan::where('merchant_id', '=', $data['merchant_id'])
     ->where(function($e) {
       $e->whereDate('end_date', '>', Carbon::now())
