@@ -16,7 +16,7 @@
         <div class="card LoginCard">
           <div class="card-body LoginCardBody">
             <div class="d-flex justify-content-center pt-5 pb-5 mb-3">
-              <b>Sign in with AskThePros</b>
+              <b>Login with AskThePros</b>
             </div>
             <div>
               <p
@@ -75,7 +75,7 @@
               <dialogueBtn 
                 :onClick="login"
                 :icon="'fas fa-sign-in-alt'"
-                :text="'Sign in'"
+                :text="'Login'"
                 :icon_position="'right'"
                 :styles="{
                   backgroundColor: colors.darkPrimary,
@@ -84,7 +84,7 @@
               />
             </div>
             <div class="d-flex justify-content-center orSeparatorA">
-              <b>Sign in with Social Media</b>
+              <b>Login with Social Media</b>
             </div>
             <div class="col-sm-12">
               <div class="row">
@@ -92,7 +92,7 @@
                   <roundedBtn
                     :onClick="gmailLogin"
                     :icon="'fab fa-google'"
-                    :text="'Sign In'"
+                    :text="'Login'"
                     :styles="{
                       background: 'none',
                       color: '272727',
@@ -107,7 +107,7 @@
                   <roundedBtn
                     :onClick="fbLogin"
                     :icon="'fa fa-facebook'"
-                    :text="'Sign In'"
+                    :text="'Login'"
                     :styles="{
                       background: 'none',
                       color: '272727',
@@ -122,7 +122,7 @@
                   <roundedBtn
                     :onClick="linkedInLogin"
                     :icon="'fab fa-linkedin-square'"
-                    :text="'Sign In'"
+                    :text="'Login'"
                     :styles="{
                       background: 'none',
                       color: '272727',

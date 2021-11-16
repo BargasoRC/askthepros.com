@@ -16,7 +16,7 @@
         <div class="card RegisterCard">
           <div class="card-body RegisterCardBody">
             <div class="d-flex justify-content-center pt-5 pb-5 mb-3">
-              <b>Sign up with AskThePros</b>
+              <b>Register with AskThePros</b>
             </div>
             <p
               class="mb-2 pb-0 errorMessage"
@@ -132,7 +132,7 @@
               <dialogueBtn 
                 :onClick="register"
                 :icon="'fas fa-sign-in-alt'"
-                :text="'Sign up'"
+                :text="'Register'"
                 :icon_position="'right'"
                 :styles="{
                   backgroundColor: colors.darkPrimary,
@@ -141,7 +141,7 @@
               />
             </div>
             <div class="d-flex justify-content-center orSeparatorA">
-              <b>Sign up with Social Media</b>
+              <b>Register with Social Media</b>
             </div>
             <div class="col-sm-12">
               <div class="row">
@@ -149,7 +149,7 @@
                   <roundedBtn
                     :onClick="gmailLogin"
                     :icon="'fab fa-google'"
-                    :text="'Sign up'"
+                    :text="'Register'"
                     :styles="{
                       background: 'none',
                       color: '#272727',
@@ -164,7 +164,7 @@
                   <roundedBtn
                     :onClick="fbLogin"
                     :icon="'fab fa-facebook-f'"
-                    :text="'Sign up'"
+                    :text="'Register'"
                     :styles="{
                       background: 'none',
                       color: '#272727',
@@ -179,7 +179,7 @@
                   <roundedBtn
                     :onClick="linkedInLogin"
                     :icon="'fab fa-linkedin-in'"
-                    :text="'Sign up'"
+                    :text="'Register'"
                     :styles="{
                       background: 'none',
                       color: '#272727',

@@ -9,7 +9,7 @@
         <span class="card-item" v-for="(item, index) in data">
           <span class="icon-container">
             <span class="icon-holder">
-              <i :class="item.icon"></i>
+              <img width="60" height="60" :src="item.icon">
             </span>
           </span>
           <span class="item-content">
@@ -29,13 +29,13 @@ export default {
   data() {
     return {
       data: [{
-        icon: 'fas fa-search',
+        icon: require('assets/img/search.png'),
         description: 'Create a brief profile with your industry'
       }, {
-        icon: 'far fa-file',
+        icon: require('assets/img/note.png'),
         description: 'We Match you with an Subject Matter Expert in your Industry'
       }, {
-        icon: 'fas fa-user-shield',
+        icon: require('assets/img/protect.png'),
         description: 'We post to your Google My Business, Facebook and Linked in 3 times per week'
       }]
     }

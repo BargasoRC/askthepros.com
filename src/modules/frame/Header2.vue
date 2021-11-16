@@ -15,8 +15,8 @@
           <i class="fa fa-bars" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" onclick="void(0)"></i>
         </span>
         <ul class="header-primary-menu">
-          <li v-if="" class="nav-item"><a class="nav-link" @click="redirect('/signup')">Sign Up</a></li>
-          <li class="nav-item"><a class="nav-link" @click="redirect('/login')">Sign In</a></li>
+          <li v-if="" class="nav-item"><a class="nav-link" @click="redirect('/signup')">Register</a></li>
+          <li class="nav-item"><a class="nav-link" @click="redirect('/login')">Login</a></li>
           <li class="nav-item"><a class="nav-link" @click="redirect('/contact')">Contact Us</a></li>
         </ul>
       </span>
@@ -37,8 +37,8 @@
           <i class="fa fa-bars" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" onclick="void(0)"></i>
         </span>
         <ul class="header-primary-menu">
-          <li class="nav-item"><a class="nav-link" @click="redirect('/signup')">Sign Up</a></li>
-          <li class="nav-item"><a class="nav-link" @click="redirect('/login')">Sign In</a></li>
+          <li class="nav-item"><a class="nav-link" @click="redirect('/signup')">Register</a></li>
+          <li class="nav-item"><a class="nav-link" @click="redirect('/login')">Login</a></li>
           <li class="nav-item"><a class="nav-link" @click="redirect('/contact')">Contact Us</a></li>
         </ul>
       </span>
@@ -46,8 +46,8 @@
     <!-- end code for other pages header -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item" v-on:click="redirect('/signup')" data-toggle="collapse" data-target="#navbarSupportedContent"><a class="nav-link">Sign Up</a></li>
-        <li class="nav-item" v-on:click="redirect('/login')" data-toggle="collapse" data-target="#navbarSupportedContent"><a class="nav-link">Sign In</a></li>
+        <li class="nav-item" v-on:click="redirect('/signup')" data-toggle="collapse" data-target="#navbarSupportedContent"><a class="nav-link">Register</a></li>
+        <li class="nav-item" v-on:click="redirect('/login')" data-toggle="collapse" data-target="#navbarSupportedContent"><a class="nav-link">Login</a></li>
         <li class="nav-item" v-on:click="redirect('/contact')" data-toggle="collapse" data-target="#navbarSupportedContent"><a class="nav-link">Contact Us</a></li>
       </ul>
     </div>

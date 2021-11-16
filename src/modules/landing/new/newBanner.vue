@@ -224,7 +224,9 @@ export default {
       ],
       index: null,
       imageIndex1: null,
-      industry: [],
+      industry: [{
+        category: 'finance'
+      }],
       global: global,
       selected: null
     }
