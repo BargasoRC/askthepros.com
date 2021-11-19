@@ -16,7 +16,12 @@
         <div class="card LoginCard">
           <div class="card-body LoginCardBody">
             <div class="d-flex justify-content-center pt-5 pb-5 mb-3">
-              <b>Login with AskThePros</b>
+              <div class="log">
+                Login
+              </div>
+              <div class="reg" @click="redirect('/signup')">
+                Register
+              </div>
             </div>
             <div>
               <p
@@ -183,6 +188,20 @@ export default {
   },
   mounted() {},
   methods: {
+    redirect(parameter) {
+      if(parameter === '/signup'){
+        if(localStorage.getItem('selectedIndustry') != null){
+          ROUTER.push(parameter)
+        }else{
+          alert('Please select industry to proceed.')
+        }
+      }else{
+        ROUTER.push(parameter)
+      }
+      if(parameter === '/'){
+        this.scrollToTop()
+      }
+    },
     showPassword() {
       this.visibility = 'text'
     },
@@ -259,6 +278,21 @@ export default {
 
 <style scoped lang="scss" scoped>
 @import "~assets/style/colors.scss";
+.log{
+  background-color: #ffc107;
+  padding: 3%;
+  border-color: #ffc107;
+  border-radius: 10px;
+  font-weight: bold;
+  margin-left: 3%;
+}
+.reg{
+  background-color: whitesmoke;
+  padding: 3%;
+  border-color: whitesmoke;
+  border-radius: 10px;
+  font-weight: bold;
+}
 .roudedInput {
   outline: none !important;
   box-shadow: none !important;

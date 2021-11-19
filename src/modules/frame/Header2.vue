@@ -15,7 +15,7 @@
           <i class="fa fa-bars" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" onclick="void(0)"></i>
         </span>
         <ul class="header-primary-menu">
-          <li v-if="" class="nav-item"><a class="nav-link" @click="redirect('/signup')">Register</a></li>
+          <li class="nav-item"><a class="nav-link" @click="redirect('/signup')">Register</a></li>
           <li class="nav-item"><a class="nav-link" @click="redirect('/login')">Login</a></li>
           <li class="nav-item"><a class="nav-link" @click="redirect('/contact')">Contact Us</a></li>
         </ul>

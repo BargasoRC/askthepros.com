@@ -24,7 +24,6 @@
 export default {
   props: ['items', 'placeholder', 'styles', 'selectedIndex', 'dropdownItemStyles'],
   mounted(){
-    console.log('[this]', this.selectedIndex)
   },
   data() {
     return {

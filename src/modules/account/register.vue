@@ -9,14 +9,19 @@
           <div class="SubQoute">
             <h1 class="QouteText" style="color: #01009A">With Automated Social Media Posting.</h1>
           </div>
-          <img :src="require('assets/img/section3-img.png')" alt="Image" style="width: 60%;height:auto">
+          <img :src="location === 'localhost' ? require('assets/img/section3-img.png') : 'https://staging.askthepros.com/static/img/section3-img.88fb0ea.png'" alt="Image" style="width: 60%;height:auto">
         </div>
       </div>
       <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xs-5 d-flex justify-content-center LoginCardContainer mb-5">
         <div class="card RegisterCard">
           <div class="card-body RegisterCardBody">
             <div class="d-flex justify-content-center pt-5 pb-5 mb-3">
-              <b>Register with AskThePros</b>
+              <div class="reg" @click="redirect('/login')">
+                Login
+              </div>
+              <div class="log">
+                Register
+              </div>
             </div>
             <p
               class="mb-2 pb-0 errorMessage"
@@ -38,7 +43,7 @@
                 v-if="!this.isValid && username == ''"
               >Required Field</p> -->
               <p class="mt-2"><b>Email</b></p>
-              <roundedInput 
+              <roundedInput
                 :type="'text'"
                 :placeholder="'Email Address'"
                 :class="!this.isValid && (email == '' || !isEmailValid) ? 'mb-0 ' : ' registrationField'"
@@ -196,7 +201,7 @@
               <b>OR</b>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-center">
-              <dialogueBtn 
+              <dialogueBtn
                 :onClick="login"
                 :icon="'fas fa-sign-in-alt'"
                 :text="'Login'"
@@ -224,11 +229,14 @@ import AUTH from 'src/services/auth'
 import CONFIG from 'src/config'
 import COMMON from 'src/common'
 import global from 'src/helpers/global'
+import ROUTER from 'src/router'
 export default {
   mounted(){
+    this.location = window.location.hostname
     let params = this.$route.params
     if(params.category){
-      this.selectedIndustry = params.category.replace(/_/g, ' ')
+      this.selectedIndustry = params.category
+      // this.selectedIndustry = params.category.replace(/_/g, ' ')
     }
     setTimeout(() => {
       this.retrievePayloads()
@@ -240,6 +248,7 @@ export default {
       password: '',
       cpassword: '',
       email: '',
+      location: null,
       config: CONFIG,
       common: COMMON,
       type: 'USER',
@@ -269,6 +278,20 @@ export default {
     }
   },
   methods: {
+    redirect(parameter) {
+      if(parameter === '/signup'){
+        if(localStorage.getItem('selectedIndustry') != null){
+          ROUTER.push(parameter)
+        }else{
+          alert('Please select industry to proceed.')
+        }
+      }else{
+        ROUTER.push(parameter)
+      }
+      if(parameter === '/'){
+        this.scrollToTop()
+      }
+    },
     retrievePayloads(){
       let conditions = [{
         value: 'subscriptions',
@@ -442,6 +465,21 @@ export default {
 
 <style lang="scss" scoped>
 @import "~assets/style/colors.scss";
+.log{
+  background-color: #ffc107;
+  padding: 3%;
+  border-color: #ffc107;
+  border-radius: 10px;
+  font-weight: bold;
+  // margin-left: 3%;
+}
+.reg{
+  background-color: whitesmoke;
+  padding: 3%;
+  border-color: whitesmoke;
+  border-radius: 10px;
+  font-weight: bold;
+}
 .requiredFieldError {
   color: $danger;
   font-size: 10px;
