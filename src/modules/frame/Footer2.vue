@@ -31,7 +31,7 @@
         <!-- <div class="ft-pay-img"> -->
           <ul class="list-unstyled">
             <li>
-              <div style="justify-content:center;text-align:center;"> <img class="payment" src="../../assets/img/pay_methods.png" alt="Payment Methods"> </div>
+              <div style="justify-content:center;text-align:center;"> <img class="payment" src="../../assets/img/pay_method.png" alt="Payment Methods"> </div>
             </li>
         </ul>
         <div class="end-line" style="padding-left:10px;color:#01009A;">
