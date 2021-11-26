@@ -227,7 +227,7 @@ export default {
     })
   },
   deaunthenticate(){
-    this.tokenData.loading = true
+    this.tokenData.loading = false
     localStorage.removeItem('account_id')
     localStorage.removeItem('google_code')
     localStorage.removeItem('google_scope')
