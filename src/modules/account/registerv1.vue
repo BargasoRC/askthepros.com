@@ -15,7 +15,7 @@
       <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xs-5 d-flex justify-content-center LoginCardContainer mb-5">
         <div class="card RegisterCard">
           <div class="card-body RegisterCardBody">
-            <div class="d-flex justify-content-center pt-5 pb-5 mb-3">
+            <div class="d-flex justify-content-center pt-3 pb-1 mb-5">
               <div class="reg" @click="redirect('/login')">
                 Login
               </div>
@@ -23,12 +23,13 @@
                 Register
               </div>
             </div>
-            <p
+            <multiRegister :selectedIndustry="getIndustry"/>
+            <!-- <p
               class="mb-2 pb-0 errorMessage"
               v-if="errorMessage != null"
-            >{{errorMessage}}</p>
-            <div>
-              <!-- <p class="mt-2"><b>Username</b></p>
+            >{{errorMessage}}</p> -->
+            <!-- <div>
+              <p class="mt-2"><b>Username</b></p>
               <roundedInput 
                 :type="'text'"
                 :placeholder="'Your username here...'"
@@ -37,11 +38,11 @@
                   border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
                 }"
                 v-model="username"
-              /> -->
-              <!-- <p
+              />
+              <p
                 class="mb-0 pb-0 requiredFieldError"
                 v-if="!this.isValid && username == ''"
-              >Required Field</p> -->
+              >Required Field</p>
               <p class="mt-2"><b>Email</b></p>
               <roundedInput
                 :type="'text'"
@@ -112,28 +113,16 @@
                   :
                   'Required Field'
               }}</p>
-              <!-- <p v-if="this.localStorage.getItem('selectedIndustry') != null">
-                hi there
-              </p> -->
-              <!-- <p class="mt-2"><b>Industry</b></p>
-              <select class="form-control" v-model="selectedIndustry" style="margin-bottom: 25px;">
-                <option :value="null" disabled selected>Select Your Industry</option>
-                <option v-for="(item, index) in industry" :value="item.category">{{item.category}}</option>
-              </select> -->
-              <!-- <p
-                class="mb-0 pb-0 requiredFieldError"
-                v-if="!this.isValid && selectedIndustry == null"
-              >Required Field</p> -->
-            </div>
-            <div class="row">
+            </div> -->
+            <!-- <div class="row">
               <p class="col-7" style="margin-left: 3%; font-size: 20px">
                 <b>{{industry.category}}</b>
               </p>
               <p class="col-4" style="margin-left: 5%; font-size: 20px">
                 <b>${{industry.payload_value}}/Month</b>
               </p>
-            </div>
-            <div class="d-flex justify-content-center">
+            </div> -->
+            <!-- <div class="d-flex justify-content-center">
               <dialogueBtn 
                 :onClick="register"
                 :icon="'fas fa-sign-in-alt'"
@@ -144,7 +133,10 @@
                   color: 'white'
                 }"
               />
-            </div>
+            </div> -->
+
+
+            <!-- ---------------start here------------------- -->
             <div class="d-flex justify-content-center orSeparatorA">
               <b>Register with Social Media</b>
             </div>
@@ -224,6 +216,7 @@ import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import roundedInput from 'src/modules/generic/roundedInput'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
+import multiRegister from './multiRegister.vue'
 import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config'
@@ -268,9 +261,17 @@ export default {
     roundedInput,
     roundedBtn,
     roundedSelectBtn,
-    COLORS
+    COLORS,
+    multiRegister
   },
   computed: {
+    getIndustry(){
+      let params = this.$route.params
+      if(params.category){
+        this.selectedIndustry = params.category
+        // this.selectedIndustry = params.category.replace(/_/g, ' ')
+      }
+    },
     returnIndustry() {
       return this.industry.map((el, ndx) => {
         return el.category

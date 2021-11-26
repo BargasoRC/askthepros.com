@@ -57,7 +57,7 @@
                   <roundedBtn
                     :onClick="gmailLogin"
                     :icon="'fab fa-google'"
-                    :text="'Sign In'"
+                    :text="'Login'"
                     :styles="{
                       background: 'none',
                       color: '272727',
@@ -72,7 +72,7 @@
                   <roundedBtn
                     :onClick="fbLogin"
                     :icon="'fab fa-facebook-f'"
-                    :text="'Sign In'"
+                    :text="'Login'"
                     :styles="{
                       background: 'none',
                       color: '272727',
@@ -87,7 +87,7 @@
                   <roundedBtn
                     :onClick="linkedInLogin"
                     :icon="'fab fa-linkedin-in'"
-                    :text="'Sign In'"
+                    :text="'Login'"
                     :styles="{
                       background: 'none',
                       color: '272727',
@@ -101,9 +101,9 @@
               </div>
             </div>
             <div class="d-flex justify-content-center orSeparatorB">
-              <b>OR</b>
+              <!-- <b>OR</b> -->
             </div>
-            <div class="col-sm-12 mb-3 col-md-12 col-lg-12 d-flex justify-content-center">
+            <!-- <div class="col-sm-12 mb-3 col-md-12 col-lg-12 d-flex justify-content-center">
               <dialogueBtn 
                 :onClick="redirect"
                 :icon="'fas fa-sign-in-alt'"
@@ -113,7 +113,7 @@
                   color: 'white'
                 }"
               />
-            </div>
+            </div> -->
           </div>
         </div>
       </div>

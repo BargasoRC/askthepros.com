@@ -25,10 +25,10 @@
         </div>
 
         <div class="form-group">
-          <label for="post_title"><b>Post Title</b></label>
+          <label for="post_title"><b>Post Question</b></label>
           <input 
-            :class="!this.isValid && title == '' ? 'form-control mb-0' : 'form-control'" 
-            placeholder="Post Title" 
+            :class="!this.isValid && title == '' ? 'form-control mb-0' : 'form-control'"
+            placeholder="Post Title"
             :style="{
               ...!this.isValid && title == '' ? {border: '1px solid red !important'} : '',
               ...{
@@ -44,7 +44,7 @@
         </div>
 
         <div class="form-group">
-          <label for="description"><b>Description</b></label>
+          <label for="description"><b>Answer</b></label>
           <textarea 
             :class="!this.isValid && description == '' ? 'form-control mb-0' : 'form-control'" 
             placeholder="Add description here" 
@@ -61,6 +61,10 @@
             v-if="!this.isValid && description == ''"
           >Required Field</p>
           <p style="text-align: right; font-size: 12px; color: gray;">Character count: {{character}}</p>
+        </div>
+        
+        <div>
+          <button type="button">Generate</button>
         </div>
         
         <div class="form-group">
