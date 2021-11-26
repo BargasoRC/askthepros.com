@@ -23,7 +23,7 @@
                 Register
               </div>
             </div>
-            <multiRegister :selectedIndustry="selectedIndustry"/>
+            <multiRegister :selectedIndustry="getIndustry"/>
             <!-- <p
               class="mb-2 pb-0 errorMessage"
               v-if="errorMessage != null"
@@ -265,6 +265,13 @@ export default {
     multiRegister
   },
   computed: {
+    getIndustry(){
+      let params = this.$route.params
+      if(params.category){
+        this.selectedIndustry = params.category
+        // this.selectedIndustry = params.category.replace(/_/g, ' ')
+      }
+    },
     returnIndustry() {
       return this.industry.map((el, ndx) => {
         return el.category

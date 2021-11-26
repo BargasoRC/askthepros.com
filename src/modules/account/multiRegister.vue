@@ -94,16 +94,16 @@
             <roundedInput
               :type="'text'"
               :placeholder="'Industry'"
-              :class="!this.isValid && (industry == '' || !isIndustryValid) ? 'mb-0 ' : ' registrationField'"
+              :class="!this.isValid && (selectedIndustry == '' || !isIndustryValid) ? 'mb-0 ' : ' registrationField'"
               :styles="{
-                border: !this.isValid && (industry == '' || !isIndustryValid) ? '1px solid red !important' : 'none',
+                border: !this.isValid && (selectedIndustry == '' || !isIndustryValid) ? '1px solid red !important' : 'none',
               }"
               disabled
-              v-model="industry"
+              v-model="selectedIndustry"
             />
             <p
               class="mb-0 pb-0 requiredFieldError"
-              v-if="!this.isValid && (industry == '' || !isIndustryValid)"
+              v-if="!this.isValid && (selectedIndustry == '' || !isIndustryValid)"
             >{{
               !isIndustryValid ?
                 'Invalid Industry'
@@ -550,19 +550,21 @@ export default {
     GooglePlacesAutoComplete
   },
   mounted(){
-    // this.location = window.location.hostname
-    // let params = this.$route.params
-    // if(params.category){
-    //   this.selectedIndustry = params.category
-    // }
-    // setTimeout(() => {
-    //   this.retrievePayloads()
-    // }, 1000)
+    this.location = window.location.hostname
+    let params = this.$route.params
+    if(params.category){
+      this.selectedIndustry = params.category
+    }
+    setTimeout(() => {
+      this.retrievePayloads()
+    }, 1000)
+    console.log('[t>>>]', this.selectedIndustry)
   },
   data(){
     return {
       common: COMMON,
       config: CONFIG,
+      selectedIndustry: null,
       page: 1,
       user: AUTH.user,
       router: ROUTER,
