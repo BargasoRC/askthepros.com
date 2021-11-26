@@ -248,6 +248,8 @@ export default {
       this.tokenData.token = null
       this.tokenData.loading = false
       ROUTER.go('/')
+    }else{
+      ROUTER.go('/')
     }
     localStorage.clear()
     // setTimeout(() => {
