@@ -49,5 +49,6 @@ export default {
         item.flag = false
       }
     })
-  }
+  },
+  version: '0.0.1'
 }
