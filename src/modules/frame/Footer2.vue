@@ -35,11 +35,7 @@
             </li>
         </ul>
         <div class="end-line" style="padding-left:10px;color:#01009A;">
-<<<<<<< HEAD
-          <p style="justify-content:center;text-align:center;font-size:14px;">Copyright © 2021 All Rights Reserved. v.{{common.version}}.<img src="../../assets/img/logo_small_redo.png" alt="logo" height="21px" width="50px" style="padding-left:10px"></p>
-=======
           <p style="justify-content:center;text-align:center;font-size:14px;">Copyright © 2021 All Rights Reserved. v.{{common.version}}<img src="../../assets/img/logo_small_redo.png" alt="logo" height="21px" width="50px" style="padding-left:10px"></p>
->>>>>>> d219b66a5a6f9d2c7a90f8bad255a4d47ed4dfc8
         </div>
       </div>
       <!-- Grid column -->
