@@ -56,7 +56,7 @@ class ImageHandlerController extends APIController
     $filename = $postId.'_'.$date.'_'.$time.'.png';
     $image->save(storage_path('/app/images/'.$filename));
 
-    $this->response['data'] = $filename;
+    $this->response['data'] = '/storage/image/'.$filename;
     return $this->response();
   }
 }
