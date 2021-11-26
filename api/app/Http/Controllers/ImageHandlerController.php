@@ -21,16 +21,17 @@ class ImageHandlerController extends APIController
     $category = $data['category'];
     $postId = $data['id'];
 
-    $width       = 800;
-    $height      = 800;
+    $width       = 400;
+    $height      = 400;
     $center_x    = $width / 2;
     $center_y    = $height / 2;
     $max_len     = 36;
     $font_size   = 42;
     $font_height = 30;
+    $backgroundColor = '#01009A';
 
     $image = Image::canvas($width, $height);
-    $image->fill('#3F0050');
+    $image->fill($backgroundColor);
 
 
     $y = $center_y - (1 * $font_height);
