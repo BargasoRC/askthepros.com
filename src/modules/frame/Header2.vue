@@ -304,6 +304,7 @@ export default {
     },
     redirect(parameter) {
       if(parameter === '/signup'){
+        // ROUTER.push(parameter)
         if(localStorage.getItem('selectedIndustry') != null){
           ROUTER.push(parameter)
         }else{
