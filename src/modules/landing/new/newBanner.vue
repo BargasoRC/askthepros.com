@@ -3,13 +3,27 @@
     <div class="text-center container">
       <h1 class="text-white">MANAGED SOCIAL MEDIA POSTING WRITTEN BY INDUSTRY EXPERTS IN YOUR FIELD</h1>    
       <p class="text-white"><b>1.</b> Create & Import Profile &nbsp;&nbsp;<b>2.</b> Just Relax &nbsp;&nbsp;<b>3.</b> Grow your Sales</p>
-      <span class="text-center category-selection" v-if="industry && industry.length > 0">
+      <div class="category-selection" v-if="industry && industry.length > 0" v-for="(item, index) in industry">
+        <roundedBtn
+          :onClick="() => {getSelected(item.category)}"
+          :text="item.category.replace(/_/g, ' ')"
+          :styles="{
+            backgroundColor: '#ffc107',
+            color: '#ffffff',
+            width: (industry.length % 3 == 0) ? '25%' : industry.length <= 2 ? '42%' : (industry.length <= 5 && industry.length > 3) ? '20%' : (industry.length > 6) ? '2%' : '100%' / industry.length,
+            marginLeft: '3%',
+            marginRight: '4%',
+            marginTop: '2%'
+          }"
+        />
+      </div>
+      <!-- <span class="text-center category-selection" v-if="industry && industry.length > 0">
         <select class="form-control" v-model="selected" @change="getSelected(selected)">
           <option :value="null" disabled selected hidden>Select Your Industry</option>
           <option v-for="(item, index) in industry" :value="item.category">{{item.category.replace(/_/g, ' ')}}</option>
         </select>
         <button class="btn redirect-btn" @click="register()">Try It Now!</button>
-      </span>
+      </span> -->
     </div>
 
     <div class="left">
@@ -33,13 +47,11 @@
   margin-top: 15vh;
 }
 
-
 .category-selection{
-  width: 70%;
-  float: left;
-  margin-left: 15%;
-  margin-right: 15%;
   margin-top: 2vh;
+  margin-left: 10%;
+  margin-right: 6%;
+  flex-wrap: wrap;
 }
 
 .form-control{
@@ -203,15 +215,20 @@ import CoolLightBox from 'vue-cool-lightbox'
 import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css'
 import Industry from 'src/modules/landing/new/Industry.vue'
 import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
+import roundedBtn from 'src/modules/generic/roundedBtn'
+import COLORS from 'src/assets/style/colors.js'
 import global from 'src/helpers/global'
 export default {
   components: {
     CoolLightBox,
     Industry,
-    roundedSelectBtn
+    roundedSelectBtn,
+    roundedBtn,
+    COLORS
   },
   data() {
     return {
+      colors: COLORS,
       items: [
         {
           title: 'title',
@@ -224,7 +241,17 @@ export default {
       ],
       index: null,
       imageIndex1: null,
-      industry: [],
+      industry: [{
+        category: 'Finance'
+      }, {
+        category: 'Marketing'
+      }, {
+        category: 'Real_Estate'
+      }, {
+        category: 'Real_Estate'
+      }, {
+        category: 'Education'
+      }],
       global: global,
       selected: null
     }

@@ -1,0 +1,9 @@
+{
+    "powermode.presets": "fireworks",
+    "powermode.enabled": true,
+    "powermode.customExplosions": [
+        "https://c.tenor.com/ORFVjQct6_MAAAAi/borboletas-butterflies.gif"
+    ],        
+    "powermode.enableShake": false,
+    "powermode.backgroundMode": "image",
+}
