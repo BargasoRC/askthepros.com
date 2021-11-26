@@ -226,3 +226,7 @@ $route = env('PACKAGE_ROUTE', '').'/dashboards/';
 $controller = 'DashboardController@';
 Route::post($route.'retrieve_by_user', $controller."retrieveByUser");
 Route::get($route.'test', $controller."test");
+
+$route = env('PACKAGE_ROUTE', '').'/image_generator/';
+$controller = 'ImageHandlerController@';
+Route::post($route.'generate', $controller."generate");
