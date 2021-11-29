@@ -64,7 +64,7 @@
         </div>
         
         <div>
-          <button type="button">Generate</button>
+          <button class="btn btn-primary" type="button" @click="generateImage()">Generate Image</button>
         </div>
         
         <div class="form-group">
@@ -243,6 +243,25 @@ export default {
   },
   methods: {
     // EDIT A POST
+    generateImage(){
+      let parameter = {
+        question: this.title,
+        answer: this.description,
+        category: this.user.merchant.addition_informations.industry
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('image_generator/generate', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data.length > 0) {
+          this.imageList.push(response.data)
+        }else{
+          //
+        }
+      }).catch(error => {
+        $('#loading').css({'display': 'none'})
+        error
+      })
+    },
     retrievePayloads(){
       let conditions = [{
         value: 'subscriptions',
