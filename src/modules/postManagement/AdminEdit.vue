@@ -248,6 +248,10 @@ export default {
     }
   },
   methods: {
+    generateText(){
+      let parameter = {
+      }
+    },
     generateImage(){
       let parameter = {
         question: this.title,
