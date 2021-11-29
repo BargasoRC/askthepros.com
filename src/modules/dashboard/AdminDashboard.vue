@@ -65,7 +65,7 @@ export default {
       tableActions: [],
       // table header: should specify;  title, key(will be used as key in table data) and type
       tableHeaders: [
-        {title: 'Post Title'},
+        {title: 'Post Question'},
         {title: 'Category'},
         {title: 'Channel Actions'},
         {title: 'Author'},

@@ -28,7 +28,7 @@
           <label for="post_title"><b>Post Question</b></label>
           <input 
             :class="!this.isValid && title == '' ? 'form-control mb-0' : 'form-control'"
-            placeholder="Post Title"
+            placeholder="Post Question"
             :style="{
               ...!this.isValid && title == '' ? {border: '1px solid red !important'} : '',
               ...{
@@ -44,10 +44,10 @@
         </div>
 
         <div class="form-group">
-          <label for="description"><b>Answer</b></label>
+          <label for="description"><b>Post Answer</b></label>
           <textarea 
             :class="!this.isValid && description == '' ? 'form-control mb-0' : 'form-control'" 
-            placeholder="Add description here" 
+            placeholder="Add post answer here" 
             rows="10" 
             :style="{
               ...!this.isValid && description == '' ? {border: '1px solid red !important'} : '',
@@ -66,6 +66,7 @@
         <div>
           <button class="btn btn-primary" type="button" @click="generateImage()">Generate Image</button>
         </div>
+        <br>
         
         <div class="form-group">
           <label for="category"><b>Category</b></label>
@@ -97,14 +98,14 @@
           >Required Field</p>
         </div>
 
-        <div class="form-group" style="margin-top: 3%">
+        <!-- <div class="form-group" style="margin-top: 3%">
           <label for="post_setting"><b>Post Setting</b></label>
           <div class="Row row">
             <div class="Column col-4" style="margin-left: -20%"><Toggle :text="'Facebook'" v-model="facebook" :isChecked="facebook" v-if="!isClearing"/></div>
             <div class="Column col-5"><Toggle :text="'Google My Business'" v-model="googleMyBusiness" :isChecked="googleMyBusiness" v-if="!isClearing"/></div>
             <div class="Column col-3"><Toggle :text="'Linkedin'" v-model="linkedin" :isChecked="linkedin" v-if="!isClearing"/></div>
           </div>
-        </div>
+        </div> -->
         <br>
       </div>
       <div class="col-sm-5">
@@ -169,9 +170,6 @@ export default {
     if(this.$route.params.parameter === undefined){
       this.title = ''
       this.description = ''
-      this.facebook = false
-      this.linkedin = false
-      this.googleMyBusiness = false
       this.selectedIndex = null
       this.status = null
       this.retrieveBranding()
@@ -195,9 +193,9 @@ export default {
       isValid: true,
       title: '',
       description: '',
-      facebook: false,
-      googleMyBusiness: false,
-      linkedin: false,
+      facebook: true,
+      googleMyBusiness: true,
+      linkedin: true,
       isClearing: false,
       character: 0,
       selectedIndex: null,
@@ -253,7 +251,9 @@ export default {
       this.APIRequest('image_generator/generate', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data.length > 0) {
-          this.imageList.push(response.data)
+          console.log('[response]', response.data)
+          this.imagesList = {url: this.config.BACKEND_URL + response.data}
+          // this.imageList.push(response.data)
         }else{
           //
         }

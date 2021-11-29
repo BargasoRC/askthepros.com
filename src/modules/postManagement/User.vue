@@ -77,7 +77,7 @@ export default {
     return {
       tableHeaders: [
         {title: 'Date'},
-        {title: 'Post Title'},
+        {title: 'Post Question'},
         {title: 'Channel To Post'},
         {title: 'Status'},
         {title: 'Review'}
