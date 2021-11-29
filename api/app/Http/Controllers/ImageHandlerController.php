@@ -19,7 +19,6 @@ class ImageHandlerController extends APIController
     $question = $data['question'];
     $answer = $data['answer'];
     $category = $data['category'];
-    $postId = $data['id'];
 
     $width       = 400;
     $height      = 400;
@@ -53,7 +52,7 @@ class ImageHandlerController extends APIController
 
     $date = Carbon::now()->toDateString();
     $time = str_replace(':', '_',Carbon::now()->toTimeString());
-    $filename = $postId.'_'.$date.'_'.$time.'.png';
+    $filename = $date.'_'.$time.'.png';
     $image->save(storage_path('/app/images/'.$filename));
 
     $this->response['data'] = '/storage/image/'.$filename;
