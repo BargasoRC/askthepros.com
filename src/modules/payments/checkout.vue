@@ -134,6 +134,7 @@ export default {
       this.errorMessage = null
       if(this.isAgree){
         this.$refs.stripe.addNewPaymentMethod()
+        this.redirect('/thankyou')
       }else{
         this.errorMessage = 'Please accept the I agree my card will be automatically billed monthly until cancellation.'
       }
