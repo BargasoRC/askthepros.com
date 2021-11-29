@@ -35,8 +35,8 @@ class ImageHandlerController extends APIController
 
 
     $y = $center_y - (1 * $font_height);
-    $image->text($category, $center_x, 100, function($font) use ($font_size) {
-      $font->file(public_path('font/OpenSans-Regular.ttf'));
+    $image->text($category. ' Q&A', $center_x, 50, function($font) use ($font_size) {
+      $font->file(public_path('font/OpenSans-Bold.ttf'));
       $font->size($font_size);
       $font->color('#ffffff');
       $font->align('center');
@@ -44,7 +44,7 @@ class ImageHandlerController extends APIController
     });
 
     $image->text($question, $center_x, $y, function($font) use ($font_size) {
-      $font->file(public_path('font/OpenSans-Regular.ttf'));
+      $font->file(public_path('font/OpenSans-Bold.ttf'));
       $font->size($font_size - 10);
       $font->color('#ffffff');
       $font->align('center');
