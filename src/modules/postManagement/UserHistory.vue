@@ -78,7 +78,7 @@ export default {
       tableHeaders: [
         {title: 'Date Posted'},
         {title: 'Time Posted'},
-        {title: 'Post Title'},
+        {title: 'Post Question'},
         {title: 'Channel Posted To'},
         {title: 'Link'},
         {title: 'Status'}

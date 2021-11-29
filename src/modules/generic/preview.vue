@@ -167,7 +167,7 @@ export default {
         if(!this.isAddd && this.verdict === 'false'){
           this.files = Object.values(this.files).map(el => {
             let temp = {}
-            temp['url'] = el.url
+            temp['url'] = el.url === undefined ? el : el.url
             return temp
           })
           return (this.files ? this.files.filter((el, index) => {
