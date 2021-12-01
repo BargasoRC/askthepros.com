@@ -143,7 +143,7 @@ export default {
       con: false,
       tableHeaders: [
         {title: 'Date'},
-        {title: 'Post Title'},
+        {title: 'Post Question'},
         {title: 'Channel Actions'},
         {title: 'Status'},
         {title: 'Actions'}

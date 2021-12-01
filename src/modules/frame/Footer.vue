@@ -31,11 +31,11 @@
         <!-- <div class="ft-pay-img"> -->
           <ul class="list-unstyled">
             <li>
-              <img class="payment" src="../../assets/img/pay_methods.png" alt="Payment Methods">
+              <img class="payment" src="../../assets/img/pay_method.png" alt="Payment Methods">
             </li>
         </ul>
-        <div class="end-line" style="padding-left:10px">
-          <p>Copyright © 2021. All Rights Reserved.<img src="../../assets/img/logo_small_redo.png" alt="logo" height="21px" width="50px" style="padding-left:10px"></p>
+        <div class="end-line">
+          <p>Copyright © 2021. All Rights Reserved. v.{{common.version}}<img src="../../assets/img/logo_small_redo.png" alt="logo" height="21px" width="50px" style="padding-left:10px"></p>
         </div>
       </div>
       <!-- Grid column -->

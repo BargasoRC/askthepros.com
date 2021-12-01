@@ -196,7 +196,7 @@ export default {
   data() {
     return {
       tableHeaders: [
-        {title: 'Post Title'},
+        {title: 'Post Question'},
         {title: 'Channel Posted To'},
         {title: 'Links'},
         {title: 'Status'}
