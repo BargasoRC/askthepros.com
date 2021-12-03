@@ -65,7 +65,7 @@
       <div v-for="(item, index) in industry" :key="index" class="subscription-item">
         <div>
           <div class="layer1">
-            <h6 class="text-primary">{{item.category}}</h6>
+            <h6 class="text-primary">{{item.category.replace('_', ' ')}}</h6>
             <p> {{item.payload_value}} USD / Month</p>
 
             <roundedBtn
