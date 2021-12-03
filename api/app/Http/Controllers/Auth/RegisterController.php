@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\APIController;
+use App\Branding;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -52,10 +53,26 @@ class RegisterController extends APIController
                 $account->created_at = Carbon::now();
                 $account->save();
 
+                $info = new AccountInformation();
+                $info->account_id = $account->id;
+                $info->first_name = $request['first_name'];
+                $info->last_name = $request['last_name'];
+                $info->cellular_number = $request['cellular'];
+                $info->first_name = $request['business_name'];
+                $info->address = $request['address'];
+                $info->save();
+                
+                $branding = new Branding();
+                $branding->account_id = $account->id;
+                $branding->code = $this->generateBrandingCode();
+                $branding->details = $request['details'];
+                $branding->save();
+
                 $merchant = new Merchant();
                 $merchant->account_id = $account->id;
                 $merchant->code = $this->generateCode($merchant);
                 $merchant->email = $account->email;
+                $merchant->name = $request['business_name'];
                 $merchant->addition_informations = $request['industry'];
                 $merchant->save();
                 if($account && $account->id){
@@ -157,4 +174,14 @@ class RegisterController extends APIController
         return $code;
       }
     }
+
+    public function generateBrandingCode(){
+        $code = 'brn_'.substr(str_shuffle($this->codeSource), 0, 60);
+        $codeExist = Branding::where('code', '=', $code)->get();
+        if(sizeof($codeExist) > 0){
+          $this->generateBrandingCode();
+        }else{
+          return $code;
+        }
+      }
 }

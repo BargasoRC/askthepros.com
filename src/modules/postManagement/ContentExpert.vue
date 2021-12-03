@@ -64,7 +64,8 @@
         </div>
         
         <div>
-          <button class="btn btn-primary" type="button" @click="generateImage()">Generate Image</button>
+          <button class="btn btn-primary" type="button" @click="generateAnswer()" v-if="title !== ''">Generate Answer</button>
+          <button class="btn btn-primary" type="button" @click="generateImage()" v-if="title !== '' && description !== ''">Generate Image</button>
         </div>
         <br>
         
@@ -240,28 +241,44 @@ export default {
     }
   },
   methods: {
-    // EDIT A POST
-    generateImage(){
-      let parameter = {
-        question: this.title,
-        answer: this.description,
-        category: this.user.merchant.addition_informations.industry
-      }
-      $('#loading').css({'display': 'block'})
-      this.APIRequest('image_generator/generate', parameter).then(response => {
-        $('#loading').css({'display': 'none'})
-        if(response.data.length > 0) {
-          console.log('[response]', response.data)
-          this.imagesList = {url: this.config.BACKEND_URL + response.data}
-          // this.imageList.push(response.data)
-        }else{
-          //
+    generateAnswer(){
+      if(this.title !== ''){
+        let parameter = {
+          question: this.title
         }
-      }).catch(error => {
-        $('#loading').css({'display': 'none'})
-        error
-      })
+        this.APIRequest('image_generator/generate_answer', parameter).then(res => {
+          console.log('========', res)
+          this.res.result[0] = this.description
+        })
+      }else{
+        this.isValid = false
+      }
     },
+    generateImage(){
+      if(this.title !== '' && this.description !== ''){
+        let parameter = {
+          question: this.title,
+          answer: this.description,
+          category: this.user.merchant.addition_informations.industry
+        }
+        $('#loading').css({'display': 'block'})
+        this.APIRequest('image_generator/generate', parameter).then(response => {
+          $('#loading').css({'display': 'none'})
+          if(response.data.length > 0) {
+            this.imagesList = {url: this.config.BACKEND_URL + response.data}
+            // this.imageList.push(response.data)
+          }else{
+            //
+          }
+        }).catch(error => {
+          $('#loading').css({'display': 'none'})
+          error
+        })
+      }else{
+        this.isValid = false
+      }
+    },
+    // EDIT A POST
     retrievePayloads(){
       let conditions = [{
         value: 'subscriptions',

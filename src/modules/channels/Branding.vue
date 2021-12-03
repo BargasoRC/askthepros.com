@@ -114,7 +114,6 @@ export default {
         branding: this.selectedItem.branding
       }
       this.render = true
-      console.log('[selec]', this.selectedItem)
       return this.selectedItem
     },
     returnBranding() {

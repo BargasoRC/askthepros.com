@@ -494,7 +494,7 @@ export default {
   text-align: center;
 }
 .orSeparatorA {
-  margin-top: 35px;
+  margin-top: 60px;
   margin-bottom: 15px;
 }
 .orSeparatorB {
