@@ -203,7 +203,7 @@
             :styles="{
               border: !this.isValid && (business_name == '' || !isBusinessNameValid) ? '1px solid red !important' : 'none',
             }"
-            v-model="email"
+            v-model="business_name"
           />
           <p
             class="mb-0 pb-0 requiredFieldError"
@@ -234,7 +234,7 @@
       </div>
       <span>
         <p style="margin-top: 5%; float: left; cursor:pointer" @click="page = 1"><b>Back</b></p>
-        <p style="margin-top: 5%; float: right; cursor:pointer" @click="page = 3"><b>Next</b></p>
+        <p style="margin-top: 5%; float: right; cursor:pointer" @click="next(3)"><b>Next</b></p>
       </span>
     </div>
     <div v-if="page===3" style="margin-left: 10px">
@@ -244,11 +244,11 @@
         <span class="checkmark"></span>
       </label>
       <label class="container">I want to promote both myself and my Company Name.
-        <input type="radio" name="radio" value="Myself and Company" v-model="brand">
+        <input type="radio" name="radio" value="Employee of Company" v-model="brand">
         <span class="checkmark"></span>
       </label>
       <label class="container">I want to promote myself only without referencing a Company Name.
-        <input type="radio" name="radio" value="Myself" v-model="brand">
+        <input type="radio" name="radio" value="Individual" v-model="brand">
         <span class="checkmark"></span>
       </label>
       <!-- <label class="container">Generated Question
@@ -687,6 +687,9 @@ export default {
       brand: 'brand',
       errorMessage: null,
       selectedLocation: null,
+      brand1: null,
+      brand2: null,
+      brand3: null,
       property: {
         style: {
           outline: 'none !important',
@@ -721,9 +724,11 @@ export default {
         company_industry: this.selectedIndustry,
         entity: this.brand
       }
-      console.log('[params]', parameter)
       this.APIRequest('image_generator/generate_text', parameter).then(res => {
-        console.log('[sdfasdfasdf]', res)
+        if(res.success === true){
+          JSON.parse(res).result[0] = this.brand1
+          this.register()
+        }
       })
     },
     register() {
@@ -759,8 +764,8 @@ export default {
         this.APIRequest('account/create', parameter).then(response => {
           $('#loading').css({'display': 'none'})
           if(response.data !== null) {
-            this.createMerchantAndPayload(response.data.data)
-            // this.login()
+            this.login()
+            // this.createMerchantAndPayload(response.data.data)
           }else if(response.error !== null){
             if(response.error.status === 100){
               let message = response.error.message
@@ -776,31 +781,6 @@ export default {
           }
         })
       }
-    },
-    async createMerchantAndPayload(id) {
-      let merchant = {
-        account_id: id,
-        name: this.email,
-        email: this.email,
-        addition_informations: JSON.stringify({industry: this.selectedIndustry})
-      }
-      let payload = {
-        account_id: id,
-        payload: 'automation_settings',
-        payload_value: 'ON'
-      }
-      this.APIRequest('merchants/create', merchant).then(response => {
-        console.log('MERCHANT RESPONSE: ', response)
-      }).catch(error => {
-        console.log('MERCHANT ERROR', error)
-      })
-      this.APIRequest('payloads/create', payload).then(response => {
-        console.log('PAYLOAD RESPONSE: ', response)
-      }).catch(error => {
-        console.log('PAYLOAD ERROR', error)
-      })
-
-      await this.login()
     },
     validate() {
       if(this.first_name !== '' && this.last_name !== '' && this.phone_number !== '' && this.first_name !== undefined && this.last_name !== undefined && this.phone_number !== undefined && this.email !== '' && this.password !== '' || this.cpassword !== '') {

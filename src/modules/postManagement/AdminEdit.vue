@@ -253,8 +253,10 @@ export default {
         let parameter = {
           question: this.title
         }
+        $('#loading').css({'display': 'block'})
         this.APIRequest('image_generator/generate_answer', parameter).then(res => {
-          res.result[0] = this.description
+          $('#loading').css({'display': 'none'})
+          JSON.parse(res).result[0] = this.description
         })
       }else{
         this.isValid = false
