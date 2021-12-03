@@ -58,7 +58,6 @@ class RegisterController extends APIController
                 $info->first_name = $request['first_name'];
                 $info->last_name = $request['last_name'];
                 $info->cellular_number = $request['cellular'];
-                $info->first_name = $request['business_name'];
                 $info->address = $request['address'];
                 $info->save();
                 
