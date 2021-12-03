@@ -241,17 +241,7 @@ export default {
       ],
       index: null,
       imageIndex1: null,
-      industry: [{
-        category: 'Finance'
-      }, {
-        category: 'Marketing'
-      }, {
-        category: 'Real_Estate'
-      }, {
-        category: 'Real_Estate'
-      }, {
-        category: 'Education'
-      }],
+      industry: [],
       global: global,
       selected: null
     }
