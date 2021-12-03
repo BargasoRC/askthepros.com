@@ -65,7 +65,13 @@ class ImageHandlerController extends APIController
     $endpoint = 'https://openai.askthepros.com/api/v1/generate';
     $res = HTTP::withHeaders([
       'X-Api-Key' => 'bM8sWJwKCyPegpgY3GJGY9Wd7aaV7RsCxnPWQeprrc3Pb9NnuAFAuhBseUJH52Fd'
-    ])->post($endpoint, ['question' => $data['question']]);    
+    ])->post($endpoint, [
+      "company_industry" => $data['company_industry'],
+      "company_location" => $data['company_location'],
+      "company_name" => $data['company_name'],
+      "employee_name" => $data['employee_name'],
+      "entity" => $data['entity']
+    ]);    
     return $res;
   }
 
