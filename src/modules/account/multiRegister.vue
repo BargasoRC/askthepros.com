@@ -14,10 +14,10 @@
           </h6>
       </div>
       <div class="col-md-4 text-center">
-          <h6>
-            <span :class="page===3 ? 'circle' : 'circle-outline'">3</span>
-            Preview
-          </h6>
+        <h6>
+          <span :class="page===3 ? 'circle' : 'circle-outline'">3</span>
+          Branding
+        </h6>
       </div>
     </div>
     <div v-if="page===1">
@@ -72,17 +72,17 @@
             <roundedInput
               :type="'text'"
               :placeholder="'Phone Number'"
-              :class="!this.isValid && (phone_number == '' || !isPhoneNumber) ? 'mb-0 ' : ' registrationField'"
+              :class="!this.isValid && (phone_number == '' || !isPhoneNumberValid) ? 'mb-0 ' : ' registrationField'"
               :styles="{
-                border: !this.isValid && (phone_number == '' || !isPhoneNumber) ? '1px solid red !important' : 'none',
+                border: !this.isValid && (phone_number == '' || !isPhoneNumberValid) ? '1px solid red !important' : 'none',
               }"
               v-model="phone_number"
             />
             <p
               class="mb-0 pb-0 requiredFieldError"
-              v-if="!this.isValid && (phone_number == '' || !isPhoneNumber)"
+              v-if="!this.isValid && (phone_number == '' || !isPhoneNumberValid)"
             >{{
-              !isPhoneNumber ?
+              !isPhoneNumberValid ?
                 'Invalid Phone Number'
               :
                 'Required Field'
@@ -145,10 +145,7 @@
               }"
               v-model="password"
             />
-        </div>
-        <!-- ///////////// -->
-        <div class="col-md-6">
-          <p
+            <p
             class="mb-0 pb-0 requiredFieldError"
             v-if="!this.isValid && (password == '' || password != cpassword || passwordRequirements != '')"
           >{{
@@ -163,6 +160,9 @@
               :
               'Required Field'
           }}</p>
+        </div>
+        <!-- ///////////// -->
+        <div class="col-md-6">
           <p class="mt-2"><b>Confirm Password</b></p>
           <roundedInput 
             :type="'password'"
@@ -191,7 +191,7 @@
           }}</p>
         </div>
       </div>
-      <i class="fas fa-angle-right fa-3x" style="float: right; margin-top: 5%" @click="page = 2"></i>
+      <p style="float: right; margin-top: 3%; cursor: pointer" @click="next(2)"><b>Next</b></p>
     </div>
     <div  v-if="page===2">
       <div>
@@ -222,7 +222,7 @@
             @onFinish="getAddressData($event)"
             >
           </GooglePlacesAutoComplete>
-          <p
+          <!-- <p
             class="mb-0 pb-0 requiredFieldError"
             v-if="!this.isValid && (email == '' || !isEmailValid)"
           >{{
@@ -230,17 +230,112 @@
               'Invalid Email'
             :
               'Required Field'
-          }}</p>
+          }}</p> -->
       </div>
-      <i class="fas fa-chevron-left fa-3x" style="margin-top: 5%" @click="page = 1"></i>
+      <span>
+        <p style="margin-top: 5%; float: left; cursor:pointer" @click="page = 1"><b>Back</b></p>
+        <p style="margin-top: 5%; float: right; cursor:pointer" @click="page = 3"><b>Next</b></p>
+      </span>
     </div>
-    <div v-if="page===3">
+    <div v-if="page===3" style="margin-left: 10px">
+      <p><b>Which option best describes your situation ?</b></p>
+      <label class="container">I want to promote my Company Name Only.
+        <input type="radio" name="radio" checked="checked" value="Company" v-model="brand">
+        <span class="checkmark"></span>
+      </label>
+      <label class="container">I want to promote both myself and my Company Name.
+        <input type="radio" name="radio" value="Myself and Company" v-model="brand">
+        <span class="checkmark"></span>
+      </label>
+      <label class="container">I want to promote myself only without referencing a Company Name.
+        <input type="radio" name="radio" value="Myself" v-model="brand">
+        <span class="checkmark"></span>
+      </label>
+      <!-- <label class="container">Generated Question
+        <input type="radio" name="radio">
+        <span class="checkmark"></span>
+      </label> -->
+      <span>
+        <p style="margin-top: 5%; float: left; cursor:pointer" @click="page = 1"><b>Back</b></p>
+        <p style="margin-top: 5%; float: right; font-size: 15px; cursor:pointer; color: blue;" @click="generateBrand()"><b>Submit</b></p>
+        <!-- <p style="margin-top: 5%; float: right; cursor:pointer" @click="page = 3"><b>Submit</b></p> -->
+      </span>
       <!-- <Checkout :addOns="selectedAddOn"/> -->
     </div>
   </div>
 </template>
 <style scoped lang="scss">
 @import "~assets/style/colors.scss";
+/* The container */
+.container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  font-size: 14px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.container .checkmark:after {
+ 	top: 9px;
+	left: 9px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: white;
+}
+
+.requiredFieldError {
+  color: $danger;
+  font-size: 10px;
+  margin-left: 20px;
+  margin-bottom: 25px !important;
+}
 .registrationField {
   margin-bottom: 5px;
 }
@@ -535,6 +630,9 @@ h5{
 }
 </style>
 <script>
+import dialogueBtn from 'src/modules/generic/dialogueBtn'
+import global from 'src/helpers/global'
+import COLORS from 'src/assets/style/colors.js'
 import COMMON from 'src/common.js'
 import ROUTER from 'src/router'
 import roundedInput from 'src/modules/generic/roundedInput'
@@ -545,6 +643,7 @@ import GooglePlacesAutoComplete from 'src/components/increment/generic/location/
 import CONFIG from 'src/config.js'
 export default {
   components: {
+    dialogueBtn,
     roundedInput,
     VueSlider,
     GooglePlacesAutoComplete
@@ -558,10 +657,10 @@ export default {
     setTimeout(() => {
       this.retrievePayloads()
     }, 1000)
-    console.log('[t>>>]', this.selectedIndustry)
   },
   data(){
     return {
+      colors: COLORS,
       common: COMMON,
       config: CONFIG,
       selectedIndustry: null,
@@ -574,6 +673,8 @@ export default {
       isFirstNameValid: true,
       isLastNameValid: true,
       isBusinessNameValid: true,
+      isPhoneNumberValid: true,
+      isIndustryValid: true,
       first_name: '',
       last_name: '',
       phone_number: '',
@@ -583,6 +684,7 @@ export default {
       email: '',
       passwordRequirements: '',
       industry: [],
+      brand: 'brand',
       errorMessage: null,
       selectedLocation: null,
       property: {
@@ -604,8 +706,156 @@ export default {
     }
   },
   methods: {
+    generateBrand(){
+      let parameter = {
+        company_name: this.business_name,
+        employee_name: this.first_name + '' + this.last_name,
+        company_location: JSON.stringify({
+          route: this.selectedLocation.route,
+          locality: this.selectedLocation.locality,
+          region: this.selectedLocation.region,
+          country: this.selectedLocation.country,
+          latitude: this.selectedLocation.latitude,
+          longitude: this.selectedLocation.longitude
+        }),
+        company_industry: this.selectedIndustry,
+        entity: this.brand
+      }
+      console.log('[params]', parameter)
+      this.APIRequest('image_generator/generate_text', parameter).then(res => {
+        console.log('[sdfasdfasdf]', res)
+      })
+    },
+    register() {
+      if(this.validate() && this.validate2()) {
+        this.isValid = true
+        let parameter = {
+          username: this.email,
+          email: this.email,
+          password: this.password,
+          account_type: 'USER',
+          referral_code: null,
+          status: 'ADMIN',
+          business_name: this.business_name,
+          first_name: this.first_name,
+          last_name: this.last_name,
+          cellular: this.phone_number,
+          address: JSON.stringify({
+            route: this.selectedLocation.route,
+            locality: this.selectedLocation.locality,
+            region: this.selectedLocation.region,
+            country: this.selectedLocation.country,
+            latitude: this.selectedLocation.latitude,
+            longitude: this.selectedLocation.longitude
+          }),
+          details: JSON.stringify({
+            brand1: this.brand1,
+            brand2: this.brand2,
+            brand3: this.brand3
+          }),
+          industry: JSON.stringify({industry: this.selectedIndustry})
+        }
+        $('#loading').css({'display': 'block'})
+        this.APIRequest('account/create', parameter).then(response => {
+          $('#loading').css({'display': 'none'})
+          if(response.data !== null) {
+            this.createMerchantAndPayload(response.data.data)
+            // this.login()
+          }else if(response.error !== null){
+            if(response.error.status === 100){
+              let message = response.error.message
+              // if(typeof message.username !== undefined && typeof message.username !== 'undefined'){
+              //   this.errorMessage = message.username[0]
+              if(typeof message.email !== undefined && typeof message.email !== 'undefined'){
+                this.errorMessage = message.email[0]
+              }
+            }else{
+              let message = response.error.message
+              this.errorMessage = message
+            }
+          }
+        })
+      }
+    },
+    async createMerchantAndPayload(id) {
+      let merchant = {
+        account_id: id,
+        name: this.email,
+        email: this.email,
+        addition_informations: JSON.stringify({industry: this.selectedIndustry})
+      }
+      let payload = {
+        account_id: id,
+        payload: 'automation_settings',
+        payload_value: 'ON'
+      }
+      this.APIRequest('merchants/create', merchant).then(response => {
+        console.log('MERCHANT RESPONSE: ', response)
+      }).catch(error => {
+        console.log('MERCHANT ERROR', error)
+      })
+      this.APIRequest('payloads/create', payload).then(response => {
+        console.log('PAYLOAD RESPONSE: ', response)
+      }).catch(error => {
+        console.log('PAYLOAD ERROR', error)
+      })
+
+      await this.login()
+    },
+    validate() {
+      if(this.first_name !== '' && this.last_name !== '' && this.phone_number !== '' && this.first_name !== undefined && this.last_name !== undefined && this.phone_number !== undefined && this.email !== '' && this.password !== '' || this.cpassword !== '') {
+        if(!global.validateField(this.first_name) && !global.validateField(this.last_name) && global.validateNumber(this.phone_number) === true && !this.email.includes(' ') && global.validateEmail(this.email) && (this.password === this.cpassword)) {
+          this.isFirstNameValid = true
+          this.isLastNameValid = true
+          this.isPhoneNumberValid = true
+          this.isEmailValid = true
+          this.isValid = true
+          return true
+        }else if(this.password !== this.cpassword) {
+          this.isValid = false
+          return false
+        }else if(!global.validatePassword(this.password)) {
+          this.isValid = false
+          this.passwordRequirements = 'Password should be minimum of 8 and maximum of 16.'
+          return false
+        }else{
+          this.isValid = false
+          this.isEmailValid = false
+          this.isFirstNameValid = false
+          this.isLastNameValid = false
+          this.isPhoneNumberValid = false
+          return false
+        }
+      }else {
+        this.isValid = false
+        this.isEmailValid = false
+        this.isFirstNameValid = false
+        this.isLastNameValid = false
+        this.isPhoneNumberValid = false
+        return false
+      }
+    },
+    validate2() {
+      if(this.business_name !== '' && this.selectedLocation !== null) {
+        this.isValid = true
+        this.isBusinessNameValid = true
+        return true
+      }else {
+        this.isValid = false
+        this.isBusinessNameValid = false
+        return false
+      }
+    },
     next(page){
-      this.page = page
+      if(page === 2 && !this.validate()) {
+        console.log('Not valid')
+        return
+      }else if(page === 3 && !this.validate2()){
+        console.log('[Not Valid2]')
+        return
+      }else{
+        this.page = page
+      }
     },
     previous(page){
       this.page = page

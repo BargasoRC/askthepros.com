@@ -367,7 +367,7 @@ export default {
           username: this.email,
           email: this.email,
           password: this.password,
-          config: CONFIG,
+          // config: CONFIG,
           account_type: this.type,
           referral_code: null,
           status: 'ADMIN',
