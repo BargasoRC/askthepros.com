@@ -114,6 +114,7 @@ export default {
       setTimeout(() => {
         let vue = new Vue()
         vue.APIRequest('authenticate/refresh', {}, (response) => {
+          console.log('response', response)
           this.setToken(response['token'])
         }, (response) => {
           this.deaunthenticate()
