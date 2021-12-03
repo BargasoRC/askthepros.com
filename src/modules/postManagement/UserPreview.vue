@@ -1,6 +1,6 @@
 <template>
   <div class="modal fade" id="selectLocationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
       <div class="modal-content" style="height: 100vh">
         <div class="modal-header bg-primary">
           <h5 class="modal-title" id="exampleModalLabel"></h5>
@@ -29,11 +29,11 @@
 .modal.fade {
   overflow-y: hidden;
   margin-top: -4%;
-  width: 40% !important; 
+  // width: 40% !important; 
   // margin-left: 75%; 
   position: 'absolute';
   right: 0;
-  left: 60%;
+  // left: 60%;
   min-height: 100vh !important;
   -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
   -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
