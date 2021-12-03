@@ -25,7 +25,7 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>{{selected.category.toUpperCase()}} Monthly Subscription</td>
+						<td>{{selected.category.toUpperCase().replace('_', ' ')}} Monthly Subscription</td>
 						<td>$ {{selected.payload_value}} / Month</td>
 					</tr>
           <tr>
@@ -134,7 +134,6 @@ export default {
       this.errorMessage = null
       if(this.isAgree){
         this.$refs.stripe.addNewPaymentMethod()
-        this.redirect('/thankyou')
       }else{
         this.errorMessage = 'Please accept the I agree my card will be automatically billed monthly until cancellation.'
       }
@@ -142,7 +141,7 @@ export default {
     retrieve(){
       console.log('test')
       let plan = this.$route.params.plan
-      plan = plan.replace('_', ' ')
+      // plan = plan.replace('_', ' ')
       let parameter = {
         condition: [{
           value: 'subscriptions',
@@ -159,10 +158,13 @@ export default {
       this.isLoading = true
       this.APIRequest('payloads/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
+        console.log('response', response)
         if(response.data.length > 0) {
           this.selected = response.data[0]
+          console.log('data active', this.selected)
         }else{
           this.selected = null
+          console.log('no data', this.selected)
         }
         this.isLoading = false
       }).catch(error => {
