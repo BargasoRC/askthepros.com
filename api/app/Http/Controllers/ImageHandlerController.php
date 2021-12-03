@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use Intervention\Image\ImageManager;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -10,7 +11,6 @@ use Intervention\Image\ImageManagerStatic as Image;
 class ImageHandlerController extends APIController
 {
   function __construct(){
-
   }
 
   public function generate(Request $request){
@@ -57,5 +57,25 @@ class ImageHandlerController extends APIController
 
     $this->response['data'] = '/storage/image/'.$filename;
     return $this->response();
+  }
+
+  public function generateText(Request $request){
+    $data = $request->all();
+    $headers[] = 'X-Api-Key: bM8sWJwKCyPegpgY3GJGY9Wd7aaV7RsCxnPWQeprrc3Pb9NnuAFAuhBseUJH52Fd';
+    $endpoint = 'https://openai.askthepros.com/api/v1/generate';
+    $res = HTTP::withHeaders([
+      'X-Api-Key' => 'bM8sWJwKCyPegpgY3GJGY9Wd7aaV7RsCxnPWQeprrc3Pb9NnuAFAuhBseUJH52Fd'
+    ])->post($endpoint, ['question' => $data['question']]);    
+    return $res;
+  }
+
+  public function generateAnswer(Request $request){
+    $data = $request->all();
+    $headers[] = 'X-Api-Key: bM8sWJwKCyPegpgY3GJGY9Wd7aaV7RsCxnPWQeprrc3Pb9NnuAFAuhBseUJH52Fd';
+    $endpoint = 'https://openai.askthepros.com/api/v1/qa';
+    $res = HTTP::withHeaders([
+      'X-Api-Key' => 'bM8sWJwKCyPegpgY3GJGY9Wd7aaV7RsCxnPWQeprrc3Pb9NnuAFAuhBseUJH52Fd'
+    ])->post($endpoint, ['question' => $data['question']]);    
+    return $res;
   }
 }

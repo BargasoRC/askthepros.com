@@ -63,8 +63,8 @@
           <p style="text-align: right; font-size: 12px; color: gray;">Character count: {{character}}</p>
         </div>
         <div>
-          <button class="btn btn-primary" type="button" @click="generateText()">Generate Text</button>
-          <button class="btn btn-primary" type="button" @click="generateImage()">Generate Image</button>
+          <button class="btn btn-primary" type="button" @click="generateAnswer()" v-if="title !== ''">Generate Answer</button>
+          <button class="btn btn-primary" type="button" @click="generateImage()" v-if="title !== '' && description !== ''">Generate Image</button>
         </div>
         <br>
         <div class="form-group">
@@ -168,8 +168,8 @@ import COLORS from 'src/assets/style/colors.js'
 import CONFIG from 'src/config.js'
 import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
 import global from 'src/helpers/global'
-import preview from 'src/modules/generic/preview.vue'
 import axios from 'axios'
+import preview from 'src/modules/generic/preview.vue'
 import ROUTER from 'src/router'
 import searchField from 'src/modules/generic/searchField.vue'
 import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
@@ -248,29 +248,41 @@ export default {
     }
   },
   methods: {
-    generateText(){
-      let parameter = {
+    generateAnswer(){
+      if(this.title !== ''){
+        let parameter = {
+          question: this.title
+        }
+        this.APIRequest('image_generator/generate_answer', parameter).then(res => {
+          res.result[0] = this.description
+        })
+      }else{
+        this.isValid = false
       }
     },
     generateImage(){
-      let parameter = {
-        question: this.title,
-        answer: this.description,
-        category: this.user.merchant.addition_informations.industry
-      }
-      $('#loading').css({'display': 'block'})
-      this.APIRequest('image_generator/generate', parameter).then(response => {
-        $('#loading').css({'display': 'none'})
-        if(response.data.length > 0) {
-          this.imagesList = {url: this.config.BACKEND_URL + response.data}
-          // this.imageList.push(response.data)
-        }else{
-          //
+      if(this.title !== '' && this.description !== ''){
+        let parameter = {
+          question: this.title,
+          answer: this.description,
+          category: this.user.merchant.addition_informations.industry
         }
-      }).catch(error => {
-        $('#loading').css({'display': 'none'})
-        error
-      })
+        $('#loading').css({'display': 'block'})
+        this.APIRequest('image_generator/generate', parameter).then(response => {
+          $('#loading').css({'display': 'none'})
+          if(response.data.length > 0) {
+            this.imagesList = {url: this.config.BACKEND_URL + response.data}
+            // this.imageList.push(response.data)
+          }else{
+            //
+          }
+        }).catch(error => {
+          $('#loading').css({'display': 'none'})
+          error
+        })
+      }else{
+        this.isValid = false
+      }
     },
     // EDIT A POST
     retrievePayloads(){

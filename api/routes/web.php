@@ -230,3 +230,5 @@ Route::get($route.'test', $controller."test");
 $route = env('PACKAGE_ROUTE', '').'/image_generator/';
 $controller = 'ImageHandlerController@';
 Route::post($route.'generate', $controller."generate");
+Route::post($route.'generate_text', $controller."generateText");
+Route::post($route.'generate_answer', $controller."generateAnswer");
