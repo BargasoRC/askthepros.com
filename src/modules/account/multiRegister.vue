@@ -725,13 +725,13 @@ export default {
         entity: this.brand
       }
       this.APIRequest('image_generator/generate_text', parameter).then(res => {
-        if(res.success === true){
+        if(JSON.parse(res).success === true){
           JSON.parse(res).result[0] = this.brand1
-          this.register()
+          this.register(JSON.parse(res).result[0])
         }
       })
     },
-    register() {
+    register(brand) {
       if(this.validate() && this.validate2()) {
         this.isValid = true
         let parameter = {
@@ -754,7 +754,7 @@ export default {
             longitude: this.selectedLocation.longitude
           }),
           details: JSON.stringify({
-            brand1: this.brand1,
+            brand1: brand,
             brand2: this.brand2,
             brand3: this.brand3
           }),
@@ -763,21 +763,12 @@ export default {
         $('#loading').css({'display': 'block'})
         this.APIRequest('account/create', parameter).then(response => {
           $('#loading').css({'display': 'none'})
-          if(response.data !== null) {
-            this.login()
+          if(response.data.message !== null) {
+            ROUTER.push('/login')
             // this.createMerchantAndPayload(response.data.data)
-          }else if(response.error !== null){
-            if(response.error.status === 100){
-              let message = response.error.message
-              // if(typeof message.username !== undefined && typeof message.username !== 'undefined'){
-              //   this.errorMessage = message.username[0]
-              if(typeof message.email !== undefined && typeof message.email !== 'undefined'){
-                this.errorMessage = message.email[0]
-              }
-            }else{
-              let message = response.error.message
-              this.errorMessage = message
-            }
+          }else {
+            let message = response.error.message
+            this.errorMessage = message
           }
         })
       }
@@ -791,6 +782,10 @@ export default {
           this.isEmailValid = true
           this.isValid = true
           return true
+        }else if(global.validateNumber(this.phone_number) === false){
+          this.isValid = false
+          this.isPhoneNumberValid = false
+          return false
         }else if(this.password !== this.cpassword) {
           this.isValid = false
           return false
