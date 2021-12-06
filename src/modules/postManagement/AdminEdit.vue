@@ -256,7 +256,7 @@ export default {
         $('#loading').css({'display': 'block'})
         this.APIRequest('image_generator/generate_answer', parameter).then(res => {
           $('#loading').css({'display': 'none'})
-          JSON.parse(res).result[0] = this.description
+          this.description = JSON.parse(res).result[0]
         })
       }else{
         this.isValid = false
@@ -428,7 +428,6 @@ export default {
       this.selectedIndustry.forEach(element => {
         selectIndustry.push({category: element.category, id: element.id})
       })
-      console.log('[this.validate]', this.validate(), global.validateDate(this.description))
       if(this.validate()) {
         $('#loading').css({'display': 'block'})
         let channels = []
