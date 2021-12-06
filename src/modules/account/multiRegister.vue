@@ -238,6 +238,10 @@
       </span>
     </div>
     <div v-if="page===3" style="margin-left: 10px">
+      <p
+        class="mb-2 pb-0 errorMessage"
+        v-if="errorMessage != null"
+      >{{errorMessage}}</p>
       <p><b>Which option best describes your situation ?</b></p>
       <label class="container">I want to promote my Company Name Only.
         <input type="radio" name="radio" checked="checked" value="Company" v-model="brand">
@@ -328,6 +332,13 @@
 	height: 8px;
 	border-radius: 50%;
 	background: white;
+}
+
+.errorMessage {
+  margin-top: -14px;
+  color: $danger;
+  margin-bottom: 25px !important;
+  text-align: center;
 }
 
 .requiredFieldError {
