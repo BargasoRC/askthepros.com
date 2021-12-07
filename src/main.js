@@ -7,10 +7,11 @@ import router from './router'
 import config from './config.js'
 import VueResource from 'vue-resource'
 import { firestorePlugin } from 'vuefire'
+import VueCarousel from 'vue-carousel'
 
+Vue.use(VueCarousel);
 Vue.use(firestorePlugin)
 Vue.use(VueResource)
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

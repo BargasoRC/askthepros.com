@@ -3,52 +3,78 @@
     <center>
       <h1>Spend your valuable time making sales</h1>
     </center>
-    <div class="container">
-      <div class="row holder" id="tcard">
-        <div class="column single-card" v-for="(item, index) in testimonials" :key="index">
-          <div class="card-image"><img id="company" :src="item.company"></div>
+    <div id="tcard">
+      <carousel>
+        <slide v-for="(item, index) in testimonials" :key="index" style="padding-right: 5%; padding-left: 5%">
+          <div style="align-items: center; padding-left: 45%; padding-right: 45%"><img id="company" :src="item.company"></div>
           <p><i class="fas fa-quote-left"></i></p>
           <h6>{{item.comment}}</h6>
           <hr/>
           <div class="row">
-            <div class="column" style="width:30%"><img id="photo" :src="item.photo"></div>
+            <div class="column" style="width:10%"><img id="photo" :src="item.photo"></div>
             <div class="column" style="width:70%">
               <p id="name">{{item.name}}</p>
               <p id="job">{{item.job}}</p>
             </div>
           </div>
-        </div>
-      </div>
+        </slide>
+      </carousel>
     </div>
   </div>
 </template>
 
 <script>
 import ROUTER from 'src/router'
+import { Carousel, Slide } from 'vue-carousel'
 export default {
+  components: {
+    Carousel,
+    Slide
+  },
   data(){
     return{
       testimonials: [
         {
-          company: require('assets/img/temp-comp.png'),
-          comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.  ',
-          photo: require('assets/img/temp-image.jpg'),
-          name: 'Juan Dela Cruz',
-          job: 'Founder, SOS Company'
+          company: require('assets/img/just-us-insurance.png'),
+          comment: 'David Wolfe with Wolfe Media worked with my daughter Heather and I to create a video that conveyed our Business..... David was incredibly Helpful and Knowledgeable.... he allowed as to do as much or a little input that we felt comfortable with.... David also gave easy instructions on what he needed to create the video... David exceeded our expectations.... Excellent Job David.... Thanks Jay and Heather Gray - Just Us Insurance, San Marcos, Ca ',
+          photo: require('assets/img/jay-gray.jpg'),
+          name: 'Jay Gray',
+          job: 'Medicare Agent'
         },
         {
-          company: require('assets/img/temp-comp1.png'),
-          comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
-          photo: require('assets/img/temp-image2.jpg'),
-          name: 'Jane Millers',
-          job: 'CMO, Company.com'
+          company: require('assets/img/aging-at-altitude.jpg'),
+          comment: `David Wolfe is an expert when it comes to digital marketing. His knowledge about Google My Business and overall optimization has launched my online presence into a whole new level. Highly recommend looking no further if you're looking for a valuable resource in overall digital/video marketing. `,
+          photo: require('assets/img/Mary-Hansen.jpg'),
+          name: 'Mary Hansen',
+          job: 'Medicare Agent'
         },
         {
-          company: require('assets/img/temp-comp2.png'),
-          comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
-          photo: require('assets/img/temp-image1.jpg'),
-          name: 'John Doe',
-          job: 'CEO, ABC Company'
+          company: null,
+          comment: `Wolfe Media just made my first Business video for my husband & I. We really didn't know what we were doing. But he put it all together & madw it look perfect. I highly recommend using them for Video Production. `,
+          photo: require('assets/img/deina-prof.jpg'),
+          name: 'Deina Hildebrand',
+          job: 'Medicare Agent'
+        },
+        {
+          company: null,
+          comment: `I feel so confident from the help I received from David Wolfe about my marketing my Google business. He took the time to answer all my questions. I think Wolfe Media is incredible! `,
+          photo: require('assets/img/Janetta-Bouman.jpg'),
+          name: 'Janetta Bouman',
+          job: 'Medicare Agent'
+        },
+        {
+          company: null,
+          comment: `David has helped me put together videos, helped me market My Google Business page and really helped my social presence overall and taken it to a whole new level. He's been awesome and I highly recommend him to all my peers! `,
+          photo: require('assets/img/Zeb-Christensen.jpg'),
+          name: 'Zeb Christensen',
+          job: 'Medicare Agent'
+        },
+        {
+          company: require('assets/img/just-us-insurance.png'),
+          comment: `Bill Kellaway with BackOfficeDesigns.com has done an incredible job with our JustusInsurance.com and also our Insr4u.com... Both of our websites are enterprise class websites. BIll has been very patient with my daughter Heather and myself throughout the years, helping us with any tweaks we need on the website... I have known Bill for over 25 years, and there is no one that know of that has more knowledge about Websites / Search Engine Marketing / Internet Strategies. Bill is a 5 Star kind of guy in our Book. `,
+          photo: require('assets/img/jay-gray.jpg'),
+          name: 'Jay Gray',
+          job: 'Medicare Agent'
         }
       ]
     }
@@ -83,6 +109,9 @@ center {
 
 #tcard{
   padding-bottom: 15vh;
+  padding-top: 5%;
+  padding-right: 5%;
+  padding-left: 5%;
 }
 
 
@@ -110,7 +139,7 @@ p {
   background-color: $white;
   box-shadow: -4px 8px 15px #e9e9e9;
   padding: 30px;
-  margin: 0.5%;
+  margin: 5%;
   min-height: 50vh;
   border-radius: 5px;
   float: left;
@@ -144,7 +173,8 @@ p {
 
 }
 #company {
-  height: 70px;
+  height: 50px;
+  // width: 120px;
 }
 
 .card-image{
@@ -173,6 +203,7 @@ hr {
 
 #photo {
   height: 50px;
+  width: 50px;
   border-radius: 50px;
   border: 1px solid $warning;
 }
@@ -187,4 +218,3 @@ hr {
   font-weight: 400;
 }
 </style>
-

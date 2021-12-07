@@ -32,10 +32,10 @@ export default {
       testimonials: [
         {
           company: require('assets/img/temp-comp.png'),
-          comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna sed do eiusmod tempor incig didunt ut labore et dolore magna sd gsgr gg   gdgdfg   aliqua. ',
+          comment: '"David Wolfe with Wolfe Media worked with my daughter Heather and I to create a video that conveyed our Business.....David was incredibly Helpful and Knowledgeable....he allowed as to do as much or a little input that we felt comfortable with....David also gave easy instructions on what he needed to create the video...David exceeded our expectations....Excellent Job David....Thanks Jay and Heather Gray - Just Us Insurance, San Marcos, Ca"',
           photo: require('assets/img/temp-image.jpg'),
-          name: 'Juan Dela Cruz',
-          job: 'Founder, SOS Company'
+          name: 'Jay Gray',
+          job: 'Medicare Agent'
         },
         {
           company: require('assets/img/temp-comp1.png'),
