@@ -58,26 +58,18 @@
       </div>
 
       <div class="body" v-if="active === 2">
-        <roundedInput
-          :type="'text'"
-          :placeholder="'Business Name'"
-          :class="'mb-0'"
-          :styles="{
-            border:'1px solid grey !important'
-          }"
-          v-model="businessName"
-        />
-
-       <roundedInput
-          :type="'text'"
-          :placeholder="'Business Address'"
-          :class="'mb-0'"
-          :styles="{
-            border:'1px solid grey !important',
-            marginTop: '25px'
-          }"
-          v-model="businessAddress"
-        />
+        <label class="container">I want to promote my Company Name Only.
+          <input type="radio" name="radio" checked="checked" value="Company" v-model="brand">
+          <span class="checkmark"></span>
+        </label>
+        <label class="container">I want to promote both myself and my Company Name.
+          <input type="radio" name="radio" value="Employee of Company" v-model="brand">
+          <span class="checkmark"></span>
+        </label>
+        <label class="container">I want to promote myself only without referencing a Company Name.
+          <input type="radio" name="radio" value="Individual" v-model="brand">
+          <span class="checkmark"></span>
+        </label>
       </div>      
 
       <div class="footer">
@@ -154,7 +146,7 @@ export default {
             return true
           }else{
             this.errorMessage = 'All fields are required.'
-            return false
+            return true
           }
         }
         case 1: {
@@ -162,7 +154,7 @@ export default {
             return true
           }else{
             this.errorMessage = 'All fields are required.'
-            return false
+            return true
           }
         }
       }
@@ -184,6 +176,7 @@ export default {
 }
 </script>
 <style scoped lang="scss">
+@import "~assets/style/colors.scss";
 .stepper-container{
   width: 100%;
   float: left;
@@ -207,5 +200,47 @@ export default {
 .body{
   margin-top: 25px;
   margin-bottom: 25px;
+}
+
+/* The container */
+.container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  font-size: 14px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: #2196F3;
 }
 </style>
