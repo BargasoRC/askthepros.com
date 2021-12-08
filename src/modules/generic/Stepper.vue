@@ -57,6 +57,29 @@
         />
       </div>
 
+      <div class="body" v-if="active === 2">
+        <roundedInput
+          :type="'text'"
+          :placeholder="'Business Name'"
+          :class="'mb-0'"
+          :styles="{
+            border:'1px solid grey !important'
+          }"
+          v-model="businessName"
+        />
+
+       <roundedInput
+          :type="'text'"
+          :placeholder="'Business Address'"
+          :class="'mb-0'"
+          :styles="{
+            border:'1px solid grey !important',
+            marginTop: '25px'
+          }"
+          v-model="businessAddress"
+        />
+      </div>      
+
       <div class="footer">
         <dialogueBtn
           :onClick="this.managePrevious"
@@ -115,6 +138,10 @@ export default {
         }
         case 1: {
           this.title = 'Business Details'
+          break
+        }
+        case 2: {
+          this.title = 'Which option best describes your situation?'
           break
         }
       }
