@@ -62,7 +62,7 @@
           :onClick="this.managePrevious"
           :icon="'fas fa-chevron-left'"
           :text="'Previous'"
-          :icon_position="'right'"
+          :icon_position="'left'"
           :styles="{
             backgroundColor: colors.danger,
             color: 'white'
