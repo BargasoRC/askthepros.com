@@ -200,6 +200,14 @@ export default{
     meta: {
       tokenRequired: true
     }
+  },
+  {
+    path: '/stepper',
+    name: 'stepper',
+    component: resolve => require(['src/modules/generic/Stepper.vue'], resolve),
+    meta: {
+      tokenRequired: false
+    }
   }
   ]
 }

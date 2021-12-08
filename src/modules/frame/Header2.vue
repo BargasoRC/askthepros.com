@@ -18,6 +18,7 @@
           <li class="nav-item"><a class="nav-link" @click="redirect('/signup')">Register</a></li>
           <li class="nav-item"><a class="nav-link" @click="redirect('/login')">Login</a></li>
           <li class="nav-item"><a class="nav-link" @click="redirect('/contact')">Contact Us</a></li>
+          <li class="nav-item"><a class="nav-link" @click="redirectDirect('/stepper')">Stepper</a></li>
         </ul>
       </span>
     </div>
@@ -301,6 +302,10 @@ export default {
           background: ColorJS.primary
         })
       }
+    },
+    redirectDirect(parameter){
+      console.log({parameter})
+      ROUTER.push(parameter)
     },
     redirect(parameter) {
       if(parameter === '/signup'){
