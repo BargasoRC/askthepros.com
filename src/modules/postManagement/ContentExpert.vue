@@ -250,6 +250,7 @@ export default {
         this.APIRequest('image_generator/generate_answer', parameter).then(res => {
           $('#loading').css({'display': 'none'})
           this.description = JSON.parse(res).result[0]
+          this.charCount()
         })
       }else{
         this.isValid = false

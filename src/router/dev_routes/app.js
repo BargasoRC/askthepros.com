@@ -3,7 +3,7 @@ export default{
   routes: [{
     path: '/signup/:category?',
     name: 'signup',
-    component: resolve => require(['modules/account/registerv1.vue'], resolve),
+    component: resolve => require(['modules/account/register.vue'], resolve),
     meta: {
       tokenRequired: false
     }
