@@ -194,7 +194,6 @@ class SocialController extends APIController
         $data = $request->all();
         if ($request->has('token')) {
             // $user->invitee = $request->input('invitee');
-            dd($data['token']);
             $result = Account::where([
                 ['id', '=', $data['id']],
                 ['token', '=', $data['token']],
