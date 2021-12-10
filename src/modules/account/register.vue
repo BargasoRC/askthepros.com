@@ -23,11 +23,11 @@
                 Register
               </div>
             </div>
-            <p
+            <!-- <p
               class="mb-2 pb-0 errorMessage"
               v-if="errorMessage != null"
             >{{errorMessage}}</p>
-            <div>
+            <div> -->
               <!-- <p class="mt-2"><b>Username</b></p>
               <roundedInput 
                 :type="'text'"
@@ -42,7 +42,7 @@
                 class="mb-0 pb-0 requiredFieldError"
                 v-if="!this.isValid && username == ''"
               >Required Field</p> -->
-              <p class="mt-2"><b>Email</b></p>
+              <!-- <p class="mt-2"><b>Email</b></p>
               <roundedInput
                 :type="'text'"
                 :placeholder="'Email Address'"
@@ -111,29 +111,17 @@
                     passwordRequirements
                   :
                   'Required Field'
-              }}</p>
-              <!-- <p v-if="this.localStorage.getItem('selectedIndustry') != null">
-                hi there
-              </p> -->
-              <!-- <p class="mt-2"><b>Industry</b></p>
-              <select class="form-control" v-model="selectedIndustry" style="margin-bottom: 25px;">
-                <option :value="null" disabled selected>Select Your Industry</option>
-                <option v-for="(item, index) in industry" :value="item.category">{{item.category}}</option>
-              </select> -->
-              <!-- <p
-                class="mb-0 pb-0 requiredFieldError"
-                v-if="!this.isValid && selectedIndustry == null"
-              >Required Field</p> -->
+              }}</p> -->
             </div>
-            <div class="row">
-              <p class="col-7" style="margin-left: 3%; font-size: 20px">
+            <div class="row" style="margin-left: 10%; margin-right: 6%;">
+              <p class="col-sm-7" style="font-size: 20px">
                 <b>{{industry.category}}</b>
               </p>
-              <p class="col-4" style="margin-left: 5%; font-size: 20px">
+              <p class="col-sm-5" style="font-size: 20px">
                 <b>${{industry.payload_value}}/Month</b>
               </p>
             </div>
-            <div class="d-flex justify-content-center">
+            <!-- <div class="d-flex justify-content-center">
               <dialogueBtn 
                 :onClick="register"
                 :icon="'fas fa-sign-in-alt'"
@@ -144,17 +132,17 @@
                   color: 'white'
                 }"
               />
-            </div>
+            </div> -->
             <div class="d-flex justify-content-center orSeparatorA">
-              <b>Register with Social Media</b>
+              <!-- <b>Register with Social Media</b> -->
             </div>
             <div class="col-sm-12">
-              <div class="row">
-                <div class="col-sm-4 col-md-4 col-lg-4 mt-1 mb-1">
+              <!-- <div class="row"> -->
+                <div class="col-sm-12 col-md-12 col-lg-12 mt-1 mb-1">
                   <roundedBtn
                     :onClick="gmailLogin"
                     :icon="'fab fa-google'"
-                    :text="'Register'"
+                    :text="'Register with Email'"
                     :styles="{
                       background: 'none',
                       color: '#272727',
@@ -165,11 +153,12 @@
                     :icon_position="'left'"
                   />
                 </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 mt-1 mb-1">
+                <br>
+                <div class="col-sm-12 col-md-12 col-lg-12 mt-1 mb-1">
                   <roundedBtn
                     :onClick="fbLogin"
                     :icon="'fab fa-facebook-f'"
-                    :text="'Register'"
+                    :text="'Register with Facebook'"
                     :styles="{
                       background: 'none',
                       color: '#272727',
@@ -180,11 +169,12 @@
                     :icon_position="'left'"
                   />
                 </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 mt-1 mb-1">
+                <br>
+                <div class="col-sm-12 col-md-12 col-lg-12 mt-1 mb-1">
                   <roundedBtn
                     :onClick="linkedInLogin"
                     :icon="'fab fa-linkedin-in'"
-                    :text="'Register'"
+                    :text="'Register with LinkedIn'"
                     :styles="{
                       background: 'none',
                       color: '#272727',
@@ -195,7 +185,7 @@
                     :icon_position="'left'"
                   />
                 </div>
-              </div>
+              <!-- </div> -->
             </div>
             <!-- <div class="d-flex justify-content-center orSeparatorB">
               <b>OR</b>
@@ -319,12 +309,14 @@ export default {
       })
     },
     gmailLogin(event) {
+      // this.$router.push('/stepper/' + this.selectedIndustry)
       $('#loading').css({'display': 'block'})
       localStorage.setItem('login_with', 'google')
       this.APIRequest('social_lite/authenticate/google/redirect', {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
-          window.location.href = response.data.url
+          // window.location.href = response.data.url
+          this.$router.push('/stepper')
         }
       }, error => {
         $('#loading').css({'display': 'none'})
@@ -493,7 +485,7 @@ export default {
   text-align: center;
 }
 .orSeparatorA {
-  margin-top: 35px;
+  margin-top: 15px;
   margin-bottom: 15px;
 }
 .orSeparatorB {
@@ -523,6 +515,7 @@ export default {
   box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
   -webkit-box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
   -moz-box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
+  max-height: 42.5rem;
 }
 
 .LoginContainer {

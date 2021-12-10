@@ -33,6 +33,7 @@ class SocialController extends APIController
 
       $result = Socialite::driver($_provider)->with(['redirect_uri' => $redirect_uri])->scopes($scopes)->redirect()->getTargetUrl();
       $this->response['data'] = array('url' => $result);
+      dd($result);
       return $this->response();
     }
 
@@ -190,6 +191,7 @@ class SocialController extends APIController
     public function checkToken(Request $request)
     {
         $data = $request->all();
+        dd($request->has('token'));
         if ($request->has('token')) {
             // $user->invitee = $request->input('invitee');
             $result = Account::where([
@@ -206,7 +208,7 @@ class SocialController extends APIController
                 $response['account_type'] = $result[0]['account_type'];
                 $response['status'] = $result[0]['status'];
                 $response['username'] = $result[0]['username'];
-                $response['created_at'] = $result[0]['created_at'];
+                $response['created_at'] = $result[0]['created_at']; 
                 $response['updated_at'] = $result[0]['updated_at'];
                 $response['deleted_at'] = $result[0]['deleted_at'];
                 $response['token'] = $result[0]['token'];

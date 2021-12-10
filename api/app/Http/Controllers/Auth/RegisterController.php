@@ -40,54 +40,52 @@ class RegisterController extends APIController
         \DB::beginTransaction();
         try {
             $request = $request->all();
-            $referralCode = $request['referral_code'];
-            $invitationPassword = $request['password'];
-            if($this->validateEmail($request['email']) === true){
-                $account = new Account();
-                $account->code = $this->generateCode($account);
-                $account->password = Hash::make($request['password']);
-                $account->status = 'NOT_VERIFIED';
-                $account->email = $request['email'];
-                $account->username = $request['username'];
-                $account->account_type = $request['account_type'];
-                $account->created_at = Carbon::now();
-                $account->save();
+            // $referralCode = $request['referral_code'];
+            // $invitationPassword = $request['password'];
+            if($request['id'] > 0){
+                // $account = new Account();
+                // $account->code = $this->generateCode($account);
+                // $account->password = Hash::make($request['password']);
+                // $account->status = 'NOT_VERIFIED';
+                // $account->email = $request['email'];
+                // $account->username = $request['username'];
+                // $account->account_type = $request['account_type'];
+                // $account->created_at = Carbon::now();
+                // $account->save();
 
                 $info = new AccountInformation();
-                $info->account_id = $account->id;
+                $info->account_id = $request['id'];
                 $info->first_name = $request['first_name'];
                 $info->last_name = $request['last_name'];
-                $info->cellular_number = $request['cellular'];
                 $info->address = $request['address'];
                 $info->save();
                 
                 $branding = new Branding();
-                $branding->account_id = $account->id;
+                $branding->account_id = $request['id'];
                 $branding->code = $this->generateBrandingCode();
                 $branding->details = $request['details'];
                 $branding->save();
 
                 $merchant = new Merchant();
-                $merchant->account_id = $account->id;
+                $merchant->account_id = $request['id'];
                 $merchant->code = $this->generateCode($merchant);
-                $merchant->email = $account->email;
                 $merchant->name = $request['business_name'];
                 $merchant->addition_informations = $request['industry'];
                 $merchant->save();
-                if($account && $account->id){
+                if($request['id'] > 0){
                     Payload::insert(array(
-                        'account_id' => $account->id,
+                        'account_id' => $request['id'],
                         'payload'   => 'automation_settings',
                         'payload_value' => 'OFF',
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now()
                     ));
-                    app('App\Http\Controllers\EmailController')->verification($account->id);
+                    app('App\Http\Controllers\EmailController')->verification($request['id']);
                 }
     
     
                 \DB::commit();
-                $this->response['data'] = array('message' => 'account_successfully_created', 'data' => $account->id);
+                $this->response['data'] = array('message' => 'account_successfully_created', 'data' => $request['id']);
                 $this->response['error'] = null;
             }else{
                 $this->response['data'] = null;

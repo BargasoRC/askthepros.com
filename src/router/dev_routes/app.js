@@ -202,7 +202,7 @@ export default{
     }
   },
   {
-    path: '/stepper',
+    path: '/stepper/:industry?',
     name: 'stepper',
     component: resolve => require(['src/modules/generic/Stepper.vue'], resolve),
     meta: {
