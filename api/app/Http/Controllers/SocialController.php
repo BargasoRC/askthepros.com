@@ -39,7 +39,6 @@ class SocialController extends APIController
     public function Callback($provider)
     {
       $user = Socialite::driver($provider)->stateless()->user();
-      dd($user);
       $acc = Account::firstOrNew(['email' => $user->getEmail()]);
       $account = Account::where('email', '=', $user->getEmail())->get();
       $token = $user->token;
@@ -169,7 +168,6 @@ class SocialController extends APIController
     public function connectCallBack(Request $request, $provider) {
       $data = $request->all();
       $user = Socialite::driver($provider)->stateless()->user();
-      dd('TEST', $user);
       $social_auth = SocialAuths::firstOrNew(['account_id' => $data['id'], 'type' => $provider]);
       $token = $user->token;
       if($social_auth->exists){
