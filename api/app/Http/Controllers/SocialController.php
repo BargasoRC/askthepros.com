@@ -190,9 +190,9 @@ class SocialController extends APIController
     public function checkToken(Request $request)
     {
         $data = $request->all();
-        dd($request->has('token'));
         if ($request->has('token')) {
             // $user->invitee = $request->input('invitee');
+            dd($data['token']);
             $result = Account::where([
                 ['id', '=', $data['id']],
                 ['token', '=', $data['token']],

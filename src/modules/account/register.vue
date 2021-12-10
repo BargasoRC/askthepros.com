@@ -316,8 +316,8 @@ export default {
         $('#loading').css({'display': 'none'})
         console.log('[response]', response)
         if(response.data && response.data.url) {
-          // window.location.href = response.data.url
-          // this.$router.push('/stepper')
+          window.location.href = response.data.url
+          this.$router.push('/stepper')
         }
       }, error => {
         $('#loading').css({'display': 'none'})
