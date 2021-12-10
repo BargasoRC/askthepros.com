@@ -33,7 +33,6 @@ class SocialController extends APIController
 
       $result = Socialite::driver($_provider)->with(['redirect_uri' => $redirect_uri])->scopes($scopes)->redirect()->getTargetUrl();
       $this->response['data'] = array('url' => $result);
-      dd($result);
       return $this->response();
     }
 

@@ -115,7 +115,7 @@
             </div>
             <div class="row" style="margin-left: 10%; margin-right: 6%;">
               <p class="col-sm-7" style="font-size: 20px">
-                <b>{{industry.category}}</b>
+                <b>{{industry.category.replace(/_/g, ' ')}}</b>
               </p>
               <p class="col-sm-5" style="font-size: 20px">
                 <b>${{industry.payload_value}}/Month</b>
@@ -314,9 +314,10 @@ export default {
       localStorage.setItem('login_with', 'google')
       this.APIRequest('social_lite/authenticate/google/redirect', {}, response => {
         $('#loading').css({'display': 'none'})
+        console.log('[response]', response)
         if(response.data && response.data.url) {
           // window.location.href = response.data.url
-          this.$router.push('/stepper')
+          // this.$router.push('/stepper')
         }
       }, error => {
         $('#loading').css({'display': 'none'})
