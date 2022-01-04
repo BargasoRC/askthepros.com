@@ -259,9 +259,7 @@ export default {
         offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
       $('#loading').css({'display': 'block'})
-      console.log('->>>>>>>>>>>', parameter)
       this.APIRequest('post/retrieve', parameter).then(response => {
-        console.log('[response]', response)
         $('#loading').css({'display': 'none'})
         if(response.data.length > 0) {
           this.data = response.data

@@ -457,6 +457,7 @@ export default {
             this.linkedin = false
             this.isClearing = false
             this.imagesList = []
+            this.addImage = []
           }
           ROUTER.push('/post_management')
         })

@@ -166,7 +166,6 @@ export default {
       }
       this.setToken(token)
       let vue = new Vue()
-      console.log('TYPE::: ', type)
       this.user.login_type = type
       let verifyUrl = type === 'local' ? 'authenticate/user' : 'social_lite/verify_token'
       let parameters = type === 'local' ? {} : {id: id, token: token, provider: localStorage.getItem('login_with')}

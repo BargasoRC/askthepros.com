@@ -34,7 +34,7 @@
           <tr v-for="(item, index) in tableData" :key="index">
             <td>{{item.created_at_human}} at {{item.time}}</td>
             <td>{{item.title}}</td>
-            <td>{{displayArray(item.channels)}}</td>
+            <!-- <td>{{displayArray(item.channels)}}</td> -->
             <td class="text-warning" v-if="item.status.toLowerCase() === 'draft'">{{item.status.toUpperCase()}}</td>
             <td class="text-primary" v-else>{{item.status.toUpperCase()}}</td>
             <td v-if="item.status.toLowerCase() === 'draft'">
@@ -144,7 +144,7 @@ export default {
       tableHeaders: [
         {title: 'Date'},
         {title: 'Post Question'},
-        {title: 'Channel Actions'},
+        // {title: 'Channel Actions'},
         {title: 'Status'},
         {title: 'Actions'}
       ],
@@ -156,8 +156,8 @@ export default {
           {title: 'Created Descending', payload: 'created_at', payload_value: 'desc', type: 'date'},
           {title: 'Title Ascending', payload: 'title', payload_value: 'asc', type: 'text'},
           {title: 'Title Descending', payload: 'title', payload_value: 'desc', type: 'text'},
-          {title: 'Channel Ascending', payload: 'channels', payload_value: 'asc', type: 'text'},
-          {title: 'Channel Descending', payload: 'channels', payload_value: 'desc', type: 'text'},
+          // {title: 'Channel Ascending', payload: 'channels', payload_value: 'asc', type: 'text'},
+          // {title: 'Channel Descending', payload: 'channels', payload_value: 'desc', type: 'text'},
           {title: 'Status Ascending', payload: 'status', payload_value: 'asc', type: 'text'},
           {title: 'Status Descending', payload: 'status', payload_value: 'desc', type: 'text'}
         ]
@@ -215,23 +215,23 @@ export default {
         error
       })
     },
-    displayArray(channels){
-      if(channels){
-        let parsedChannels = JSON.parse(channels)
-        let response = ''
-        for (var i = 0; i < parsedChannels.length; i++) {
-          let item = parsedChannels[i]
-          if(i > 0){
-            response += ', ' + item
-          }else{
-            response = item
-          }
-        }
-        return response
-      }else{
-        return null
-      }
-    },
+    // displayArray(channels){
+    //   if(channels){
+    //     let parsedChannels = JSON.parse(channels)
+    //     let response = ''
+    //     for (var i = 0; i < parsedChannels.length; i++) {
+    //       let item = parsedChannels[i]
+    //       if(i > 0){
+    //         response += ', ' + item
+    //       }else{
+    //         response = item
+    //       }
+    //     }
+    //     return response
+    //   }else{
+    //     return null
+    //   }
+    // },
     newPost() {
       this.$router.push('/post_management/content_edit')
     },
