@@ -65,7 +65,7 @@ export default {
   currentPath: false,
   attachmentValue: null,
   setUser(user, notifSetting, subAccount){
-    $('#loading').css({display: 'none'})
+    // $('#loading').css({display: 'none'})
     console.log('user', user)
     let vue = new Vue()
     if(user === null){
@@ -125,7 +125,7 @@ export default {
   hash(type, data) {
     let text = 'login_type'
     if(type === 'hide') {
-      localStorage.setItem(text, window.btoa(data))
+      localStorage.setItem(text, 'local')
     }else if(type === 'show') {
       return window.atob(localStorage.getItem(text))
     }
@@ -140,7 +140,7 @@ export default {
     vue.APIRequest('authenticate', credentials, (response) => {
       this.tokenData.token = response.token
       this.setToken(this.tokenData.token)
-      this.hash('hide', response.login_type)
+      localStorage.setItem('login_type', response.login_type)
       vue.APIRequest('authenticate/user', {}, async (userInfo) => {
         this.setUser(userInfo, null, null)
         // this.retrieveAccountProfileAndInformation(userInfo.id)
@@ -156,9 +156,11 @@ export default {
     this.tokenData.verifyingToken = true
     let token = localStorage.getItem('usertoken')
     let id = localStorage.getItem('account_id')
-    let type = this.hash('show', null)
-    console.log('TYPE::: ', type)
-    if(token){
+    let type = localStorage.getItem('login_type')
+    console.log({
+      token
+    })
+    if(token && token !== 'null'){
       if(flag === false){
         this.tokenData.loading = true
       }
@@ -174,10 +176,10 @@ export default {
         this.setToken(null)
         this.tokenData.verifyingToken = false
         this.tokenData.loading = false
-        this.hash('hide', response.login_type)
-        ROUTER.push({
-          path: this.currentPath
-        })
+        localStorage.setItem('login_type', response.login_type)
+        // ROUTER.push({
+        //   path: this.currentPath
+        // })
       }).catch(error => {
         console.log('ERRRROOORRR:: ', error)
       })
@@ -237,14 +239,14 @@ export default {
     this.setUser(null)
     let vue = new Vue()
     this.clearNotifTimer()
-    if(this.hash('show', null) === 'local') {
+    if(localStorage.getItem('login_type') === 'local') {
       vue.APIRequest('authenticate/invalidate').then((response) => {
         localStorage.removeItem('usertoken')
         this.tokenData.token = null
         this.tokenData.loading = false
         ROUTER.go('/')
       })
-    }else if(this.hash('show', null) === 'social_lite'){
+    }else if(localStorage.getItem('login_type') === 'social_lite'){
       localStorage.removeItem('usertoken')
       this.tokenData.token = null
       this.tokenData.loading = false

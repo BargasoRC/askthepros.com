@@ -386,6 +386,7 @@ export default {
           description: this.description,
           account_id: this.user.userID,
           status: status,
+          url: JSON.stringify(this.imagesList),
           channels: JSON.stringify(channels),
           category: this.user.merchant.addition_informations.industry
           // category: JSON.stringify(selectIndustry)
