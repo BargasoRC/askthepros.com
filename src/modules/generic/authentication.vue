@@ -3,7 +3,7 @@
     <div class="center">
       <div class="loading"></div>
       <div class="loader">
-        <span>Authenticating</span>
+        <span>authenticating</span>
       </div>
     </div>
   </div>
@@ -19,6 +19,7 @@ export default {
     }
   },
   mounted() {
+    console.log('===============', new RegExp(/\?.+=.*/g).test(window.location.href), (localStorage.getItem('login_with'), localStorage.getItem('connect_with')))
     if(new RegExp(/\?.+=.*/g).test(window.location.href) && (localStorage.getItem('login_with') || localStorage.getItem('connect_with'))) {
       this.loginCallBack()
       this.connectCallback()
@@ -40,10 +41,9 @@ export default {
         this.APIRequest(`social_lite/authenticate/${localStorage.getItem('login_with')}/callback?` + query, {}, response => {
           // $('#loading').css({'display': 'none'})
           console.log('logged in: ', response)
-          localStorage.removeItem('login_with')
+          // localStorage.removeItem('login_with')
           localStorage.setItem('usertoken', response.token)
           AUTH.hash('hide', response.login_type)
-          // console.log('USER @ Index: ', response.user)
           AUTH.setUser(response.user)
           AUTH.checkAuthentication()
           ROUTER.push(`/dashboard`)

@@ -157,13 +157,13 @@ export default {
     let token = localStorage.getItem('usertoken')
     let id = localStorage.getItem('account_id')
     let type = this.hash('show', null)
+    console.log('TYPE::: ', type)
     if(token){
       if(flag === false){
         this.tokenData.loading = true
       }
       this.setToken(token)
       let vue = new Vue()
-      console.log('TYPE::: ', type)
       this.user.login_type = type
       let verifyUrl = type === 'local' ? 'authenticate/user' : 'social_lite/verify_token'
       let parameters = type === 'local' ? {} : {id: id, token: token, provider: localStorage.getItem('login_with')}
@@ -175,15 +175,15 @@ export default {
         this.tokenData.verifyingToken = false
         this.tokenData.loading = false
         this.hash('hide', response.login_type)
-        // ROUTER.push({
-        //   path: this.currentPath
-        // })
+        ROUTER.push({
+          path: this.currentPath
+        })
       }).catch(error => {
         console.log('ERRRROOORRR:: ', error)
       })
 
       if(!this.user.information) {
-        // this.retrieveAccountProfileAndInformation(id)
+        this.retrieveAccountProfileAndInformation(id)
       }
 
       return true

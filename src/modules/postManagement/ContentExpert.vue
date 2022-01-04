@@ -69,7 +69,7 @@
         </div>
         <br>
         
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label for="category"><b>Category</b></label>
           <searchField
             :placeholder="'Select Industry'"
@@ -97,7 +97,7 @@
             class="mb-0 pb-0 requiredFieldError ml-0 mt-1"
             v-if="!this.isValid && selectedIndustry == null"
           >Required Field</p>
-        </div>
+        </div> -->
 
         <!-- <div class="form-group" style="margin-top: 3%">
           <label for="post_setting"><b>Post Setting</b></label>
@@ -167,7 +167,7 @@ import searchField from 'src/modules/generic/searchField.vue'
 import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 export default {
   mounted(){
-    this.retrievePayloads()
+    // this.retrievePayloads()
     if(this.$route.params.parameter === undefined){
       this.title = ''
       this.description = ''
@@ -203,6 +203,7 @@ export default {
       selectedItem: null,
       render: false,
       item: [],
+      addImage: [],
       val: false
     }
   },
@@ -268,7 +269,7 @@ export default {
           $('#loading').css({'display': 'none'})
           if(response.data.length > 0) {
             this.imagesList = {url: this.config.BACKEND_URL + response.data}
-            // this.imageList.push(response.data)
+            this.addImage.push(response.data)
           }else{
             //
           }
@@ -281,34 +282,34 @@ export default {
       }
     },
     // EDIT A POST
-    retrievePayloads(){
-      let conditions = [{
-        value: 'subscriptions',
-        clause: '=',
-        column: 'payload'
-      }]
-      let parameter = {
-        condition: conditions
-      }
-      $('#loading').css({'display': 'block'})
-      this.APIRequest('payloads/retrieve', parameter).then(response => {
-        $('#loading').css({'display': 'none'})
-        if(response.data.length > 0) {
-          this.industry = response.data
-          this.industry.map(el => {
-            if(this.user.merchant.addition_informations.industry === el.category){
-              this.item.push(el)
-              return this.item
-            }
-          })
-        }else{
-          this.industry = []
-        }
-      }).catch(error => {
-        $('#loading').css({'display': 'none'})
-        error
-      })
-    },
+    // retrievePayloads(){
+    //   let conditions = [{
+    //     value: 'subscriptions',
+    //     clause: '=',
+    //     column: 'payload'
+    //   }]
+    //   let parameter = {
+    //     condition: conditions
+    //   }
+    //   $('#loading').css({'display': 'block'})
+    //   this.APIRequest('payloads/retrieve', parameter).then(response => {
+    //     $('#loading').css({'display': 'none'})
+    //     if(response.data.length > 0) {
+    //       this.industry = response.data
+    //       this.industry.map(el => {
+    //         if(this.user.merchant.addition_informations.industry === el.category){
+    //           this.item.push(el)
+    //           return this.item
+    //         }
+    //       })
+    //     }else{
+    //       this.industry = []
+    //     }
+    //   }).catch(error => {
+    //     $('#loading').css({'display': 'none'})
+    //     error
+    //   })
+    // },
     retrieveEditPosts() {
       let parameter = {
         account_id: this.user.userID,
@@ -326,19 +327,19 @@ export default {
               this.title = el.title
               this.description = el.description
               this.charCount()
-              var channel = el.channels
-              if(channel.includes('FACEBOOK')){
-                this.facebook = true
-              }
-              if(channel.includes('LINKEDIN')){
-                this.linkedin = true
-              }
-              if(channel.includes('GOOGLE_MY_BUSINESS')){
-                this.googleMyBusiness = true
-              }
-              JSON.parse(el.category).forEach(el => {
-                this.$refs.searchField.value.push(el)
-              })
+              // var channel = el.channels
+              // if(channel.includes('FACEBOOK')){
+              //   this.facebook = true
+              // }
+              // if(channel.includes('LINKEDIN')){
+              //   this.linkedin = true
+              // }
+              // if(channel.includes('GOOGLE_MY_BUSINESS')){
+              //   this.googleMyBusiness = true
+              // }
+              // JSON.parse(el.category).forEach(el => {
+              //   this.$refs.searchField.value.push(el)
+              // })
               this.imagesList = Object.values(JSON.parse(el.url)).map(el => {
                 let temp = {}
                 if(this.$route.params.parameter === undefined){
@@ -360,6 +361,7 @@ export default {
         account_id: this.user.userID
       }
       this.APIRequest('brandings/retrieve_by_accountId', parameter).then(response => {
+        console.log('[branding]', response.details)
         this.selectedItem = {}
         this.selectedItem['branding'] = {
           details: response.details
@@ -368,11 +370,11 @@ export default {
       })
     },
     update(status){
-      this.$refs.searchField.returnCategory()
-      let selectIndustry = []
-      this.selectedIndustry.forEach(element => {
-        selectIndustry.push({category: element.category, id: element.id})
-      })
+      // this.$refs.searchField.returnCategory()
+      // let selectIndustry = []
+      // this.selectedIndustry.forEach(element => {
+      //   selectIndustry.push({category: element.category, id: element.id})
+      // })
       if(this.validate()){
         let channels = []
         this.facebook ? channels.push('FACEBOOK') : null
@@ -385,7 +387,8 @@ export default {
           account_id: this.user.userID,
           status: status,
           channels: JSON.stringify(channels),
-          category: JSON.stringify(selectIndustry)
+          category: this.user.merchant.addition_informations.industry
+          // category: JSON.stringify(selectIndustry)
         }
         this.isClearing = true
         this.APIRequest('post/update_expert', parameter).then(response => {
@@ -398,17 +401,32 @@ export default {
     },
     // Adding a Post
     storeImages(data) {
-      this.imagesList = data
+      this.addImage = data
+      if(this.$route.params.parameter === undefined){
+        this.imagesList = Object.values(data).map(el => {
+          let temp = {}
+          temp['url'] = this.config.BACKEND_URL + el
+          return temp
+        })
+      }else if(this.$route.params.parameter !== undefined && this.isAdd === true){
+        this.imagesList = Object.values(data).map(el => {
+          let temp = {}
+          temp['url'] = this.config.BACKEND_URL + el
+          return temp
+        })
+      }else{
+        this.imagesList = data
+      }
     },
     onSelect(data) {
       this.selectedIndustry = data
     },
     save(status) {
-      this.$refs.searchField.returnCategory()
-      let selectIndustry = []
-      this.selectedIndustry.forEach(element => {
-        selectIndustry.push({category: element.category, id: element.id})
-      })
+      // this.$refs.searchField.returnCategory()
+      // let selectIndustry = []
+      // this.selectedIndustry.forEach(element => {
+      //   selectIndustry.push({category: element.category, id: element.id})
+      // })
       if(this.validate()) {
         $('#loading').css({'display': 'block'})
         let channels = []
@@ -422,8 +440,9 @@ export default {
           status: status,
           channels: JSON.stringify(channels),
           parent: null,
-          url: null,
-          category: JSON.stringify(selectIndustry)
+          url: JSON.stringify(this.addImage),
+          category: this.user.merchant.addition_informations.industry
+          // category: JSON.stringify(selectIndustry)
         }
         this.isClearing = true
         this.APIRequest('post/create', parameter).then(response => {
@@ -435,6 +454,7 @@ export default {
             this.facebook = false
             this.googleMyBusiness = false
             this.linkedin = false
+            this.addImage = []
             this.isClearing = false
           }
         })
@@ -447,7 +467,7 @@ export default {
           return true
         }
       })
-      if(this.selectedIndustry.length <= 0 && this.title === '' && this.title === null && this.title === undefined && this.description === '' && this.description === null && this.description === undefined){
+      if(this.title === '' && this.title === null && this.title === undefined && this.description === '' && this.description === null && this.description === undefined){
         this.$refs.errorModal.show()
         this.val = false
         return false
@@ -458,12 +478,13 @@ export default {
         this.$refs.errorModal.show()
         return false
       }
-      if(this.selectedIndustry.length <= 0) {
-        this.isValid = false
-        this.val = false
-        this.$refs.errorModal.show()
-        return false
-      }if(this.title === '' && this.title === null && this.title === undefined) {
+      // if(this.selectedIndustry.length <= 0) {
+      //   this.isValid = false
+      //   this.val = false
+      //   this.$refs.errorModal.show()
+      //   return false
+      // }
+      if(this.title === '' && this.title === null && this.title === undefined) {
         this.isValid = false
         this.val = false
         this.$refs.errorModal.show()

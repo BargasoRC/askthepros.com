@@ -313,9 +313,10 @@ export default {
       localStorage.setItem('login_with', 'google')
       this.APIRequest('social_lite/authenticate/google/redirect', {}, response => {
         $('#loading').css({'display': 'none'})
+        console.log('response', response.data)
         if(response.data && response.data.url) {
           window.location.href = response.data.url
-          this.$router.push('/stepper')
+          // this.$router.push('/stepper')
         }
       }, error => {
         $('#loading').css({'display': 'none'})

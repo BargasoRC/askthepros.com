@@ -9,7 +9,7 @@
         <p class="text-danger"><b>Opps!</b> {{errorMessage}}</p>
       </div>
       
-      <div class="body" v-if="active === 0">
+      <div class="body">
         <roundedInput
           :type="'text'"
           :placeholder="'First Name'"
@@ -32,15 +32,21 @@
         />
       </div>
 
+      <div class="header">
+        <b>Business Information</b>
+      </div>
+      
+      <div class="error" v-if="errorMessage !== null">
+        <p class="text-danger"><b>Opps!</b> {{errorMessage}}</p>
+      </div>
 
-
-      <div class="body" v-if="active === 1">
+      <div class="body">
         <roundedInput
           :type="'text'"
           :placeholder="'Business Name'"
           :class="'mb-0'"
           :styles="{
-            border:'1px solid lightGrey !important'
+            border:'1px solid grey !important'
           }"
           v-model="businessName"
         />
@@ -63,7 +69,14 @@
         /> -->
       </div>
 
-      <div class="body" v-if="active === 2">
+      <div class="header">
+        <b>Which option best describes your situation?</b>
+      </div>
+      
+      <div class="error" v-if="errorMessage !== null">
+        <p class="text-danger"><b>Opps!</b> {{errorMessage}}</p>
+      </div>
+      <div class="body">
         <label class="container">I want to promote my Company Name Only.
           <input type="radio" name="radio" checked="checked" value="Company" v-model="brand">
           <span class="checkmark"></span>
@@ -142,7 +155,7 @@ export default {
           boxShadow: 'none !important',
           height: '45px !important',
           borderRadius: '40px !important',
-          border: '1px solid $gray !important'
+          border: '1px solid grey !important'
         },
         placeholder: null,
         GOOGLE_API_KEY: CONFIG.GOOGLE.API_KEY,

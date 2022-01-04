@@ -31,7 +31,7 @@ class SocialController extends APIController
         $redirect_uri = $provider == 'google' ? env('GOOGLE_URL') : env('CONNECT_CALLBACK_URL');
       }
 
-      $result = Socialite::driver($_provider)->with(['redirect_uri' => $redirect_uri])->scopes($scopes)->redirect()->getTargetUrl();
+      $result = Socialite::driver($_provider)->with(['redirect_uri' => env('CONNECT_CALLBACK_URL')])->scopes($scopes)->redirect()->getTargetUrl();
       $this->response['data'] = array('url' => $result);
       return $this->response();
     }
