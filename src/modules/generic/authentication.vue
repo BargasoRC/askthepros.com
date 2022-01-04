@@ -3,7 +3,7 @@
     <div class="center">
       <div class="loading"></div>
       <div class="loader">
-        <span>authenticating</span>
+        <span>Authenticating</span>
       </div>
     </div>
   </div>
@@ -41,7 +41,7 @@ export default {
         this.APIRequest(`social_lite/authenticate/${localStorage.getItem('login_with')}/callback?` + query, {}, response => {
           // $('#loading').css({'display': 'none'})
           console.log('logged in: ', response)
-          // localStorage.removeItem('login_with')
+          localStorage.removeItem('login_with')
           localStorage.setItem('usertoken', response.token)
           AUTH.hash('hide', response.login_type)
           AUTH.setUser(response.user)

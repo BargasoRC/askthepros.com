@@ -185,7 +185,7 @@ export default {
       })
 
       if(!this.user.information) {
-        this.retrieveAccountProfileAndInformation(id)
+        // this.retrieveAccountProfileAndInformation(id)
       }
 
       return true
