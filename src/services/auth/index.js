@@ -140,11 +140,11 @@ export default {
     vue.APIRequest('authenticate', credentials, (response) => {
       this.tokenData.token = response.token
       this.setToken(this.tokenData.token)
-      localStorage.setItem('login_type', response.login_type)
       vue.APIRequest('authenticate/user', {}, async (userInfo) => {
         this.setUser(userInfo, null, null)
         // this.retrieveAccountProfileAndInformation(userInfo.id)
-        await callback(response)
+        localStorage.setItem('login_type', userInfo.login_type)
+        await callback(userInfo)
       })
     }, (response, status) => {
       if(errorCallback){
