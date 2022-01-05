@@ -4,7 +4,8 @@
       <div class="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xs-7 QouteCardContainer mb-5 ">
         <div class="QouteCard">
           <div class="SubQoute">
-            <h1 class="QouteText" style="color: #01004E">Become A Local Expert</h1>
+            <h1 class="QouteText" style="color: #01004E">Become THE LOCAL</h1>
+            <h1 class="QouteText" style="color: #01004E">{{industry.category.replace(/_/g, ' ').toUpperCase()}} Expert</h1>
           </div>
           <div class="SubQoute">
             <h1 class="QouteText" style="color: #01009A">With Automated Social Media Posting.</h1>
