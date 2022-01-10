@@ -8,11 +8,13 @@
         <slide v-for="(item, index) in testimonials" :key="index" style="padding-right: 5%; padding-left: 5%">
           <div style="align-items: center; padding-left: 45%; padding-right: 45%"><img id="company" :src="item.company"></div>
           <p><i class="fas fa-quote-left"></i></p>
+          <div class="comment-section">
           <h6>{{item.comment}}</h6>
+          </div>
           <hr/>
           <div class="row">
-            <div class="column" style="width:10%"><img id="photo" :src="item.photo"></div>
-            <div class="column" style="width:70%">
+            <div class="column photo" style=""><img id="photo" :src="item.photo"></div>
+            <div class="column name-job" style="">
               <p id="name">{{item.name}}</p>
               <p id="job">{{item.job}}</p>
             </div>
@@ -90,6 +92,21 @@ export default {
 
 <style scoped lang='scss'>
 @import '~assets/style/colors.scss';
+hr {
+  background-color: $primary;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.photo{
+  width:10%;
+  margin-left: 1em;
+}
+.name-job{
+  width:70%; 
+}
+.comment-section{
+  height: 30vh;
+}
 .sectionn {
   min-height: 80vh;
   width: 100%;
@@ -145,15 +162,25 @@ p {
   float: left;
   width: 32%;
 }
-
-@media screen and (max-width: 767px) {
-  .single-card {
-    width: 90%;
-    margin: 5%;
+@media screen and (max-width: 1525px) {
+  .comment-section{
+    height: 45vh!important;
+  }
+  .name-job{
+    margin-left: 1em !important;
+  }
+  .photo{
+    margin-left: 1em!important;
   }
 }
 
 @media screen and (max-width: 991px) {
+  .comment-section{
+    height: 50vh !important;
+  }
+  .name-job{
+    margin-left: 20px!important;
+  }
   h1{
     font-size: 150% !important;
   }
@@ -195,12 +222,6 @@ h6 {
   min-height: 15vh;
 }
 
-hr {
-  background-color: $primary;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
 #photo {
   height: 50px;
   width: 50px;
@@ -216,5 +237,17 @@ hr {
 #job{
   margin-top: -20px ;
   font-weight: 400;
+}
+@media screen and (max-width: 786px) {
+  .comment-section{
+      height: 55vh!important;
+  }
+
+}
+@media screen and (max-width: 767px) {
+  .single-card {
+    width: 90%;
+    margin: 5%;
+  }
 }
 </style>
