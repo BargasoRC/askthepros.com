@@ -3,20 +3,23 @@
     <div class="text-center container">
       <h1 class="text-white">MANAGED SOCIAL MEDIA POSTING WRITTEN BY INDUSTRY EXPERTS IN YOUR FIELD</h1>    
       <p class="text-white"><b>1.</b> Create & Import Profile &nbsp;&nbsp;<b>2.</b> Just Relax &nbsp;&nbsp;<b>3.</b> Grow your Sales</p>
-      <div class="category-selection" v-if="industry && industry.length > 0" v-for="(item, index) in industry">
+      <div class="category-container row">
+        <div class="category-selection col-4" v-if="industry && industry.length > 0" v-for="(item, index) in industry">
         <roundedBtn
           :onClick="() => {getSelected(item.category)}"
           :text="item.category.replace(/_/g, ' ')"
           :styles="{
             backgroundColor: '#ffc107',
             color: '#ffffff',
-            width: (industry.length % 3 == 0) ? '25%' : industry.length <= 2 ? '42%' : (industry.length <= 5 && industry.length > 3) ? '20%' : (industry.length > 6) ? '2%' : '100%' / industry.length,
+            width: '8em',
             marginLeft: '3%',
             marginRight: '4%',
             marginTop: '2%'
           }"
         />
       </div>
+      </div>
+      
       <!-- <span class="text-center category-selection" v-if="industry && industry.length > 0">
         <select class="form-control" v-model="selected" @change="getSelected(selected)">
           <option :value="null" disabled selected hidden>Select Your Industry</option>
@@ -36,15 +39,23 @@
 </template>
 <style scoped lang="scss">
 @import "~assets/style/colors.scss";
+.category-container{
+margin:auto;
+  width: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .cloud-image{
   width: 100%;
   background: $primary;
   min-height: 20vh;
   overflow-y: hidden;
+  margin-top: 4%;
 }
 
 .container{
-  margin-top: 15vh;
+  margin-top: 3%;
 }
 
 .category-selection{
@@ -137,11 +148,20 @@ b{
 
 
 @media (max-width: 1400px) {
+  .right{
+    padding-top: 1px;
+  }
   .left img, .right img{
   height: 15vh !important;
   width: auto;
   margin-top: -6vh !important;
 } 
+  .cloud-image{
+    margin-top: 0%!important  ;
+  }
+    .container{
+    margin-top: 8%;
+  }
 }
 
 @media (max-width: 1060px) {
@@ -153,6 +173,10 @@ b{
 }
 
 @media (max-width: 991px){
+
+  .cloud-image{
+    margin-top: 0%!important  ;
+  }
   .category-selection{
     width: 80% !important;
     margin-left: 10% !important;
@@ -199,8 +223,15 @@ b{
   width: auto;
   margin-top: -3vh !important;
 } 
+.container{
+  margin-top: 10% !important;
 }
-
+}
+@media (max-width: 620px) {
+  .container{
+    margin-top: 15% !important;
+  }
+}
 @media (max-width: 620px) {
   .left img, .right img{
   height: 5vh !important;

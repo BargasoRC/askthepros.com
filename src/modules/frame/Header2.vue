@@ -208,6 +208,9 @@
 }
 
 @media screen and (max-width: 992px) {
+  .header{
+    position: fixed;
+  }
   .header-section, .header-section2 {
     width: 90% !important;
     margin: 0 5% 0 5% !important;

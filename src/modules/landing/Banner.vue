@@ -30,6 +30,7 @@
     background-size: cover;
     position: relative;
     background-position: center top;
+    margin-top:50%;
 }
 .button-container-button {
   display: flex;
