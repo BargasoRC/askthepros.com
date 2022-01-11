@@ -15,6 +15,8 @@ use App\Post;
 use App\PostHistory;
 use App\Page;
 use Increment\Common\Payload\Models\Payload;
+use Increment\Account\Models\AccountInformation;
+use Increment\Account\Models\Account;
 
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -28,8 +30,11 @@ class Posting implements ShouldQueue
    * @return void
    */
 
-  public $postHistoryController = 'App\Http\Controllers\PostHistoryController';
 
+
+  public $postHistoryController = 'App\Http\Controllers\PostHistoryController';
+  public $industries = null;
+  public $industry = null;
   public function __construct()
   {
       //
@@ -40,64 +45,180 @@ class Posting implements ShouldQueue
    *
    * @return void
    */
-  public function handle()
-  {
-    
-    // Get channels credentials
-    // Send to curl of the channel
+  public function handle(){
     $schedule = 'MondayTuesdayWednesdayThursdayFriday';
     $currentDate = Carbon::now()->format('l');
     echo "currentDate = ".$currentDate;
     if(str_contains($schedule, $currentDate)){
-      echo "\n\t [POSTING] Running on day => ".$currentDate;
-      // Get current merchant
-      $plans = Plan::where('end_date', '=', null)->orWhere('end_date', '>=', Carbon::now())->get();
+      // Get all list of industries
+      $industries = Payload::where(array(
+        array('payload', '=', 'subscriptions')
+      ))->orderBy('category', 'asc')->get();
 
-      if(sizeof($plans) > 0){
-        foreach ($plans as $key => $plan) {
-          // Get published posting using the same category as plan
-          $posts = $size = DB::table('post_targets as T1')
-          ->leftJoin('posts as T2', 'T2.id', '=', 'T1.post_id')
-          ->where('T1.payload_value', 'like', '%'.$plan['plan'].'%')
-          ->get(['T2.*']);
-          $posts = json_decode($posts, true);
-          // echo  "\n\t" . $posts;
-          if($posts && sizeof($posts) > 0){
-            foreach ($posts as $pKey => $post) {
-              $this->manageChannels($post, $plan);
-            }
-          }else{
-            echo "\n\t [POSTING] No post(s) related to the category.";
-          }
+      if($industries && sizeof($industries) > 0){
+        $this->industries = $industries;
+        // get the current industry for posting
+        $currentPayload = Payload::where(array(
+          array('payload', '=', 'current_industry')
+        ))->get();
+
+        if($currentPayload && sizeof($currentPayload) > 0){
+          // continue to the current industry
+          $this->manageIndustry($currentPayload[0]['category']);
+        }else{
+          // continue to first industry
+          $this->manageIndustry($industries[0]['category']);
         }
       }else{
-        echo "\n\t [POSTING] No active customer with active plans.";
+        echo "\n\t [POSTING] No available industries..";
       }
     }else{
       echo "\n\t [POSTING] Not on schedule..";
     }
   }
 
+  public function manageIndustry($industry){
+    // get current save plan of the industry
+    $currentPlan = Payload::where(array(
+      array('payload', '=', 'current_plan')
+    ))->get();
+
+    $this->industry = $industry;
+    if($currentPlan && sizeof($currentPlan) > 0){
+      // proceed to next state
+      $currentPlanDetails = json_decode($currentPlan[0]['payload_value'], true);
+      $this->manageNextPlan($currentPlanDetails['id']);
+    }else{
+      // empty plan state
+      $this->manageNextPlan(false);
+    }
+  }
+
+  public function manageNextPlan($planId = null){
+    $conditions = array(
+      array('plan', '=', $this->industry),
+      array('end_date', '>', Carbon::now())
+    );
+    if($planId){
+      $conditions[] = array('id', '>', $planId);
+    }
+
+    $currentPlan = Plan::where($conditions)->limit(1)->orderBy('created_at', 'desc')->get();
+
+    if($currentPlan && sizeof($currentPlan) > 0){
+      // get the status on payloads
+      $plan = $currentPlan[0];
+      $competition = Payload::where(array(
+        array('payload', '=', 'competitor'),
+        array('account_id', '=', $plan['account_id'])
+      ))->get();
+      if($competition && sizeof($competition) > 0){
+        // get competition size
+        $payloadValue = json_decode($competition[0]['payload_value'], true);
+        $competitors = Payload::where(array(
+          array('payload', '=', 'competitor'),
+          array('category', '=', $this->industry),
+          array('payload_value', 'like', '%"locality":"'.$payloadValue['locality'].'"')
+        ))->get();
+
+        $size = sizeof($competitors);
+
+        if($size > 1){
+          // with competition, proceed to posting
+          // the rank
+          $rank = intval($payloadValue['rank']);
+          $this->managePosting($plan, $rank, $size);
+        }else{
+          // no competition, proceed to posting
+          $this->managePosting($plan, null, null);
+        }
+      }else{
+        // no competition, proceed to posting
+        $this->managePosting($plan, null, null);
+      }
+      $this->manageState(array(
+        'payload' => 'current_plan',
+        'payload_value' => $plan['id']
+      ));
+
+    }else{
+      // no available plan then proceed to next
+      echo "\n\t\t No available plan on selected industry ==> ".$this->industry;
+    }
+  }
+
+  public function managePosting($plan, $rank, $size){
+    // get all post
+    $posts = DB::table('post_targets as T1')
+    ->leftJoin('posts as T2', 'T2.id', '=', 'T1.post_id')
+    ->where('T1.payload_value', 'like', '%'.$plan['plan'].'%')
+    ->get(['T2.*']);
+
+    $postSize = sizeof($posts);
+
+    // get last post
+
+    $lastPost = PostHistory::where('industry', '=', $this->industry)->where('account_id', '=', $plan['account_id'])->orderBy('created_at', 'desc')->limit(1)->get();
+
+    $nextPost = null;
+
+    if($lastPost){
+      $lastIndex = array_search($lastPost[0]['post_id'], array_column($posts, 'id'));
+      // if($rank && $size){
+      //   // get the last post of the other user which rank before the current user.
+      //   $lastCompetitor = Payload::where(array(
+      //     array('payload', '=', 'competitor'),
+      //     array('category', '=', $this->industry),
+      //     array('payload_value', 'like', '%"rank":"'.(intval($rank) - 1).'"')
+      //   ))->get();
+
+      //   if($lastCompetitor){
+      //     $lastCompetitorPost = PostHistory::where('industry', '=', $this->industry)->where('account_id', '=', $lastCompetitor[0]['account_id'])->orderBy('created_at', 'desc')->limit(1)->get();
+      //     $lastCompetitorPostIndex = array_search($lastCompetitorPost[0]['post_id'], array_column($posts, 'id'));
+      //     $nextPost = $lastCompetitorPostIndex && sizeof($posts) > 0 && $lastCompetitorPostIndex < sizeof($posts) ? $posts[$lastCompetitorPostIndex + 1] : null;
+      //   }else{
+      //     $nextPost = $lastIndex && sizeof($posts) > 0 && $lastIndex < sizeof($posts) ? $posts[$lastIndex + 1] : null;
+      //   }
+      // }else{
+      //   // get the next post
+      //   $nextPost = $lastIndex && sizeof($posts) > 0 && $lastIndex < sizeof($posts) ? $posts[$lastIndex + 1] : null;
+      // }
+      $nextPost = $lastIndex && sizeof($posts) > 0 && $lastIndex < sizeof($posts) ? $posts[$lastIndex + 1] : null;
+    }else{
+      $nextPost = sizeof($posts) > 0 ? $posts[0] : null;
+    }
+
+    if($nextPost && $plan){
+      $this->manageChannels($nextPost, $plan);
+    }else{
+      echo "\n\t\t No available post on selected industry ==> ".$industry;
+    }
+  }
+
   public function manageChannels($post, $plan){
     echo "\n\t\t Manage channels";
-    $channels = $post && $post['channels'] ? json_decode($post['channels']) : null;
-    if($channels){
+    $channels = $post && $post[0]->channels ? json_decode($post[0]->channels) : null;
+    if(sizeOf($channels) > 0){
       foreach ($channels as $key => $channel) {
+        // dd($post[0]);
         $postHistory = PostHistory::where(array(
-          array('post_id', '=', $post['id']),
+          array('post_id', '=', $post[0]->id),
           array('account_id', '=', $plan['account_id']),
           array('channel', '=', $channel),
           array('created_at', '>=', Carbon::now()->subDays(7))
-        ))->get();
-
+          ))->get();
+          // ))->whereBetween('created_at', array(Carbon::now()->startOfDay(), Carbon::now()->endOfDay()))->get();
+          // dd($postHistory);
         if($postHistory && sizeof($postHistory) > 0){
-          echo "\n\t\t Post id => ".$post['id']." for ".$channel." already existed";
+          echo "\n\t\t Post id => ".$post[0]->id." for ".$channel." already existed";
         }else{
           $this->managePostHistory($post, $plan, $channel);
         }
+
+
       }
     }else{
-      echo "\n\t\t No added was added";
+      echo "\n\t\t No channel was added";
     }
   }
 
@@ -108,31 +229,43 @@ class Posting implements ShouldQueue
       array('payload', '=', 'automation_settings'),
       array('account_id', '=', $plan['account_id'])
     ))->get();
-
+    
     if($postSetting && sizeof($postSetting) > 0){
       $page = Page::where(array(
         array('account_id', '=', $plan['account_id']),
-        array('type', '=', $channel === 'GOOGLE_MY_BUSINESS' ? 'google' : $channel)
-      ))->orderBy('created_at', 'desc')
-      ->limit(1)
-      ->get();
-
+        array('type', '=', $channel === 'GOOGLE_MY_BUSINESS' ? 'google' : strtolower($channel))
+        ))->orderBy('created_at', 'desc')
+        // ->limit(1)
+        ->get();
+      // dd($page);
       if($page && sizeof($page) > 0){
         $result = app($this->postHistoryController)->createByParams(array(
-          'post_id' => $post['id'],
+          'post_id' => $post[0]->id,
           'page_id' => $page[0]['id'],
           'link'    => null,
           'channel' => $channel,
           'account_id'  => $plan['account_id'],
           'status'  => $postSetting[0]['payload_value'] == 'ON' ? 'for posting' : 'for review'
         ));
+        // dd($result);
 
-        echo "\n\t\t Post id => ".$post['id']." for ".$channel." successfully created";        
+        echo "\n\t\t Post id => ".$post[0]->id." for ".$channel." successfully created";        
       }else{
         echo "\n\t\t Account don't have existing page for channel ".$channel;
       }
     }else{
       echo "\n\t\t No post automation settings";
+    }
+  }
+
+  public function manageState($data){
+    $payload = Payload::where('payload', '=', $data['payload'])->get();
+    if($payload && sizeof($payload)){
+      $data['updated_at'] = Carbon::now();
+      return Payload::where('id', '=', $payload[0]['id'])->update($data);
+    }else{
+      $data['created_at'] = Carbon::now();
+      return Payload::insert($data);
     }
   }
 }

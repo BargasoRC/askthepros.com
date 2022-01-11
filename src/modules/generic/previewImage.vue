@@ -13,10 +13,72 @@
         </div>
       </div>
 
-      <div class="d-flex justify-content-start mt-5">
-        <button id="imageCont" type="button" class="btn add_file" @click="addImage(edit)">Add File</button>
+      <div class="d-flex justify-content-start mt-5 mb-5">
+        <button id="imageCont" type="button" class="btn add_file" @click="addImage()">Add File</button>
         <input type="file" id="Image" accept="image/*"
           @change="setUpFileUpload($event, add)">
+      </div>
+    </div>
+    <!-- <confirmError
+    ref="confirmError"
+    :title="'Error Message'"
+    :message="'Invalid Image'"
+    /> -->
+    <div v-if="selectedImage != null" class="modal fade" id="incrementAlert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-primary" id="exampleModalLabel">Error Message</h5>
+            <button type="button" class="close" @click="hideModal()" aria-label="Close">
+              <span aria-hidden="true" class="text-primary">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <label>Invalid Image</label>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" @click="hideModal()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" role="dialog" id="editImage">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="height: 75vh; width: 70%; margin-right: 15%; margin-left: 15%;">
+          <div id="tui-image-editor"></div>
+          <div style="text-align: right;">
+            <!--  background-color: #151515; 1px solid white -->
+            <roundedBtn
+              :onClick="close"
+              :icon="null"
+              :text="'Close'"
+              :styles="{
+                background: '#FF0000',
+                color: 'white',
+                width: '150px !important',
+                minWidth: '150px !important',
+                border: 'none',
+                margin: '5px'
+              }"
+              :icon_position="'left'"
+            />
+            <roundedBtn
+              :onClick="saveImage"
+              :icon="null"
+              :text="'Save Image'"
+              :styles="{
+                background: '#01009A',
+                color: 'white',
+                width: '150px !important',
+                minWidth: '150px !important',
+                border: 'none',
+                margin: '10px'
+              }"
+              :icon_position="'left'"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -27,6 +89,11 @@ import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import axios from 'axios'
 import COMMON from 'src/common.js'
+// import confirmError from 'src/components/increment/generic/Modal/Alert.vue'
+import 'tui-color-picker/dist/tui-color-picker.css'
+import 'tui-image-editor/dist/tui-image-editor.css'
+import roundedBtn from 'src/modules/generic/roundedBtn'
+const ImageEditor = require('tui-image-editor')
 export default {
   props: ['imagesRetrieve', 'formData', 'edit', 'code'],
   data: () => ({
@@ -42,8 +109,14 @@ export default {
     hasError: false,
     files: [],
     fileUrls: [],
-    add: true
+    add: true,
+    useDefaultUI: true,
+    instance: null,
+    imageToEdit: null
   }),
+  components: {
+    roundedBtn
+  },
   mounted(){
     if(this.user.type === 'USER'){
       this.retrieveImageUser()
@@ -63,8 +136,63 @@ export default {
     }
   },
   methods: {
-    addImage(edit){
-      $('#Image')[0].click()
+    close(){
+      $('#editImage').modal('hide')
+    },
+    saveImage() {
+      let imageName = this.instance.getImageName()
+      let base = this.instance.toDataURL()
+      var arr = base.split(',')
+      let mime = arr[0].match(/:(.*?);/)[1]
+      let bstr = atob(arr[1])
+      let n = bstr.length
+      let u8arr = new Uint8Array(n)
+      while(n--){
+        u8arr[n] = bstr.charCodeAt(n)
+      }
+      let finalImageName = imageName.split('.')[0] + '.' + mime.split('/')[1]
+      this.file = new File([u8arr], imageName, {type: mime})
+      this.upload(true)
+      $('#editImage').modal('hide')
+    },
+    show(){
+      $('#incrementAlert').modal({
+        show: true,
+        backdrop: 'static',
+        keyboard: false
+      })
+    },
+    hideModal(){
+      $('#incrementAlert').modal('hide')
+    },
+    addImage(){
+      this.instance = new ImageEditor(
+        document.querySelector('#tui-image-editor'),
+        {
+          includeUI: {
+            loadImage: {
+              path: null,
+              name: 'image'
+            },
+            theme: {
+              'common.backgroundColor': 'white',
+              'loadButton.backgroundColor': '#F1B814',
+              'loadButton.border': '#F1B814',
+              'submenu.normalIcon.color': '#8c8c8c',
+              'submenu.normalLabel.color': '#8c8c8c',
+              'submenu.activeIcon.color': 'black',
+              'submenu.activeLabel.color': 'black',
+              'submenu.partition.color': '#01009A',
+              'submenu.backgroundColor': 'white',
+              'common.bisize.height': '0px',
+              'downloadButton.display': 'none'
+            },
+            menuBarPosition: 'bottom'
+          }
+        }
+      )
+      $('#editImage').modal({backdrop: 'static', keyboard: false})
+      $('#editImage').modal('show')
     },
     selectImage(url){
       this.selectedImage = url
@@ -79,7 +207,8 @@ export default {
         if(filename.substring(filename.lastIndexOf('.')) === '.png' || filename.substring(filename.lastIndexOf('.')) === '.jpg' || filename.substring(filename.lastIndexOf('.')) === '.jpeg' || filename.substring(filename.lastIndexOf('.')) === '.gif' || filename.substring(filename.lastIndexOf('.')) === '.tif' || filename.substring(filename.lastIndexOf('.')) === '.bmp'){
           this.createFile(files[0], add)
         }else{
-          this.errorMessage = 'Upload images only!'
+          this.show()
+          // this.$refs.confirmError.show()
           this.file = null
         }
       }
@@ -90,8 +219,8 @@ export default {
       this.upload(add)
     },
     upload(add){
-      if(parseInt(this.file.size / 1024) > 1024){
-        this.errorMessage = 'Allowed size is up to 1 MB only'
+      if(this.file.size < 10240 && this.file != null){
+        this.show()
         this.file = null
         return
       }

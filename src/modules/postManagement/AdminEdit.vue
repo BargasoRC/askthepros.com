@@ -7,14 +7,28 @@
             <p>Hi {{user.username}}! You can fill up contents of your post by using the field editor
               or directly on the preview section. For other channel, just click the next and previous action.
             </p>
+            <div style="text-align: left; font-size: 13px">
+              <i>Note:</i>
+              <p style="text-align: left; margin-left: 5%">
+                <i> No HTML tags allowed.</i>
+                <br>
+                <i> No Dates that Expire.</i>
+                <br>
+                <i> No Phone Numbers.</i>
+                <br>
+                <i> No new line allowed between paragraphs or sentence for LinkedIn.</i>
+                <br>
+                <i> You may encourage a phone call but a phone number is not allowed.</i>
+              </p>
+            </div>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="post_title"><b>Post Title</b></label>
+          <label for="post_title"><b>Post Question</b></label>
           <input 
             :class="!this.isValid && title == '' ? 'form-control mb-0' : 'form-control'" 
-            placeholder="Post Title" 
+            placeholder="Post Question" 
             :style="{
               ...!this.isValid && title == '' ? {border: '1px solid red !important'} : '',
               ...{
@@ -30,11 +44,11 @@
         </div>
 
         <div class="form-group">
-          <label for="description"><b>Description</b></label>
+          <label for="description"><b>Post Answer</b></label>
           <textarea 
             :class="!this.isValid && description == '' ? 'form-control mb-0' : 'form-control'" 
-            placeholder="Add description here" 
-            rows="10" 
+            placeholder="Add post answer here"
+            rows="10"
             :style="{
               ...!this.isValid && description == '' ? {border: '1px solid red !important'} : '',
             }"
@@ -48,7 +62,11 @@
           >Required Field</p>
           <p style="text-align: right; font-size: 12px; color: gray;">Character count: {{character}}</p>
         </div>
-        
+        <div>
+          <button class="btn btn-primary" type="button" @click="generateAnswer()" v-if="title !== ''">Generate Answer</button>
+          <button class="btn btn-primary" type="button" @click="generateImage()" v-if="title !== '' && description !== ''">Generate Image</button>
+        </div>
+        <br>
         <div class="form-group">
           <label for="category"><b>Category</b></label>
           <searchField
@@ -80,17 +98,18 @@
           >Required Field</p>
         </div>
 
-        <div class="form-group" style="margin-top: 3%">
+        <!-- <div class="form-group" style="margin-top: 3%">
           <label for="post_setting"><b>Post Setting</b></label>
           <div class="Row row">
             <div class="Column col-4" style="margin-left: -20%"><Toggle :text="'Facebook'" v-model="facebook" :isChecked="facebook" v-if="!isClearing"/></div>
             <div class="Column col-5"><Toggle :text="'Google My Business'" v-model="googleMyBusiness" :isChecked="googleMyBusiness" v-if="!isClearing"/></div>
-            <div class="Column col-3"><Toggle :text="'Linkedin'" v-model="linkedin" :isChecked="linkedin" v-if="!isClearing"/></div>
+            <div class="Column col-3"><Toggle :text="'Linkedin'
+            " v-model="linkedin" :isChecked="linkedin" v-if="!isClearing"/></div>
           </div>
-        </div>
+        </div> -->
         <br>
         
-        <b>File(s)</b>
+        <b>Add Image</b>
         <Images @formData="form" v-if="!isClearing" @filePreview="storeImages" @add="add" :edit="$route.params.parameter != undefined ? true : false" :imagesRetrieve="imagesList" :code="$route.params.parameter != undefined ? $route.params.parameter : null"></Images>
         <br>
         <br>
@@ -102,10 +121,10 @@
             :onClick="() => (status != 'PUBLISH' && status != undefined) ? update('DRAFT') : save('DRAFT')"
             :text="'Save as Draft'"
             :styles="{
-              backgroundColor: colors.warning,
+              backgroundColor: colors.secondary,
               color: 'white',
               width: '15%',
-              outlineColor: colors.warning
+              outlineColor: colors.secondary
             }"
           />
           <roundedBtn
@@ -135,7 +154,7 @@
     <errorModal
     ref="errorModal"
     :title="'Error Message'"
-    :message="'Please fill in all of the fields.'"
+    :message="val === true ? 'Your description is invalid or you have reached the maximum number(1500) of characters.' : 'Please fill in all of the fields and put a valid image.'"
     />
   </div>
 </template>
@@ -149,8 +168,8 @@ import COLORS from 'src/assets/style/colors.js'
 import CONFIG from 'src/config.js'
 import roundedSelectBtn from 'src/modules/generic/roundedSelectBtn'
 import global from 'src/helpers/global'
-import preview from 'src/modules/generic/preview.vue'
 import axios from 'axios'
+import preview from 'src/modules/generic/preview.vue'
 import ROUTER from 'src/router'
 import searchField from 'src/modules/generic/searchField.vue'
 import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
@@ -160,9 +179,6 @@ export default {
     if(this.$route.params.parameter === undefined){
       this.title = ''
       this.description = ''
-      this.facebook = false
-      this.linkedin = false
-      this.googleMyBusiness = false
       this.selectedIndex = null
       this.status = null
       this.retrieveBranding()
@@ -186,9 +202,9 @@ export default {
       isValid: true,
       title: '',
       description: '',
-      facebook: false,
-      googleMyBusiness: false,
-      linkedin: false,
+      facebook: true,
+      googleMyBusiness: true,
+      linkedin: true,
       isClearing: false,
       character: 0,
       selectedIndex: null,
@@ -196,7 +212,8 @@ export default {
       render: false,
       addImage: [],
       isAdd: false,
-      isEmpty: true
+      isEmpty: true,
+      val: false
     }
   },
   components: {
@@ -231,6 +248,45 @@ export default {
     }
   },
   methods: {
+    generateAnswer(){
+      if(this.title !== ''){
+        let parameter = {
+          question: this.title
+        }
+        $('#loading').css({'display': 'block'})
+        this.APIRequest('image_generator/generate_answer', parameter).then(res => {
+          $('#loading').css({'display': 'none'})
+          this.description = JSON.parse(res).result[0]
+          this.charCount()
+        })
+      }else{
+        this.isValid = false
+      }
+    },
+    generateImage(){
+      if(this.title !== '' && this.description !== ''){
+        let parameter = {
+          question: this.title,
+          answer: this.description,
+          category: this.user.merchant.addition_informations.industry
+        }
+        $('#loading').css({'display': 'block'})
+        this.APIRequest('image_generator/generate', parameter).then(response => {
+          $('#loading').css({'display': 'none'})
+          if(response.data.length > 0) {
+            this.imagesList = {url: this.config.BACKEND_URL + response.data}
+            // this.imageList.push(response.data)
+          }else{
+            //
+          }
+        }).catch(error => {
+          $('#loading').css({'display': 'none'})
+          error
+        })
+      }else{
+        this.isValid = false
+      }
+    },
     // EDIT A POST
     retrievePayloads(){
       let conditions = [{
@@ -401,31 +457,67 @@ export default {
             this.linkedin = false
             this.isClearing = false
             this.imagesList = []
+            this.addImage = []
           }
           ROUTER.push('/post_management')
         })
       }
     },
     validate() {
+      var checkString = this.description.split(/\r?\n/).map(el => {
+        if(el === ''){
+          return true
+        }
+      })
       if(this.selectedIndustry.length <= 0 && this.title === '' && this.title === null && this.title === undefined && this.description === '' && this.description === null && this.description === undefined){
         this.$refs.errorModal.show()
+        this.val = false
         return false
       }
-      if(this.facebook === false && this.linkedin === false && this.googleMyBusiness === false){
-        this.isValid = false
-        this.$refs.errorModal.show()
-        return false
-      }
+      // if(this.facebook === false && this.linkedin === false && this.googleMyBusiness === false){
+      //   this.isValid = false
+      //   this.val = false
+      //   this.$refs.errorModal.show()
+      //   return false
+      // }
       if(this.selectedIndustry.length <= 0) {
         this.isValid = false
+        this.val = false
         this.$refs.errorModal.show()
         return false
       }if(this.title === '' && this.title === null && this.title === undefined) {
         this.isValid = false
+        this.val = false
         this.$refs.errorModal.show()
         return false
       }if(this.description === '' && this.description === null && this.description === undefined) {
         this.isValid = false
+        this.val = false
+        this.$refs.errorModal.show()
+        return false
+      }if(this.googleMyBusiness === true && this.character >= 1500){
+        this.isValid = false
+        this.val = true
+        this.$refs.errorModal.show()
+        return false
+      }if(this.linkedin === true && checkString.includes(true)){
+        this.isValid = false
+        this.val = true
+        this.$refs.errorModal.show()
+        return false
+      }if(global.validateHTML(this.description) === true){
+        this.isValid = false
+        this.val = true
+        this.$refs.errorModal.show()
+        return false
+      }if(global.validatePhoneNumber(this.description)){
+        this.isValid = false
+        this.val = true
+        this.$refs.errorModal.show()
+        return false
+      }if(global.validateDate(this.description)){
+        this.isValid = false
+        this.val = true
         this.$refs.errorModal.show()
         return false
       }

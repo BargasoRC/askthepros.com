@@ -19,6 +19,7 @@ export default {
     }
   },
   mounted() {
+    console.log('===============', new RegExp(/\?.+=.*/g).test(window.location.href), (localStorage.getItem('login_with'), localStorage.getItem('connect_with')))
     if(new RegExp(/\?.+=.*/g).test(window.location.href) && (localStorage.getItem('login_with') || localStorage.getItem('connect_with'))) {
       this.loginCallBack()
       this.connectCallback()
@@ -43,7 +44,6 @@ export default {
           localStorage.removeItem('login_with')
           localStorage.setItem('usertoken', response.token)
           AUTH.hash('hide', response.login_type)
-          // console.log('USER @ Index: ', response.user)
           AUTH.setUser(response.user)
           AUTH.checkAuthentication()
           ROUTER.push(`/dashboard`)

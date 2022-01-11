@@ -30,7 +30,7 @@
                   <p
                     class="mb-0 pb-0 invalidEmail"
                     v-if="!this.isValidAccount && email == ''"
-                  >{{ email == '' ? 'Required Field' : emailValidation }}</p>
+                  >{{ (!isValidAccount && emailValidation == '') ? 'Required Field' : emailValidation }}</p>
                 </div>
               </div>
             </div>
@@ -53,10 +53,8 @@ import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
-import axios from 'axios'
 import $ from 'jquery'
 import global from 'src/helpers/global'
-import ROUTER from 'src/router'
 export default {
   data() {
     return {
@@ -71,7 +69,8 @@ export default {
       isValid: true,
       isValidAccount: true,
       canUpdateAccount: false,
-      emailValidation: ''
+      emailValidation: '',
+      username: ''
     }
   },
   components: {
@@ -85,12 +84,11 @@ export default {
     }
   },
   watch: {
-    email: this.email
+    email: function(val){
+      this.email = val
+    }
   },
   created() {
-    if(AUTH.hash('show', localStorage.getItem('login_with')) === 'social_lite') {
-      this.passwordVerified = true
-    }
     this.retrieveInformation()
   },
   methods: {
@@ -121,13 +119,10 @@ export default {
       })
     },
     update_account(event){
-      console.log('...updating', this.canUpdateProfile, 'validated: ', !this.validate())
       if(!this.validate()) {
         return
       }
       if(this.canUpdateAccount) {
-        let info = AUTH.user.information
-        console.log('INFO: ', info)
         if(this.canUpdateAccount) {
           let acc = {
             id: this.user.userID,
@@ -137,14 +132,16 @@ export default {
           $('#loading').css({'display': 'block'})
           this.APIRequest('accounts/update_email', acc).then(response => {
             $('#loading').css({'display': 'none'})
-            console.log('UPDATE RESPONSE: ', response)
-            if(response.error.length > 0) {
+            if(response.error != null) {
               this.isValidAccount = false
               this.email = ''
               this.emailValidation = response.error
-              // console.log('UPDATE RESPONSE: ', response)
+            }else{
+              this.emailValidation = ''
+              this.email = ''
+              this.isValidAccount = true
+              window.location.reload()
             }
-            window.location.reload()
           })
         }
       }

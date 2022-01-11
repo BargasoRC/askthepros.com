@@ -51,15 +51,16 @@
         <div class="col-sm-12 mb-5">
           <h3 style="margin-top: 20px;font-size: 20px;">Add Branding.</h3>
           <p class="subheads">These “branding footers” will be added to the end of your social media posts.   They should be one or two short sentences and incorporate your brand name and location. </p>
+          <p v-if="error" style="color: red">Must have at least 1 branding.</p>
           <p class="pl-0 mt-5"><b>Branding Footer 1</b></p>
           <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand1"></textarea>
-          <span class="char-count">Character Count: {{brand1.length}}</span>
+          <span class="char-count">Character Count: {{brand1 && brand1.length}}</span>
           <p class="pl-0 mt-4"><b>Branding Footer 2</b></p>
           <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand2"></textarea>
-          <span class="char-count">Character Count: {{brand2.length}}</span>
+          <span class="char-count">Character Count: {{brand2 && brand2.length}}</span>
           <p class="pl-0 mt-4"><b>Branding Footer 3</b></p>
           <textarea class="textArea" rows="5" placeholder="Write your branding footer content here..." v-model="brand3"></textarea>
-          <span class="char-count">Character Count: {{brand3.length}}</span>
+          <span class="char-count">Character Count: {{brand3 && brand3.length}}</span>
           <roundedBtn
             :class="'btnn'"
             :onClick="saveBrandings"
@@ -97,7 +98,8 @@ export default {
       brand3: '',
       user: AUTH.user,
       render: false,
-      selectedItem: null
+      selectedItem: null,
+      error: false
     }
   },
   components: {
@@ -112,7 +114,6 @@ export default {
         branding: this.selectedItem.branding
       }
       this.render = true
-      console.log('[selec]', this.selectedItem)
       return this.selectedItem
     },
     returnBranding() {
@@ -133,6 +134,10 @@ export default {
       this.count = this.brand.length
     },
     saveBrandings() {
+      if(this.brand1 === '' && this.brand2 === '' && this.brand3 === ''){
+        this.error = true
+        return
+      }
       let parameter = {
         condition: [
           {
@@ -147,6 +152,7 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('brandings/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
+        this.error = false
         let brandings = {
           account_id: this.user.userID,
           details: JSON.stringify({
@@ -187,7 +193,6 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('brandings/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('Brandings response: ', response)
         if(response.data.length > 0) {
           let brandings = JSON.parse(response.data[0].details)
           this.brand1 = brandings.brand1

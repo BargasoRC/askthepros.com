@@ -1,5 +1,5 @@
 <template>
-  <div class="LoginContainer col-sm-12">
+  <div class="LoginContainer">
     <div class="row RowContainer">
       <div class="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xs-7 QouteCardContainer mb-5">
         <div class="QouteCard">
@@ -16,7 +16,12 @@
         <div class="card LoginCard">
           <div class="card-body LoginCardBody">
             <div class="d-flex justify-content-center pt-5 pb-5 mb-3">
-              <b>Login with AskThePros</b>
+              <div class="log">
+                Login
+              </div>
+              <div class="reg" @click="redirect('/signup')">
+                Register
+              </div>
             </div>
             <div>
               <p
@@ -25,18 +30,30 @@
               >{{errorMessage}}</p>
               <roundedInput 
                 :type="'text'"
-                :placeholder="'Username'"
-                :class="!this.isValid && username == '' ? 'mb-0 ' : ' LoginField'"
+                :placeholder="'Email'"
+                :class="!this.isValid && email == '' ? 'mb-0 ' : ' LoginField'"
                 :styles="{
-                  border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
+                  border: !this.isValid && email == '' ? '1px solid red !important' : 'none',
                 }"
-                v-model="username"
+                v-model="email"
               />
               <p
                 class="mb-0 pb-0 invalidEmail"
-                v-if="!this.isValid && username == ''"
+                v-if="!this.isValid && email == ''"
               >Required Field</p>
-              <roundedInput 
+
+              <div class="roudedInput">
+                <div class="input-group">
+                    <input class="form-control roudedInput !this.isValid && password == ''? 'mb-0 ' : ' LoginField'" style="border: none !important; background: none !important" :type="visibility" placeholder="Password" v-model="password" @keyup.enter="login()">
+                    <span style="background: none; margin-top: 2.5%; margin-right: 3%">
+                    <i v-if="visibility == 'password'" @click="showPassword()" class="fa fa-eye" aria-hidden="true"></i>
+                    <i v-if="visibility == 'text'" @click="hidePassword()" class="fa fa-eye-slash" aria-hidden="true"></i>
+                  </span>
+                </div>
+              </div>
+              <br>
+
+              <!-- <roundedInput 
                 :type="'password'"
                 :placeholder="'Password'"
                 :class="!this.isValid && password == ''? 'mb-0 ' : ' LoginField'"
@@ -45,7 +62,7 @@
                 }"
                 v-model="password"
                 :onEnter="login"
-              />
+              /> -->
               <p
                 class="mb-0 pb-0 invalidEmail"
                 v-if="!this.isValid && password == ''"
@@ -72,7 +89,7 @@
               />
             </div>
             <div class="d-flex justify-content-center orSeparatorA">
-              <b>OR</b>
+              <b>Login with Social Media</b>
             </div>
             <div class="col-sm-12">
               <div class="row">
@@ -80,7 +97,7 @@
                   <roundedBtn
                     :onClick="gmailLogin"
                     :icon="'fab fa-google'"
-                    :text="'Sign In'"
+                    :text="'Login'"
                     :styles="{
                       background: 'none',
                       color: '272727',
@@ -95,7 +112,7 @@
                   <roundedBtn
                     :onClick="fbLogin"
                     :icon="'fa fa-facebook'"
-                    :text="'Sign In'"
+                    :text="'Login'"
                     :styles="{
                       background: 'none',
                       color: '272727',
@@ -110,7 +127,7 @@
                   <roundedBtn
                     :onClick="linkedInLogin"
                     :icon="'fab fa-linkedin-square'"
-                    :text="'Sign In'"
+                    :text="'Login'"
                     :styles="{
                       background: 'none',
                       color: '272727',
@@ -123,7 +140,7 @@
                 </div>
               </div>
             </div>
-            <div class="d-flex justify-content-center orSeparatorB">
+            <!-- <div class="d-flex justify-content-center orSeparatorB">
               <b>OR</b>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-center">
@@ -133,11 +150,11 @@
                 :text="'Register Now'"
                 :icon_position="'right'"
                 :styles="{
-                  backgroundColor: colors.warning,
+                  backgroundColor: colors.secondary,
                   color: 'white'
                 }"
               />
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -155,12 +172,13 @@ import ROUTER from 'src/router'
 export default {
   data() {
     return {
-      username: '',
+      email: '',
       password: '',
       errorMessage: '',
       isValid: true,
       colors: COLORS,
-      user: AUTH.user
+      user: AUTH.user,
+      visibility: 'password'
     }
   },
   components: {
@@ -170,17 +188,37 @@ export default {
   },
   mounted() {},
   methods: {
+    redirect(parameter) {
+      if(parameter === '/signup'){
+        if(localStorage.getItem('selectedIndustry') != null){
+          ROUTER.push(parameter)
+        }else{
+          alert('Please select industry to proceed.')
+        }
+      }else{
+        ROUTER.push(parameter)
+      }
+      if(parameter === '/'){
+        this.scrollToTop()
+      }
+    },
+    showPassword() {
+      this.visibility = 'text'
+    },
+    hidePassword() {
+      this.visibility = 'password'
+    },
     login(event) {
-      if(this.username !== '' && this.password !== '') {
+      if(this.email !== '' && this.password !== '') {
         this.isValid = true
         $('#loading').css({'display': 'block'})
-        AUTH.authenticate(this.username, this.password, (response) => {
+        AUTH.authenticate(this.email, this.password, (response) => {
           $('#loading').css({'display': 'none'})
           ROUTER.push(`/dashboard`)
         }, (response, status) => {
           $('#loading').css({'display': 'none'})
           if(status === 401){
-            this.errorMessage = 'Username and Password did not match.'
+            this.errorMessage = 'Email and Password did not match.'
           }else if(status === 402){
             this.errorMessage = response.error
           }
@@ -190,21 +228,17 @@ export default {
       }
     },
     register(event) {
-      console.log('register:::')
       this.$router.push('/signup')
     },
     forgotPassword(event) {
-      console.log('forgot password:::')
       this.$router.push('/request_reset_password')
     },
     gmailLogin(event) {
-      console.log('gmail login:::')
       $('#loading').css({'display': 'block'})
       localStorage.setItem('login_with', 'google')
       this.APIRequest('social_lite/authenticate/google/redirect', {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
-          console.log('Authentication with google response: ', response)
           window.location.href = response.data.url
         }
       }, error => {
@@ -214,12 +248,10 @@ export default {
     },
     fbLogin(event) {
       $('#loading').css({'display': 'block'})
-      console.log('facebook login:::')
       localStorage.setItem('login_with', 'facebook')
       this.APIRequest('social_lite/authenticate/facebook/redirect', {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
-          console.log('Authentication with facebook response: ', response)
           window.location.href = response.data.url
         }
       }, error => {
@@ -229,12 +261,10 @@ export default {
     },
     linkedInLogin(event) {
       $('#loading').css({'display': 'block'})
-      console.log('linkedin login:::')
       localStorage.setItem('login_with', 'linkedin')
       this.APIRequest('social_lite/authenticate/linkedin/redirect', {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
-          console.log('Authentication with linkedin response: ', response)
           window.location.href = response.data.url
         }
       }, error => {
@@ -246,8 +276,30 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss" scoped>
 @import "~assets/style/colors.scss";
+.log{
+  background-color: #ffc107;
+  padding: 3%;
+  border-color: #ffc107;
+  border-radius: 10px;
+  font-weight: bold;
+  margin-left: 3%;
+}
+.reg{
+  background-color: whitesmoke;
+  padding: 3%;
+  border-color: whitesmoke;
+  border-radius: 10px;
+  font-weight: bold;
+}
+.roudedInput {
+  outline: none !important;
+  box-shadow: none !important;
+  height: 45px !important;
+  border-radius: 40px !important;
+  border: 1px solid $gray !important;
+}
 .errorMessage {
   margin-top: -14px;
   color: $danger;
@@ -294,13 +346,13 @@ export default {
   -moz-box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
   max-height: 42.5rem;
 }
-.LoginCardBody {
-}
+
 .LoginContainer {
   min-height: 85vh;
 }
 .RowContainer {
   background: white;
+  padding-top: 15vh;
 }
 .QouteCardContainer {
   display: flex !important;

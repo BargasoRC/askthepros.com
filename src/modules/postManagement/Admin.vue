@@ -7,8 +7,8 @@
         :text="'New Post'"
         :icon_position="'right'"
         :styles="{
-            backgroundColor: '#01004E',
-            color: 'white'
+          backgroundColor: '#01004E',
+          color: 'white'
         }"
       />
     </div>
@@ -17,7 +17,7 @@
         :category="category"
         :activeCategoryIndex="0"
         :activeSortingIndex="0"
-        @changeSortEvent="() => {}"
+        @changeSortEvent="retrieve($event.sort, $event.filter)"
         :grid="['list']"
         :sortByStyle="{
           background: '#01004E !important',
@@ -57,7 +57,7 @@
             <td v-if="item.status.toLowerCase() === 'publish'">
               <i class="fa fa-eye text-primary"  @click="showPreview(item)"></i>
               <!-- <i class="fas fa-copy text-primary" @click="edit(item.code)"></i> -->
-              <i class="fa fa-trash text-danger" @click="showDeleteConfirmation(item.id)"></i>
+              <!-- <i class="fa fa-trash text-danger" @click="showDeleteConfirmation(item.id)"></i> -->
             </td>
           </tr>
         </tbody>
@@ -99,7 +99,7 @@ import Pager from 'src/components/increment/generic/pager/Pager.vue'
 import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
 import ROUTER from 'src/router'
 import CONFIG from 'src/config.js'
-import Search from 'src/components/increment/generic/filter/Basic'
+import Search from 'src/components/increment/generic/filter/FilterWithCalendar.vue'
 import preview from './UserPreview.vue'
 export default {
   data() {
@@ -120,16 +120,6 @@ export default {
       category: [{
         title: 'Sort By',
         sorting: [{
-          title: 'Post ascending',
-          payload: 'post',
-          payload_value: 'asc',
-          type: 'date'
-        }, {
-          title: 'Post descending',
-          payload: 'post',
-          payload_value: 'desc',
-          type: 'date'
-        }, {
           title: 'Created ascending',
           payload: 'created_at',
           payload_value: 'asc',
@@ -150,33 +140,23 @@ export default {
           payload_value: 'desc',
           type: 'text'
         }, {
-          title: 'Category ascending',
-          payload: 'category',
-          payload_value: 'asc',
-          type: 'text'
-        }, {
-          title: 'Category descending',
-          payload: 'category',
-          payload_value: 'desc',
-          type: 'text'
-        }, {
           title: 'Channel ascending',
-          payload: 'channel',
+          payload: 'channels',
           payload_value: 'asc',
           type: 'text'
         }, {
           title: 'Channel descending',
-          payload: 'channel',
+          payload: 'channels',
           payload_value: 'desc',
           type: 'text'
         }, {
           title: 'Author ascending',
-          payload: 'author',
+          payload: 'account_id',
           payload_value: 'asc',
           type: 'text'
         }, {
           title: 'Author descending',
-          payload: 'author',
+          payload: 'account_id',
           payload_value: 'desc',
           type: 'text'
         }, {
@@ -209,9 +189,6 @@ export default {
     Pager,
     Search,
     preview
-  },
-  created() {
-    this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
   },
   mounted(){
     this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
@@ -273,7 +250,7 @@ export default {
       let parameter = {
         condition: [{
           column: filter.column,
-          value: filter.value + '%',
+          value: filter.value !== null ? '%' + filter.value + '%' : '%%',
           clause: 'like'
         }],
         sort: sort,
@@ -284,11 +261,12 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        if(!response.error) {
+        if(response.data.length > 0) {
           this.data = response.data
           this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
         }else{
           this.data = []
+          this.numPages = null
         }
       })
     },
@@ -332,7 +310,5 @@ export default {
 .container-fluid{
   min-height: 70vh !important;
 }
-.text-primary{
-  color: #01004E!important;
-}
+
 </style>

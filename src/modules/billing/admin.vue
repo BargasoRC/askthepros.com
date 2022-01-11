@@ -8,7 +8,7 @@
         :category="category"
         :activeCategoryIndex="0"
         :activeSortingIndex="0"
-        @changeSortEvent="() => {} "
+        @changeSortEvent="retrieve($event.sort, $event.filter)"
         :grid="['list']"
         :sortByStyle="{
           background: '#01004E !important',
@@ -30,7 +30,7 @@
           <th v-for="(item, index) in tableHeaders" :key="index">{{item.title}}</th>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in data">
+          <tr v-for="(item, index) in data" :key="index">
             <td>{{item.invoice}}</td>
             <td>{{item.created_at}}</td>
             <td>{{item.account.username}}</td>
@@ -45,15 +45,23 @@
     </div>
 
     <empty v-if="data.length <= 0" :title="'No billings available!'" :action="'Keep growing.'"></empty>
+
+    <Pager
+      :pages="numPages"
+      :active="activePage"
+      :limit="limit"
+      v-if="data.length > 0"
+    />
   </div>
 </template>
 
 <script>
 import DataTable from 'src/modules/generic/table'
-import Search from 'src/components/increment/generic/filter/Basic'
+import Search from 'src/components/increment/generic/filter/FilterWithCalendar.vue'
+import Pager from 'src/components/increment/generic/pager/Pager.vue'
 export default {
   mounted(){
-    this.retrieve()
+    this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
   },
   data() {
     return {
@@ -72,16 +80,6 @@ export default {
       category: [{
         title: 'Sort By',
         sorting: [{
-          title: 'Post ascending',
-          payload: 'post',
-          payload_value: 'asc',
-          type: 'date'
-        }, {
-          title: 'Post descending',
-          payload: 'post',
-          payload_value: 'desc',
-          type: 'date'
-        }, {
           title: 'Created ascending',
           payload: 'created_at',
           payload_value: 'asc',
@@ -92,43 +90,13 @@ export default {
           payload_value: 'desc',
           type: 'date'
         }, {
-          title: 'Title ascending',
-          payload: 'title',
+          title: 'Username ascending',
+          payload: 'account_id',
           payload_value: 'asc',
           type: 'text'
         }, {
-          title: 'Title descending',
-          payload: 'title',
-          payload_value: 'desc',
-          type: 'text'
-        }, {
-          title: 'Category ascending',
-          payload: 'category',
-          payload_value: 'asc',
-          type: 'text'
-        }, {
-          title: 'Category descending',
-          payload: 'category',
-          payload_value: 'desc',
-          type: 'text'
-        }, {
-          title: 'Channel ascending',
-          payload: 'channel',
-          payload_value: 'asc',
-          type: 'text'
-        }, {
-          title: 'Channel descending',
-          payload: 'channel',
-          payload_value: 'desc',
-          type: 'text'
-        }, {
-          title: 'Author ascending',
-          payload: 'author',
-          payload_value: 'asc',
-          type: 'text'
-        }, {
-          title: 'Author descending',
-          payload: 'author',
+          title: 'Username descending',
+          payload: 'account_id',
           payload_value: 'desc',
           type: 'text'
         }, {
@@ -142,13 +110,20 @@ export default {
           payload_value: 'desc',
           type: 'text'
         }]
-      }]
+      }],
+      limit: 5,
+      offset: 0,
+      numPages: null,
+      filter: null,
+      sort: null,
+      activePage: 1
     }
   },
   components: {
     DataTable,
     Search,
-    'empty': require('components/increment/generic/empty/Empty.vue')
+    'empty': require('components/increment/generic/empty/Empty.vue'),
+    Pager
   },
   methods: {
     renderPlan(plan){
@@ -159,23 +134,39 @@ export default {
       }
     },
     onTableAction(data) {
-      console.log('Table Action: ', data)
     },
-    retrieve(){
+    retrieve(sort, filter){
+      if(sort !== null){
+        this.sort = sort
+      }
+      if(filter !== null){
+        this.filter = filter
+      }
+      if(sort === null && this.sort !== null){
+        sort = this.sort
+      }
+      if(filter === null && this.filter !== null){
+        filter = this.filter
+      }
       let parameter = {
-        sort: {
-          start_date: 'desc'
-        },
-        offset: 0,
-        limit: 50
+        condition: [{
+          value: filter.value !== null ? '%' + filter.value + '%' : '%%',
+          column: filter.column,
+          clause: 'like'
+        }],
+        sort: sort,
+        limit: this.limit,
+        offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('billings/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.length > 0) {
           this.data = response.data
+          this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
         }else{
           this.data = []
+          this.numPages = null
         }
       })
     }

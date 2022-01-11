@@ -8,7 +8,7 @@ export default {
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ALL', description: 'Accounts Management', icon: 'fa fa-tachometer', path: 'accounts', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ALL', description: 'Billing Management', icon: 'fa fa-tachometer', path: 'billing_management', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ALL', description: 'Subscription Management', icon: 'fa fa-tachometer', path: 'subscriptions_management', flag: false, subMenu: null},
-    {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ALL', description: 'Account Settings', icon: 'fa fa-cogs', path: 'settings', flag: false, subMenu: null},
+    // {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ALL', description: 'Account Settings', icon: 'fa fa-cogs', path: 'settings', flag: false, subMenu: null},
     {accountType: 'USER', showOnAdmin: false, accountStatus: 'ALL', description: 'Post Management', icon: 'fa fa-credit-card', path: 'post_management', flag: false, subMenu: null},
     {accountType: 'USER', showOnAdmin: false, accountStatus: 'ALL', description: 'Social Media Channels', icon: 'fa fa-credit-card', path: 'channels', flag: false, subMenu: null},
     {accountType: 'USER', showOnAdmin: false, accountStatus: 'ALL', description: 'Account Settings', icon: 'fa fa-cogs', path: 'settings', flag: false, subMenu: null},
@@ -49,5 +49,6 @@ export default {
         item.flag = false
       }
     })
-  }
+  },
+  version: '1.0.3'
 }

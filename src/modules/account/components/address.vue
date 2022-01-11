@@ -5,26 +5,49 @@
         <div class="my-title mb-5">
           <h3>Address</h3>
         </div>
-
         <div class="row">
-          <div class="col-sm-12">
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <p>Route</p>
-                <roundedInput :type="'text'" :placeholder="'Enter your route here'"
-                  :class="!isValidAddress && route == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                            border: !isValidAddress && !route ? '1px solid red !important' : 'none',
-                          }" v-model="route" class="input-style" />
-                <div>
+          <!-- <div class="col-sm-12"> -->
+            <!-- <div class="row"> -->
+              <!-- <div class="col-md-6 mb-3"> -->
+                <div class="col-md-5 mb-3">
+                  <!-- <roundedInput :type="'text'" :placeholder="'Enter your city here'"
+                  :class="!isValidAddress && city == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
+                          border: !isValidAddress && !city ? '1px solid red !important' : 'none',
+                        }" v-model="city" class="input-style" />
+                  <div>
+                    <p class="mb-0 pb-0 requiredFieldError"
+                      v-if="city == '' || city == undefined && !isValidAddress">
+                      {{
+                      'Required Field'
+                      }}</p>
+                  </div> -->
+                  <!-- // last implementation -->
+                      <!-- ref="address"
+                      id="map"
+                      classname="form-control roudedInput"
+                      :placeholder="selectedLocation == null ? 'Please type your address' : selectedLocation"
+                      v-on:placechanged="getAddressData"
+                      country="sg" -->
+                  <GooglePlacesAutoComplete
+                  :property="property"
+                  @onFinish="getAddressData($event)"
+                  >
+                  </GooglePlacesAutoComplete>
+                </div>
+                <!-- <roundedBtn :onClick="setLocation" :icon="'fas fa-sign-in-alt'" :text="'Select Location'" :styles="{
+                  backgroundColor: '#01004E',
+                  color: 'white'
+                }" /> -->
+                <!-- <div>
                   <p class="mb-0 pb-0 requiredFieldError"
                     v-if="route == '' || route == undefined  && !isValidAddress">
                     {{
                     'Required Field'
                     }}</p>
-                </div>
-              </div>
+                </div> -->
+              <!-- </div> -->
 
-              <div class="col-md-6 mb-3">
+              <!-- <div class="col-md-6 mb-3">
                 <p>City</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your city here'"
                   :class="!isValidAddress && city == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
@@ -86,10 +109,16 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
+        
+        <p class="mb-1 pb-0 requiredFieldError"
+        v-if="selectedLocation == '' || selectedLocation == null && !isValidAddress">
+        {{
+        'Required Field'
+        }}</p>
 
-        <roundedBtn :onClick="update_account" :icon="'fas fa-sign-in-alt'" :text="'Update'" :styles="{
+        <roundedBtn :onClick="update_address" :icon="'fas fa-sign-in-alt'" :text="'Update'" :styles="{
           backgroundColor: '#01004E',
           color: 'white'
         }" style="margin-bottom: 5%;" />
@@ -99,16 +128,17 @@
   </div>
 </template>
 <script>
+import VueGoogleAutocomplete from 'vue-google-autocomplete'
+import GooglePlacesAutoComplete from 'src/components/increment/generic/location/GooglePlacesAutoComplete'
 import dialogueBtn from 'src/modules/generic/dialogueBtn'
 import roundedInput from 'src/modules/generic/roundedInput'
 import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
-import axios from 'axios'
+import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 import $ from 'jquery'
 import global from 'src/helpers/global'
-import ROUTER from 'src/router'
 export default {
   data() {
     return {
@@ -119,20 +149,47 @@ export default {
       global: global,
       errorMessage: null,
       data: null,
-      route: '',
+      address: '',
       city: '',
       region: '',
       country: '',
       postalZipCode: '',
       isValid: true,
       isValidAddress: true,
-      canUpdateAddress: false
+      canUpdateAddress: false,
+      selectedLocation: null,
+      id: null,
+      val: false,
+      property: {
+        style: {
+          outline: 'none !important',
+          boxShadow: 'none !important',
+          height: '45px !important',
+          borderRadius: '40px !important',
+          border: '1px solid $gray !important'
+        },
+        placeholder: null,
+        GOOGLE_API_KEY: CONFIG.GOOGLE.API_KEY,
+        results: {
+          style: {
+            zIndex: '99999999px'
+          }
+        }
+      }
     }
   },
+  props: ['addresData'],
   components: {
     dialogueBtn,
     roundedInput,
-    roundedBtn
+    roundedBtn,
+    VueGoogleAutocomplete,
+    GooglePlacesAutoComplete,
+    errorModal
+  },
+  mounted(){
+    this.$parent.retrieveInformation()
+    this.retrieveInformation()
   },
   computed: {
     returnProfile() {
@@ -157,97 +214,83 @@ export default {
     }
   },
   created() {
-    this.retrieveInformation()
+    // this.$parent.retrieveInformation()
   },
   methods: {
-    retrieveInformation() {
-      let parameter = {
-        account_id: this.user.userID
-      }
-      $('#loading').css({'display': 'block'})
-      this.APIRequest('accounts_info/retrieve', parameter).then(response => {
-        $('#loading').css({'display': 'none'})
-        let data = response.data[0]
-        this.username = this.user.username
-        this.email = this.user.email
-        this.businessname = this.user.merchant ? this.user.merchant.name : ''
-        AUTH.user.information = response.data[0]
-        if(response.data.length > 0) {
-          AUTH.user.merchant = [data.merchant]
-          this.firstname = data.first_name
-          this.lastname = data.last_name
-          this.contactnumber = data.cellular_number
-          let address = data.address ? JSON.parse(data.address) : {}
-          this.route = address ? address.route : ''
-          this.city = address ? address.city : ''
-          this.region = address ? address.region : ''
-          this.country = address ? address.country : ''
-          this.postalZipCode = address ? address.postalZipCode : ''
-        }
-      })
+    getAddressData(e) {
+      this.selectedLocation = e
+      this.property.placeholder = e
     },
-    update_account(event){
-      console.log('...updating', this.canUpdateAddress, 'validated: ', this.validate())
+    retrieveInformation() {
+      let address = this.user.information.address ? JSON.parse(this.user.information.address) : ''
+      this.selectedLocation = Object.keys(address).length > 0 ? address.route + ', ' + address.locality + ', ' + address.region + ', ' + address.country : null
+      this.getAddressData(this.selectedLocation)
+      this.id = this.user.information.id
+    },
+    update_address(event){
       if(!this.validate()) {
-        console.log('Validation Failed')
+        this.val = false
+        this.$emit('Address', this.val)
         // return
       }
       if(this.canUpdateAddress) {
         let parameter = {
+          id: this.user.information.id,
           account_id: this.user.userID,
           address: JSON.stringify({
-            route: this.route,
-            city: this.city,
-            region: this.region,
-            country: this.country,
-            postalZipCode: this.postalZipCode
+            route: this.selectedLocation.route,
+            locality: this.selectedLocation.locality,
+            region: this.selectedLocation.region,
+            country: this.selectedLocation.country,
+            latitude: this.selectedLocation.latitude,
+            longitude: this.selectedLocation.longitude
           })
         }
-        let info = AUTH.user.information
-        console.log('INFO: ', info)
-        console.log('Parameters: ', parameter)
-        if(Object.keys(info).length > 1){
-          this.APIRequest('accounts_info/update_account', parameter).then(response => {
-            $('#loading').css({'display': 'none'})
-            if(response.error.length === 0){
-              this.retrieveInformation()
-              console.log('Update profile response: ', response)
-              this.canUpdateProfile = false
-              console.log('Submitted')
-            }
-          })
-        }else{
-          $('#loading').css({'display': 'block'})
-          this.APIRequest('account_informations/create', parameter).then(response => {
-            $('#loading').css({'display': 'none'})
-            if(response.error === 0) {
-              this.retrieveInformation()
-              this.canUpdateProfile = false
-            }
-          })
-        }
+        $('#loading').css({'display': 'block'})
+        this.APIRequest('account_informations/create_with_location', parameter).then(response => {
+          $('#loading').css({'display': 'none'})
+          if(response.error === 0) {
+            this.$parent.retrieveInformation()
+            this.val = true
+            this.$emit('Address', this.val)
+            this.canUpdateProfile = false
+          }
+        })
+        // }
       }
     },
     validate() {
-      if(this.route !== '' || this.region !== '' || this.city !== '' || this.postalZipCode !== '' || this.city !== '' || this.country !== '') {
-        if(!this.route || !this.region || !this.city || !this.postalZipCode || !this.city || !this.country) {
-          this.canUpdateAddress = false
-          this.isValidAddress = false
-        }else{
-          this.canUpdateAddress = true
-          this.isValidAddress = true
-        }
-      }else {
+      if(this.selectedLocation) {
+        this.canUpdateAddress = true
+        this.isValidAddress = true
+      }else{
         this.canUpdateAddress = false
         this.isValidAddress = false
       }
-      console.log('Can update profile ', this.canUpdateAddress, 'Is valid address', this.isValidAddress)
-      console.log('Route', this.route)
       if(!this.isValidAddress) {
         return false
       }else {
         return true
       }
+      // if(this.route !== '' || this.region !== '' || this.city !== '' || this.postalZipCode !== '' || this.city !== '' || this.country !== '') {
+      //   if(!this.route || !this.region || !this.city || !this.postalZipCode || !this.city || !this.country) {
+      //     this.canUpdateAddress = false
+      //     this.isValidAddress = false
+      //   }else{
+      //     this.canUpdateAddress = true
+      //     this.isValidAddress = true
+      //   }
+      // }else {
+      //   this.canUpdateAddress = false
+      //   this.isValidAddress = false
+      // }
+      // console.log('Can update profile ', this.canUpdateAddress, 'Is valid address', this.isValidAddress)
+      // console.log('Route', this.route)
+      // if(!this.isValidAddress) {
+      //   return false
+      // }else {
+      //   return true
+      // }
     }
   }
 }

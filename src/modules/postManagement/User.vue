@@ -43,7 +43,7 @@
           <tr v-for="(item, index) in tableData" :key="index">
             <td>{{item.date}}</td>
             <td>{{item.post[0] != null ? item.post[0].title : null}}</td>
-            <td>{{item.post[0] != null ? displayArray(item.post[0].channels) : null}}</td>
+            <td>{{item.channel}}</td>
             <td class="text-warning">{{item.status.toUpperCase()}}</td>
             <td>
               <i class="fa fa-eye text-primary" @click="showPreview(item.code)"></i>
@@ -77,7 +77,7 @@ export default {
     return {
       tableHeaders: [
         {title: 'Date'},
-        {title: 'Post Title'},
+        {title: 'Post Question'},
         {title: 'Channel To Post'},
         {title: 'Status'},
         {title: 'Review'}

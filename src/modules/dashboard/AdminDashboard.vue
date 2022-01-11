@@ -65,7 +65,7 @@ export default {
       tableActions: [],
       // table header: should specify;  title, key(will be used as key in table data) and type
       tableHeaders: [
-        {title: 'Post Title'},
+        {title: 'Post Question'},
         {title: 'Category'},
         {title: 'Channel Actions'},
         {title: 'Author'},
@@ -128,7 +128,6 @@ export default {
       this.$router.push('/post_management/edit')
     },
     onTableAction(data) {
-      console.log('TABLE ACTION: ', data)
     },
     retrievePosts(sort, filter) {
       if(sort !== null){

@@ -23,8 +23,8 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-12 p-0 mt-5 mb-4" v-if="(returnDescription !== '' && returnDescription) || files && (files ? files.length : 0) > 0">
-          <p class="mb-0 p-0">
+        <div class="col-sm-12 p-0 mt-5 mb-4" v-if="(returnDescription !== '' && returnDescription) || fileImage && (fileImage ? fileImage.length : 0) > 0">
+          <p class="mb-0 p-0" style="white-space: pre-line;">
             {{returnDescription}}
           </p>
         </div>
@@ -35,19 +35,19 @@
           </p>
         </div> -->
         <br>
-        <!-- <div class="col-sm-12 p-0 d-flex justify-content-between file_container" v-if="(files && (files ? files.length : 0) > 0)"> -->
-        <div class="col-sm-12 p-0 d-flex justify-content-between file_container" v-if="(returnDescription !== '' && returnDescription) || files && (files ? files.length : 0) > 0">
+        <!-- <div class="col-sm-12 p-0 d-flex justify-content-between file_container" v-if="(filess && (filess ? filess.length : 0) > 0)"> -->
+        <div class="col-sm-12 p-0 d-flex justify-content-between file_container" v-if="(returnDescription !== '' && returnDescription) || fileImage && (fileImage ? fileImage.length : 0) > 0">
           <div v-for="(el, ndx) in returnFiles" :key="ndx + String(el.id)"
-            :class="'file_width ' + (([1, 3, 4].includes((files ? files.length : 0)) || (files ? files.length : 0) >= 5) && ndx === 0 ? 'whole_page ' : '') + ( (files ? files.length : 0) >= 4 && ndx !== 0 ? 'compressed ' : '')" :style="{
+            :class="'file_width ' + (([1, 3, 4].includes((fileImage ? fileImage.length : 0)) || (fileImage ? fileImage.length : 0) >= 5) && ndx === 0 ? 'whole_page ' : '') + ( (fileImage ? fileImage.length : 0) >= 4 && ndx !== 0 ? 'compressed ' : '')" :style="{
               background: `url(${el.url})`,
               backgroundRepeat: 'no-repeat',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
-              opacity: files.length > 4 && ndx === 3 ? 0.7 : 1
+              opacity: fileImage.length > 4 && ndx === 3 ? 0.7 : 1
             }"
             >
             <b 
-              v-if="files.length > 4 && ndx === 3"
+              v-if="fileImage.length > 4 && ndx === 3"
               :style="{
                 position: 'absolute',
                 top: '50%',
@@ -60,10 +60,10 @@
               class="view_more"
             ><i class="fas fa-plus" :style="{
               fontSize: '17px'
-            }"></i> {{files.length - 4}}</b>
+            }"></i> {{fileImage.length - 4}}</b>
           </div>
         </div>
-        <div class="col-sm-12 p-0" v-if="(returnDescription === '' || !returnDescription) && (files ? files.length : 0) <= 0">
+        <div class="col-sm-12 p-0" v-if="(returnDescription === '' || !returnDescription) && (fileImage ? fileImage.length : 0) <= 0">
           <div class="col-sm-12 p-0 mt-5" :style="{
             height: '17px',
             backgroundColor: '#ededed'
@@ -122,7 +122,8 @@ export default {
       previewIndex: 0,
       blank: [1, 2, 3],
       verdict: false,
-      add: false
+      add: false,
+      fileImage: this.files
     }
   },
   components: {
@@ -153,90 +154,92 @@ export default {
       }
     },
     returnFiles() {
-      if(this.files != null){
+      this.fileImage = this.files
+      if(this.files !== null){
         if((this.verdict === 'true' && this.isAddd === false) || (this.verdict === true && this.isAddd === 'false')){
-          this.files = Object.values(this.files).map(el => {
+          this.fileImage = Object.values(this.fileImage).map(el => {
             let temp = {}
             temp['url'] = el.url
             return temp
           })
-          return (this.files ? this.files.filter((el, index) => {
+          return (this.fileImage ? this.fileImage.filter((el, index) => {
             return index <= 3
           }) : [])
         }
         if(!this.isAddd && this.verdict === 'false'){
-          this.files = Object.values(this.files).map(el => {
+          this.fileImage = Object.values(this.fileImage).map(el => {
             let temp = {}
-            temp['url'] = el.url
+            temp['url'] = el.url === undefined ? el : el.url
             return temp
           })
-          return (this.files ? this.files.filter((el, index) => {
+
+          return (this.fileImage ? this.fileImage.filter((el, index) => {
             return index <= 3
           }) : [])
         }
         if(this.verdict === 'false' && this.isAddd === true){
-          this.files = Object.values(this.files).map(el => {
+          this.fileImage = Object.values(this.fileImage).map(el => {
             let temp = {}
             temp['url'] = el.url
             return temp
           })
-          return (this.files ? this.files.filter((el, index) => {
+          return (this.fileImage ? this.fileImage.filter((el, index) => {
             return index <= 3
           }) : [])
         }
         if((this.verdict === 'true' && this.isAddd === true)){
-          this.files = Object.values(this.files).map(el => {
+          this.fileImage = Object.values(this.fileImage).map(el => {
             let temp = {}
             temp['url'] = this.config.BACKEND_URL + el
             return temp
           })
-          return (this.files ? this.files.filter((el, index) => {
+          return (this.fileImage ? this.fileImage.filter((el, index) => {
             return index <= 3
           }) : [])
         }
         if((this.verdict === 'undefined' && this.isAddd === 'undefined') || (this.verdict === undefined && this.isAddd === undefined)){
-          this.files = Object.values(this.files).map(el => {
+          this.fileImage = Object.values(this.fileImage).map(el => {
             let temp = {}
             temp['url'] = el.url
             return temp
           })
-          return (this.files ? this.files.filter((el, index) => {
+          return (this.fileImage ? this.fileImage.filter((el, index) => {
             return index <= 3
           }) : [])
         }
         if(this.verdict === undefined && this.isAddd === false){
-          if(this.files[0].url){
-            this.files = this.files.map(el => {
+          if(this.fileImage[0].url){
+            this.fileImage = this.fileImage.map(el => {
               let temp = {}
               temp['url'] = el.url
               return temp
             })
-            return (this.files ? this.files.filter((el, index) => {
+            return (this.fileImage ? this.fileImage.filter((el, index) => {
               return index <= 3
             }) : [])
           }else{
-            this.files = this.files.map(el => {
+            this.fileImage = this.fileImage.map(el => {
               let temp = {}
               temp['url'] = this.config.BACKEND_URL + el
               return temp
             })
-            return (this.files ? this.files.filter((el, index) => {
+            return (this.fileImage ? this.fileImage.filter((el, index) => {
               return index <= 3
             }) : [])
           }
         }
         if(this.verdict === undefined && this.isAddd === true){
-          this.files = this.files.map(el => {
+          this.fileImage = this.fileImage.map(el => {
             let temp = {}
             temp['url'] = this.config.BACKEND_URL + el
             return temp
           })
-          return (this.files ? this.files.filter((el, index) => {
+          return (this.fileImage ? this.fileImage.filter((el, index) => {
             return index <= 3
           }) : [])
         }
       }else{
-        return null
+        return []
       }
     }
   },

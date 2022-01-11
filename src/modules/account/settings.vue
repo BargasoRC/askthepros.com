@@ -2,8 +2,8 @@
   <div class="container-fluid " >
     <div class="row flex-column-reverse flex-md-row mb-3">
       <div class="col-sm-8 col-sm-pull-4">
-        <Profile/>
-        <Address/>
+        <Profile @Profile="onProfile" :profileData="data"/>
+        <Address :latitude="latitude" :longitude="longitude" @Address="onAddress" :addresData="data"/>
         <Account/>
         <div  v-if="passwordVerified === false">
         <CPass/>
@@ -49,6 +49,11 @@
         </div>
       </div>
     </div>
+    <errorModal
+    ref="errorModal"
+    :title="val === true ? 'Success Message' : 'Error Message'"
+    :message="val === true ? `${label} has been successfully updated!` : 'Please fill in all of the required fields'"
+    />
   </div>
 </template>
 <script>
@@ -66,6 +71,10 @@ import Profile from 'src/modules/account/components/profile.vue'
 import Address from 'src/modules/account/components/address.vue'
 import Account from 'src/modules/account/components/account.vue'
 import CPass from 'src/modules/account/components/cpass.vue'
+import VueGeolocation from 'vue-browser-geolocation'
+import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
+import Vue from 'vue'
+Vue.use(VueGeolocation)
 export default {
   data() {
     return {
@@ -78,7 +87,12 @@ export default {
       data: null,
       file: null,
       copiedIndex: null,
-      passwordVerified: false
+      passwordVerified: false,
+      username: null,
+      latitude: null,
+      longitude: null,
+      val: false,
+      label: ''
     }
   },
   components: {
@@ -88,7 +102,8 @@ export default {
     Profile,
     Address,
     Account,
-    CPass
+    CPass,
+    errorModal
   },
   computed: {
     returnProfile() {
@@ -128,12 +143,26 @@ export default {
     }
   },
   mounted() {
+    this.retrieveInformation()
     if(AUTH.hash('show', localStorage.getItem('login_with')) === 'social_lite') {
       this.passwordVerified = true
     }
-    this.retrieveInformation()
   },
   methods: {
+    onAddress(e){
+      this.val = e
+      this.label = 'Address'
+      this.$refs.errorModal.show()
+    },
+    onProfile(e){
+      this.val = e
+      this.label = 'Profile'
+      this.$refs.errorModal.show()
+    },
+    setInitialView(location){
+      this.longitude = location.lng
+      this.latitude = location.lat
+    },
     checkPassword(evet){
       if(this.oPassword === '') {
         this.isValidPassword = false
@@ -161,8 +190,8 @@ export default {
           this.isValidPassword = false
         }
       }, error => {
+        console.log('[ERROR]', error)
         $('#loading').css({'display': 'none'})
-        console.log('password erro:', error)
       })
     },
     retrieveInformation() {
@@ -172,17 +201,17 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('accounts_info/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        let data = response.data[0]
+        this.data = response.data[0]
         this.username = this.user.username
         this.email = this.user.email
         this.businessname = this.user.merchant ? this.user.merchant.name : ''
         AUTH.user.information = response.data[0]
         if(response.data.length > 0) {
-          AUTH.user.merchant = [data.merchant]
-          this.firstname = data.first_name
-          this.lastname = data.last_name
-          this.contactnumber = data.cellular_number
-          let address = data.address ? JSON.parse(data.address) : {}
+          AUTH.user.merchant = [this.data.merchant]
+          this.firstname = this.data.first_name
+          this.lastname = this.data.last_name
+          this.contactnumber = this.data.cellular_number
+          let address = this.data.address ? JSON.parse(this.data.address) : {}
           this.route = address ? address.route : ''
           this.city = address ? address.city : ''
           this.region = address ? address.region : ''
@@ -192,7 +221,6 @@ export default {
       })
     },
     update_account(event){
-      console.log('...updating', this.canUpdateProfile, 'validated: ', !this.validate())
       if(!this.validate()) {
         return
       }
@@ -201,7 +229,6 @@ export default {
           account_id: this.user.userID
         }
         let info = AUTH.user.information
-        console.log('INFO: ', info)
         // Just to check if what fields are updated and only updated fields will be pass as parameters of update
         if(Object.keys(info).length > 1) {
           Object.keys(info).forEach((el, ndx) => {
@@ -255,17 +282,17 @@ export default {
             city: this.city,
             region: this.region,
             country: this.country,
-            postalZipCode: this.postalZipCode
+            postalZipCode: this.postalZipCode,
+            longitude: this.longitude,
+            latitude: this.latitude
           })
         }
-        console.log('Parameters: ', parameter)
         if(Object.keys(info).length > 1 && Object.keys(parameter).length > 1){
           $('#loading').css({'display': 'block'})
           this.APIRequest('accounts_info/update_account', parameter).then(response => {
             $('#loading').css({'display': 'none'})
             if(response.error.length === 0) {
               this.retrieveInformation()
-              console.log('UPDATE PROFILE RESPONSE: ', response)
               this.canUpdateProfile = false
             }
           })
@@ -318,12 +345,10 @@ export default {
         $('#loading').css({'display': 'block'})
         this.APIRequest('accounts/update_email', acc).then(response => {
           $('#loading').css({'display': 'none'})
-          console.log('UPDATE RESPONSE: ', response)
           if(response.error.length > 0) {
             this.isValidAccount = false
             this.email = ''
             this.emailValidation = response.error
-            // console.log('UPDATE RESPONSE: ', response)
           }
         })
       }
@@ -341,7 +366,6 @@ export default {
           this.isValidPassword = true
           this.passwordVerified = false
           if(!response.error) {
-            console.log('UPDATE PASSWORD RESPONSE: ', response)
           }
         })
       }
@@ -372,7 +396,6 @@ export default {
       axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data.data !== null){
-          console.log('PROFILE URL: ', response.data.data)
           let profile = response.data.data
           let condition = {
             condition: [
@@ -424,7 +447,6 @@ export default {
       }else {
         this.canUpdateProfile = false
       }
-      console.log('update profile ', this.isValidProfile)
       if(this.username !== '' || this.email !== '') {
         if(!this.username || !this.email || this.email === this.user.email) {
           this.isValidAccount = false

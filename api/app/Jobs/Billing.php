@@ -37,7 +37,7 @@ class Billing implements ShouldQueue
   {
     // get plans with end_date is null
     $plans = Plan::where('end_date', '=', null)->get();
-
+    
     if($plans && sizeof($plans) > 0){
       foreach ($plans as $key => $plan) {
         // get last billing
@@ -49,11 +49,12 @@ class Billing implements ShouldQueue
             $diffInDays = $currentDate->diffInDays($lastDate, true);
             $startDate = null;
             $endDate = null;
-            if($diffInDays > 1 && $diffInDays <= 7){
+            if($diffInDays >= 0 && $diffInDays <= 7){
               // create billing
               $startDate = $lastDate->copy();
               $endDate = $lastDate->copy()->addMonths(1);
             }else if($diffInDays < 0){
+
               $startDate = Carbon::now();
               $endDate = Carbon::now()->addMonths(1);
             }

@@ -19,7 +19,7 @@
               <b>Request to Reset Password with AskThePros</b>
             </div>
             <div>
-              <roundedInput 
+              <roundedInput
                 :type="'text'"
                 :styles="{
                   border: !this.isEmailError ? '.2px solid red !important' : 'none'
@@ -34,7 +34,8 @@
               >{{email == '' ? 'Required Field' :'Invalid email'}}</p>
             </div>
             <div class="message mt-2 mb-2">
-              <i v-if="showResponse" class="resetPasswordMessage">We send recory email to yor email address at <u>{{email}}</u>. Please give us a moment, it may take few minutes. Please check your email address to continue.</i>
+              <i v-if="showResponse" class="resetPasswordMessage">We send recovery email to your email address at <u>{{email}}</u>. Please give us a moment, it may take few minutes. Please check your email address to continue.</i>
+              <i v-if="showError" class="resetPasswordMessage" style="color:red">Something went wrong.</i>
             </div>
             <div class="d-flex justify-content-center">
               <dialogueBtn 
@@ -56,7 +57,7 @@
                   <roundedBtn
                     :onClick="gmailLogin"
                     :icon="'fab fa-google'"
-                    :text="'Sign In'"
+                    :text="'Login'"
                     :styles="{
                       background: 'none',
                       color: '272727',
@@ -71,7 +72,7 @@
                   <roundedBtn
                     :onClick="fbLogin"
                     :icon="'fab fa-facebook-f'"
-                    :text="'Sign In'"
+                    :text="'Login'"
                     :styles="{
                       background: 'none',
                       color: '272727',
@@ -86,7 +87,7 @@
                   <roundedBtn
                     :onClick="linkedInLogin"
                     :icon="'fab fa-linkedin-in'"
-                    :text="'Sign In'"
+                    :text="'Login'"
                     :styles="{
                       background: 'none',
                       color: '272727',
@@ -100,9 +101,9 @@
               </div>
             </div>
             <div class="d-flex justify-content-center orSeparatorB">
-              <b>OR</b>
+              <!-- <b>OR</b> -->
             </div>
-            <div class="col-sm-12 mb-3 col-md-12 col-lg-12 d-flex justify-content-center">
+            <!-- <div class="col-sm-12 mb-3 col-md-12 col-lg-12 d-flex justify-content-center">
               <dialogueBtn 
                 :onClick="redirect"
                 :icon="'fas fa-sign-in-alt'"
@@ -112,7 +113,7 @@
                   color: 'white'
                 }"
               />
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -131,7 +132,8 @@ export default {
     return {
       email: '',
       showResponse: false,
-      isEmailError: true
+      isEmailError: true,
+      showError: false
     }
   },
   components: {
@@ -141,16 +143,18 @@ export default {
   },
   methods: {
     reset(event) {
-      console.log('Reset password:::', global.validateEmail(this.email))
       if(global.validateEmail(this.email)){
         this.isEmailError = true
         let parameter = {
           email: this.email
         }
         this.APIRequest('accounts/request_reset', parameter).then(response => {
-          if(response.data.length > 0){
-            console.log('ACCOUNTS RESPONSE: ', response)
+          if(response.data === true){
             this.showResponse = true
+            this.showError = false
+          }else{
+            this.showError = true
+            this.showResponse = false
           }
         })
       }else{
@@ -225,12 +229,13 @@ export default {
   -webkit-box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
   -moz-box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
 }
-.LoginCardBody {}
+
 .LoginContainer {
   min-height: 85vh;
 }
 .RowContainer {
   background: white;
+  padding-top: 15vh;
 }
 .QouteCardContainer {
   display: flex !important;

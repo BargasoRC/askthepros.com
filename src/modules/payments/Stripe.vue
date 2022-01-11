@@ -1,44 +1,43 @@
 <template>
-    <div class="payment-accounts">
-      <div class="text-danger" v-if="errorMessage !== null" style="padding-top: 10px; padding-bottom: 10px;">Opps! {{errorMessage}}</div>
-      <div :class="{complete}">
-        <div class="row">
-          <div class="form-group login-spacer col-lg-12 col-md-12 col-sm-12">
-            <label for="address">Card Number</label>
-            <card-number class="stripe-element card-number"
-              ref="cardNumber"
-              :stripe="stripeSK"
-              @change="number = $event.complete"
-              :options="options"
-            />
-          </div>
+  <div class="payment-accounts">
+    <div class="text-danger" v-if="errorMessage !== null" style="padding-top: 10px; padding-bottom: 10px;">Opps! {{errorMessage}}</div>
+    <div :class="{complete}">
+      <div class="row">
+        <div class="form-group login-spacer col-lg-12 col-md-12 col-sm-12">
+          <label for="address">Card Number</label>
+          <card-number class="stripe-element card-number"
+            ref="cardNumber"
+            :stripe="stripeSK"
+            @change="number = $event.complete"
+            :options="options"
+          />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group login-spacer col-lg-6 col-md-6 col-sm-12">
+          <label for="address">Expiration</label>
+          <card-expiry class="stripe-element card-expiry"
+            ref="cardExpiry" 
+            :stripe="stripeSK" 
+            @change="expiry = $event.complete"
+            :options="options"
+          />
         </div>
 
-        <div class="row">
-          <div class="form-group login-spacer col-lg-6 col-md-6 col-sm-12">
-            <label for="address">Expiration</label>
-            <card-expiry class="stripe-element card-expiry"
-              ref="cardExpiry" 
+        <div class="form-group login-spacer col-lg-6 col-md-6 col-sm-12">
+          <label for="address">CVC</label>
+          <div id="signup-card-number">
+            <card-cvc class='stripe-element card-cvc'
+              ref='cardCvc'
               :stripe="stripeSK" 
-              @change="expiry = $event.complete"
+              @change="expiry = $event.complete" 
               :options="options"
             />
-          </div>
-
-          <div class="form-group login-spacer col-lg-6 col-md-6 col-sm-12">
-            <label for="address">CVC</label>
-            <div id="signup-card-number">
-              <card-cvc class='stripe-element card-cvc'
-                ref='cardCvc'
-                :stripe="stripeSK" 
-                @change="expiry = $event.complete" 
-                :options="options"
-              />
-            </div>
           </div>
         </div>
       </div>
-  </div>
+    </div>
   </div>
 </template>
 <style>
@@ -166,30 +165,36 @@ export default {
       if(this.user.merchant && this.user.merchant.addition_informations === null){
         return
       }
-      console.log({
-        data: this.data
-      })
       $('#loading').css({'display': 'block'})
       this.errorMessage = null
       Stripe.createSource().then(data => {
-        if(data.error !== undefined){
-          // console.log(data.error)
+        if(data.error !== undefined && this.user.information === undefined){
           $('#loading').css({'display': 'none'})
           this.errorMessage = data.error.message
+        }else if(data.error === undefined && this.user.information === undefined){
+          $('#loading').css({'display': 'none'})
+          this.redirect('/settings')
         }else{
-          let parameter = {
-            source: data.source,
-            account_id: this.user.userID,
-            plan: this.data,
-            email: this.user.email,
-            name: this.user.information.first_name + ' ' + this.user.information.last_name
-          }
-          this.APIRequest('stripe_webhooks/charge_customer', parameter).then(response => {
-            $('#loading').css({'display': 'none'})
-            if(response.data){
-              this.redirect('/thankyou')
+          if(this.user.information !== undefined && this.user.information.first_name !== undefined && this.user.information.last_name !== undefined){
+            let parameter = {
+              source: data.source,
+              account_id: this.user.userID,
+              plan: this.data,
+              email: this.user.email,
+              name: this.user.information.first_name + ' ' + this.user.information.last_name
             }
-          })
+            this.APIRequest('stripe_webhooks/charge_customer', parameter).then(response => {
+              $('#loading').css({'display': 'none'})
+              if(response.data){
+                this.redirect('/thankyou')
+              }
+            })
+          }else if(this.user.information === undefined && this.user.information.first_name === undefined && this.user.information.last_name === undefined){
+            $('#loading').css({'display': 'none'})
+            this.redirect('/settings')
+          }else{
+            $('#loading').css({'display': 'none'})
+          }
         }
       })
     },
@@ -200,14 +205,10 @@ export default {
       if(this.user.merchant && this.user.merchant.addition_informations === null){
         return
       }
-      console.log({
-        data: this.data
-      })
       $('#loading').css({'display': 'block'})
       this.errorMessage = null
       Stripe.createSource().then(data => {
         if(data.error !== undefined){
-          // console.log(data.error)
           $('#loading').css({'display': 'none'})
           this.errorMessage = data.error.message
         }else{

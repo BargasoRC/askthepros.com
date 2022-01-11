@@ -202,10 +202,10 @@ export default {
       ROUTER.push(route)
     },
     connect(item) {
-      if(this.user && (this.user.plan === null || this.user.plan === undefined)){
-        this.redirect('/subscriptions')
-        return
-      }
+      // if(this.user && (this.user.plan === null || this.user.plan === undefined)){
+      //   this.redirect('/subscriptions')
+      //   return
+      // }
       $('#loading').css({'display': 'block'})
       let condition = {
         condition: [
@@ -225,7 +225,6 @@ export default {
       }
       this.APIRequest('plans/retrieve', condition, response => {
         $('#loading').css({'display': 'none'})
-        console.log('response.data', response)
         if(response.data.length > 0) {
           if(item.payload === 'google') {
             this.connectToGmail(item.payload)
@@ -243,7 +242,6 @@ export default {
       })
     },
     addPage(){
-      console.log(this.activePayload.payload, this.selectedPage)
       if(this.selectedPage === null){
         return null
       }
@@ -275,7 +273,6 @@ export default {
         }
         $('#loading').css({'display': 'block'})
         this.APIRequest('social/retrieve_linkedin_pages', parameter, response => {
-          // console.log('LINKEDIN PAGES: ', response)
           $('#loading').css({'display': 'none'})
           this.data = response.data
           let element = this.$refs.modal
@@ -291,7 +288,6 @@ export default {
         }
         $('#loading').css({'display': 'block'})
         this.APIRequest('social/retrieve_fb_pages', parameter, response => {
-          console.log('FACEBOOK PAGES: ', response)
           $('#loading').css({'display': 'none'})
           this.data = response.data
           let element = this.$refs.modal
@@ -307,7 +303,6 @@ export default {
         }
         $('#loading').css({'display': 'block'})
         this.APIRequest('social/retrive_businesses', parameter, response => {
-          console.log('Businesses: ', response)
           $('#loading').css({'display': 'none'})
           this.data = response.data.locations.map((el, ndx) => {
             el['id'] = ndx + 1
@@ -353,7 +348,6 @@ export default {
       })
     },
     connectToGmail(payload) {
-      console.log('gmail login:::')
       $('#loading').css({'display': 'block'})
       localStorage.setItem('connect_with', payload)
       this.APIRequest(`social_lite/authenticate/${payload}/redirect`, {}, response => {
@@ -369,7 +363,6 @@ export default {
     },
     connectToFb(payload) {
       $('#loading').css({'display': 'block'})
-      console.log('facebook login:::')
       localStorage.setItem('connect_with', payload)
       this.APIRequest(`social_lite/authenticate/${payload}/redirect`, {}, response => {
         $('#loading').css({'display': 'none'})
@@ -384,7 +377,6 @@ export default {
     },
     connectToLinkedIn(payload) {
       $('#loading').css({'display': 'block'})
-      console.log('linkedin login:::')
       localStorage.setItem('connect_with', payload)
       this.APIRequest(`social_lite/authenticate/${payload}/redirect`, {}, response => {
         $('#loading').css({'display': 'none'})

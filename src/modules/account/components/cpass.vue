@@ -189,10 +189,10 @@ export default {
   watch: {
   },
   created() {
-    if(AUTH.hash('show', localStorage.getItem('login_with')) === 'social_lite') {
-      this.passwordVerified = true
-    }
-    this.retrieveInformation()
+    // if(AUTH.hash('show', localStorage.getItem('login_with')) === 'social_lite') {
+    //   this.passwordVerified = true
+    // }
+    // this.retrieveInformation()
   },
   methods: {
     checkPassword(evet){
@@ -222,38 +222,37 @@ export default {
           this.isValidPassword = false
         }
       }, error => {
+        console.log('[ERROR]', error)
         $('#loading').css({'display': 'none'})
-        console.log('password erro:', error)
       })
     },
-    retrieveInformation() {
-      let parameter = {
-        account_id: this.user.userID
-      }
-      $('#loading').css({'display': 'block'})
-      this.APIRequest('accounts_info/retrieve', parameter).then(response => {
-        $('#loading').css({'display': 'none'})
-        let data = response.data[0]
-        this.username = this.user.username
-        this.email = this.user.email
-        this.businessname = this.user.merchant ? this.user.merchant.name : ''
-        AUTH.user.information = response.data[0]
-        if(response.data.length > 0) {
-          AUTH.user.merchant = [data.merchant]
-          this.firstname = data.first_name
-          this.lastname = data.last_name
-          this.contactnumber = data.cellular_number
-          let address = data.address ? JSON.parse(data.address) : {}
-          this.route = address ? address.route : ''
-          this.city = address ? address.city : ''
-          this.region = address ? address.region : ''
-          this.country = address ? address.country : ''
-          this.postalZipCode = address ? address.postalZipCode : ''
-        }
-      })
-    },
+    // retrieveInformation() {
+    //   let parameter = {
+    //     account_id: this.user.userID
+    //   }
+    //   $('#loading').css({'display': 'block'})
+    //   this.APIRequest('accounts_info/retrieve', parameter).then(response => {
+    //     $('#loading').css({'display': 'none'})
+    //     let data = response.data[0]
+    //     this.username = this.user.username
+    //     this.email = this.user.email
+    //     this.businessname = this.user.merchant ? this.user.merchant.name : ''
+    //     AUTH.user.information = response.data[0]
+    //     if(response.data.length > 0) {
+    //       AUTH.user.merchant = [data.merchant]
+    //       this.firstname = data.first_name
+    //       this.lastname = data.last_name
+    //       this.contactnumber = data.cellular_number
+    //       let address = data.address ? JSON.parse(data.address) : {}
+    //       this.route = address ? address.route : ''
+    //       this.city = address ? address.city : ''
+    //       this.region = address ? address.region : ''
+    //       this.country = address ? address.country : ''
+    //       this.postalZipCode = address ? address.postalZipCode : ''
+    //     }
+    //   })
+    // },
     update_account(event){
-      console.log('...updating', this.canUpdateProfile, 'validated: ', !this.validate())
       if(!this.validate()) {
         return
       }
@@ -271,7 +270,7 @@ export default {
           this.isValidPassword = true
           this.passwordVerified = false
           if(!response.error) {
-            console.log('UPDATE PASSWORD RESPONSE: ', response)
+            this.$parent.retrieveInformation
           }
         })
       }

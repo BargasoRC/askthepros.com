@@ -163,6 +163,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
         // Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         'Tymon\JWTAuth\Providers\LaravelServiceProvider',
 
@@ -240,7 +241,8 @@ return [
         // 'JWTFactory' => Tymon\JWTAuthFacades\JWTFactory::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'JWTAuth' => 'Tymon\JWTAuth\Facades\JWTAuth',
-        'JWTFactory' => 'Tymon\JWTAuth\Facades\JWTFactory'
+        'JWTFactory' => 'Tymon\JWTAuth\Facades\JWTFactory',
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];

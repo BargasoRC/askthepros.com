@@ -90,19 +90,21 @@ Route::post($route.'/auth', function () {
 $route = env('PACKAGE_ROUTE', '').'/users';
 $controller = 'AccountsController@';
 Route::post($route. '/retrieve ', $controller.'retrieve');
+Route::post($route. '/update_verification ', $controller.'updateByVerification');
 
 
 
 // Google Place
-$route = env('PACKAGE_ROUTE', '').'/google_places/';
+$route = env('PACKAGE_ROUTE', '').'/google_places';
 $controller = 'GooglePlaceController@';
-Route::post($route.'search', $controller."search");
+Route::post($route.'/search', $controller."search");
 
 //Emails Controller
 $route = env('PACKAGE_ROUTE', '').'/emails';
 Route::post($route.'/reset_password', 'EmailController@resetPassword');
 Route::post($route.'/verification', 'EmailController@verification');
 Route::post($route.'/changed_password', 'EmailController@changedPassword');
+Route::post($route.'/send_message', 'EmailController@sendMessage');
 Route::post($route.'/trial', 'EmailController@trial');
 Route::get($route.'/test', 'EmailController@test');
 
@@ -224,3 +226,9 @@ $route = env('PACKAGE_ROUTE', '').'/dashboards/';
 $controller = 'DashboardController@';
 Route::post($route.'retrieve_by_user', $controller."retrieveByUser");
 Route::get($route.'test', $controller."test");
+
+$route = env('PACKAGE_ROUTE', '').'/image_generator/';
+$controller = 'ImageHandlerController@';
+Route::post($route.'generate', $controller."generate");
+Route::post($route.'generate_text', $controller."generateText");
+Route::post($route.'generate_answer', $controller."generateAnswer");

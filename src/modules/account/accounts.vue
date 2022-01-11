@@ -34,6 +34,7 @@
           <th scope="col">Business Name</th>
           <th scope="col">Contact Number</th>
           <th scope="col">Type</th>
+          <th scope="col">Industry</th>
           <th scope="col">Status</th>
         </tr>
       </thead>
@@ -60,6 +61,20 @@
               </select>
               <i class="fa fa-check text-primary" style="margin-left: 5px; float: left;" @click="updateType(item, index)"></i>
               <i class="fa fa-times text-danger" style="margin-left: 5px; float: left;" @click="setEditTypeIndex(index, item)"></i>
+            </span>
+          </td>
+          <td>
+            <label v-if="editIndustryIndex !== index && item.account_type !== 'EXPERT'">{{JSON.parse(item.industry) ? JSON.parse(item.industry).industry : ''}}</label>
+            <!-- <label v-if="editIndustryIndex !== index && item.account_type !== 'EXPERT'">{{Object.values(JSON.parse(item.industry))[0]}}</label> -->
+            <label v-if="editIndustryIndex !== index && item.account_type === 'EXPERT'">{{expertIndustry.length >= 1 ? expertIndustry : 'No Industry'}}</label>
+            <i class="fa fa-pencil text-primary" style="margin-left: 10px;" @click="setEditIndustryIndex(index, item)" v-if="editIndustryIndex !== index && item.account_type === 'EXPERT'"></i>
+            <span v-if="editIndustryIndex === index">
+              <select class="form-control" v-model="newIndustry" style="float: left; width: 70%;">
+                <option v-if="user.type === 'ADMIN'" v-for="(typeItem, typeIndex) in industry" :key="typeIndex">{{typeItem}}</option>
+                <option v-else v-for="(typeItem, typeIndex) in industry" :key="typeIndex">{{typeItem}}</option>
+              </select>
+              <i class="fa fa-check text-primary" style="margin-left: 5px; float: left;" @click="updateIndustry(item, index)"></i>
+              <i class="fa fa-times text-danger" style="margin-left: 5px; float: left;" @click="setEditIndustryIndex(index, item)"></i>
             </span>
           </td>
           <td>{{item.status}}</td>
@@ -120,6 +135,8 @@ export default{
   mounted(){
     $('#loading').css({display: 'block'})
     this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+    this.retrievePayloads()
+    this.retrieveExpertPayloads()
   },
   computed: {
     returnData(){
@@ -142,74 +159,75 @@ export default{
         title: 'Sort by',
         sorting: [{
           title: 'Created ascending',
-          payload: 'created',
-          payload_value: 'asc'
+          payload: 'created_at',
+          payload_value: 'asc',
+          type: 'date'
         }, {
           title: 'Created descending',
-          payload: 'created',
-          payload_value: 'desc'
+          payload: 'created_at',
+          payload_value: 'desc',
+          type: 'date'
         }, {
           title: 'Username ascending',
           payload: 'username',
-          payload_value: 'asc'
+          payload_value: 'asc',
+          type: 'text'
         }, {
           title: 'Username descending',
           payload: 'username',
-          payload_value: 'desc'
+          payload_value: 'desc',
+          type: 'text'
         }, {
           title: 'Email ascending',
           payload: 'email',
-          payload_value: 'asc'
+          payload_value: 'asc',
+          type: 'text'
         }, {
           title: 'Email descending',
           payload: 'email',
-          payload_value: 'desc'
-        }, {
-          title: 'Name ascending',
-          payload: 'name',
-          payload_value: 'asc'
-        }, {
-          title: 'Name descending',
-          payload: 'name',
-          payload_value: 'desc'
-        }, {
-          title: 'Business Name ascending',
-          payload: 'business_name',
-          payload_value: 'asc'
-        }, {
-          title: 'Business Name descending',
-          payload: 'business_name',
-          payload_value: 'desc'
+          payload_value: 'desc',
+          type: 'text'
         }, {
           title: 'Type ascending',
-          payload: 'type',
-          payload_value: 'asc'
+          payload: 'account_type',
+          payload_value: 'asc',
+          type: 'text'
         }, {
           title: 'Type descending',
-          payload: 'type',
-          payload_value: 'desc'
+          payload: 'account_type',
+          payload_value: 'desc',
+          type: 'text'
         }, {
           title: 'Status ascending',
           payload: 'status',
-          payload_value: 'asc'
+          payload_value: 'asc',
+          type: 'text'
         }, {
           title: 'Status descending',
           payload: 'status',
-          payload_value: 'desc'
+          payload_value: 'desc',
+          type: 'text'
         }]
       }],
       filter: null,
       sort: null,
       editTypeIndex: null,
+      editIndustryIndex: null,
       newAccountType: null,
+      newIndustry: null,
       selectedAccount: null,
+      selectedIndustry: null,
       activeItem: 'home',
-      activePage: 1
+      activePage: 1,
+      location: null,
+      industry: [],
+      expertIndustry: [],
+      selectIndust: false
     }
   },
   components: {
     'empty': require('components/increment/generic/empty/Empty.vue'),
-    'basic-filter': require('components/increment/generic/filter/Basic.vue'),
+    'basic-filter': require('src/components/increment/generic/filter/FilterWithCalendar.vue'),
     Pager
 
   },
@@ -224,8 +242,17 @@ export default{
         this.newAccountType = item.account_type
       }
     },
+    setEditIndustryIndex(index, item){
+      if(index === this.editIndustryIndex){
+        this.editIndustryIndex = null
+        this.newIndustry = null
+      }else{
+        this.selectedIndustry = item
+        this.editIndustryIndex = index
+        this.newIndustry = item.account_type
+      }
+    },
     updateType(item, index){
-      console.log('[df]', item)
       if(this.newAccountType === null || this.newAccountType === item.account_type){
         this.setEditTypeIndex(index, item)
         return
@@ -234,12 +261,43 @@ export default{
         id: item.id,
         account_type: this.newAccountType
       }
-      console.log('[od]', parameter)
       $('#loading').css({display: 'block'})
       this.APIRequest('accounts/update_account_type', parameter).then(response => {
         $('#loading').css({display: 'none'})
+        if(this.newAccountType === 'EXPERT'){
+          this.updateIndustry(item, index)
+          this.selectIndust = true
+        }
         this.setEditTypeIndex(index, item)
         this.retrieve(null, null)
+      })
+    },
+    updateIndustry(item, index){
+      if(this.newIndustry === null && this.selectIndust === true){
+        this.industry.map(ndx => {
+          if(ndx === JSON.parse(item.industry).industry){
+            this.editIndustryIndex = index
+            this.newIndustry = ndx
+          }
+        })
+      }else if(this.selectIndust === false){
+        if(this.newIndustry === null){
+          this.setEditIndustryIndex(index, item)
+          return
+        }
+      }
+      let parameter = {
+        account_id: item.id,
+        payload: 'assigned_industry',
+        payload_value: this.newIndustry
+      }
+      $('#loading').css({display: 'block'})
+      this.APIRequest('payloads/create_industry', parameter).then(response => {
+        $('#loading').css({display: 'none'})
+        if(response.data >= 1){
+          this.setEditIndustryIndex(index, item)
+          this.retrieve(null, null)
+        }
       })
     },
     showProfileModal(item){
@@ -253,15 +311,6 @@ export default{
     },
     redirect(params){
       ROUTER.push(params)
-    },
-    pagination(flag){
-      if(flag === false && this.offset > 5){
-        this.offset = this.offset - 5
-        this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
-      }else{
-        this.offset = this.offset + 5
-        this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
-      }
     },
     retrieve(sort, filter){
       if(sort !== null){
@@ -278,7 +327,7 @@ export default{
       }
       let parameter = {
         condition: [{
-          value: filter.value + '%',
+          value: filter.value !== null ? '%' + filter.value + '%' : '%%',
           column: filter.column,
           clause: 'like'
         }],
@@ -286,20 +335,74 @@ export default{
         limit: this.limit,
         offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
-      if(this.activeItem !== 'home'){
-        parameter['accountType'] = this.activeItem
-      }
       $('#loading').css({display: 'block'})
       this.APIRequest('users/retrieve', parameter).then(response => {
-        console.log('[dfg]', response.data)
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
+          this.retrieveExpertPayloads()
           this.data = response.data
           this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
         }else{
           this.data = []
           this.numPages = null
         }
+      })
+    },
+    retrievePayloads(){
+      let conditions = [{
+        value: 'subscriptions',
+        clause: '=',
+        column: 'payload'
+      }]
+      let parameter = {
+        condition: conditions
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('payloads/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data.length > 0) {
+          response.data.map(el => {
+            this.industry.push(el.category)
+            return el.category
+          })
+        }else{
+          this.industry = []
+        }
+      }).catch(error => {
+        $('#loading').css({'display': 'none'})
+        error
+      })
+    },
+    retrieveExpertPayloads(){
+      let conditions = [{
+        value: 'assigned_industry',
+        clause: '=',
+        column: 'payload'
+      }]
+      let parameter = {
+        condition: conditions
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('payloads/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data.length > 0) {
+          response.data.map(elI => {
+            this.data.map(el => {
+              if(elI.account_id === el.id){
+                this.expertIndustry = elI.payload_value
+              }
+            })
+          })
+          // response.data.map(el => {
+          //   this.expertIndustry.push(el.expertIndustry)
+          //   return el.expertIndustry
+          // })
+        }else{
+          this.expertIndustry = []
+        }
+      }).catch(error => {
+        $('#loading').css({'display': 'none'})
+        error
       })
     },
     updateUserStatus(item){
@@ -353,13 +456,6 @@ export default{
       }else{
         alert('Not Allowed!')
       }
-    },
-    isActive (menuItem) {
-      return this.activeItem === menuItem
-    },
-    setActive (menuItem) {
-      this.activeItem = menuItem
-      this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
     }
   }
 }

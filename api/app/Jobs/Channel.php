@@ -11,6 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use App\PostHistory;
 use App\Post;
 use Carbon\Carbon;
+use App\Facebook;
 class Channel implements ShouldQueue
 {
   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -23,6 +24,7 @@ class Channel implements ShouldQueue
 
   public $facebookController = 'App\Http\Controllers\FacebookService';
   public $pageController = 'App\Http\Controllers\PageController';
+  public $brandingController = 'App\Http\Controllers\BrandingController';
   public function __construct()
   {
       //
@@ -41,36 +43,94 @@ class Channel implements ShouldQueue
             ->where('post_histories.status', '=', 'for posting')
             ->select('post_histories.*', 'posts.url', 'posts.description')
             ->get();
-
+    $rand = [];
+    $dates = [];
     if($posts && sizeof($posts) > 0){
       foreach ($posts as $key => $postHistory) {
-        switch(strtolower($postHistory['channel'])){
-          case 'facebook':
-            $this->manageFacebook($postHistory);
-            break;
-          case 'linkedin':
-            $this->manageLinkedIn($postHistory);
-            break;
-          case 'google_my_business':
-            $this->manageGoogle($postHistory);
-            break;
+        $branding = app($this->brandingController)->getActiveByParams($postHistory['account_id']);
+        if($branding != null){
+          array_push($dates, $postHistory['created_at']);
+        }else{
+          echo "\n\t\t[No Branding Added]";
         }
+      }
+      $this->getOldestPost($dates);
+      // dd($dates[count($dates) -1]);
+      $oldest = $dates[count($dates) -1];
+      $i = 0;
+      foreach ($posts as $key){
+        $branding = app($this->brandingController)->getActiveByParams($key['account_id']);
+        if(strtotime($key['created_at']) == strtotime($oldest)){
+          $isPosted = PostHistory::where('account_id', '=', $key['account_id'])->whereBetween('created_at', array(Carbon::now()->startOfDay(), Carbon::now()->endOfDay()))->first();
+            if($isPosted != null){
+              $this->manageSocialPosting($key, $branding);
+            }else{
+              echo 'You already post something today.';
+            }
+        }
+        $i++;
       }
     }else{
       echo "\n\t\t[CHANNEL] No post available for posting.";
     }
   }
 
+  public function manageSocialPosting($postHistory, $branding){
+    $keys = array_rand($branding['details'], 1);
+    switch(strtolower($postHistory['channel'])){
+      case 'facebook':
+        if($branding && $branding['details'] !== null){
+          $message = "\n\n".$branding['details'][$keys];
+          // $message = "\n\n".$branding['details']['brand1']."\n\n".$branding['details']['brand2']."\n\n".$branding['details']['brand3'];
+          $postHistory['description'] .= $message;
+        }
+        $this->manageFacebook($postHistory);
+        break;
+      case 'linkedin':
+        if($branding && $branding['details'] !== null){
+          $message = "  ".$branding['details'][$keys];
+          // $message = "//n//n".$branding['details']['brand1']."//n//n".$branding['details']['brand2']."//n//n".$branding['details']['brand3'];
+          // $postHistory['description'];
+          $postHistory['description'] .= $message;
+          // dd($postHistory['description']);
+        }
+        $this->manageLinkedIn($postHistory);
+        break;
+      case 'google_my_business':
+        if($branding && $branding['details'] !== null){
+          $message = "\n\n".$branding['details'][$keys];
+          // $message = "\n\n".$branding['details']['brand1']."\n\n".$branding['details']['brand2']."\n\n".$branding['details']['brand3'];
+          $postHistory['description'] .= $message;
+        }
+        $this->manageGoogle($postHistory);
+        break;
+    }
+  }
+
+  
+  public function getOldestPost($date){
+    $now = Carbon::now();
+    $temp = usort($date, function($a, $b) {
+      $date1 = strtotime($a);
+      $date2 = strtotime($b);
+      return $date1 < $date2 ? -1: 1;
+      // dd($date1 < $date2 ? -1: 1);
+    });
+  }
+
   public function manageFacebook($postHistory){
     $media = '';
     $result = null;
     $page = app($this->pageController)->getActiveByParams($postHistory['account_id'], 'facebook');
+    echo "\n\t\t\t pageController => ".$postHistory['account_id'];
 
     if($page == null){
         return false;
     }
 
     $token = $page['details']['access_token'];
+    // $media = env('BACKEND_URL').'/storage/image/2_2021-08-03_02_00_17_robot.png';
+    // $media = 'https://api.staging.askthepros.com/server.php/increment/v1/storage/image/2_2021-08-03_02_00_17_robot.png';
     if(isset($postHistory['url'])) {
       if(json_decode($postHistory['url'])) {
         $url = $postHistory['url'];
@@ -79,51 +139,70 @@ class Channel implements ShouldQueue
       }
     }
 
-    $url = $page['page'].'/feed';
-    $params = array(
-      "message" => $postHistory['description'],
-      "access_token" => $token
-    );
 
-    // if($postHistory['url']){
-    //   $urls = json_decode($postHistory['url'], true);
-    //   echo print_r($urls);
-    // }else{
+    $params = null;
+    $facebook = new Facebook($token);
+    // $postHistory['url'] = null;
+    if($postHistory['url']){
+      // post with image
+      $params = array(
+        "message" => $postHistory['description'],
+        "access_token" => $token,
+        "url" => $media
+      );
 
-    // }
+      $result = $facebook->publishContentWithPhoto($page['page'], $params);
+    }else{
+      // post without image
+      $params = array(
+        "message" => $postHistory['description'],
+        "access_token" => $token
+      );
+      $result = $facebook->publishContentTextOnly($page['page'], $params);
+    }
 
-    app($this->facebookController)->publishContent($url, $params, $token);
-
-    // if($postHistory['url']) {
-    //   $result = app('App\Http\Controllers\SocialMediaController')->facebookPostTextOnly($postHistory['description'], $postHistory['account_id']);
-    //   $result = app('App\Http\Controllers\SocialMediaController')->facebookPostWithMedia($postHistory['description'], $media, $postHistory['account_id']);
-    //   print_r($result);
-    //   $this->updatePostHistories($postHistory);
-    // }else {
-    //   $result = app('App\Http\Controllers\SocialMediaController')->facebookPostTextOnly($postHistory['description'], $postHistory['account_id']);
-    //   $this->updatePostHistories($postHistory);
-    // }
-    echo "\n\t\t\t Manage facebook => ".json_encode($result);
+    if($result && isset($result['id'])){
+      $this->updatePostHistories($postHistory, 'https://www.facebook.com/'.$result['id']);
+      echo "\n\t\t Posted on facebook => ".$result['id'];
+    }else{
+      echo "\n\t\t Unable to post on facebook";
+    }
   }
 
   public function manageLinkedIn($postHistory){
     $media = '';
     $result = null;
+    // $media = env('BACKEND_URL').'/storage/image/2_2021-08-03_02_00_17_robot.png';
     if($postHistory['url']) {
       $url = $postHistory['url'];
       $media = json_decode($url)[0];
     }
+    $postHistory['url'] = null;
     if($postHistory['url']) {
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinRegisterUpload($postHistory['account_id'], $postHistory['description'], substr($media, 15));
     }else {
       $result = app('App\Http\Controllers\SocialMediaController')->linkedinPost($postHistory['account_id'], $postHistory['description']);
     }
-    echo "\n\t\t\t Manage Linkedin => ".json_encode($result);
+    
+    // dd($result);
+    if($result && isset($result['id'])){
+      $link = '';
+      if(strpos($result['id'], 'li') > -1){
+        $link = $result['id'];
+      }else{
+        $link = $postHistory['url'] ? 'urn:li:ugcPost:'.$result['id'] : 'urn:li:share:'.$result['id'];
+      }
+      $this->updatePostHistories($postHistory, 'https://www.linkedin.com/embed/feed/update/'.$link);
+      echo "\n\t\t Posted on linkedin => ".$result['id'];
+    }else{
+      echo "\n\t\t Unable to post on linkedin";
+    }
   }
 
   public function manageGoogle($postHistory){
     $media = [];
     $result = null;
+    // $media = 'https://api.staging.askthepros.com/server.php/increment/v1/storage/image/2_2021-08-03_02_00_17_robot.png';
     if(isset($postHistory['url'])) {
       if(json_decode($postHistory['url'])) {
         $url = $postHistory['url'];
@@ -134,12 +213,18 @@ class Channel implements ShouldQueue
     if($postHistory['url']) {
       $result = app('App\Http\Controllers\SocialMediaController')->googleBusinessPostWithMedia($postHistory['account_id'], $postHistory['description'], $media);
     }
-    echo "\n\t\t\t Manage GOOGLE => ".json_encode($result);
+    if($result && isset($result['searchUrl']) && $result['searchUrl'] !== null){
+      $this->updatePostHistories($postHistory, $result['searchUrl']);
+      echo "\n\t\t Posted on google_my_business => ".$result['searchUrl'];
+    }else{
+      echo "\n\t\t Unable to post on google_my_business\n error => ".json_encode($result);
+    }
   }
 
-  public function updatePostHistories($postHistory){
+  public function updatePostHistories($postHistory, $link){
     PostHistory::where('id', '=', $postHistory['id'])->update(array(
       'status' => 'posted',
+      'link'   => $link,
       'updated_at' => Carbon::now()
     ));
   }
