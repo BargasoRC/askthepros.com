@@ -307,6 +307,7 @@ export default {
 </script>
 <style scoped lang="scss" scoped>
 @import "~assets/style/colors.scss";
+
 .container-fluid{
   min-height: 70vh !important;
 }

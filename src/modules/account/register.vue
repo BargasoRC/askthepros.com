@@ -16,7 +16,7 @@
       <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xs-5 d-flex justify-content-center LoginCardContainer mb-5">
         <div class="card RegisterCard">
           <div class="card-body RegisterCardBody">
-            <div class="d-flex justify-content-center pt-5 pb-5 mb-3">
+            <div class="d-flex justify-content-center pt-5 pb-4 mb-3">
               <div class="reg" @click="redirect('/login')">
                 Login
               </div>
@@ -515,23 +515,24 @@ export default {
   box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
   -webkit-box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
   -moz-box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
-  max-height: 42.5rem;
+  max-height: 37rem;
+  margin-top: 10%;
 }
 
 .LoginContainer {
-  min-height: 85vh;
+  min-height: 90vh;
   background-color: transparent !important;
 }
 .RowContainer {
   background-color: white !important;
-  padding-top: 15vh;
+  padding-top: 9vh;
 }
 .QouteCardContainer {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
   background-color: transparent !important;
-  margin-top: 5%;
+  margin-top: 2%;
 }
 .LoginCardContainer {
   background-color: transparent !important;

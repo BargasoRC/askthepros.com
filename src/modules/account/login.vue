@@ -93,7 +93,7 @@
             </div>
             <div class="col-sm-12">
               <div class="row">
-                <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="col-sm-4 col-md-4 col-lg-4 mb-2">
                   <roundedBtn
                     :onClick="gmailLogin"
                     :icon="'fab fa-google'"
@@ -108,7 +108,7 @@
                     :icon_position="'left'"
                   />
                 </div>
-                <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="col-sm-4 col-md-4 col-lg-4 mb-2">
                   <roundedBtn
                     :onClick="fbLogin"
                     :icon="'fa fa-facebook'"
@@ -123,7 +123,7 @@
                     :icon_position="'left'"
                   />
                 </div>
-                <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="col-sm-4 col-md-4 col-lg-4 mb-2">
                   <roundedBtn
                     :onClick="linkedInLogin"
                     :icon="'fab fa-linkedin-square'"
@@ -344,7 +344,8 @@ export default {
   box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
   -webkit-box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
   -moz-box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
-  max-height: 42.5rem;
+  max-height: 40rem;
+  margin-top: 5%;
 }
 
 .LoginContainer {
@@ -359,7 +360,7 @@ export default {
   justify-content: center !important;
   align-items: center !important;
   background: none;
-  margin-top: 5%;
+  margin-top: 1%;
 }
 .LoginCardContainer {
   background: none;

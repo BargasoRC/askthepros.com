@@ -369,11 +369,6 @@ export default {
       })
     },
     update(status){
-      // this.$refs.searchField.returnCategory()
-      // let selectIndustry = []
-      // this.selectedIndustry.forEach(element => {
-      //   selectIndustry.push({category: element.category, id: element.id})
-      // })
       if(this.validate()){
         let channels = []
         this.facebook ? channels.push('FACEBOOK') : null
