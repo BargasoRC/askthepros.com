@@ -143,14 +143,12 @@ export default {
   },
   methods: {
     reset(event) {
-      console.log('Reset password:::', global.validateEmail(this.email))
       if(global.validateEmail(this.email)){
         this.isEmailError = true
         let parameter = {
           email: this.email
         }
         this.APIRequest('accounts/request_reset', parameter).then(response => {
-          console.log('ACCOUNTS RESPONSE: ', response)
           if(response.data === true){
             this.showResponse = true
             this.showError = false

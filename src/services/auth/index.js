@@ -66,7 +66,6 @@ export default {
   attachmentValue: null,
   setUser(user, notifSetting, subAccount){
     // $('#loading').css({display: 'none'})
-    console.log('user', user)
     let vue = new Vue()
     if(user === null){
       this.user.userID = 0
@@ -114,7 +113,6 @@ export default {
       setTimeout(() => {
         let vue = new Vue()
         vue.APIRequest('authenticate/refresh', {}, (response) => {
-          console.log('response', response)
           this.setToken(response['token'])
         }, (response) => {
           this.deaunthenticate()
@@ -157,9 +155,6 @@ export default {
     let token = localStorage.getItem('usertoken')
     let id = localStorage.getItem('account_id')
     let type = localStorage.getItem('login_type')
-    console.log({
-      token
-    })
     if(token && token !== 'null'){
       if(flag === false){
         this.tokenData.loading = true

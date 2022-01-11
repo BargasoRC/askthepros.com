@@ -834,10 +834,8 @@ export default {
     },
     next(page){
       if(page === 2 && !this.validate()) {
-        console.log('Not valid')
         return
       }else if(page === 3 && !this.validate2()){
-        console.log('[Not Valid2]')
         return
       }else{
         this.page = page

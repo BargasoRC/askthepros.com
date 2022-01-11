@@ -307,7 +307,6 @@ export default {
       }
     },
     redirectDirect(parameter){
-      console.log({parameter})
       ROUTER.push(parameter)
     },
     redirect(parameter) {

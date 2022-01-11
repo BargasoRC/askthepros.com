@@ -128,7 +128,6 @@ export default {
       this.$router.push('/post_management/edit')
     },
     onTableAction(data) {
-      console.log('TABLE ACTION: ', data)
     },
     retrievePosts(sort, filter) {
       if(sort !== null){

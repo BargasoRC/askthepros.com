@@ -165,7 +165,6 @@ export default {
       if(this.user.merchant && this.user.merchant.addition_informations === null){
         return
       }
-      console.log({data: this.data})
       $('#loading').css({'display': 'block'})
       this.errorMessage = null
       Stripe.createSource().then(data => {
@@ -195,7 +194,6 @@ export default {
             this.redirect('/settings')
           }else{
             $('#loading').css({'display': 'none'})
-            console.log('[ambot nimo]')
           }
         }
       })
@@ -207,14 +205,10 @@ export default {
       if(this.user.merchant && this.user.merchant.addition_informations === null){
         return
       }
-      console.log({
-        data: this.data
-      })
       $('#loading').css({'display': 'block'})
       this.errorMessage = null
       Stripe.createSource().then(data => {
         if(data.error !== undefined){
-          // console.log(data.error)
           $('#loading').css({'display': 'none'})
           this.errorMessage = data.error.message
         }else{

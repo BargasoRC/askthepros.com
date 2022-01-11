@@ -100,7 +100,6 @@ export default {
         offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
       this.APIRequest('billings/retrieve_on_history', parameter).then(response => {
-        console.log('[history]', response)
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.length > 0) {
           this.data = response.data

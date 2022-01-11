@@ -278,7 +278,6 @@ export default {
       this.APIRequest('post/retrieve_by_codes', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         response.data[0].post.filter(el => {
-          console.log('[sdfsdf]', el.url)
           Object.values(JSON.parse(el.url)).map(el => {
             this.imagesList.push(el)
           })

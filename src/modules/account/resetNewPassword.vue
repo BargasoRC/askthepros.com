@@ -223,7 +223,6 @@ export default {
       this.$router.push('/login')
     },
     login(event) {
-      console.log('login:::')
       this.$router.push('/')
     },
     forgotPassword(event) {

@@ -46,12 +46,13 @@ margin:auto;
   justify-content: center;
   align-items: center;
 }
+
 .cloud-image{
   width: 100%;
   background: $primary;
   min-height: 20vh;
   overflow-y: hidden;
-  margin-top: 4%;
+  margin-top: 3%;
 }
 
 .container{
@@ -299,7 +300,6 @@ export default {
       let parameter = {
         condition: conditions
       }
-      console.log('[parameter]', parameter)
       $('#loading').css({'display': 'block'})
       this.APIRequest('payloads/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})

@@ -134,7 +134,6 @@ export default {
       }
     },
     onTableAction(data) {
-      console.log('Table Action: ', data)
     },
     retrieve(sort, filter){
       if(sort !== null){

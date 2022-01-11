@@ -119,7 +119,6 @@ export default {
       })
     },
     update_account(event){
-      console.log('...updating', this.canUpdateProfile, 'validated: ', !this.validate())
       if(!this.validate()) {
         return
       }
@@ -133,12 +132,10 @@ export default {
           $('#loading').css({'display': 'block'})
           this.APIRequest('accounts/update_email', acc).then(response => {
             $('#loading').css({'display': 'none'})
-            console.log('UPDATE RESPONSE: ', response)
             if(response.error != null) {
               this.isValidAccount = false
               this.email = ''
               this.emailValidation = response.error
-              // console.log('UPDATE RESPONSE: ', response)
             }else{
               this.emailValidation = ''
               this.email = ''

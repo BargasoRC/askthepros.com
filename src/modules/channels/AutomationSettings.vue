@@ -129,7 +129,6 @@ export default {
         payload_value: 'ON'
       }
       this.APIRequest('payloads/create', payload).then(response => {
-        console.log('PAYLOAD CREATED: ', response)
         this.retrieve()
       })
     },
@@ -152,7 +151,6 @@ export default {
         $('#loading').css({'display': 'none'})
         if(response.data.length !== 0){
           this.id = response.data[0].id
-          console.log('RESPONSE: ', response.data[0])
           this.status = response.data[0].payload_value
         }else {
           this.create()

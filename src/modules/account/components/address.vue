@@ -228,9 +228,7 @@ export default {
       this.id = this.user.information.id
     },
     update_address(event){
-      console.log('update address')
       if(!this.validate()) {
-        console.log('[......not validated]')
         this.val = false
         this.$emit('Address', this.val)
         // return
@@ -248,7 +246,6 @@ export default {
             longitude: this.selectedLocation.longitude
           })
         }
-        console.log('[id]', parameter)
         $('#loading').css({'display': 'block'})
         this.APIRequest('account_informations/create_with_location', parameter).then(response => {
           $('#loading').css({'display': 'none'})
@@ -261,7 +258,6 @@ export default {
         })
         // }
       }
-      console.log('val', this.val)
     },
     validate() {
       if(this.selectedLocation) {

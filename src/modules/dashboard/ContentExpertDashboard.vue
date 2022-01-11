@@ -307,7 +307,6 @@ export default {
       }, 100)
     },
     remove(e){
-      console.log('[sadfsdf]', e)
       let parameter = {
         id: e.id
       }

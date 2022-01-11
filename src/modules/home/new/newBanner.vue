@@ -244,7 +244,6 @@ export default {
       this.APIRequest('payloads/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data.length > 0) {
-          console.log('Log', response)
           this.industry = response.data
         }else{
           this.industry = []
@@ -255,7 +254,6 @@ export default {
       })
     },
     onSelect(data) {
-      console.log('SELECTED INDUSTRY: ', data)
       this.selected = data.index
       this.global.selectedIndustryIndex = data.index
     },

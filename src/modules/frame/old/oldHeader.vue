@@ -729,7 +729,6 @@ export default {
     display(){
     },
     initPusher(){
-      console.log('hi')
       if(CONFIG.PUSHER.flag === 'pusher'){
         window.Echo = new Echo({
           broadcaster: 'pusher',
@@ -749,7 +748,6 @@ export default {
       }
       window.Echo.channel(COMMON.pusher.channel)
       .listen('call', e => {
-        console.log(e)
       })
       .listen(COMMON.pusher.notifications, e => {
         AUTH.addNotification(e.data)
@@ -759,7 +757,6 @@ export default {
       })
       .listen(COMMON.pusher.messageGroup, e => {
         if(parseInt(e.data.id) === AUTH.messenger.messengerGroupId){
-          console.log('group', e.data)
           AUTH.messenger.group.status = parseInt(e.data.status)
           AUTH.messenger.group.validations = e.data.validations
           AUTH.messenger.group.rating = e.data.rating

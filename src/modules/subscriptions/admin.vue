@@ -156,7 +156,6 @@ export default {
       }
     },
     onTableAction(data) {
-      console.log('Table Action: ', data)
     },
     retrieve(sort, filter){
       if(sort !== null){
@@ -183,7 +182,6 @@ export default {
         account_id: false,
         switch: false
       }
-      console.log('[parameter]', parameter)
       $('#loading').css({'display': 'block'})
       this.APIRequest('billings/retrieve_on_history', parameter).then(response => {
         $('#loading').css({'display': 'none'})

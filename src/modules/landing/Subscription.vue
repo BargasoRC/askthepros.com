@@ -60,7 +60,6 @@ export default {
   },
   methods: {
     onIndustrySelect(data) {
-      console.log('SELECTED INDUSTRY: ', data)
       this.selected = data.index
       this.global.selectedIndustryIndex = data.index
     },

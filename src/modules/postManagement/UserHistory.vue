@@ -153,7 +153,6 @@ export default {
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve_history', parameter).then(response => {
-        console.log('[this]', response.data)
         $('#loading').css({'display': 'none'})
         if(response.data.length > 0){
           this.tableData = response.data

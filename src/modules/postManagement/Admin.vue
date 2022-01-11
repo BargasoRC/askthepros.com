@@ -271,9 +271,6 @@ export default {
       })
     },
     showDeleteConfirmation(id){
-      console.log({
-        test: 'again'
-      })
       this.deleteId = id
       setTimeout(() => {
         this.$refs.confirm.show(id)
@@ -283,11 +280,9 @@ export default {
       let parameter = {
         id: e.id
       }
-      console.log('[remove]', parameter)
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/delete', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('RESPONSE: ', response)
         this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
       })
     },

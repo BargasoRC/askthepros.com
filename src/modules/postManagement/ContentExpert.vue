@@ -361,7 +361,6 @@ export default {
         account_id: this.user.userID
       }
       this.APIRequest('brandings/retrieve_by_accountId', parameter).then(response => {
-        console.log('[branding]', response.details)
         this.selectedItem = {}
         this.selectedItem['branding'] = {
           details: response.details

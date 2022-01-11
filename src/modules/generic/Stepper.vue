@@ -129,7 +129,6 @@ import GooglePlacesAutoComplete from 'src/components/increment/generic/location/
 import CONFIG from 'src/config.js'
 export default {
   mounted(){
-    console.log('[asdfasdf]', this.$route.params.industry)
     this.selectedIndustry = this.$route.params.industry
   },
   data() {

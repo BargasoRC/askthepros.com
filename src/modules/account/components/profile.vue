@@ -162,9 +162,7 @@ export default {
       this.contactnumber = this.profileData != null ? this.profileData.cellular_number : this.user.information.cellular_number
     },
     update_account(event){
-      console.log('account update')
       if(!this.validate()) {
-        console.log('Not valid')
         return
       }
       if(this.canUpdateProfile === true) {
@@ -244,7 +242,6 @@ export default {
         this.val = false
         this.$emit('Profile', this.val)
       }
-      console.log('val', this.val)
     },
     onUpdate(){
       let newinfo = {

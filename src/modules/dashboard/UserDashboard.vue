@@ -290,7 +290,6 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve_history', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('RESPONSE: ', response)
         if(response.data.length > 0){
           this.tableData = response.data
         }else{
@@ -322,7 +321,6 @@ export default {
       $('#loading').css({'display': 'block'})
       this.APIRequest('plans/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
-        console.log('Brandings response: ', response)
         if(response.data.length === 0) {
           $('#subscriptionModal').modal('show')
         }else if(response.data.length >= 1){

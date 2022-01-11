@@ -222,8 +222,8 @@ export default {
           this.isValidPassword = false
         }
       }, error => {
+        console.log('[ERROR]', error)
         $('#loading').css({'display': 'none'})
-        console.log('password erro:', error)
       })
     },
     // retrieveInformation() {
@@ -253,7 +253,6 @@ export default {
     //   })
     // },
     update_account(event){
-      console.log('...updating', this.canUpdateProfile, 'validated: ', !this.validate())
       if(!this.validate()) {
         return
       }
@@ -272,7 +271,6 @@ export default {
           this.passwordVerified = false
           if(!response.error) {
             this.$parent.retrieveInformation
-            console.log('UPDATE PASSWORD RESPONSE: ', response)
           }
         })
       }

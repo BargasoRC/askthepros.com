@@ -152,10 +152,10 @@ export default {
             this.content = ''
           }
         }).catch(error => {
+          console.log('ERROR', error)
           $('#loading').css({'display': 'none'})
-          console.log('[error]', error)
           this.val = false
-          this.$refs.errorModal.sho()
+          this.$refs.errorModal.show()
         })
       }else {
         this.isValid = false

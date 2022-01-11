@@ -150,13 +150,11 @@ export default {
   },
   methods: {
     onAddress(e){
-      console.log('Emmitted address val', e)
       this.val = e
       this.label = 'Address'
       this.$refs.errorModal.show()
     },
     onProfile(e){
-      console.log('Emmitted profile val', e)
       this.val = e
       this.label = 'Profile'
       this.$refs.errorModal.show()
@@ -164,7 +162,6 @@ export default {
     setInitialView(location){
       this.longitude = location.lng
       this.latitude = location.lat
-      console.log('[this]', this.longitude, this.latitude)
     },
     checkPassword(evet){
       if(this.oPassword === '') {
@@ -193,8 +190,8 @@ export default {
           this.isValidPassword = false
         }
       }, error => {
+        console.log('[ERROR]', error)
         $('#loading').css({'display': 'none'})
-        console.log('password erro:', error)
       })
     },
     retrieveInformation() {
@@ -203,7 +200,6 @@ export default {
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('accounts_info/retrieve', parameter).then(response => {
-        console.log('[sdf]', response.data[0], this.user)
         $('#loading').css({'display': 'none'})
         this.data = response.data[0]
         this.username = this.user.username
@@ -225,7 +221,6 @@ export default {
       })
     },
     update_account(event){
-      console.log('...updating', this.canUpdateProfile, 'validated: ', !this.validate())
       if(!this.validate()) {
         return
       }
@@ -234,7 +229,6 @@ export default {
           account_id: this.user.userID
         }
         let info = AUTH.user.information
-        console.log('INFO: ', info)
         // Just to check if what fields are updated and only updated fields will be pass as parameters of update
         if(Object.keys(info).length > 1) {
           Object.keys(info).forEach((el, ndx) => {
@@ -272,7 +266,6 @@ export default {
                     }
                   })
                   if(Object.keys(address).length > 0) {
-                    console.log('[fdfdfdf]', JSON.stringify(address))
                     parameter['address'] = JSON.stringify(address)
                   }
                   break
@@ -294,14 +287,12 @@ export default {
             latitude: this.latitude
           })
         }
-        console.log('Parameters: ', parameter)
         if(Object.keys(info).length > 1 && Object.keys(parameter).length > 1){
           $('#loading').css({'display': 'block'})
           this.APIRequest('accounts_info/update_account', parameter).then(response => {
             $('#loading').css({'display': 'none'})
             if(response.error.length === 0) {
               this.retrieveInformation()
-              console.log('UPDATE PROFILE RESPONSE: ', response)
               this.canUpdateProfile = false
             }
           })
@@ -354,12 +345,10 @@ export default {
         $('#loading').css({'display': 'block'})
         this.APIRequest('accounts/update_email', acc).then(response => {
           $('#loading').css({'display': 'none'})
-          console.log('UPDATE RESPONSE: ', response)
           if(response.error.length > 0) {
             this.isValidAccount = false
             this.email = ''
             this.emailValidation = response.error
-            // console.log('UPDATE RESPONSE: ', response)
           }
         })
       }
@@ -377,7 +366,6 @@ export default {
           this.isValidPassword = true
           this.passwordVerified = false
           if(!response.error) {
-            console.log('UPDATE PASSWORD RESPONSE: ', response)
           }
         })
       }
@@ -408,7 +396,6 @@ export default {
       axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data.data !== null){
-          console.log('PROFILE URL: ', response.data.data)
           let profile = response.data.data
           let condition = {
             condition: [
@@ -460,7 +447,6 @@ export default {
       }else {
         this.canUpdateProfile = false
       }
-      console.log('update profile ', this.isValidProfile)
       if(this.username !== '' || this.email !== '') {
         if(!this.username || !this.email || this.email === this.user.email) {
           this.isValidAccount = false

@@ -28,7 +28,6 @@ export default {
   },
   methods: {
     onTableAction(data) {
-      console.log('Table Action: ', data)
     },
     retrieveUser(){
       let parameter = {
