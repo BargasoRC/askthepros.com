@@ -4,9 +4,9 @@
       <h1 class="text-white">MANAGED SOCIAL MEDIA POSTING WRITTEN BY INDUSTRY EXPERTS IN YOUR FIELD</h1>    
       <p class="text-white"><b>1.</b> Create & Import Profile &nbsp;&nbsp;<b>2.</b> Just Relax &nbsp;&nbsp;<b>3.</b> Grow your Sales</p>
       <div class="category-container row">
-        <div class="category-selection col-4" v-if="industry && industry.length > 0" v-for="(item, index) in industry">
+        <div class="category-selection col-2" v-if="industry && industry.length > 0" v-for="(item, index) in industry">
         <roundedBtn
-          :onClick="() => {getSelected(item.category)}"
+          :onClick="() => {getSelected(item.category)}"z
           :text="item.category.replace(/_/g, ' ')"
           :styles="{
             backgroundColor: '#ffc107',
@@ -40,19 +40,18 @@
 <style scoped lang="scss">
 @import "~assets/style/colors.scss";
 .category-container{
-margin:auto;
-  width: 70%;
+  margin:auto;
+  width: 90%;
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
 }
-
 .cloud-image{
   width: 100%;
   background: $primary;
   min-height: 20vh;
   overflow-y: hidden;
-  margin-top: 3%;
+  margin-top: 4%;
 }
 
 .container{
@@ -61,7 +60,7 @@ margin:auto;
 
 .category-selection{
   margin-top: 2vh;
-  margin-left: 10%;
+  margin-left: 8%;
   margin-right: 6%;
   flex-wrap: wrap;
 }
@@ -300,6 +299,7 @@ export default {
       let parameter = {
         condition: conditions
       }
+      console.log('[parameter]', parameter)
       $('#loading').css({'display': 'block'})
       this.APIRequest('payloads/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
