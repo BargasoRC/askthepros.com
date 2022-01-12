@@ -47,12 +47,18 @@ import AUTH from 'src/services/auth'
 import ROUTER from 'src/router'
 export default {
   mounted(){
-    this.retrieveBillings()
+    this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
   },
   data() {
     return {
       user: AUTH.user,
-      data: []
+      data: [],
+      limit: 5,
+      offset: 0,
+      numPages: null,
+      filter: null,
+      sort: null,
+      activePage: 1
     }
   },
   components: {
@@ -65,20 +71,36 @@ export default {
     redirect(route){
       ROUTER.push(route)
     },
-    retrieveBillings(){
+    retrieve(sort, filter){
+      if(sort !== null){
+        this.sort = sort
+      }
+      if(filter !== null){
+        this.filter = filter
+      }
+      if(sort === null && this.sort !== null){
+        sort = this.sort
+      }
+      if(filter === null && this.filter !== null){
+        filter = this.filter
+      }
       let parameter = {
-        condition: [
-          {
-            value: this.user.userID,
-            clause: '=',
-            column: 'account_id'
-          }
-        ],
-        sort: {
-          created_at: 'desc'
-        }
+        condition: [{
+          value: filter.value + '%',
+          column: filter.column,
+          clause: 'like'
+        }, {
+          value: this.user.userID,
+          column: 'account_id',
+          clause: '='
+        }],
+        sort: sort,
+        limit: this.limit,
+        switch: true,
+        offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
       this.APIRequest('billings/retrieve_on_history', parameter).then(response => {
+        console.log('[history]', response)
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.length > 0) {
           this.data = response.data

@@ -1,7 +1,7 @@
  <template>
   <div>
     <div class="system-header">
-      <a class="navbar-brand" v-on:click="redirect('dashboard')">
+      <a class="navbar-brand" v-on:click="redirect('/dashboard')">
         <img :src="require('../../assets/img/logo_white.png')" class="logo-brand">
         <!-- <label class="navbar-brand hide-on-mobile text-white" v-html="common.APP_NAME_HTML"></label> -->
       </a>
@@ -15,7 +15,10 @@
         <label class="account-type  hide-on-mobile bg-warning" v-if="user !== null && user.type">{{user.type}}</label>
       </span>
       <span class="left-menu-icons" v-if="user.type === 'USER'">
-        <label class="account-type  hide-on-mobile bg-warning" v-if="user !== null && user.merchant">{{user.merchant.addition_informations.industry}}</label>
+        <label class="account-type  hide-on-mobile bg-warning" v-if="user !== null && user.merchant">{{user.merchant.addition_informations.industry.replace(/_/g, ' ')}}</label>
+      </span>
+      <span class="left-menu-icons left-menu-icon" v-if="user.type === 'EXPERT'">
+        <label class="account-type  hide-on-mobile bg-warning" v-if="user !== null && user.merchant && industry === true">{{user.merchant.addition_informations.industry.replace(/_/g, ' ')}}</label>
       </span>
       <span class="right-menu-icons">
         <div class="dropdown"> 
@@ -103,7 +106,7 @@ body{
 
 .arrow::before{
   border-right-color: #ed2a2a !important;
-  position: relative;
+  position: fixed;
   border-top-color: #ed2a2a !important;
 }
 /*------------------------------------
@@ -209,6 +212,14 @@ body{
   float: left;
   width: 50%;
   position: fixed;
+  z-index: 100;
+}
+.left-menu-icon, right-menu-icons{
+  height: 50px;
+  float: left;
+  margin-left: 3.5%;
+  width: 50%;
+  // position: fixed;
   z-index: 100;
 }
 
@@ -674,10 +685,12 @@ import Echo from 'laravel-echo'
 import Vue from 'vue'
 export default {
   mounted(){
+    this.retrieveIndustryPayloads()
   },
   data(){
     return{
       user: AUTH.user,
+      industry: false,
       data: null,
       tokenData: AUTH.tokenData,
       settingFlag: false,
@@ -697,6 +710,33 @@ export default {
     }
   },
   methods: {
+    retrieveIndustryPayloads(){
+      let conditions = [{
+        value: 'assigned_industry',
+        clause: '=',
+        column: 'payload'
+      }, {
+        value: this.user.userID,
+        clause: '=',
+        column: 'account_id'
+      }
+      ]
+      let parameter = {
+        condition: conditions
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('payloads/retrieve', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.data.length > 0) {
+          this.industry = true
+        }else{
+          this.industry = false
+        }
+      }).catch(error => {
+        $('#loading').css({'display': 'none'})
+        error
+      })
+    },
     makeActive(icon){
       if(icon === 'dropdown'){
         this.settingFlag = true
@@ -828,4 +868,5 @@ export default {
     }
   }
 }
+
 </script>

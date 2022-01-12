@@ -76,10 +76,10 @@
             <tbody>
               <tr v-for="(item, index) in tableData" :key="index">
                 <td>{{item.post[0] != null ? item.post[0].title : null}}</td>
-                <td>{{item.post[0] != null ? displayArray(item.post[0].channels) : null}}</td>
+                <td>{{item.channel}}</td>
                 <td>{{item.link != null ? item.link : null}}</td>
-                <td class="text-warning" v-if="item.status === 'review'">Posted - Reviewed by You</td>
-                <td class='text-primary' v-else>Posted Automatically</td>
+                <td class="text-primary" v-if="item.post[0].account_id != user.userID">Posted Automatically</td>
+                <td class="text-warning" v-else>Posted - Reviewed by You</td>
               </tr>
             </tbody>
           </table>
@@ -196,7 +196,7 @@ export default {
   data() {
     return {
       tableHeaders: [
-        {title: 'Post Title'},
+        {title: 'Post Question'},
         {title: 'Channel Posted To'},
         {title: 'Links'},
         {title: 'Status'}
@@ -325,6 +325,8 @@ export default {
         console.log('Brandings response: ', response)
         if(response.data.length === 0) {
           $('#subscriptionModal').modal('show')
+        }else if(response.data.length >= 1){
+          this.$router.push(`/channels`)
         }
       }).catch(error => {
         $('#loading').css({'display': 'none'})

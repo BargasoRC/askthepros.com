@@ -11,12 +11,12 @@
               <div class="col-md-6" >
                 <p>First Name</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your first name here'"
-                  :class="!isValidProfile && firstname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                        border: !isValidProfile && !firstname ? '1px solid red !important' : 'none',
+                  :class="isNotValidProfile == true && firstname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
+                        border: (isNotValidProfile == true && !firstname) ? '1px solid red !important' : 'none',
                       }" v-model="firstname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="firstname == '' && !isValidProfile">
+                    v-if="isNotValidProfile == true && (firstname == undefined || firstname == '')">
                     {{
                     'Required Field'
                     }}</p>
@@ -25,12 +25,12 @@
               <div class="col-md-6" >
                 <p>Last Name</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your last name here'"
-                  :class="!isValidProfile && lastname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                      border: !isValidProfile && !lastname ? '1px solid red !important' : 'none',
+                  :class="isNotValidProfile == true && lastname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
+                      border: isNotValidProfile == true && !lastname ? '1px solid red !important' : 'none',
                     }" v-model="lastname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="lastname == ''  && !isValidProfile">
+                    v-if="isNotValidProfile == true && (lastname == undefined || lastname == '')">
                     {{
                     'Required Field'
                     }}</p>
@@ -42,12 +42,12 @@
               <div class="col-md-6" >
                 <p>Business Name</p>
                 <roundedInput :type="'text'" :placeholder="'Enter business name here'"
-                  :class="!isValidProfile && businessname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                      border: !isValidProfile && !businessname ? '1px solid red !important' : 'none',
+                  :class="isNotValidProfile == true && businessname == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
+                      border: isNotValidProfile == true && !businessname ? '1px solid red !important' : 'none',
                     }" v-model="businessname" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="businessname == ''  && !isValidProfile">
+                    v-if="isNotValidProfile == true && (businessname == '' || businessname == null)">
                     {{
                     'Required Field'
                     }}</p>
@@ -56,14 +56,19 @@
               <div class="col-md-6" >
                 <p>Contact Number</p>
                 <roundedInput :type="'text'" :placeholder="'Enter your contact number here'"
-                  :class="!isValidProfile && contactnumber == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
-                      border: !isValidProfile && !contactnumber ? '1px solid red !important' : 'none',
+                  :class="isNotValidProfile == true && contactnumber == '' ? 'mb-0 ' : ' SettingsField'" :styles="{
+                      border: isNotValidProfile == true ? '1px solid red !important' : 'none',
                     }" v-model="contactnumber" class="input-style" />
                 <div>
                   <p class="mb-0 pb-0 requiredFieldError"
-                    v-if="contactnumber == ''  && !isValidProfile">
+                    v-if="isNotValidProfile == true && (contactnumber == undefined || contactnumber== '')">
                     {{
                     'Required Field'
+                    }}</p>
+                    <p class="mb-0 pb-0 requiredFieldError"
+                    v-else-if="isNotValidProfile == true && (contactnumber != undefined || contactnumber != '')">
+                    {{
+                    'Invalid Input'
                     }}</p>
                 </div>
               </div>
@@ -76,7 +81,6 @@
           backgroundColor: '#01004E',
           color: 'white'
         }" style="margin-bottom: 5%;" />
-
       </div>
     </div>
   </div>
@@ -88,19 +92,19 @@ import roundedBtn from 'src/modules/generic/roundedBtn'
 import COLORS from 'src/assets/style/colors.js'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
-import axios from 'axios'
+import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 import $ from 'jquery'
 import global from 'src/helpers/global'
-import ROUTER from 'src/router'
 export default {
   data() {
     return {
+      val: false,
       eyeToggle: false,
       colors: COLORS,
       firstname: '',
       middlename: '',
       lastname: '',
-      businessname: '',
+      businessname: null,
       contactnumber: '',
       user: AUTH.user,
       config: CONFIG,
@@ -108,19 +112,24 @@ export default {
       errorMessage: null,
       data: null,
       isValid: true,
-      isValidProfile: true,
+      isNotValidProfile: false,
       canUpdateProfile: false
     }
   },
+  props: ['profileData'],
   components: {
     dialogueBtn,
     roundedInput,
-    roundedBtn
+    roundedBtn,
+    errorModal
   },
   computed: {
     returnProfile() {
       return this.user.profile
     }
+  },
+  mounted(){
+    this.retrieveInformation()
   },
   watch: {
     username: function(val) {
@@ -143,38 +152,17 @@ export default {
     if(AUTH.hash('show', localStorage.getItem('login_with')) === 'social_lite') {
       this.passwordVerified = true
     }
-    this.retrieveInformation()
+    // this.retrieveInformation()
   },
   methods: {
-    retrieveInformation() {
-      let parameter = {
-        account_id: this.user.userID
-      }
-      $('#loading').css({'display': 'block'})
-      this.APIRequest('accounts_info/retrieve', parameter).then(response => {
-        $('#loading').css({'display': 'none'})
-        console.log('Data1: ', response)
-        let data = response.data[0]
-        this.username = this.user.username
-        this.email = this.user.email
-        this.businessname = this.user.merchant ? this.user.merchant[0].name : ''
-        AUTH.user.information = response.data[0]
-        if(response.data.length > 0) {
-          AUTH.user.merchant = [data.merchant]
-          this.firstname = data.first_name
-          this.lastname = data.last_name
-          this.contactnumber = data.cellular_number
-          let address = data.address ? JSON.parse(data.address) : {}
-          this.route = address ? address.route : ''
-          this.city = address ? address.city : ''
-          this.region = address ? address.region : ''
-          this.country = address ? address.country : ''
-          this.postalZipCode = address ? address.postalZipCode : ''
-        }
-      })
+    retrieveInformation(){
+      this.businessname = this.user.merchant ? this.user.merchant[0].name : null
+      this.firstname = this.profileData != null ? this.profileData.first_name : this.user.information.first_name
+      this.lastname = this.profileData != null ? this.profileData.last_name : this.user.information.last_name
+      this.contactnumber = this.profileData != null ? this.profileData.cellular_number : this.user.information.cellular_number
     },
     update_account(event){
-      console.log('Can Update: ', this.canUpdateProfile, 'Validated: ', this.validate())
+      console.log('account update')
       if(!this.validate()) {
         console.log('Not valid')
         return
@@ -188,51 +176,77 @@ export default {
           cellular_number: this.contactnumber
         }
         let info = AUTH.user.information
-        console.log('INFO: ', info)
-        console.log('Parameters: ', parameter)
-        if(Object.keys(info).length > 1){
+        if(info !== null && Object.keys(info).length > 1){
           this.APIRequest('accounts_info/update_account', parameter).then(response => {
             $('#loading').css({'display': 'none'})
             if(response.error.length === 0){
-              this.retrieveInformation()
-              console.log('Update profile response: ', response)
               this.canUpdateProfile = false
-              console.log('Submitted')
             }
           })
+          // alert('Profile Updated')
         }else{
           $('#loading').css({'display': 'block'})
           this.APIRequest('account_informations/create', parameter).then(response => {
             $('#loading').css({'display': 'none'})
             if(response.error === 0) {
-              this.retrieveInformation()
               this.canUpdateProfile = false
             }
           })
+          // alert('Profile Created')
         }
-        console.log('Business name: ', this.businessname)
-        let merchant = {
-          name: this.businessname,
-          account_id: this.user.userID,
-          id: this.user.merchant[0].id
+        if(this.user.merchant !== undefined || this.user.merchant !== null){
+          let merchant = {
+            name: this.businessname,
+            account_id: this.user.userID,
+            id: this.user.merchant[0].id
+          }
+          let url = 'merchants/update'
+          if(this.user.merchant.name !== this.businessname){
+            $('#loading').css({'display': 'block'})
+            this.APIRequest(url, merchant, response => {
+              $('#loading').css({'display': 'none'})
+              this.canUpdateProfile = false
+            }, error => {
+              $('#loading').css({'display': 'none'})
+              this.canUpdateProfile = false
+              error
+            })
+          }
         }
-        let url = 'merchants/update'
-        if(this.user.merchant.name !== this.businessname){
-          $('#loading').css({'display': 'block'})
-          this.APIRequest(url, merchant, response => {
-            $('#loading').css({'display': 'none'})
-            this.canUpdateProfile = false
-            this.retrieveInformation()
-            console.log('Updated business')
-          }, error => {
-            $('#loading').css({'display': 'none'})
-            this.canUpdateProfile = false
-            error
-          })
-        }
+        this.val = true
+        this.$emit('Profile', this.val)
+        this.$parent.retrieveInformation()
+      }else if((this.canUpdateProfile === true && this.user.merchant[0] === undefined)){
+        this.val = false
+        this.$emit('Profile', this.val)
+        // let merchant = {
+        //   account_id: this.user.userID,
+        //   code: this.user.code,
+        //   name: this.businessname,
+        //   email: this.user.email
+        // }
+        // let payload = {
+        //   account_id: this.user.userID,
+        //   payload: 'automation_settings',
+        //   payload_value: 'ON'
+        // }
+        // this.APIRequest('merchants/create', merchant).then(response => {
+        //   console.log('MERCHANT RESPONSE: ', response)
+        // }).catch(error => {
+        //   console.log('MERCHANT ERROR', error)
+        // })
+        // this.APIRequest('payloads/create', payload).then(response => {
+        //   console.log('PAYLOAD RESPONSE: ', response)
+        // }).catch(error => {
+        //   console.log('PAYLOAD ERROR', error)
+        // })
       }else{
-        console.log('Cant update')
+        this.val = false
+        this.$emit('Profile', this.val)
       }
+      console.log('val', this.val)
+    },
+    onUpdate(){
       let newinfo = {
         ...AUTH.user.information,
         first_name: this.firstname,
@@ -249,23 +263,22 @@ export default {
       }, 100)
     },
     validate() {
-      if(this.firstname !== '' || this.lastname !== '' || this.businessname !== '' || this.contactnumber !== '') {
-        if(!global.validateField(this.firstname) && !global.validateField(this.lastname) && !global.validateField(this.businessname) && !global.validateNumber(this.contactnumber)) {
-          this.isValidProfile = false
-          this.canUpdateProfile = false
-        }else{
-          this.isValidProfile = true
+      if(this.firstname !== '' && this.lastname !== '' && this.businessname !== '' && this.contactnumber !== '' && this.firstname !== undefined && this.lastname !== undefined && this.businessname !== undefined && this.contactnumber !== undefined) {
+        if(!global.validateField(this.firstname) && !global.validateField(this.lastname) && !global.validateField(this.businessname) && global.validateNumber(this.contactnumber) === true) {
+          this.isNotValidProfile = false
           this.canUpdateProfile = true
+        }else{
+          this.isNotValidProfile = true
+          this.canUpdateProfile = false
         }
       }else {
         this.canUpdateProfile = false
-        this.isValidProfile = false
+        this.isNotValidProfile = true
       }
-      console.log('Valid: ', this.isValidProfile, 'Can update:" ', this.canUpdateProfile)
-      if(!this.isValidProfile) {
-        return false
-      }else {
+      if(this.isNotValidProfile === false) {
         return true
+      }else {
+        return false
       }
     }
   }

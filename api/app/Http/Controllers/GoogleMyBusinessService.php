@@ -38,12 +38,18 @@ class GoogleMyBusinessService extends APIController
         $body = '{
             "languageCode": "en-US",
             "summary": "'.$message.'",
+            "callToAction": {
+                "actionType": "ORDER",
+                "url": "https://askthepros.com"
+            },
+
+            "topicType": "STANDARD",
             "media": [
                 {
                   "mediaFormat": "PHOTO",
                   "sourceUrl": "'.$image.'",
                 }
-            ]
+            ],
         }';
         $curl = new CurlController($this->headers);
         $result = $curl->postRequest($this->url, $body);

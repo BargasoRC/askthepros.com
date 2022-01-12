@@ -7,11 +7,13 @@ use App\Mail\ResetPassword;
 use App\Mail\Verification;
 use App\Mail\ChangedPassword;
 use App\Mail\LoginEmail;
+use App\Mail\ContactUs;
 use App\Mail\OtpEmail;
 use App\Mail\Receipt;
 use App\Mail\Billing;
 use App\Mail\SetupSNS;
 use App\Mail\NewMessage;
+use App\Mail\VerificationStatus;
 use Illuminate\Http\Request;
 
 class EmailController extends APIController
@@ -100,6 +102,25 @@ class EmailController extends APIController
             $this->response['data'] = true;
         }
         return $this->response();
+    }
+
+
+    public function sendMessage(Request $request){
+        $data = $request->all();
+        $subject = $data['subject'];
+        $content = $data['content'];
+        Mail::to(env('COMPANY_EMAIL'))->send(new ContactUs($data, $this->response['timezone'], $subject, $content));
+        $this->response['data'] = true;
+        return $this->response();
+    }
+
+    public function verification_status($accountId, $details){
+        $user = $this->retrieveAccountDetails($accountId);
+        if($user != null && $user['status'] != 'NOT_VERIFIED'){
+            Mail::to($user['email'])->send(new VerificationStatus($user, $details, $this->response['timezone']));
+            return true;
+        }
+        return false;
     }
 
 }

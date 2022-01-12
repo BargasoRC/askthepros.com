@@ -7,6 +7,7 @@ use Increment\Account\Models\Account;
 use Increment\Account\Models\AccountProfile;
 use Increment\Account\Models\AccountInformation;
 use App\SocialAuths;
+use Increment\Common\Payload\Models\Payload;
 use Socialite;
 use Carbon\Carbon;
 class SocialController extends APIController
@@ -100,6 +101,14 @@ class SocialController extends APIController
             'last_name' => $lastName,
             'created_at' => Carbon::now()
           ));
+
+          Payload::insert(array(
+            'account_id' => $acc->id,
+            'payload'   => 'automation_settings',
+            'payload_value' => 'OFF',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+          ));
         }
       }
 
@@ -124,6 +133,7 @@ class SocialController extends APIController
         $userAccount = $userAccount[0];
         $userAccount['merchant'] = app('Increment\Imarket\Merchant\Http\MerchantController')->getByParams('account_id', $userAccount['id']);
         $userAccount['plan'] = app('App\Http\Controllers\PlanController')->getByParams('account_id', $userAccount['id']);
+        $userAccount['information'] = app('Increment\Account\Http\AccountInformationController')->getAccountInformation($userAccount['id']);
       }
 
       return response()->json([
@@ -196,12 +206,13 @@ class SocialController extends APIController
                 $response['account_type'] = $result[0]['account_type'];
                 $response['status'] = $result[0]['status'];
                 $response['username'] = $result[0]['username'];
-                $response['created_at'] = $result[0]['created_at'];
+                $response['created_at'] = $result[0]['created_at']; 
                 $response['updated_at'] = $result[0]['updated_at'];
                 $response['deleted_at'] = $result[0]['deleted_at'];
                 $response['token'] = $result[0]['token'];
                 $response['login_type'] = 'social_lite';
-                $response['information'] = app('Increment\Account\Http\AccountProfileController')->getProfileUrlByAccountId($result[0]['id']);
+
+                $response['information'] = app('Increment\Account\Http\AccountInformationController')->getAccountInformation($result[0]['id']);
                 $response['merchant'] = app('Increment\Imarket\Merchant\Http\MerchantController')->getByParams('account_id', $result[0]['id']);
                 $response['profile'] = app('Increment\Account\Http\AccountProfileController')->getProfileUrlByAccountId($result[0]['id']);
                 $response['plan'] = app('App\Http\Controllers\PlanController')->getByParams('account_id', $result[0]['id']);

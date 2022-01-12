@@ -43,9 +43,9 @@
             <td>{{item.date}}</td>
             <td>{{item.time}}</td>
             <td>{{item.post[0] != null ? item.post[0].title : null}}</td>
-            <td>{{item.post[0] != null ? displayArray(item.post[0].channels) : null}}</td>
+            <td>{{item.channel}}</td>
             <td style="color: gray"><u>{{item.link}}</u></td>
-            <td class="text-primary" v-if="item.post[0].parent === null">Posted Automatically</td>
+            <td class="text-primary" v-if="item.post[0].account_id != user.userID">Posted Automatically</td>
             <td class="text-warning" v-else>Posted - Reviewed by You</td>
           </tr>
         </tbody>
@@ -78,7 +78,7 @@ export default {
       tableHeaders: [
         {title: 'Date Posted'},
         {title: 'Time Posted'},
-        {title: 'Post Title'},
+        {title: 'Post Question'},
         {title: 'Channel Posted To'},
         {title: 'Link'},
         {title: 'Status'}
@@ -147,12 +147,13 @@ export default {
         }],
         sort: sort,
         limit: this.limit,
-        status: 'for posting',
+        status: 'posted',
         account_id: this.user.userID,
         offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('post/retrieve_history', parameter).then(response => {
+        console.log('[this]', response.data)
         $('#loading').css({'display': 'none'})
         if(response.data.length > 0){
           this.tableData = response.data

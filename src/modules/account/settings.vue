@@ -2,8 +2,8 @@
   <div class="container-fluid " >
     <div class="row flex-column-reverse flex-md-row mb-3">
       <div class="col-sm-8 col-sm-pull-4">
-        <Profile/>
-        <Address/>
+        <Profile @Profile="onProfile" :profileData="data"/>
+        <Address :latitude="latitude" :longitude="longitude" @Address="onAddress" :addresData="data"/>
         <Account/>
         <div  v-if="passwordVerified === false">
         <CPass/>
@@ -49,6 +49,11 @@
         </div>
       </div>
     </div>
+    <errorModal
+    ref="errorModal"
+    :title="val === true ? 'Success Message' : 'Error Message'"
+    :message="val === true ? `${label} has been successfully updated!` : 'Please fill in all of the required fields'"
+    />
   </div>
 </template>
 <script>
@@ -66,6 +71,10 @@ import Profile from 'src/modules/account/components/profile.vue'
 import Address from 'src/modules/account/components/address.vue'
 import Account from 'src/modules/account/components/account.vue'
 import CPass from 'src/modules/account/components/cpass.vue'
+import VueGeolocation from 'vue-browser-geolocation'
+import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
+import Vue from 'vue'
+Vue.use(VueGeolocation)
 export default {
   data() {
     return {
@@ -78,7 +87,12 @@ export default {
       data: null,
       file: null,
       copiedIndex: null,
-      passwordVerified: false
+      passwordVerified: false,
+      username: null,
+      latitude: null,
+      longitude: null,
+      val: false,
+      label: ''
     }
   },
   components: {
@@ -88,7 +102,8 @@ export default {
     Profile,
     Address,
     Account,
-    CPass
+    CPass,
+    errorModal
   },
   computed: {
     returnProfile() {
@@ -128,12 +143,29 @@ export default {
     }
   },
   mounted() {
+    this.retrieveInformation()
     if(AUTH.hash('show', localStorage.getItem('login_with')) === 'social_lite') {
       this.passwordVerified = true
     }
-    this.retrieveInformation()
   },
   methods: {
+    onAddress(e){
+      console.log('Emmitted address val', e)
+      this.val = e
+      this.label = 'Address'
+      this.$refs.errorModal.show()
+    },
+    onProfile(e){
+      console.log('Emmitted profile val', e)
+      this.val = e
+      this.label = 'Profile'
+      this.$refs.errorModal.show()
+    },
+    setInitialView(location){
+      this.longitude = location.lng
+      this.latitude = location.lat
+      console.log('[this]', this.longitude, this.latitude)
+    },
     checkPassword(evet){
       if(this.oPassword === '') {
         this.isValidPassword = false
@@ -171,18 +203,19 @@ export default {
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('accounts_info/retrieve', parameter).then(response => {
+        console.log('[sdf]', response.data[0], this.user)
         $('#loading').css({'display': 'none'})
-        let data = response.data[0]
+        this.data = response.data[0]
         this.username = this.user.username
         this.email = this.user.email
         this.businessname = this.user.merchant ? this.user.merchant.name : ''
         AUTH.user.information = response.data[0]
         if(response.data.length > 0) {
-          AUTH.user.merchant = [data.merchant]
-          this.firstname = data.first_name
-          this.lastname = data.last_name
-          this.contactnumber = data.cellular_number
-          let address = data.address ? JSON.parse(data.address) : {}
+          AUTH.user.merchant = [this.data.merchant]
+          this.firstname = this.data.first_name
+          this.lastname = this.data.last_name
+          this.contactnumber = this.data.cellular_number
+          let address = this.data.address ? JSON.parse(this.data.address) : {}
           this.route = address ? address.route : ''
           this.city = address ? address.city : ''
           this.region = address ? address.region : ''
@@ -239,6 +272,7 @@ export default {
                     }
                   })
                   if(Object.keys(address).length > 0) {
+                    console.log('[fdfdfdf]', JSON.stringify(address))
                     parameter['address'] = JSON.stringify(address)
                   }
                   break
@@ -255,7 +289,9 @@ export default {
             city: this.city,
             region: this.region,
             country: this.country,
-            postalZipCode: this.postalZipCode
+            postalZipCode: this.postalZipCode,
+            longitude: this.longitude,
+            latitude: this.latitude
           })
         }
         console.log('Parameters: ', parameter)

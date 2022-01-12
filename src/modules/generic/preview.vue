@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="col-sm-12 p-0 mt-5 mb-4" v-if="(returnDescription !== '' && returnDescription) || files && (files ? files.length : 0) > 0">
-          <p class="mb-0 p-0">
+          <p class="mb-0 p-0" style="white-space: pre-line;">
             {{returnDescription}}
           </p>
         </div>
@@ -167,7 +167,7 @@ export default {
         if(!this.isAddd && this.verdict === 'false'){
           this.files = Object.values(this.files).map(el => {
             let temp = {}
-            temp['url'] = el.url
+            temp['url'] = el.url === undefined ? el : el.url
             return temp
           })
           return (this.files ? this.files.filter((el, index) => {

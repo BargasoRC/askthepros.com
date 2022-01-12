@@ -36,8 +36,12 @@
       />
       <div class="new-payment-method-holder" v-if="newPaymentFlag === true">
         <div class="card-holder">
-          <div style="margin-bottom: 10px; margin-left: -5px;">
-            <img class="payment" :src="require('src/assets/img/pay_methods.png')" alt="Payment Methods">
+          <div class="fontawesome-icons">
+            <i class="fa fa-cc-visa"></i>
+            <i class="fa fa-cc-discover"></i>
+            <i class="fa fa-cc-mastercard"></i>
+            <i class="fa fa-cc-amex"></i>
+            <i class="fa fa-cc-jcb"></i>
           </div>
           <stripe-cc ref="stripe" />
           <roundedBtn 
@@ -130,5 +134,12 @@ export default {
   margin-right: 76%;
   float: left;
   margin-bottom: 25px;
+}
+
+.fontawesome-icons{
+  margin-bottom: 10px;
+  margin-left: -5px;
+  font-size: 32px;
+  color: $primary;
 }
 </style>

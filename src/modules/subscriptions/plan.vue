@@ -14,7 +14,6 @@
             <div class="layer1">
               <h6>{{data.plan.plan}}</h6>
               <p> {{data.plan.amount}} {{data.plan.currency}} / Month</p>
-
               <p v-if="data.plan.end_date !== null">
                 Expire on {{data.plan.end_date}}
               </p>
@@ -66,7 +65,7 @@
       <div v-for="(item, index) in industry" :key="index" class="subscription-item">
         <div>
           <div class="layer1">
-            <h6 class="text-primary">{{item.category}}</h6>
+            <h6 class="text-primary">{{item.category.replace('_', ' ')}}</h6>
             <p> {{item.payload_value}} USD / Month</p>
 
             <roundedBtn
@@ -116,6 +115,9 @@ import Confirmation from 'src/components/increment/generic/modal/Confirmation.vu
 export default {
   mounted(){
     this.retrieve()
+    if((this.user && this.user.information === null) || (this.user && this.user.information && this.user.information.first_name === null) || (this.user && this.user.information && this.user.information.last_name === null)){
+      this.redirect('/settings')
+    }
   },
   data() {
     return {
@@ -138,9 +140,6 @@ export default {
     redirect(parameter){
       this.$router.push(parameter)
     },
-    test(parameter){
-      console.log(parameter)
-    },
     cancelPlanConfirmation(){
       if(this.data && this.data.plan){
         this.selectedId = this.data.plan.id
@@ -158,7 +157,7 @@ export default {
         $('#loading').css({'display': 'block'})
         this.APIRequest('plans/cancel_plan', parameter).then(response => {
           $('#loading').css({'display': 'none'})
-          this.$parent.retrieve()
+          this.$parent.retrieveUser()
         }).catch(error => {
           $('#loading').css({'display': 'none'})
           error
@@ -242,7 +241,7 @@ h1 {
 p {
   margin-top: 20px;
   font-size: 24px;
-  color: $title;
+  // color: $title;
 }
 
 img {
@@ -263,7 +262,7 @@ img {
 }
 
 .pricing .layer1 h6{
-  color: $warning;
+  color: $secondary;
   font-size: 24px;
 }
 
@@ -312,6 +311,7 @@ hr {
   float: left;
   padding: 15px;
   border-radius: 5px;
+  margin-bottom: 25px;
   border: solid 1px #ddd;
 }
 

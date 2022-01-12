@@ -78,10 +78,21 @@ devMiddleware.waitUntilValid(function () {
 let server = null
 
 if(configuration.IS_HTTP) {
-  server = https.createServer({
-    key: fs.readFileSync('./certs/server.key'),
-    cert: fs.readFileSync('./certs/server.cert')
-  }, app).listen(port)
+  // server = https.createServer({
+  //   key: fs.readFileSync('./certs/server.key'),
+  //   cert: fs.readFileSync('./certs/server.cert')
+  // }, app).listen(port)
+  server = app.listen(port, function (err) {
+    if (err) {
+      console.log(err)
+      return
+    }
+  
+    // when env is testing, don't need open it
+    if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
+      opn(uri)
+    }
+  })
 }else{
   server = app.listen(port, function (err) {
     if (err) {

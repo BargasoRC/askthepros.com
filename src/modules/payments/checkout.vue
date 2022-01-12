@@ -25,7 +25,7 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>{{selected.category.toUpperCase()}} Monthly Subscription</td>
+						<td>{{selected.category.toUpperCase().replace('_', ' ')}} Monthly Subscription</td>
 						<td>$ {{selected.payload_value}} / Month</td>
 					</tr>
           <tr>
@@ -51,8 +51,12 @@
       <i id="stripe" class="far fa-circle"  v-if="!payment" @click="choose"></i>
       <label for="stripe" class="stripe_label">Stripe</label>
     </div> -->
-    <div class="mt-3">
-      <img class="payment" :src="require('src/assets/img/pay_methods.png')" alt="Payment Methods">
+    <div class="mt-3 icons-fontawesome">
+      <i class="fa fa-cc-visa"></i>
+      <i class="fa fa-cc-discover"></i>
+      <i class="fa fa-cc-mastercard"></i>
+      <i class="fa fa-cc-amex"></i>
+      <i class="fa fa-cc-jcb"></i>
     </div>
     <div class="col-sm-6 p-0 mt-3" v-if="selected !== null">
       <div class="mt-3 d-flex justify-content-start">
@@ -137,7 +141,7 @@ export default {
     retrieve(){
       console.log('test')
       let plan = this.$route.params.plan
-      plan = plan.replace('_', ' ')
+      // plan = plan.replace('_', ' ')
       let parameter = {
         condition: [{
           value: 'subscriptions',
@@ -154,10 +158,13 @@ export default {
       this.isLoading = true
       this.APIRequest('payloads/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
+        console.log('response', response)
         if(response.data.length > 0) {
           this.selected = response.data[0]
+          console.log('data active', this.selected)
         }else{
           this.selected = null
+          console.log('no data', this.selected)
         }
         this.isLoading = false
       }).catch(error => {
@@ -196,5 +203,10 @@ export default {
 .form-control{
   height: 50px !important;
   border-radius: 25px !important;
+}
+
+.icons-fontawesome{
+  font-size: 32px;
+  color: $primary;
 }
 </style>

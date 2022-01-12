@@ -4,26 +4,32 @@
       <div class="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xs-7 QouteCardContainer mb-5 ">
         <div class="QouteCard">
           <div class="SubQoute">
-            <h1 class="QouteText" style="color: #01004E">Become A Local Expert</h1>
+            <h1 class="QouteText" style="color: #01004E">Become THE LOCAL</h1>
+            <h1 class="QouteText" style="color: #01004E">{{industry.category.replace(/_/g, ' ').toUpperCase()}} Expert</h1>
           </div>
           <div class="SubQoute">
             <h1 class="QouteText" style="color: #01009A">With Automated Social Media Posting.</h1>
           </div>
-          <img :src="require('assets/img/section3-img.png')" alt="Image" style="width: 60%;height:auto">
+          <img :src="location === 'localhost' ? require('assets/img/section3-img.png') : 'https://staging.askthepros.com/static/img/section3-img.88fb0ea.png'" alt="Image" style="width: 60%;height:auto">
         </div>
       </div>
       <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xs-5 d-flex justify-content-center LoginCardContainer mb-5">
         <div class="card RegisterCard">
           <div class="card-body RegisterCardBody">
             <div class="d-flex justify-content-center pt-5 pb-5 mb-3">
-              <b>Register with AskThePros</b>
+              <div class="reg" @click="redirect('/login')">
+                Login
+              </div>
+              <div class="log">
+                Register
+              </div>
             </div>
-            <p
+            <!-- <p
               class="mb-2 pb-0 errorMessage"
               v-if="errorMessage != null"
             >{{errorMessage}}</p>
-            <div>
-              <p class="mt-2"><b>Username</b></p>
+            <div> -->
+              <!-- <p class="mt-2"><b>Username</b></p>
               <roundedInput 
                 :type="'text'"
                 :placeholder="'Your username here...'"
@@ -32,13 +38,13 @@
                   border: !this.isValid && username == '' ? '1px solid red !important' : 'none',
                 }"
                 v-model="username"
-              />
-              <p
+              /> -->
+              <!-- <p
                 class="mb-0 pb-0 requiredFieldError"
                 v-if="!this.isValid && username == ''"
-              >Required Field</p>
-              <p class="mt-2"><b>Email</b></p>
-              <roundedInput 
+              >Required Field</p> -->
+              <!-- <p class="mt-2"><b>Email</b></p>
+              <roundedInput
                 :type="'text'"
                 :placeholder="'Email Address'"
                 :class="!this.isValid && (email == '' || !isEmailValid) ? 'mb-0 ' : ' registrationField'"
@@ -88,6 +94,7 @@
                 :class="!this.isValid && (password == '' || password != cpassword || passwordRequirements != '') ? 'mb-0 ' : ' registrationField'"
                 :styles="{
                   border: !this.isValid && (password == '' || password != cpassword || passwordRequirements != '') ? '1px solid red !important' : 'none',
+                  marginBottom: '5%'
                 }"
                 v-model="cpassword"
               />
@@ -105,58 +112,38 @@
                     passwordRequirements
                   :
                   'Required Field'
-              }}</p>
-              <p class="mt-2"><b>Industry</b></p>
-              <roundedSelectBtn 
-                :placeholder="'Select Industry'"
-                :items="returnIndustry"
-                :class="''"
-                :styles="{
-                  background: 'none',
-                  color: '#84868B !important',
-                  width: '100% !important',
-                  minWidth: '100% !important',
-                  border: !this.isValid && selectedIndustry == null ? '1px solid red !important' : 'none',
-                  marginBottom: !this.isValid && selectedIndustry == null ? '0px' : '35px'
-                }"
-                :selectedIndex="global.selectedIndustryIndex"
-                @onSelect="onSelect"
-              />
-              <p
-                class="mb-0 pb-0 requiredFieldError"
-                v-if="!this.isValid && selectedIndustry == null"
-              >Required Field</p>
+              }}</p> -->
             </div>
-            <div class="d-flex justify-content-center">
-              <!-- <roundedBtn
-                :onClick="forgotPassword"
-                :text="'Forgot your password?'"
-                :styles="{
-                  background: 'none',
-                  color: '#272727'
-                }"
-              /> -->
+            <div class="row" style="margin-left: 10%; margin-right: 6%;">
+              <p class="col-sm-7" style="font-size: 20px">
+                <b>{{industry.category.replace(/_/g, ' ')}}</b>
+              </p>
+              <p class="col-sm-5" style="font-size: 20px">
+                <b>${{industry.payload_value}}/Month</b>
+              </p>
+            </div>
+            <!-- <div class="d-flex justify-content-center">
               <dialogueBtn 
                 :onClick="register"
                 :icon="'fas fa-sign-in-alt'"
-                :text="'Register now'"
+                :text="'Register'"
                 :icon_position="'right'"
                 :styles="{
                   backgroundColor: colors.darkPrimary,
                   color: 'white'
                 }"
               />
-            </div>
+            </div> -->
             <div class="d-flex justify-content-center orSeparatorA">
-              <b>OR</b>
+              <!-- <b>Register with Social Media</b> -->
             </div>
             <div class="col-sm-12">
-              <div class="row">
-                <div class="col-sm-4 col-md-4 col-lg-4 mt-1 mb-1">
+              <!-- <div class="row"> -->
+                <div class="col-sm-12 col-md-12 col-lg-12 mt-1 mb-1">
                   <roundedBtn
                     :onClick="gmailLogin"
                     :icon="'fab fa-google'"
-                    :text="'Sign In'"
+                    :text="'Register with Email'"
                     :styles="{
                       background: 'none',
                       color: '#272727',
@@ -167,11 +154,12 @@
                     :icon_position="'left'"
                   />
                 </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 mt-1 mb-1">
+                <br>
+                <div class="col-sm-12 col-md-12 col-lg-12 mt-1 mb-1">
                   <roundedBtn
                     :onClick="fbLogin"
                     :icon="'fab fa-facebook-f'"
-                    :text="'Sign In'"
+                    :text="'Register with Facebook'"
                     :styles="{
                       background: 'none',
                       color: '#272727',
@@ -182,11 +170,12 @@
                     :icon_position="'left'"
                   />
                 </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 mt-1 mb-1">
+                <br>
+                <div class="col-sm-12 col-md-12 col-lg-12 mt-1 mb-1">
                   <roundedBtn
                     :onClick="linkedInLogin"
                     :icon="'fab fa-linkedin-in'"
-                    :text="'Sign In'"
+                    :text="'Register with LinkedIn'"
                     :styles="{
                       background: 'none',
                       color: '#272727',
@@ -197,25 +186,24 @@
                     :icon_position="'left'"
                   />
                 </div>
-              </div>
+              <!-- </div> -->
             </div>
-            <div class="d-flex justify-content-center orSeparatorB">
+            <!-- <div class="d-flex justify-content-center orSeparatorB">
               <b>OR</b>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-center">
-              <dialogueBtn 
+              <dialogueBtn
                 :onClick="login"
                 :icon="'fas fa-sign-in-alt'"
                 :text="'Login'"
                 :icon_position="'right'"
                 :styles="{
-                  backgroundColor: colors.warning,
+                  backgroundColor: colors.secondary,
                   color: 'white'
                 }"
               />
-            </div>
+            </div> -->
           </div>
-        </div>
       </div>
     </div>
   </div>
@@ -231,9 +219,18 @@ import AUTH from 'src/services/auth'
 import CONFIG from 'src/config'
 import COMMON from 'src/common'
 import global from 'src/helpers/global'
+import ROUTER from 'src/router'
 export default {
   mounted(){
-    this.retrievePayloads()
+    this.location = window.location.hostname
+    let params = this.$route.params
+    if(params.category){
+      this.selectedIndustry = params.category
+      // this.selectedIndustry = params.category.replace(/_/g, ' ')
+    }
+    setTimeout(() => {
+      this.retrievePayloads()
+    }, 1000)
   },
   data() {
     return {
@@ -241,6 +238,7 @@ export default {
       password: '',
       cpassword: '',
       email: '',
+      location: null,
       config: CONFIG,
       common: COMMON,
       type: 'USER',
@@ -264,17 +262,35 @@ export default {
   },
   computed: {
     returnIndustry() {
-      return this.industry.map(el => {
+      return this.industry.map((el, ndx) => {
         return el.category
       })
     }
   },
   methods: {
+    redirect(parameter) {
+      if(parameter === '/signup'){
+        if(localStorage.getItem('selectedIndustry') != null){
+          ROUTER.push(parameter)
+        }else{
+          alert('Please select industry to proceed.')
+        }
+      }else{
+        ROUTER.push(parameter)
+      }
+      if(parameter === '/'){
+        this.scrollToTop()
+      }
+    },
     retrievePayloads(){
       let conditions = [{
         value: 'subscriptions',
         clause: '=',
         column: 'payload'
+      }, {
+        value: this.selectedIndustry,
+        clause: '=',
+        column: 'category'
       }]
       let parameter = {
         condition: conditions
@@ -283,7 +299,7 @@ export default {
       this.APIRequest('payloads/retrieve', parameter).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data.length > 0) {
-          this.industry = response.data
+          this.industry = response.data[0]
         }else{
           this.industry = []
         }
@@ -293,14 +309,14 @@ export default {
       })
     },
     gmailLogin(event) {
-      console.log('gmail login:::')
+      // this.$router.push('/stepper/' + this.selectedIndustry)
       $('#loading').css({'display': 'block'})
       localStorage.setItem('login_with', 'google')
       this.APIRequest('social_lite/authenticate/google/redirect', {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
-          console.log('Authentication with google response: ', response)
           window.location.href = response.data.url
+          this.$router.push('/stepper')
         }
       }, error => {
         $('#loading').css({'display': 'none'})
@@ -309,12 +325,10 @@ export default {
     },
     fbLogin(event) {
       $('#loading').css({'display': 'block'})
-      console.log('facebook login:::')
       localStorage.setItem('login_with', 'facebook')
       this.APIRequest('social_lite/authenticate/facebook/redirect', {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
-          console.log('Authentication with facebook response: ', response)
           window.location.href = response.data.url
         }
       }, error => {
@@ -324,12 +338,10 @@ export default {
     },
     linkedInLogin(event) {
       $('#loading').css({'display': 'block'})
-      console.log('linkedin login:::')
       localStorage.setItem('login_with', 'linkedin')
       this.APIRequest('social_lite/authenticate/linkedin/redirect', {}, response => {
         $('#loading').css({'display': 'none'})
         if(response.data && response.data.url) {
-          console.log('Authentication with linkedin response: ', response)
           window.location.href = response.data.url
         }
       }, error => {
@@ -337,42 +349,39 @@ export default {
         console.log('Authentication with linkedin error! ', error)
       })
     },
-    onSelect(data) {
-      console.log('On Select:::')
-      this.selectedIndustry = data.index
-    },
     login(event) {
-      // console.log('login:::')
       this.$router.push('/login')
     },
     register(event) {
-      console.log('register:::')
       if(this.validate()) {
         this.isValid = true
         let parameter = {
-          username: this.username,
+          username: this.email,
           email: this.email,
           password: this.password,
-          config: CONFIG,
+          // config: CONFIG,
           account_type: this.type,
           referral_code: null,
           status: 'ADMIN',
-          industry: JSON.stringify({industry: this.industry[this.selectedIndustry].category})
+          industry: JSON.stringify({industry: this.selectedIndustry})
         }
         $('#loading').css({'display': 'block'})
         this.APIRequest('account/create', parameter).then(response => {
           $('#loading').css({'display': 'none'})
           if(response.data !== null) {
-            this.login()
-            // this.createMerchantAndPayload(response.data)
+            this.createMerchantAndPayload(response.data.data)
+            // this.login()
           }else if(response.error !== null){
             if(response.error.status === 100){
               let message = response.error.message
-              if(typeof message.username !== undefined && typeof message.username !== 'undefined'){
-                this.errorMessage = message.username[0]
-              }else if(typeof message.email !== undefined && typeof message.email !== 'undefined'){
+              // if(typeof message.username !== undefined && typeof message.username !== 'undefined'){
+              //   this.errorMessage = message.username[0]
+              if(typeof message.email !== undefined && typeof message.email !== 'undefined'){
                 this.errorMessage = message.email[0]
               }
+            }else{
+              let message = response.error.message
+              this.errorMessage = message
             }
           }
         })
@@ -381,9 +390,9 @@ export default {
     async createMerchantAndPayload(id) {
       let merchant = {
         account_id: id,
-        name: this.username,
+        name: this.email,
         email: this.email,
-        addition_informations: JSON.stringify({industry: this.industry[this.selectedIndustry].category})
+        addition_informations: JSON.stringify({industry: this.selectedIndustry})
       }
       let payload = {
         account_id: id,
@@ -406,7 +415,7 @@ export default {
     validate() {
       this.errorMessage = null
       let email = this.email
-      let username = this.username
+      let username = this.email
       let password = this.password
       let cpassword = this.cpassword
       let selectedIndustry = this.selectedIndustry
@@ -415,7 +424,7 @@ export default {
         return false
       }else if(username.includes(' ')){
         this.isValid = false
-        this.errorMessage = 'Username should not contain spaces.'
+        this.errorMessage = 'Email should not contain spaces.'
         return false
       }else if(!global.validateEmail(email)) {
         this.isValid = false
@@ -432,7 +441,8 @@ export default {
           this.isEmailValid = true
         }
         this.isValid = false
-        this.passwordRequirements = 'Password should be minimum of 8 and maximum of 16 and should contain at least one digit, lower case, upper case and special character.'
+        this.passwordRequirements = 'Password should be minimum of 8 and maximum of 16.'
+        // this.passwordRequirements = 'Password should be minimum of 8 and maximum of 16 and should contain at least one digit, lower case, upper case and special character.'
         return false
       }
       this.passwordRequirements = ''
@@ -447,6 +457,21 @@ export default {
 
 <style lang="scss" scoped>
 @import "~assets/style/colors.scss";
+.log{
+  background-color: #ffc107;
+  padding: 3%;
+  border-color: #ffc107;
+  border-radius: 10px;
+  font-weight: bold;
+  // margin-left: 3%;
+}
+.reg{
+  background-color: whitesmoke;
+  padding: 3%;
+  border-color: whitesmoke;
+  border-radius: 10px;
+  font-weight: bold;
+}
 .requiredFieldError {
   color: $danger;
   font-size: 10px;
@@ -460,7 +485,7 @@ export default {
   text-align: center;
 }
 .orSeparatorA {
-  margin-top: 35px;
+  margin-top: 15px;
   margin-bottom: 15px;
 }
 .orSeparatorB {
@@ -490,14 +515,16 @@ export default {
   box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
   -webkit-box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
   -moz-box-shadow: 3px 3px 1px -2px rgba(1,0,154,0.75);
+  max-height: 42.5rem;
 }
-.RegisterCardBody {}
+
 .LoginContainer {
   min-height: 85vh;
   background-color: transparent !important;
 }
 .RowContainer {
   background-color: white !important;
+  padding-top: 15vh;
 }
 .QouteCardContainer {
   display: flex !important;
@@ -508,6 +535,14 @@ export default {
 }
 .LoginCardContainer {
   background-color: transparent !important;
+}
+
+.form-control{
+  border-radius: 25px !important;
+  height: 50px !important;
+  width: 100%;
+  margin: auto;
+  display: flex;
 }
 
 @media (max-width: 500px) {

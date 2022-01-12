@@ -11,8 +11,8 @@
       <textarea style="border-color: white; color: gray; margin-left: 1%" name="branding" id="branding" cols="90" v-model="branding" disabled="disabled">
       </textarea>
     </div>
-    <p style="text-align: right; font-size: 12px; color: gray;">Character count: {{character}}</p>
     <br>
+    <p style="text-align: right; font-size: 12px; color: gray;">Character count: {{character}}</p>
     <br>
     <br>
     <h5>Files:</h5>
@@ -70,6 +70,7 @@ import errorModal from 'src/components/increment/generic/Modal/Alert.vue'
 export default {
   mounted(){
     this.retrieveReview(this.$route.params.parameter)
+    this.retrieveBranding()
   },
   data() {
     return {
@@ -149,6 +150,7 @@ export default {
           url: this.addImage.length > 0 ? JSON.stringify(this.addImage) : JSON.stringify(this.imagesList),
           account_id: this.user.userID,
           channels: JSON.stringify(channels),
+          category: this.selectedItem.category,
           parent: this.dataRetrieve.post_id,
           id: this.dataRetrieve.id
         }
@@ -156,7 +158,7 @@ export default {
         this.APIRequest('post/update_user', parameter).then(response => {
           $('#loading').css({'display': 'none'})
           if(response.data > 0){
-            ROUTER.push('/post_management/history')
+            ROUTER.push('/post_management')
           }
         })
       }
@@ -204,6 +206,18 @@ export default {
     },
     preview(){
       this.$refs.previewSelected.show()
+    },
+    retrieveBranding(){
+      let parameter = {
+        account_id: this.user.userID
+      }
+      $('#loading').css({'display': 'block'})
+      this.APIRequest('brandings/retrieve_by_accountId', parameter).then(response => {
+        $('#loading').css({'display': 'none'})
+        if(response.details != null) {
+          this.branding = Object.values(JSON.parse(response.details))
+        }
+      })
     },
     retrieveReview(code){
       let parameter = {

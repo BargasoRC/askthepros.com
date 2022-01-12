@@ -60,7 +60,7 @@ class PostController extends APIController
     public function retrieve(Request $request) {
         $data = $request->all();
         $con = $data['condition'];
-
+        
         $result = Post::leftJoin('post_targets', 'posts.id', '=', 'post_targets.post_id')
         ->leftJoin('accounts', 'accounts.id', '=', 'posts.account_id')
         ->select('posts.*', 'post_targets.payload_value as category', 'accounts.username as author')
@@ -227,17 +227,30 @@ class PostController extends APIController
     public function retrieveHistoryPosts(Request $request){
       $data = $request->all();
       $con = $data['condition'];
-      $contains = Str::contains($data['status'], 'post');
-      $result = PostHistory::where('account_id', '=', $data['account_id'])
-      ->where('status', '=', ($contains ? ('for posting') : ('for review')))
-      ->where($con[0]['column'], $con[0]['clause'], $con[0]['value'])
-      ->limit($data['limit'])
-      ->offset($data['offset'])->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+      $contains = !Str::contains($data['status'], 'for');
+      if($contains){
+        $result = PostHistory::where('account_id', '=', $data['account_id'])
+        ->where('status', '=', 'posted')
+        ->where($con[0]['column'], $con[0]['clause'], $con[0]['value'])
+        ->limit($data['limit'])
+        ->offset($data['offset'])->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
 
-      $size = PostHistory::where('account_id', '=', $data['account_id'])
-      ->where('status', '=', ($contains ? ('for posting') : ('for review')))
-      ->where($con[0]['column'], $con[0]['clause'], $con[0]['value'])
-      ->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+        $size = PostHistory::where('account_id', '=', $data['account_id'])
+        ->where('status', '=', 'posted')
+        ->where($con[0]['column'], $con[0]['clause'], $con[0]['value'])
+        ->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+      }else{
+        $result = PostHistory::where('account_id', '=', $data['account_id'])
+        ->where('status', '!=', 'posted')
+        ->where($con[0]['column'], $con[0]['clause'], $con[0]['value'])
+        ->limit($data['limit'])
+        ->offset($data['offset'])->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+
+        $size = PostHistory::where('account_id', '=', $data['account_id'])
+        ->where('status', '!=', 'posted')
+        ->where($con[0]['column'], $con[0]['clause'], $con[0]['value'])
+        ->orderBy(array_keys($data['sort'])[0], array_values($data['sort'])[0])->get();
+      }
 
       $i = 0;
       foreach ($result as $key) {
@@ -246,6 +259,7 @@ class PostController extends APIController
         $result[$i]['time'] = Carbon::createFromFormat('Y-m-d H:i:s', $result[$i]['created_at'])->copy()->tz($this->response['timezone'])->format('h:i A');
         $i++;
       }
+      // dd($result);
       $this->response['data'] = $result;
       $this->response['size'] = count($size);
       $this->response['error'] = null;
@@ -266,6 +280,16 @@ class PostController extends APIController
         'status' => 'PUBLISH'
       );
       $var = Post::create($dataArray);
+
+      $post_target = new PostTarget();
+      $dataPostHistory = array(
+        'code' => $this->generateCode($post_target),
+        'post_id' => $var->id,
+        'payload' => 'INDUSTRY',
+        'payload_value' => $data['category']
+      );
+      PostTarget::create($dataPostHistory);
+
       PostHistory::where('id', '=', $data['id'])->update(array(
         'post_id' => $var->id,
         'status' => 'for posting',

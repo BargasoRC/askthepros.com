@@ -10,6 +10,7 @@ import DataTable from 'src/modules/generic/table'
 import AUTH from 'src/services/auth'
 export default {
   mounted(){
+    this.retrieveUser()
   },
   data() {
     return {
@@ -23,13 +24,13 @@ export default {
     Plan
   },
   created() {
-    this.retrieve()
+    this.retrieveUser()
   },
   methods: {
     onTableAction(data) {
       console.log('Table Action: ', data)
     },
-    retrieve(){
+    retrieveUser(){
       let parameter = {
         condition: [
           {
