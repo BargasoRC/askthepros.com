@@ -164,7 +164,7 @@ p {
 }
 @media screen and (max-width: 1525px) {
   .comment-section{
-    height: 45vh!important;
+    height: 20vh!important;
   }
   .name-job{
     margin-left: 1em !important;
@@ -173,10 +173,14 @@ p {
     margin-left: 1em!important;
   }
 }
-
+@media screen and (max-width: 1152px) {
+    .comment-section{
+    height: 25vh!important;
+  }
+}
 @media screen and (max-width: 991px) {
   .comment-section{
-    height: 50vh !important;
+    height: 25vh !important;
   }
   .name-job{
     margin-left: 20px!important;
@@ -240,7 +244,7 @@ h6 {
 }
 @media screen and (max-width: 786px) {
   .comment-section{
-      height: 55vh!important;
+      height: 35vh!important;
   }
 
 }

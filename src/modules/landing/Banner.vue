@@ -30,7 +30,6 @@
     background-size: cover;
     position: relative;
     background-position: center top;
-    margin-top:50%;
 }
 .button-container-button {
   display: flex;
@@ -77,7 +76,7 @@
 }
 .banner-container-text {
   font-size:50px;
-  padding-left: 0px;
+  padding-left: 0px;  
   text-align: center;
 }
 .banner-container-row {
