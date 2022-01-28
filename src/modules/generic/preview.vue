@@ -155,8 +155,10 @@ export default {
     },
     returnFiles() {
       this.fileImage = this.files
+      console.log('[response files]', this.fileImage, this.verdict, this.isAddd)
       if(this.files !== null){
         if((this.verdict === 'true' && this.isAddd === false) || (this.verdict === true && this.isAddd === 'false')){
+          console.log('[a]')
           this.fileImage = Object.values(this.fileImage).map(el => {
             let temp = {}
             temp['url'] = el.url
@@ -167,9 +169,11 @@ export default {
           }) : [])
         }
         if(!this.isAddd && this.verdict === 'false'){
+          console.log('[b]', this.isAddd, this.verdict)
           this.fileImage = Object.values(this.fileImage).map(el => {
             let temp = {}
             temp['url'] = el.url === undefined ? el : el.url
+            console.log('[temp]', temp)
             return temp
           })
 
@@ -178,6 +182,7 @@ export default {
           }) : [])
         }
         if(this.verdict === 'false' && this.isAddd === true){
+          console.log('[c]')
           this.fileImage = Object.values(this.fileImage).map(el => {
             let temp = {}
             temp['url'] = el.url
@@ -188,6 +193,7 @@ export default {
           }) : [])
         }
         if((this.verdict === 'true' && this.isAddd === true)){
+          console.log('[d]')
           this.fileImage = Object.values(this.fileImage).map(el => {
             let temp = {}
             temp['url'] = this.config.BACKEND_URL + el
@@ -198,6 +204,7 @@ export default {
           }) : [])
         }
         if((this.verdict === 'undefined' && this.isAddd === 'undefined') || (this.verdict === undefined && this.isAddd === undefined)){
+          console.log('[e]')
           this.fileImage = Object.values(this.fileImage).map(el => {
             let temp = {}
             temp['url'] = el.url
@@ -208,6 +215,7 @@ export default {
           }) : [])
         }
         if(this.verdict === undefined && this.isAddd === false){
+          console.log('[f]')
           if(this.fileImage[0].url){
             this.fileImage = this.fileImage.map(el => {
               let temp = {}
@@ -229,6 +237,7 @@ export default {
           }
         }
         if(this.verdict === undefined && this.isAddd === true){
+          console.log('[g]')
           this.fileImage = this.fileImage.map(el => {
             let temp = {}
             temp['url'] = this.config.BACKEND_URL + el
@@ -291,7 +300,7 @@ export default {
 .whole_page:after {
   content: "" !important;
   display: block !important;
-  padding-bottom: 50% !important;
+  // padding-bottom: 80% !important;
 }
 .file_container {
   flex-wrap: wrap;

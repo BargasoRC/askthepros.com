@@ -6,7 +6,7 @@
       <div class="category-container row">
         <div class="category-selection col-2" v-if="industry && industry.length > 0" v-for="(item, index) in industry">
         <roundedBtn
-          :onClick="() => {getSelected(item.category)}"z
+          :onClick="() => {getSelected(item.category)}"
           :text="item.category.replace(/_/g, ' ')"
           :styles="{
             backgroundColor: '#ffc107',
@@ -51,11 +51,11 @@
   background: $primary;
   min-height: 20vh;
   overflow-y: hidden;
-  margin-top: 4%;
+  margin-top: 3%;
 }
 
 .container{
-  margin-top: 3%;
+  margin-top: 5%;
 }
 
 .category-selection{

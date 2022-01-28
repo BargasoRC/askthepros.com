@@ -20,8 +20,8 @@ class ImageHandlerController extends APIController
     $answer = $data['answer'];
     $category = $data['category'];
 
-    $width       = 400;
-    $height      = 400;
+    $width       = 250;
+    $height      = 250;
     $center_x    = $width / 2;
     $center_y    = $height / 2;
     $max_len     = 36;

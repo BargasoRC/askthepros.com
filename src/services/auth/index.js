@@ -164,6 +164,7 @@ export default {
       this.user.login_type = type
       let verifyUrl = type === 'local' ? 'authenticate/user' : 'social_lite/verify_token'
       let parameters = type === 'local' ? {} : {id: id, token: token, provider: localStorage.getItem('login_with')}
+      console.log('[checkAuthentication]', parameters, '[verifyUrl]', verifyUrl)
       vue.APIRequest(verifyUrl, parameters, (userInfo) => {
         this.setUser(userInfo, null, null)
       }, (response) => {
@@ -172,9 +173,9 @@ export default {
         this.tokenData.verifyingToken = false
         this.tokenData.loading = false
         localStorage.setItem('login_type', response.login_type)
-        // ROUTER.push({
-        //   path: this.currentPath
-        // })
+        ROUTER.push({
+          path: this.currentPath
+        })
       }).catch(error => {
         console.log('ERRRROOORRR:: ', error)
       })

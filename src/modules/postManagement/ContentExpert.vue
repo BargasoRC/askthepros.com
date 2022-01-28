@@ -268,6 +268,7 @@ export default {
         this.APIRequest('image_generator/generate', parameter).then(response => {
           $('#loading').css({'display': 'none'})
           if(response.data.length > 0) {
+            console.log('[response]', response.data, this.config.BACKEND_URL + response.data)
             this.imagesList = {url: this.config.BACKEND_URL + response.data}
             this.addImage.push(response.data)
           }else{
